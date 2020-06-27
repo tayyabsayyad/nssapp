@@ -13,7 +13,6 @@
         android:layout_marginTop="100dp"
         android:text="Log in to your account "
         android:textAllCaps="true"
-        android:textStyle="bold"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -32,24 +31,26 @@
         app:layout_constraintTop_toBottomOf="@+id/loginSummary">
 
         <EditText
+            android:inputType="text"
             android:id="@+id/username"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:foreground="@drawable/mainbgdown"
             android:gravity="center"
-            android:hint="Username"
+            android:hint="@string/edittextUsername"
+            android:maxLength="40"
             android:padding="8dp"
             android:textSize="16sp" />
-
 
         <EditText
             android:id="@+id/password"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
             android:background="@android:color/transparent"
             android:gravity="center"
-            android:hint="Password"
+            android:hint="@string/edittextPassword"
+            android:maxLength="30"
             android:padding="8dp"
             android:textColor="@color/blackGrey"
             android:textSize="16sp" />
@@ -66,12 +67,14 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <CheckBox
+            android:id="@+id/startCheck"
             android:layout_marginStart="20dp"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
+            android:id="@+id/remember"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -99,7 +102,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorPrimary"
         android:padding="8dp"
         android:id="@+id/register"
         android:layout_width="wrap_content"

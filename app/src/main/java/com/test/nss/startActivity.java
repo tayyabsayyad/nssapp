@@ -10,29 +10,46 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class startActivity extends AppCompatActivity {
 
-    TextView tvReg;
-    TextView tvSummary;
+    TextView startReg;
+    TextView startSummary;
+    TextView startRemember;
+    CheckBox startCheck;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        tvReg = findViewById(R.id.register);
-        tvSummary = findViewById(R.id.loginSummary);
 
+        startReg = findViewById(R.id.register);
+        startSummary = findViewById(R.id.loginSummary);
+        startRemember = findViewById(R.id.remember);
+        startCheck = findViewById(R.id.startCheck);
 
         Spannable spannable = new SpannableStringBuilder("Need an account?");
         spannable.setSpan(
                 new ForegroundColorSpan(Color.BLACK),
                 0, 7,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvReg.setText(spannable);
+        startReg.setText(spannable);
+        Typeface typefaceBold = Typeface.createFromAsset(getAssets(), "fonts/google_sans_bold.ttf");
+        startReg.setTypeface(typefaceBold);
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/google_sans.ttf");
-        tvSummary.setTypeface(typeface);
+        Typeface typefaceReg = Typeface.createFromAsset(getAssets(), "fonts/google_sans.ttf");
+        startSummary.setTypeface(typefaceReg);
+
+        startRemember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                startCheck.setChecked(!startCheck.isChecked());
+            }
+        });
     }
 }

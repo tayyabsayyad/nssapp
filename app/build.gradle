@@ -4,9 +4,6 @@ def getDate() {
     return new Date().format("dd-MM-HH.mm")
 }
 
-task timenow {
-    println(getDate())
-}
 android {
     def name = "NSS"
     def date = getDate()

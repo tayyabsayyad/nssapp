@@ -7,11 +7,28 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.app/.idea/libraries/*
+/.app/.idea/jar*.xml
+/.app/.idea/run*.xml
+/.app/.idea/misc*.xml
+/.app/.idea/vcs.xml
+/.app/.idea/gradle.xml
+/.app/.idea/runConfiguration*.xml
+rclone.1
+rclone.exe
+git-log.txt
+app/debug/output.json
+app/release/*.json
+app/.idea/caches/*
+app/.idea/codeStyles/*
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
+app/gradle/*
+app/gradlew
+app/gradlew.bat
 ### Android ###
 # Built application files
 *.apk
