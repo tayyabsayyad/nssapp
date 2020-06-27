@@ -81,6 +81,8 @@ public class welcome extends AppCompatActivity implements View.OnClickListener {
                 Intent m = new Intent(welcome.this, faq.class);
                 startActivity(m);
                 break;
+            default:
+                break;
         }
     }
 

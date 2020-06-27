@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.test.nss">
+    package="com.test.nss" >
 
     <application
         android:allowBackup="true"
@@ -8,11 +8,16 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".faq"></activity>
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".ediary"
+            android:label="@string/title_activity_ediary"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity android:name=".faq" />
         <activity android:name=".welcome" />
         <activity android:name=".startActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
