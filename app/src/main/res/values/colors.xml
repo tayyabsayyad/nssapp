@@ -8,7 +8,7 @@
     <color name="black">#000000</color>
     <color name="grey">#454545</color>
     <color name="blackish">#272727</color>
-
+    <color name="transparent">@android:color/transparent</color>
     <color name="one">#fe2c83</color>
     <color name="two">#2bff89</color>
     <color name="thr">#ffeb2b</color>
