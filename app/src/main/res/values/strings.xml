@@ -5,7 +5,7 @@
     <string name="title_activity_ediary">ediary</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-        <string name="nav_header_desc">Navigation header</string>
+    <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
     <string name="main_frag">NSS</string>
@@ -17,4 +17,21 @@
     <string name="menu_help">Help</string>
     <string name="menu_setts">Settings</string>
 
+    <string name="univ">Univeristy\nDistrict</string>
+    <string name="area">Area Based Project 1</string>
+    <string name="clg">College Work</string>
+
+    <string name="camp_details">Enter your everyday camp details below</string>
+
+    <string-array name="days">
+        <item>DAY 1</item>
+        <item>DAY 2</item>
+        <item>DAY 3</item>
+        <item>DAY 4</item>
+        <item>DAY 5</item>
+        <item>DAY 6</item>
+        <item>DAY 7</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

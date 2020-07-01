@@ -6,125 +6,161 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.ActivityFragment">
 
+    <include
+        android:id="@+id/mainFY_act"
+        layout="@layout/nss_fy_common" />
+
     <LinearLayout
-        android:id="@+id/mainFY"
+        android:id="@+id/act_header"
+        android:layout_height="70dp"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainFY_act">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Activity List"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/division"
+        layout="@layout/nss_halves_fy_common"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        android:foreground="@drawable/main_border"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/homeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="15dp"
-            android:src="@drawable/ic_baseline_home_32"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout5"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="60dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/nssFY"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="NSS FIRST YEAR"
-                android:textColor="@color/blackish"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/act_header" />
 
     <LinearLayout
-        android:layout_marginTop="10dp"
-        android:id="@+id/division"
+        android:id="@+id/act_details"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="#FAFAFA"
-        app:layout_constraintTop_toBottomOf="@+id/mainFY">
-
-        <Button
-            android:text="First Half"
-            android:id="@+id/firstButton"
-            android:layout_width="200dp"
-            android:enabled="true"
-            android:background="@android:color/transparent"
-            android:layout_height="match_parent"/>
-
-        <View
-            android:id="@+id/line_main"
-            android:layout_width="1.5dp"
-            android:layout_height="match_parent"
-            android:visibility="invisible"
-            android:background="@color/blackish"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-        <Button
-            android:text="Second Half"
-            android:id="@+id/secButton"
-            android:layout_width="match_parent"
-            android:background="@android:color/transparent"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:background="@color/colorPrimary"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:background="@drawable/act_bg_lines"
+        android:orientation="vertical"
+        android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@+id/division">
 
         <TextView
-            android:layout_marginStart="20dp"
-            android:gravity="center"
+            android:id="@+id/area_act"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Univeristy/District"/>
+            android:layout_height="40dp"
+            android:layout_marginStart="15dp"
+            android:gravity="center"
+            android:text="@string/area"
+            android:textSize="18sp" />
 
         <View
-            android:layout_marginStart="10dp"
-            android:layout_width="1.5dp"
-            android:layout_height="match_parent"
+            android:id="@+id/line_main"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
             android:background="@color/blackish"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-        <TextView
-            android:layout_marginStart="10dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Area Based Project 1"/>
-        <View
-            android:layout_marginStart="10dp"
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:background="@color/blackish"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:visibility="visible" />
 
         <TextView
-            android:layout_marginStart="10dp"
-            android:layout_gravity="center"
-            android:gravity="center"
+            android:id="@+id/univ_act"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="College Work"/>
+            android:layout_height="40dp"
+            android:layout_marginStart="15dp"
+            android:gravity="center"
+            android:text="University/District"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/line_main2"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/blackish" />
+
+        <TextView
+            android:id="@+id/clg_act"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="15dp"
+            android:gravity="center"
+            android:text="@string/clg"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/act_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:background="@drawable/act_bg_lines"
+        android:orientation="vertical"
+        android:paddingRight="15dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/act_details">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="15dp"
+            android:gravity="center"
+            android:text="Activity 1"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/blackish" />
+
+        <TextView
+            android:layout_height="40dp"
+            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:text="Activity 2"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/blackish" />
+
+        <TextView
+            android:layout_height="40dp"
+            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:text="Activity 3"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/blackish" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="15dp"
+            android:gravity="center"
+            android:text="Activity 4"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/blackish" />
+
+        <TextView
+            android:layout_height="40dp"
+            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:text="Activity 5"
+            android:textSize="18sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

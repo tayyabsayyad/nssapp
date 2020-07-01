@@ -2,35 +2,25 @@ package com.test.nss;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.material.navigation.NavigationView;
-import com.test.nss.ui.main.MainFragment;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.view.menu.ActionMenuItemView;
-import androidx.core.view.GravityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.navigation.NavigationView;
 
 public class ediary extends AppCompatActivity {
 
     AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
     Button logout;
-    MenuItem camp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,17 +46,20 @@ public class ediary extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(ediary.this, startActivity.class);
                 startActivity(i);
-                Toast.makeText(ediary.this, "Logged Out!", Toast.LENGTH_SHORT).show();
+                //MainFragment mainFragment = new MainFragment();
+                //FragmentManager fragmentManager = getSupportFragmentManager();
+                //fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
                 finish();
+                Toast.makeText(ediary.this, "Logged Out!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void click(View view){
+    public void click(View view) {
         Toast.makeText(ediary.this, "Clicked First year", Toast.LENGTH_SHORT).show();
     }
 
-    public void click2(View view){
+    public void click2(View view) {
         Toast.makeText(ediary.this, "Clicked second year", Toast.LENGTH_SHORT).show();
     }
 

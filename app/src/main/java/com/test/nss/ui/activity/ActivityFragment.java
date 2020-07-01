@@ -1,62 +1,63 @@
 package com.test.nss.ui.activity;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import com.test.nss.R;
-import com.test.nss.ediary;
-import com.test.nss.ui.main.MainFragment;
+import androidx.fragment.app.FragmentManager;
 
-import java.util.Objects;
+import com.test.nss.R;
+import com.test.nss.ui.main.MainFragment;
 
 public class ActivityFragment extends Fragment {
 
-    private ActivityViewModel activityViewModel;
+    public View root;
+    Toolbar toolbar;
+    ImageView home;
     Button firstButton;
     Button secButton;
-    ImageView home;
-    View line;
-    TextView nssFY;
+    LinearLayout actDetails;
+    View line_main;
+    View line_main2;
+    TextView univ_act;
+    TextView clg_act;
+    TextView area_act;
+    LinearLayout act_list;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
-        activityViewModel =
-                ViewModelProviders.of(this).get(ActivityViewModel.class);
-        final View root = inflater.inflate(R.layout.fragment_activity, container, false);
-        //final TextView textView = root.findViewById(R.id.text_activity);
-        firstButton = (Button) root.findViewById(R.id.firstButton);
-        secButton = (Button) root.findViewById(R.id.secButton);
+                             ViewGroup container, Bundle savedInstanceState) {
+        root = inflater.inflate(R.layout.fragment_activity, container, false);
+
         home = root.findViewById(R.id.homeButton);
-        line = root.findViewById(R.id.line_main);
-        nssFY = root.findViewById(R.id.nssFY);
+        toolbar = requireActivity().findViewById(R.id.toolbar);
+        firstButton = root.findViewById(R.id.firstButton);
+        secButton = root.findViewById(R.id.secButton);
+        actDetails = root.findViewById(R.id.act_details);
+        act_list = root.findViewById(R.id.act_list);
+        area_act = root.findViewById(R.id.area_act);
+        line_main = root.findViewById(R.id.line_main);
+        line_main2 = root.findViewById(R.id.line_main2);
+        univ_act = root.findViewById(R.id.univ_act);
+        clg_act = root.findViewById(R.id.clg_act);
 
-        Typeface google_sans_bold = Typeface.createFromAsset(requireActivity().getAssets(), "fonts/google_sans_bold.ttf");
-        nssFY.setTypeface(google_sans_bold);
+        return root;
+    }
 
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(requireContext(), "Help needed", Toast.LENGTH_SHORT).show();
-            }
-        });
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        toolbar.setVisibility(View.GONE);
 
         firstButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +66,7 @@ public class ActivityFragment extends Fragment {
                 firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
                 secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
                 secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
-                line.setVisibility(View.VISIBLE);
+                actDetails.setVisibility(View.VISIBLE);
             }
         });
 
@@ -76,15 +77,31 @@ public class ActivityFragment extends Fragment {
                 secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
                 firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
                 firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
-                line.setVisibility(View.VISIBLE);
+                actDetails.setVisibility(View.VISIBLE);
             }
         });
-        activityViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+
+        home.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(@Nullable String s) {
-                //textView.setText(s);
+            public void onClick(View view) {
+                MainFragment mainFragment = new MainFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+
+                assert fragmentManager != null;
+                fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
+                toolbar.setTitle(getString(R.string.main_frag));
             }
         });
-        return root;
+
+        area_act.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                line_main.setVisibility(View.GONE);
+                univ_act.setVisibility(View.GONE);
+                line_main2.setVisibility(View.GONE);
+                clg_act.setVisibility(View.GONE);
+                act_list.setVisibility(View.VISIBLE);
+            }
+        });
     }
 }

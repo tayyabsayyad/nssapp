@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="5dp"
+        android:background="#FAFAFA"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainFY_main">
+
+        <Button
+            android:id="@+id/firstButton"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:enabled="true"
+            android:text="First Half" />
+
+        <View
+            android:id="@+id/line_main"
+            android:layout_width="1.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/blackish"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/secButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:text="Second Half" />
+    </LinearLayout>
+</LinearLayout>
