@@ -38,7 +38,7 @@ public class ediary extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_main,
-                R.id.nav_acti, R.id.nav_work, R.id.nav_camp)
+                R.id.nav_acti, R.id.nav_work, R.id.nav_camp, R.id.nav_help)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

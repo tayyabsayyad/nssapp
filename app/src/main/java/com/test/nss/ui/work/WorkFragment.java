@@ -49,28 +49,24 @@ public class WorkFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 MainFragment mainFragment = new MainFragment();
-                FragmentManager fragmentManager = getFragmentManager();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
 
-                assert fragmentManager != null;
                 fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
                 toolbar.setTitle(getString(R.string.main_frag));
             }
         });
         toolbar.setVisibility(View.GONE);
 
-        firstButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firstButton.setTextColor(Color.WHITE);
-                firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
-                secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
-                secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
-                onDetach();
+        firstButton.setOnClickListener(v -> {
+            firstButton.setTextColor(Color.WHITE);
+            firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
+            secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
+            secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
+            onDetach();
 
-                WorkDetailsFirstFrag workDetailsFirstFrag = new WorkDetailsFirstFrag();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.work_details, workDetailsFirstFrag).addToBackStack(workDetailsFirstFrag.getTag()).commit();
-            }
+            WorkDetailsFirstFrag workDetailsFirstFrag = new WorkDetailsFirstFrag();
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.work_details, workDetailsFirstFrag).addToBackStack(workDetailsFirstFrag.getTag()).commit();
         });
 
         secButton.setOnClickListener(new View.OnClickListener() {
