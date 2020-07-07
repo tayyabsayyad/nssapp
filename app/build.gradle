@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def getDate() {
+static def getDate() {
     return new Date().format("dd-MM-HH.mm")
 }
 
@@ -15,7 +15,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

@@ -75,57 +75,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainFY_main" />
 
-    <LinearLayout
-        android:id="@+id/nss_details"
+    <FrameLayout
+        android:id="@+id/halves_frame"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="5dp"
-        android:background="#FAFAFA"
-        android:orientation="horizontal"
-        android:visibility="invisible"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/division">
-
-        <Button
-            android:id="@+id/main_univ"
-            android:layout_width="120dp"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:enabled="true"
-            android:text="Univeristy\nDistrict" />
-
-        <View
-            android:id="@+id/main_lineone"
-            android:layout_width="1.5dp"
-            android:layout_height="match_parent"
-            android:background="@color/blackish"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <Button
-            android:id="@+id/main_area"
-            android:layout_width="180dp"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:text="@string/area" />
-
-        <View
-            android:id="@+id/main_linetwo"
-            android:layout_width="1.5dp"
-            android:layout_height="match_parent"
-            android:background="@color/blackish"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <Button
-            android:id="@+id/main_clg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:text="@string/clg" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/division" />
 </androidx.constraintlayout.widget.ConstraintLayout>

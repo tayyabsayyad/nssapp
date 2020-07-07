@@ -19,6 +19,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.test.nss.R;
+import com.test.nss.fyAct;
+import com.test.nss.syAct;
 
 public class MainFragment extends Fragment {
 
@@ -28,16 +30,17 @@ public class MainFragment extends Fragment {
     ImageView home;
     View line;
     TextView nssFY;
-    LinearLayout nssDetails;
+    //LinearLayout nssDetails;
 
     Toolbar toolbar;
-    Button mainUniv;
+    /*Button mainUniv;
     Button mainArea;
     Button mainClg;
     View mainOne;
-    View mainTwo;
+    View mainTwo;*/
     TextView mu;
     TextView dbit;
+    LinearLayout mainHeader;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -57,42 +60,52 @@ public class MainFragment extends Fragment {
         home = root.findViewById(R.id.homeButton);
         line = root.findViewById(R.id.line_main);
         nssFY = root.findViewById(R.id.nssFY);
-        nssDetails = root.findViewById(R.id.nss_details);
+        //nssDetails = root.findViewById(R.id.nss_details);
 
         toolbar = root.findViewById(R.id.toolbar);
 
-        mainOne = root.findViewById(R.id.main_lineone);
+        mainHeader = root.findViewById(R.id.main_header);
+
+        /*mainOne = root.findViewById(R.id.main_lineone);
         mainTwo = root.findViewById(R.id.main_linetwo);
         mainUniv = root.findViewById(R.id.main_univ);
         mainArea = root.findViewById(R.id.main_area);
-        mainClg = root.findViewById(R.id.main_clg);
-        home.setVisibility(View.INVISIBLE);
+        mainClg = root.findViewById(R.id.main_clg);*/
+
+        //home.setVisibility(View.INVISIBLE);
 
         firstButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainHeader.setVisibility(View.GONE);
                 firstButton.setTextColor(Color.WHITE);
                 firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
                 secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
                 secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
                 line.setVisibility(View.VISIBLE);
-                nssDetails.setVisibility(View.VISIBLE);
+                //nssDetails.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.GONE);
-                home.setVisibility(View.VISIBLE);
+                //home.setVisibility(View.VISIBLE);
+
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.halves_frame, new fyAct()).addToBackStack(this.toString()).commit();
             }
         });
 
         secButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainHeader.setVisibility(View.GONE);
                 secButton.setTextColor(Color.WHITE);
                 secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
                 firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
                 firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
                 line.setVisibility(View.VISIBLE);
-                nssDetails.setVisibility(View.VISIBLE);
+                //nssDetails.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.GONE);
-                home.setVisibility(View.VISIBLE);
+                //home.setVisibility(View.VISIBLE);
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.halves_frame, new syAct()).addToBackStack(this.toString()).commit();
             }
         });
         return root;
@@ -103,64 +116,35 @@ public class MainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         home = root.findViewById(R.id.homeButton);
         toolbar = requireActivity().findViewById(R.id.toolbar);
-        changeBg();
 
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                MainFragment mainFragment = new MainFragment();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-
-                assert fragmentManager != null;
-                fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
                 toolbar.setTitle(getString(R.string.main_frag));
                 toolbar.setVisibility(View.VISIBLE);
+                if (mainHeader.getVisibility() == View.GONE || mainHeader.getVisibility() == View.INVISIBLE) {
+                    mainHeader.setVisibility(View.VISIBLE);
+                }
+                onDetach();
+                resetColor();
             }
         });
     }
 
-    private void changeBg() {
-        mainUniv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainUniv.setTextColor(Color.WHITE);
-                mainUniv.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
-                mainClg.setBackgroundColor(Color.TRANSPARENT);
-                mainClg.setTextColor(Color.BLACK);
-                mainArea.setBackgroundColor(Color.TRANSPARENT);
-                mainOne.setVisibility(View.VISIBLE);
-                mainTwo.setVisibility(View.VISIBLE);
-                mainArea.setTextColor(Color.BLACK);
-            }
-        });
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        FragmentManager fm = requireActivity().getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+    }
 
-        mainArea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainArea.setTextColor(Color.WHITE);
-                mainArea.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
-                mainClg.setBackgroundColor(Color.TRANSPARENT);
-                mainClg.setTextColor(Color.BLACK);
-                mainUniv.setBackgroundColor(Color.TRANSPARENT);
-                mainUniv.setTextColor(Color.BLACK);
-                mainOne.setVisibility(View.VISIBLE);
-                mainTwo.setVisibility(View.VISIBLE);
-            }
-        });
-
-        mainClg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainClg.setTextColor(Color.WHITE);
-                mainClg.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
-                mainUniv.setBackgroundColor(Color.TRANSPARENT);
-                mainUniv.setTextColor(Color.BLACK);
-                mainArea.setBackgroundColor(Color.TRANSPARENT);
-                mainArea.setTextColor(Color.BLACK);
-                mainOne.setVisibility(View.VISIBLE);
-                mainTwo.setVisibility(View.VISIBLE);
-            }
-        });
+    private void resetColor() {
+        firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
+        firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
+        secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
+        secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
+        line.setVisibility(View.GONE);
     }
 }

@@ -19,7 +19,7 @@ import com.test.nss.R;
 import com.test.nss.ui.main.MainFragment;
 
 public class CampFragment extends Fragment {
-    public View root;
+    View root;
     Toolbar toolbar;
     ImageView home;
 
@@ -32,7 +32,6 @@ public class CampFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_camp, container, false);
-
         return root;
     }
 
@@ -62,31 +61,24 @@ public class CampFragment extends Fragment {
         camp_act.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onDetach();
-                camp_main_details.setVisibility(View.GONE);
+                //camp_main_details.setVisibility(View.GONE);
                 CampDetailsFrag campDetailsFrag = new CampDetailsFrag();
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsFrag).addToBackStack(campDetailsFrag.getTag()).commit();
+                camp_main_details.setVisibility(View.GONE);
+                fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsFrag).addToBackStack("CampFragment").commit();
             }
         });
-
-        /*camp_days.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onDetach();
-                CampDetailsDays campDetailsDays = new CampDetailsDays();
-                FragmentManager fragmentManager= requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.work_details, campDetailsDays).addToBackStack(campDetailsDays.getTag()).commit();
-            }
-        });*/
     }
+
 
     @Override
     public void onDetach() {
         super.onDetach();
         FragmentManager fm = requireActivity().getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            //fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fm.popBackStack("CampFragment", 0);
+            camp_main_details.setVisibility(View.VISIBLE);
         }
     }
 }

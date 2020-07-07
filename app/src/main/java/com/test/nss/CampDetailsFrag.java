@@ -22,7 +22,7 @@ public class CampDetailsFrag extends Fragment {
     CheckBox ch3;
     LinearLayout camp_main_details;
     String whichDay;
-    private View root;
+    View root;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

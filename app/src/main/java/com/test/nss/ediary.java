@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -44,16 +45,25 @@ public class ediary extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FragmentManager fm = getSupportFragmentManager();
+                fm.popBackStackImmediate();
                 Intent i = new Intent(ediary.this, startActivity.class);
                 startActivity(i);
                 //MainFragment mainFragment = new MainFragment();
-                //FragmentManager fragmentManager = getSupportFragmentManager();
                 //fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
                 finish();
                 Toast.makeText(ediary.this, "Logged Out!", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    /*@Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        FragmentManager fm = getSupportFragmentManager();
+        //fm.popBackStack();
+        fm.popBackStackImmediate();
+    }*/
 
     public void click(View view) {
         Toast.makeText(ediary.this, "Clicked First year", Toast.LENGTH_SHORT).show();
