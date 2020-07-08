@@ -1,6 +1,7 @@
 package com.test.nss;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -22,6 +25,9 @@ import com.test.nss.api.RetrofitClient;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,21 +35,23 @@ import retrofit2.Response;
 
 public class startActivity extends AppCompatActivity {
 
-    public static String AUTH_USER;
+    public static String AUTH_TOKEN;
 
     TextView startReg;
     TextView startSummary;
     TextView startRemember;
     CheckBox startCheck;
     Button loginButton;
-    EditText username;
+    AutoCompleteTextView username;
     EditText password;
+
+    ArrayList<String> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-
+        users = new ArrayList<String>();
 
         startReg = findViewById(R.id.register);
         startSummary = findViewById(R.id.loginSummary);
@@ -65,7 +73,18 @@ public class startActivity extends AppCompatActivity {
         Typeface typefaceReg = Typeface.createFromAsset(getAssets(), "fonts/google_sans.ttf");
         startSummary.setTypeface(typefaceReg);
 
-        startRemember.setOnClickListener(view -> startCheck.setChecked(!startCheck.isChecked()));
+        startRemember.setOnClickListener(view ->
+                startCheck.setChecked(!startCheck.isChecked()));
+
+        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
+        String getName = sharedPreferences.getString("BKEY", "");
+        users.add(getName);
+
+        username.setDropDownWidth(400);
+        username.setDropDownHorizontalOffset(55);
+        username.setDropDownBackgroundResource(R.drawable.account_roundbg);
+
+        username.setAdapter(new ArrayAdapter<>(this, R.layout.drop_down_start, users));
 
         loginButton.setOnClickListener(view -> {
             if (!isEmpty(username) && !(isEmpty(password))) {
@@ -77,12 +96,56 @@ public class startActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                         try {
                             if (response.isSuccessful() && response.body() != null) {
+                                if (startCheck.isChecked()) {
+                                    SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
+                                    SharedPreferences.Editor eddy = shareit.edit();
+                                    eddy.putString("BKEY", username.getText().toString());
+                                    eddy.apply();
+                                }
                                 Log.e("onResponse", "Logged In");
                                 JSONObject j = new JSONObject(response.body().string());
-                                AUTH_USER = j.getString("auth_token");
+                                AUTH_TOKEN = j.getString("auth_token");
+                                Log.e("AUTH_TOKEN", AUTH_TOKEN);
                                 Intent i = new Intent(startActivity.this, ediary.class);
                                 startActivity(i);
                                 finish();
+                                String t = "Token " + AUTH_TOKEN;
+                                Log.e("SS", t);
+                                Call<ResponseBody> detail = RetrofitClient.getInstance().getApi().getAct(t);
+
+                                detail.enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                                        Log.e("detail", "Success");
+                                        if (response.isSuccessful() && response.body() != null) {
+                                            Log.e("onRs", "Success");
+                                            try {
+                                                Log.e("asasas", response.body().string());
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                            //Log.e("onRs", response.message());
+                                            //Log.e("onRs", response.body().toString());
+                                        } else if (response.errorBody() != null) {
+                                            try {
+                                                Toast.makeText(startActivity.this, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                            /*try {
+                                                JSONObject j = new JSONObject(response.body().string());
+                                                Log.e("Kuch to aara",j.toString());
+                                            } catch (JSONException | IOException e) {
+                                                e.printStackTrace();
+                                            }*/
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                        Log.e("detail", "Failed" + t.getMessage());
+                                    }
+                                });
                             } else {
                                 if (response.errorBody() != null) {
                                     JSONObject j = new JSONObject(response.errorBody().string());

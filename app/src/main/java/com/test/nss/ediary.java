@@ -17,6 +17,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 
+import static com.test.nss.startActivity.AUTH_TOKEN;
+
 public class ediary extends AppCompatActivity {
 
     AppBarConfiguration mAppBarConfiguration;
@@ -31,7 +33,7 @@ public class ediary extends AppCompatActivity {
         setContentView(R.layout.activity_ediary);
         fm = getSupportFragmentManager();
 
-        Toast.makeText(this, startActivity.AUTH_USER, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, AUTH_TOKEN, Toast.LENGTH_SHORT).show();
         drawer = findViewById(R.id.drawer_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         logout = findViewById(R.id.logoutbutton);
@@ -52,9 +54,9 @@ public class ediary extends AppCompatActivity {
             fm.popBackStackImmediate();
             Intent i = new Intent(ediary.this, startActivity.class);
             startActivity(i);
-
             finish();
             Toast.makeText(ediary.this, "Logged Out!", Toast.LENGTH_SHORT).show();
+            AUTH_TOKEN = "";
         });
     }
 

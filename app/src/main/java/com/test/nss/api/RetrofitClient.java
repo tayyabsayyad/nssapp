@@ -8,20 +8,23 @@ public class RetrofitClient {
     private static RetrofitClient mInstance;
     private Retrofit retrofit;
 
-    private RetrofitClient(){
+    private RetrofitClient() {
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
-    public static synchronized RetrofitClient getInstance(){
-        if(mInstance == null){
+
+    public static synchronized RetrofitClient getInstance() {
+        if (mInstance == null) {
             mInstance = new RetrofitClient();
         }
         return mInstance;
     }
 
-    public Api getApi(){
+    //Add the interceptor to the client builder.
+
+    public Api getApi() {
         return retrofit.create(Api.class);
     }
 }
