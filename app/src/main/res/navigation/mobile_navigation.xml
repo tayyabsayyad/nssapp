@@ -29,9 +29,4 @@
         android:label="@string/menu_camp"
         tools:layout="@layout/fragment_camp" />
 
-    <fragment
-        android:id="@+id/nav_help"
-        android:name="com.test.nss.ui.help.HelpFragment"
-        android:label="@string/menu_help"
-        tools:layout="@layout/fragment_help"/>
 </navigation>

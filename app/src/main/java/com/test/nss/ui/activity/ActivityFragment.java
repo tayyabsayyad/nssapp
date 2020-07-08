@@ -22,7 +22,7 @@ import com.test.nss.ui.main.MainFragment;
 
 public class ActivityFragment extends Fragment {
 
-    public View root;
+    View root;
     Toolbar toolbar;
     ImageView home;
     Button firstButton;
@@ -59,49 +59,37 @@ public class ActivityFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         toolbar.setVisibility(View.GONE);
 
-        firstButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firstButton.setTextColor(Color.WHITE);
-                firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
-                secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
-                secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
-                actDetails.setVisibility(View.VISIBLE);
-            }
+        firstButton.setOnClickListener(v -> {
+            firstButton.setTextColor(Color.WHITE);
+            firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
+            secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
+            secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
+            actDetails.setVisibility(View.VISIBLE);
         });
 
-        secButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                secButton.setTextColor(Color.WHITE);
-                secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
-                firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
-                firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
-                actDetails.setVisibility(View.VISIBLE);
-            }
+        secButton.setOnClickListener(v -> {
+            secButton.setTextColor(Color.WHITE);
+            secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
+            firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
+            firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
+            actDetails.setVisibility(View.VISIBLE);
         });
 
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MainFragment mainFragment = new MainFragment();
-                FragmentManager fragmentManager = getFragmentManager();
+        home.setOnClickListener(view1 -> {
+            MainFragment mainFragment = new MainFragment();
+            FragmentManager fragmentManager = getFragmentManager();
 
-                assert fragmentManager != null;
-                fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
-                toolbar.setTitle(getString(R.string.main_frag));
-            }
+            assert fragmentManager != null;
+            fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
+            toolbar.setTitle(getString(R.string.main_frag));
         });
 
-        area_act.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                line_main.setVisibility(View.GONE);
-                univ_act.setVisibility(View.GONE);
-                line_main2.setVisibility(View.GONE);
-                clg_act.setVisibility(View.GONE);
-                act_list.setVisibility(View.VISIBLE);
-            }
+        area_act.setOnClickListener(v -> {
+            line_main.setVisibility(View.GONE);
+            univ_act.setVisibility(View.GONE);
+            line_main2.setVisibility(View.GONE);
+            clg_act.setVisibility(View.GONE);
+            act_list.setVisibility(View.VISIBLE);
         });
     }
 }

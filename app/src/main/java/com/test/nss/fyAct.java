@@ -1,5 +1,6 @@
 package com.test.nss;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +27,7 @@ public class fyAct extends Fragment {
     ListView listView3;
 
     LinearLayout mainFy;
-    ArrayList<String> list;
-    ArrayAdapter adapter;
+    Context mContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,32 +64,33 @@ public class fyAct extends Fragment {
             }
         });
 
+        mContext = requireContext();
         return root;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TestAdapter mDbHelper = new TestAdapter(requireContext());
+        TestAdapter mDbHelper = new TestAdapter(mContext);
         mDbHelper.createDatabase();
         mDbHelper.open();
 
         ArrayList<String> c = mDbHelper.getActList();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_2, c);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, R.layout.simple_list_item_2, c);
         listView.setAdapter(adapter);
 
         ArrayList<String> c2 = mDbHelper.getActType();
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_2, c2);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(mContext, R.layout.simple_list_item_2, c2);
         listView2.setAdapter(adapter2);
 
         ArrayList<String> c3 = mDbHelper.getActType();
-        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_2, c3);
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(mContext, R.layout.simple_list_item_2, c3);
         listView3.setAdapter(adapter3);
-
 
         mDbHelper.close();
     }
 
+    // TODO: Check this
     @Override
     public void onDetach() {
         super.onDetach();

@@ -1,6 +1,7 @@
 package com.test.nss;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 public class CampInputDetailsFrag extends Fragment {
 
@@ -84,5 +86,11 @@ public class CampInputDetailsFrag extends Fragment {
         checkbox2.setVisibility(View.GONE);
         checkbox3.setVisibility(View.GONE);
         which_day.setText("");
+
+        FragmentManager fm = getParentFragmentManager();
+        Log.e("CampInputDetailsFrag", "onDetach: " + fm.getBackStackEntryCount());
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack("CampFragment", 0);
+        }
     }
 }

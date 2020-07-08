@@ -27,6 +27,12 @@
     <string name="nss_first_year">NSS FIRST YEAR</string>
     <string name="work_hours">WORK HOURS</string>
     <string name="help_details">For E-Diary/Activities related queries\ncontact the below authorities</string>
+    <string name="nss">National Service Scheme</string>
+    <string name="mu">MUMBAI UNIVERSITY</string>
+    <string name="dbit">Don Bosco Insititute\n Of Technology</string>
+    <string name="completed_hours">Completed\nHours</string>
+    <string name="nature_of_work">Nature Of Work</string>
+    <string name="remaining_hours">Remaining Hours</string>
 
     <string-array name="days">
         <item>DAY 1</item>
@@ -37,4 +43,6 @@
         <item>DAY 6</item>
         <item>DAY 7</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

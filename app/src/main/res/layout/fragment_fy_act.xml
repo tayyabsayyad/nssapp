@@ -87,13 +87,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:padding="15dp"
+                android:padding="@dimen/margin_15dp"
                 android:text="Date" />
 
             <ListView
                 android:id="@+id/list_date"
                 tools:listitem="@layout/simple_list_item_2"
-                android:padding="10dp"
+                android:padding="@dimen/space_10dp"
                 android:textColor="@color/blackish"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,12 +122,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:padding="15dp"
+                android:padding="@dimen/margin_15dp"
                 android:text="Activities" />
 
             <ListView
                 android:id="@+id/list_act"
-                android:padding="10dp"
+                android:padding="@dimen/space_10dp"
                 tools:listitem="@layout/simple_list_item_2"
                 android:text="@string/area2"
                 android:textColor="@color/blackish"
@@ -156,13 +156,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
+                android:paddingTop="@dimen/margin_15dp"
+                android:paddingBottom="@dimen/margin_15dp"
                 android:text="Completed Hours"
                 android:textColor="@color/blackish" />
 
             <ListView
-                android:padding="10dp"
+                android:padding="@dimen/space_10dp"
                 android:id="@+id/list_hours"
                 tools:listitem="@layout/simple_list_item_2"
                 android:layout_width="match_parent"

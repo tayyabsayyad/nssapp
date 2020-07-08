@@ -55,18 +55,9 @@ public class CampDetailsDays extends Fragment {
                 args.putBoolean("is_ch3", is_ch3);
                 campInputDetailsFrag.setArguments(args);
                 Toast.makeText(getContext(), day, Toast.LENGTH_SHORT).show();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.camp_frag, campInputDetailsFrag).addToBackStack(campInputDetailsFrag.getTag()).commit();
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.camp_frag, campInputDetailsFrag).addToBackStack("CampFrag").commit();
             }
         });
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        /*FragmentManager fm = requireActivity().getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }*/
     }
 }

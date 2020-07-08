@@ -53,7 +53,7 @@
             android:gravity="center"
             android:textAllCaps="false"
             android:textColor="@color/grey"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_14sp" />
 
         <Button
             android:id="@+id/leaderButton"
@@ -65,7 +65,7 @@
             android:text="Leader"
             android:textAllCaps="false"
             android:textColor="@color/grey"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_14sp" />
 
         <Button
             android:id="@+id/volButton"
@@ -78,7 +78,7 @@
             android:text="Volunteer"
             android:textAllCaps="false"
             android:textColor="@color/grey"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -97,7 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Terms &amp; Conditions"
-            android:textSize="15sp" />
+            android:textSize="@dimen/text_14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -115,7 +115,7 @@
             android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_14sp"
             android:text="FAQs?" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

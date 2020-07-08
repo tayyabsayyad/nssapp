@@ -23,10 +23,13 @@ public class ediary extends AppCompatActivity {
     DrawerLayout drawer;
     Button logout;
 
+    FragmentManager fm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ediary);
+        fm = getSupportFragmentManager();
 
         Toast.makeText(this, startActivity.AUTH_USER, Toast.LENGTH_SHORT).show();
         drawer = findViewById(R.id.drawer_layout);
@@ -45,12 +48,11 @@ public class ediary extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         logout.setOnClickListener(view -> {
-            FragmentManager fm = getSupportFragmentManager();
+
             fm.popBackStackImmediate();
             Intent i = new Intent(ediary.this, startActivity.class);
             startActivity(i);
-            //MainFragment mainFragment = new MainFragment();
-            //fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
+
             finish();
             Toast.makeText(ediary.this, "Logged Out!", Toast.LENGTH_SHORT).show();
         });

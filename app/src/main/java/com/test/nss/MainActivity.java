@@ -18,14 +18,11 @@ MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(MainActivity.this,
-                        welcome.class);
-                startActivity(i);
-                finish();
-            }
+        new Handler().postDelayed(() -> {
+            Intent i = new Intent(MainActivity.this,
+                    welcome.class);
+            startActivity(i);
+            finish();
         }, SPLASH_SCREEN_TIME_OUT);
     }
 }

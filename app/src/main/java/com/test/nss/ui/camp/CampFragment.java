@@ -1,6 +1,7 @@
 package com.test.nss.ui.camp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +26,19 @@ public class CampFragment extends Fragment {
 
     TextView camp_days;
     TextView camp_act;
-
+    FragmentManager fm;
     LinearLayout camp_main_details;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_camp, container, false);
+        fm = requireActivity().getSupportFragmentManager();
+
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fm.popBackStack(this.toString(), 0);
+        }
         return root;
     }
 
@@ -44,41 +51,32 @@ public class CampFragment extends Fragment {
         camp_act = root.findViewById(R.id.camp_act);
         camp_main_details = root.findViewById(R.id.camp_main_details);
 
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MainFragment mainFragment = new MainFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-
-                assert fragmentManager != null;
-                fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
-                toolbar.setTitle(getString(R.string.main_frag));
-            }
-        });
         toolbar.setVisibility(View.GONE);
         camp_main_details.setVisibility(View.VISIBLE);
 
-        camp_act.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //camp_main_details.setVisibility(View.GONE);
-                CampDetailsFrag campDetailsFrag = new CampDetailsFrag();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                camp_main_details.setVisibility(View.GONE);
-                fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsFrag).addToBackStack("CampFragment").commit();
-            }
+        home.setOnClickListener(view1 -> {
+            MainFragment mainFragment = new MainFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+
+            assert fragmentManager != null;
+            fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment).addToBackStack("CampFrag").commit();
+            toolbar.setTitle(getString(R.string.main_frag));
+        });
+
+        camp_act.setOnClickListener(v -> {
+            camp_main_details.setVisibility(View.GONE);
+            //fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsFrag).addToBackStack("CampFragment").commit();
+            fm.beginTransaction().replace(R.id.camp_frag, new CampDetailsFrag()).addToBackStack("CampFrag").commit();
         });
     }
 
-
     @Override
     public void onDetach() {
+        camp_main_details.setVisibility(View.VISIBLE);
         super.onDetach();
-        FragmentManager fm = requireActivity().getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            //fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.popBackStack("CampFragment", 0);
-            camp_main_details.setVisibility(View.VISIBLE);
+            Log.e("CampFrag", "onDetach: " + fm.getBackStackEntryCount());
+            fm.popBackStack("CampFrag", 0);
         }
     }
 }

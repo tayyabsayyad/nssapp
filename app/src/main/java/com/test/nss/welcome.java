@@ -1,17 +1,15 @@
 package com.test.nss;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +20,7 @@ public class welcome extends AppCompatActivity implements View.OnClickListener {
     private Button admin; //First button in login screen
     private Button leader; //Second Login
     private Button volunteer; //Third Login
+
     private TextView faq; //Bottom Faq text
     private TextView terms; //Center t&c
     private TextView welcome; //Main Welcome

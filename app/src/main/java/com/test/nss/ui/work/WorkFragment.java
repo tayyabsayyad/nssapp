@@ -22,11 +22,12 @@ import com.test.nss.ui.main.MainFragment;
 
 public class WorkFragment extends Fragment {
 
-    public View root;
+    View root;
     Toolbar toolbar;
     ImageView home;
     Button firstButton;
     Button secButton;
+    FragmentManager fm;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class WorkFragment extends Fragment {
 
         firstButton = root.findViewById(R.id.firstButton);
         secButton = root.findViewById(R.id.secButton);
+        fm = requireActivity().getSupportFragmentManager();
 
         return root;
     }
@@ -49,8 +51,9 @@ public class WorkFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 MainFragment mainFragment = new MainFragment();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentManager fragmentManager = getFragmentManager();
 
+                assert fragmentManager != null;
                 fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
                 toolbar.setTitle(getString(R.string.main_frag));
             }
@@ -62,11 +65,8 @@ public class WorkFragment extends Fragment {
             firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
             secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
             secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
-            onDetach();
 
-            WorkDetailsFirstFrag workDetailsFirstFrag = new WorkDetailsFirstFrag();
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.work_details, workDetailsFirstFrag).addToBackStack(workDetailsFirstFrag.getTag()).commit();
+            fm.beginTransaction().replace(R.id.work_details, new WorkDetailsFirstFrag()).addToBackStack("WorkFrag").commit();
         });
 
         secButton.setOnClickListener(new View.OnClickListener() {
@@ -76,11 +76,8 @@ public class WorkFragment extends Fragment {
                 secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
                 firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
                 firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
-                onDetach();
 
-                WorkDetailsSecFrag workDetailsSecFrag = new WorkDetailsSecFrag();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.work_details, workDetailsSecFrag).addToBackStack(workDetailsSecFrag.getTag()).commit();
+                fm.beginTransaction().replace(R.id.work_details, new WorkDetailsSecFrag()).addToBackStack("WorkFrag").commit();
             }
         });
     }
@@ -88,9 +85,9 @@ public class WorkFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        FragmentManager fm = requireActivity().getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fm.popBackStack("WorkFrag", 0);
         }
     }
 }

@@ -16,17 +16,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/space_10dp"
             android:text="@string/camp_details"
             android:textColor="@color/blackish"
-            android:textSize="17sp" />
+            android:textSize="@dimen/text_18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
+            android:layout_margin="@dimen/space_3dp"
             android:background="@drawable/act_bg_lines"
-            android:padding="10dp">
+            android:padding="@dimen/space_10dp">
 
             <TextView
                 android:id="@+id/which_day"
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="15dp"
+            android:padding="@dimen/margin_15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,20 +55,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:paddingStart="10dp"
+                    android:layout_marginBottom="@dimen/margin_15dp"
+                    android:paddingStart="@dimen/space_10dp"
                     android:text="1. Activity Name"
                     android:textColor="@color/blackGrey"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_18sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="@dimen/margin_15dp"
                     android:background="#1A000000"
                     android:minHeight="80dp"
-                    android:padding="10dp">
+                    android:padding="@dimen/space_10dp">
 
                     <EditText
                         android:layout_width="wrap_content"
@@ -89,17 +89,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:paddingStart="10dp"
+                    android:layout_marginBottom="@dimen/margin_15dp"
+                    android:paddingStart="@dimen/space_10dp"
                     android:text="2. Activity Name"
                     android:textColor="@color/blackGrey"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_18sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="@dimen/margin_15dp"
                     android:background="#1A000000"
                     android:minHeight="80dp"
                     android:padding="10dp">
@@ -123,20 +123,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:paddingStart="10dp"
+                    android:layout_marginBottom="@dimen/margin_15dp"
+                    android:paddingStart="@dimen/space_10dp"
                     android:text="3. Activity Name"
                     android:textColor="@color/blackGrey"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_18sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="@dimen/margin_15dp"
                     android:background="#1A000000"
                     android:minHeight="80dp"
-                    android:padding="10dp">
+                    android:padding="@dimen/space_10dp">
 
                     <EditText
                         android:layout_width="wrap_content"

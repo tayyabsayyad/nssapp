@@ -51,9 +51,9 @@
                 android:layout_gravity="center"
                 android:layout_margin="2dp"
                 android:gravity="center"
-                android:text="Don Bosco Insititute\n Of Technology"
+                android:text="@string/dbit"
                 android:textColor="@color/blackish"
-                android:textSize="18sp" />
+                android:textSize="18dp" />
         </LinearLayout>
     </LinearLayout>
 

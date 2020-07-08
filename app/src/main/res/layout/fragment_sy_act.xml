@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
             android:enabled="true"
-            android:text="Univeristy\nDistrict" />
+            android:text="@string/univ" />
 
         <View
             android:id="@+id/main_lineone"

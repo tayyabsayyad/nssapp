@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Nature of Work"
+                android:text="@string/nature_of_work"
                 android:textColor="@color/white" />
         </LinearLayout>
 
@@ -38,15 +38,14 @@
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:orientation="vertical"
-            android:text="Nature Of Work">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Total houts"
+                android:text="Total hours"
                 android:textColor="@color/white" />
         </LinearLayout>
 
@@ -56,7 +55,7 @@
             android:gravity="center"
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:text="Nature Of Work">
+            android:text="@string/nature_of_work">
 
             <TextView
                 android:layout_width="match_parent"
@@ -64,8 +63,8 @@
                 android:layout_gravity="center"
                 android:background="@color/colorPrimary"
                 android:gravity="center"
-                android:padding="10dp"
-                android:text="Completed\nHours"
+                android:padding="@dimen/space_10dp"
+                android:text="@string/completed_hours"
                 android:textColor="@color/white" />
 
             <ListView
@@ -87,36 +86,11 @@
                 android:layout_gravity="center"
                 android:background="@color/colorPrimary"
                 android:gravity="center"
-                android:padding="10dp"
-                android:text="Remaining Hours"
+                android:padding="@dimen/space_10dp"
+                android:text="@string/remaining_hours"
                 android:textColor="@color/white" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="40"
-                android:textColor="@color/blackish" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="40"
-                android:textColor="@color/blackish" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="40"
-                android:textColor="@color/blackish" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

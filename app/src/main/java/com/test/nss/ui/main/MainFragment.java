@@ -24,34 +24,37 @@ import com.test.nss.syAct;
 
 public class MainFragment extends Fragment {
 
-    public View root;
+    View root;
+    View line;
+
     Button firstButton;
     Button secButton;
-    ImageView home;
-    View line;
-    TextView nssFY;
-    //LinearLayout nssDetails;
 
-    Toolbar toolbar;
-    /*Button mainUniv;
-    Button mainArea;
-    Button mainClg;
-    View mainOne;
-    View mainTwo;*/
+    ImageView home;
+
     TextView mu;
     TextView dbit;
+    TextView nssFY;
+
+    Toolbar toolbar;
+
+    FragmentManager fm;
+
     LinearLayout mainHeader;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_main, container, false);
 
+        fm = requireActivity().getSupportFragmentManager();
+
         Typeface typefaceBold = Typeface.createFromAsset(requireActivity().getAssets(), "fonts/google_sans_bold.ttf");
         Typeface typeface = Typeface.createFromAsset(requireActivity().getAssets(), "fonts/google_sans.ttf");
 
         mu = root.findViewById(R.id.main_mu);
-        dbit = root.findViewById(R.id.main_dbit);
         mu.setTypeface(typefaceBold);
+
+        dbit = root.findViewById(R.id.main_dbit);
         dbit.setTypeface(typeface);
 
         firstButton = root.findViewById(R.id.firstButton);
@@ -60,19 +63,10 @@ public class MainFragment extends Fragment {
         home = root.findViewById(R.id.homeButton);
         line = root.findViewById(R.id.line_main);
         nssFY = root.findViewById(R.id.nssFY);
-        //nssDetails = root.findViewById(R.id.nss_details);
 
         toolbar = root.findViewById(R.id.toolbar);
 
         mainHeader = root.findViewById(R.id.main_header);
-
-        /*mainOne = root.findViewById(R.id.main_lineone);
-        mainTwo = root.findViewById(R.id.main_linetwo);
-        mainUniv = root.findViewById(R.id.main_univ);
-        mainArea = root.findViewById(R.id.main_area);
-        mainClg = root.findViewById(R.id.main_clg);*/
-
-        //home.setVisibility(View.INVISIBLE);
 
         firstButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,11 +77,9 @@ public class MainFragment extends Fragment {
                 secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
                 secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
                 line.setVisibility(View.VISIBLE);
-                //nssDetails.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.GONE);
-                //home.setVisibility(View.VISIBLE);
 
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentManager fragmentManager = getChildFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.halves_frame, new fyAct()).addToBackStack(this.toString()).commit();
             }
         });
@@ -101,13 +93,13 @@ public class MainFragment extends Fragment {
                 firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
                 firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
                 line.setVisibility(View.VISIBLE);
-                //nssDetails.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.GONE);
-                //home.setVisibility(View.VISIBLE);
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+
+                FragmentManager fragmentManager = getChildFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.halves_frame, new syAct()).addToBackStack(this.toString()).commit();
             }
         });
+
         return root;
     }
 
@@ -125,19 +117,13 @@ public class MainFragment extends Fragment {
                 if (mainHeader.getVisibility() == View.GONE || mainHeader.getVisibility() == View.INVISIBLE) {
                     mainHeader.setVisibility(View.VISIBLE);
                 }
-                onDetach();
+                if (fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    fm.popBackStack(this.toString(), 0);
+                }
                 resetColor();
             }
         });
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        FragmentManager fm = requireActivity().getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
     }
 
     private void resetColor() {
@@ -146,5 +132,14 @@ public class MainFragment extends Fragment {
         secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
         secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
         line.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fm.popBackStack(this.toString(), 0);
+        }
     }
 }

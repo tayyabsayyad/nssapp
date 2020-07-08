@@ -64,17 +64,8 @@ public class CampDetailsFrag extends Fragment {
                 campDetailsDays.setArguments(args);
 
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsDays).addToBackStack(campDetailsDays.getTag()).commit();
+                fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsDays).addToBackStack("CampDetailsFrag").commit();
             }
         });
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        FragmentManager fm = requireActivity().getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
     }
 }
