@@ -2,6 +2,7 @@ package com.test.nss;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -10,6 +11,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -52,12 +54,18 @@ public class startActivity extends AppCompatActivity {
 
     ArrayList<String> users;
 
+    CheckConn checkConn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        users = new ArrayList<>();
+
+        checkConn = new CheckConn();
+
         mContext = startActivity.this;
+
+        users = new ArrayList<>();
 
         startReg = findViewById(R.id.register);
         startSummary = findViewById(R.id.loginSummary);
@@ -90,7 +98,7 @@ public class startActivity extends AppCompatActivity {
         username.setDropDownHorizontalOffset(55);
         username.setDropDownBackgroundResource(R.drawable.account_roundbg);
 
-        username.setAdapter(new ArrayAdapter<>(this, R.layout.drop_down_start, users));
+        username.setAdapter(new ArrayAdapter<>(mContext, R.layout.drop_down_start, users));
 
         loginButton.setOnClickListener(view -> {
             if (!isEmpty(username) && !(isEmpty(password))) {
@@ -115,6 +123,9 @@ public class startActivity extends AppCompatActivity {
                                 Intent i = new Intent(mContext, ediary.class);
                                 startActivity(i);
                                 finish();
+                                IntentFilter z = new IntentFilter();
+                                z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+                                registerReceiver(checkConn, z);
                             } else {
                                 if (response.errorBody() != null) {
                                     JSONObject j = new JSONObject(response.errorBody().string());
@@ -139,45 +150,6 @@ public class startActivity extends AppCompatActivity {
                         Log.e("onFailure", "" + t.getMessage());
                     }
                 });
-
-                Call<ResponseBody> helpData = RetrofitClient.getInstance().getApi().getHelpData("Token " + startActivity.AUTH_TOKEN);
-                helpData.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            try {
-                                JSONArray j = new JSONArray(response.body().string());
-                                Log.e("startAct:" + "arrayLen", "" + j.length());
-                        /*Log.e(TAG, j.getJSONObject(0).getString("Post"));
-                        Log.e(TAG, j.getJSONObject(0).getString("Full_Name"));
-                        Log.e(TAG, j.getJSONObject(0).getString("Contact"));*/
-                                if (j.length() > 0) {
-                                    TestAdapter mDbHelper = new TestAdapter(mContext);
-                                    mDbHelper.createDatabase();
-                                    mDbHelper.open();
-
-                                    for (int i = 0; i < j.length(); i++) {
-                                        mDbHelper.insertHelpData(
-                                                j.getJSONObject(i).getString("Post"),
-                                                j.getJSONObject(i).getString("Full_Name"),
-                                                j.getJSONObject(i).getString("Post_Email"),
-                                                j.getJSONObject(i).getString("Contact"));
-                                    }
-
-                                    mDbHelper.close();
-                                }
-                            } catch (JSONException | IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                        Toast.makeText(mContext, t.toString(), Toast.LENGTH_SHORT).show();
-                        Log.e("onFailure", "" + t.getMessage());
-                    }
-                });
             } else {
                 if (isEmpty(username) && isEmpty(password)) {
                     Snackbar.make(view, "Enter the details", Snackbar.LENGTH_SHORT).show();
@@ -197,13 +169,19 @@ public class startActivity extends AppCompatActivity {
         });
 
         loginButton.setOnLongClickListener(v -> {
-            Intent i = new Intent(mContext, ediary.class);
-            startActivity(i);
+            Intent m = new Intent(mContext, ediary.class);
+            startActivity(m);
             return true;
         });
     }
 
     private boolean isEmpty(EditText e) {
         return e.getText().toString().trim().length() <= 0;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(checkConn);
     }
 }

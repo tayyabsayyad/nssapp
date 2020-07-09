@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.test.nss">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:theme="@style/AppTheme"
         android:allowBackup="true"
@@ -11,10 +13,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true">
+        <receiver android:name=".CheckConn" >
+        </receiver>
         <activity
             android:name=".ediary"
             android:label="@string/title_activity_ediary"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".faq" />
         <activity android:name=".welcome" />
         <activity android:name=".startActivity" />
