@@ -1,5 +1,6 @@
 package com.test.nss;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -23,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.api.RetrofitClient;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -45,13 +48,16 @@ public class startActivity extends AppCompatActivity {
     AutoCompleteTextView username;
     EditText password;
 
+    Context mContext;
+
     ArrayList<String> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        users = new ArrayList<String>();
+        users = new ArrayList<>();
+        mContext = startActivity.this;
 
         startReg = findViewById(R.id.register);
         startSummary = findViewById(R.id.loginSummary);
@@ -106,51 +112,14 @@ public class startActivity extends AppCompatActivity {
                                 JSONObject j = new JSONObject(response.body().string());
                                 AUTH_TOKEN = j.getString("auth_token");
                                 Log.e("AUTH_TOKEN", AUTH_TOKEN);
-                                Intent i = new Intent(startActivity.this, ediary.class);
+                                Intent i = new Intent(mContext, ediary.class);
                                 startActivity(i);
                                 finish();
-                                String t = "Token " + AUTH_TOKEN;
-                                Log.e("SS", t);
-                                Call<ResponseBody> detail = RetrofitClient.getInstance().getApi().getAct(t);
-
-                                detail.enqueue(new Callback<ResponseBody>() {
-                                    @Override
-                                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                                        Log.e("detail", "Success");
-                                        if (response.isSuccessful() && response.body() != null) {
-                                            Log.e("onRs", "Success");
-                                            try {
-                                                Log.e("asasas", response.body().string());
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-                                            //Log.e("onRs", response.message());
-                                            //Log.e("onRs", response.body().toString());
-                                        } else if (response.errorBody() != null) {
-                                            try {
-                                                Toast.makeText(startActivity.this, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                            /*try {
-                                                JSONObject j = new JSONObject(response.body().string());
-                                                Log.e("Kuch to aara",j.toString());
-                                            } catch (JSONException | IOException e) {
-                                                e.printStackTrace();
-                                            }*/
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                        Log.e("detail", "Failed" + t.getMessage());
-                                    }
-                                });
                             } else {
                                 if (response.errorBody() != null) {
                                     JSONObject j = new JSONObject(response.errorBody().string());
                                     String m = j.getString("non_field_errors");
-                                    Toast.makeText(startActivity.this, "" + m.substring(2, m.length() - 2), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext, "" + m.substring(2, m.length() - 2), Toast.LENGTH_SHORT).show();
                                     username.setText("");
                                     password.setText("");
                                     username.requestFocus();
@@ -165,8 +134,47 @@ public class startActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                         Toast.makeText(startActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+                        Log.e("onFailure", "" + t.getMessage());
+                    }
+                });
+
+                Call<ResponseBody> helpData = RetrofitClient.getInstance().getApi().getHelpData("Token " + startActivity.AUTH_TOKEN);
+                helpData.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            try {
+                                JSONArray j = new JSONArray(response.body().string());
+                                Log.e("startAct:" + "arrayLen", "" + j.length());
+                        /*Log.e(TAG, j.getJSONObject(0).getString("Post"));
+                        Log.e(TAG, j.getJSONObject(0).getString("Full_Name"));
+                        Log.e(TAG, j.getJSONObject(0).getString("Contact"));*/
+                                if (j.length() > 0) {
+                                    TestAdapter mDbHelper = new TestAdapter(mContext);
+                                    mDbHelper.createDatabase();
+                                    mDbHelper.open();
+
+                                    for (int i = 0; i < j.length(); i++) {
+                                        mDbHelper.insertHelpData(
+                                                j.getJSONObject(i).getString("Post"),
+                                                j.getJSONObject(i).getString("Full_Name"),
+                                                j.getJSONObject(i).getString("Post_Email"),
+                                                j.getJSONObject(i).getString("Contact"));
+                                    }
+
+                                    mDbHelper.close();
+                                }
+                            } catch (JSONException | IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                        Toast.makeText(mContext, t.toString(), Toast.LENGTH_SHORT).show();
                         Log.e("onFailure", "" + t.getMessage());
                     }
                 });
@@ -189,7 +197,7 @@ public class startActivity extends AppCompatActivity {
         });
 
         loginButton.setOnLongClickListener(v -> {
-            Intent i = new Intent(startActivity.this, ediary.class);
+            Intent i = new Intent(mContext, ediary.class);
             startActivity(i);
             return true;
         });

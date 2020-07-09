@@ -50,7 +50,7 @@ public class TestAdapter {
     }
 
     public ArrayList<String> getActList() {
-        ArrayList<String> mylistAct = new ArrayList<String>();
+        ArrayList<String> mylistAct = new ArrayList<>();
         try {
             String sql = "SELECT * FROM NatureOfActivity";
             Cursor mCur = mDb.rawQuery(sql, null);
@@ -71,7 +71,7 @@ public class TestAdapter {
     }
 
     public ArrayList<String> getActType() {
-        ArrayList<String> mylistAct = new ArrayList<String>();
+        ArrayList<String> mylistAct = new ArrayList<>();
         try {
             String sql = "SELECT * FROM NatureOfActivity";
             Cursor mCur = mDb.rawQuery(sql, null);
@@ -91,16 +91,49 @@ public class TestAdapter {
         }
     }
 
-    /*public void insertData(String name, ){
+    public void insertHelpData(String post, String name, String email, String contact) {
+        String sql = "DELETE FROM Help";
+        mDb.execSQL(sql);
         try {
-            ContentValues values = new ContentValues();
+            ContentValues contentValues = new ContentValues();
 
-            mDb.insert();
-        } catch (SQLException e){
-            Log.e(TAG, "insertData: "+e.getMessage());
+            contentValues.put("CollegeName", "");
+            contentValues.put("Post", post);
+            contentValues.put("Name", name);
+            contentValues.put("EmailID", email);
+            contentValues.put("Contact", contact);
+            contentValues.put("Entry_year", "");
+            long row = mDb.insert("Help", null, contentValues);
+            if (row != -1)
+                Log.i(TAG, "Entered data");
+            else
+                Log.e(TAG, "Something went wrong");
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertData " + e.getMessage());
         }
-    }*/
+    }
 
+    public ArrayList<String> getHelpData() {
+        ArrayList<String> res = new ArrayList<>();
+        try {
+            String sql = "SELECT EmailID, Contact FROM Help";
+            Cursor mCur = mDb.rawQuery(sql, null);
+
+            if (mCur.getCount() == 0) {
+                Toast.makeText(mContext, "Too bad no data", Toast.LENGTH_SHORT).show();
+            } else {
+                if (mCur.moveToNext()) {
+                    res.add(mCur.getString(0));
+                    res.add(mCur.getString(1));
+                }
+            }
+            mCur.close();
+            return res;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
     /*public Cursor getTestData() {
         try {
             String sql ="SELECT * FROM NatureOfActivity";

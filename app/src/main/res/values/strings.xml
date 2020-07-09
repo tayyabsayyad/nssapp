@@ -43,6 +43,7 @@
         <item>DAY 6</item>
         <item>DAY 7</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="contact_no">Contact No: </string>
+    <string name="email">Email: </string>
 </resources>

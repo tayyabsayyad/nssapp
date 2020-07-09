@@ -10,7 +10,7 @@ import retrofit2.http.POST;
 
 public interface Api {
 
-    @POST("/api/token/login/?format=json")
+    @POST("/api/token/login")
     @FormUrlEncoded
     Call<ResponseBody> login(
             @Field("username") String username,
@@ -19,4 +19,7 @@ public interface Api {
 
     @GET("/diary/api/dailyactivity")
     Call<ResponseBody> getAct(@Header("Authorization") String token);
+
+    @GET("/diary/api/helpData/?format=json")
+    Call<ResponseBody> getHelpData(@Header("Authorization") String token);
 }

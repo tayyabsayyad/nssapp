@@ -1,7 +1,6 @@
 package com.test.nss.ui.help;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +17,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.test.nss.R;
+import com.test.nss.TestAdapter;
 import com.test.nss.ui.main.MainFragment;
+
+import java.text.MessageFormat;
 
 public class HelpFragment extends Fragment {
 
+    private static final String TAG = "HelpFrag";
     View root;
     Toolbar toolbar;
     ImageView home;
@@ -79,6 +82,12 @@ public class HelpFragment extends Fragment {
             toolbar.setTitle(getString(R.string.main_frag));
             onDetach();
         });
+
+        TestAdapter mDbHelper = new TestAdapter(requireContext());
+        mDbHelper.open();
+        emailPo.setText(MessageFormat.format(getString(R.string.email) + " " + "{0}", mDbHelper.getHelpData().get(0)));
+        contactPo.setText(MessageFormat.format(getString(R.string.contact_no) + " " + "{0}", mDbHelper.getHelpData().get(1)));
+        mDbHelper.close();
 
         helpMain.setOnClickListener(v -> {
             if (poDetails.getVisibility() == View.VISIBLE)

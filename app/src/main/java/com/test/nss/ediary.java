@@ -60,12 +60,10 @@ public class ediary extends AppCompatActivity {
         });
     }
 
+    // TODO: What the app should do if back pressed
     /*@Override
     public void onBackPressed() {
         super.onBackPressed();
-        FragmentManager fm = getSupportFragmentManager();
-        //fm.popBackStack();
-        fm.popBackStackImmediate();
     }*/
 
     public void click(View view) {
