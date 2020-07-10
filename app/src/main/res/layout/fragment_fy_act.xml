@@ -7,10 +7,9 @@
     tools:context=".fyAct">
 
     <LinearLayout
-        android:id="@+id/frag"
+        android:id="@+id/frag_fy"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/colorPrimaryLight"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,154 +20,119 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="?attr/selectableItemBackground"
             android:enabled="true"
-            android:text="Univeristy\nDistrict" />
+            android:text="@string/univ" />
 
         <View
-            android:id="@+id/main_lineone"
-            android:layout_width="1.5dp"
-            android:layout_height="match_parent"
+            android:id="@+id/act_line"
+            android:layout_width="1dp"
             android:background="@color/blackish"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/main_area_fy"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="?attr/selectableItemBackground"
             android:text="@string/area" />
 
         <View
-            android:id="@+id/main_linetwo"
-            android:layout_width="1.5dp"
-            android:layout_height="match_parent"
+            android:id="@+id/act_line2"
+            android:layout_width="1dp"
             android:background="@color/blackish"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/main_clg_fy"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="?attr/selectableItemBackground"
             android:text="@string/clg" />
-
     </LinearLayout>
 
     <LinearLayout
-        android:background="@drawable/act_bg_lines"
+        android:layout_marginTop="@dimen/space_10dp"
         android:id="@+id/main_fy"
+        android:background="@drawable/act_bg_lines"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frag">
+        app:layout_constraintTop_toBottomOf="@+id/frag_fy">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/hour_fy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical"
-            android:text="Nature Of Work">
-
-            <TextView
-                android:textColor="@color/blackish"
-                android:id="@+id/date_fy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:padding="@dimen/margin_15dp"
-                android:text="Date" />
-
-            <ListView
-                android:id="@+id/list_date"
-                tools:listitem="@layout/simple_list_item_2"
-                android:padding="@dimen/space_10dp"
-                android:textColor="@color/blackish"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:divider="@color/transparent" />
-        </LinearLayout>
+            android:paddingTop="@dimen/margin_15dp"
+            android:paddingBottom="@dimen/space_10dp"
+            android:text="Date"
+            android:textColor="@color/blackish" />
 
         <View
-            android:layout_width="1dp"
+            android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="@color/blackish"/>
+            android:background="@color/blackish" />
 
-        <LinearLayout
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical"
-            android:text="Nature Of Work">
-
-            <TextView
-                android:textColor="@color/blackish"
-                android:id="@+id/act_fy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:padding="@dimen/margin_15dp"
-                android:text="Activities" />
-
-            <ListView
-                android:id="@+id/list_act"
-                android:padding="@dimen/space_10dp"
-                tools:listitem="@layout/simple_list_item_2"
-                android:text="@string/area2"
-                android:textColor="@color/blackish"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:divider="@color/transparent" />
-        </LinearLayout>
+            android:paddingTop="@dimen/margin_15dp"
+            android:paddingBottom="@dimen/margin_15dp"
+            android:text="Activities"
+            android:textColor="@color/blackish" />
 
         <View
-            android:layout_width="1dp"
+            android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="@color/blackish"/>
+            android:background="@color/blackish" />
 
-        <LinearLayout
+        <TextView
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/hour_fy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:paddingTop="@dimen/margin_15dp"
-                android:paddingBottom="@dimen/margin_15dp"
-                android:text="Completed Hours"
-                android:textColor="@color/blackish" />
-
-            <ListView
-                android:padding="@dimen/space_10dp"
-                android:id="@+id/list_hours"
-                tools:listitem="@layout/simple_list_item_2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:divider="@color/transparent" />
-        </LinearLayout>
+            android:paddingTop="@dimen/margin_15dp"
+            android:paddingBottom="@dimen/margin_15dp"
+            android:text="Completed Hours"
+            android:textColor="@color/blackish" />
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/univRecFy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/act_bg_lines"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/main_fy" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/areaRecFy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/act_bg_lines"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/main_fy" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/hoursRecFy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/act_bg_lines"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/main_fy" />
 </androidx.constraintlayout.widget.ConstraintLayout>

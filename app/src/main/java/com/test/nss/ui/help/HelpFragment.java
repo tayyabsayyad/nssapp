@@ -85,6 +85,8 @@ public class HelpFragment extends Fragment {
 
         TestAdapter mDbHelper = new TestAdapter(requireContext());
         mDbHelper.open();
+
+
         emailPo.setText(MessageFormat.format(getString(R.string.email) + " " + "{0}", mDbHelper.getHelpData().get(0)));
         contactPo.setText(MessageFormat.format(getString(R.string.contact_no) + " " + "{0}", mDbHelper.getHelpData().get(1)));
         mDbHelper.close();

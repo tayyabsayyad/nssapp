@@ -7,58 +7,110 @@
     tools:context=".syAct">
 
     <LinearLayout
-        android:id="@+id/nss_details"
+        android:id="@+id/frag_sy"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="5dp"
-        android:background="#FAFAFA"
+        android:background="@color/colorPrimary"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/halves_frame">
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/main_univ"
-            android:layout_weight="1"
+            android:id="@+id/main_univ_sy"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@android:color/transparent"
             android:enabled="true"
             android:text="@string/univ" />
 
         <View
-            android:id="@+id/main_lineone"
-            android:layout_width="1.5dp"
+            android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/blackish"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:background="@color/blackish" />
 
         <Button
-            android:id="@+id/main_area"
-            android:layout_weight="1"
+            android:id="@+id/main_area_sy"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@android:color/transparent"
             android:text="@string/area2" />
 
         <View
-            android:id="@+id/main_linetwo"
-            android:layout_width="1.5dp"
+            android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/blackish"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:background="@color/blackish" />
 
         <Button
-            android:id="@+id/main_clg"
-            android:layout_weight="1"
+            android:id="@+id/main_clg_sy"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@android:color/transparent"
             android:text="@string/clg" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/main_sy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10dp"
+        android:background="@drawable/act_bg_lines"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frag_sy">
+
+        <TextView
+            android:id="@+id/hour_fy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingTop="@dimen/margin_15dp"
+            android:paddingBottom="@dimen/margin_15dp"
+            android:text="Date"
+            android:textColor="@color/blackish" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/blackish" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingTop="@dimen/margin_15dp"
+            android:paddingBottom="@dimen/margin_15dp"
+            android:text="Activities"
+            android:textColor="@color/blackish" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/blackish" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingTop="@dimen/margin_15dp"
+            android:paddingBottom="@dimen/margin_15dp"
+            android:text="Completed Hours"
+            android:textColor="@color/blackish" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/univRecSy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/act_bg_lines"
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/main_sy" />
 </androidx.constraintlayout.widget.ConstraintLayout>

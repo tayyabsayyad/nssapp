@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,7 +40,7 @@ public class MainFragment extends Fragment {
     Toolbar toolbar;
 
     FragmentManager fm;
-
+    FrameLayout halvesFrame;
     LinearLayout mainHeader;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -53,6 +54,8 @@ public class MainFragment extends Fragment {
 
         mu = root.findViewById(R.id.main_mu);
         mu.setTypeface(typefaceBold);
+
+        halvesFrame = root.findViewById(R.id.halves_frame);
 
         dbit = root.findViewById(R.id.main_dbit);
         dbit.setTypeface(typeface);
@@ -79,6 +82,8 @@ public class MainFragment extends Fragment {
                 line.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.GONE);
 
+                if (halvesFrame.getVisibility() == View.GONE)
+                    halvesFrame.setVisibility(View.VISIBLE);
                 FragmentManager fragmentManager = getChildFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.halves_frame, new fyAct()).addToBackStack(this.toString()).commit();
             }
@@ -94,6 +99,8 @@ public class MainFragment extends Fragment {
                 firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
                 line.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.GONE);
+                if (halvesFrame.getVisibility() == View.GONE)
+                    halvesFrame.setVisibility(View.VISIBLE);
 
                 FragmentManager fragmentManager = getChildFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.halves_frame, new syAct()).addToBackStack(this.toString()).commit();
@@ -112,6 +119,7 @@ public class MainFragment extends Fragment {
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 toolbar.setTitle(getString(R.string.main_frag));
                 toolbar.setVisibility(View.VISIBLE);
                 if (mainHeader.getVisibility() == View.GONE || mainHeader.getVisibility() == View.INVISIBLE) {
@@ -121,6 +129,7 @@ public class MainFragment extends Fragment {
                     fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     fm.popBackStack(this.toString(), 0);
                 }
+                halvesFrame.setVisibility(View.GONE);
                 resetColor();
             }
         });
