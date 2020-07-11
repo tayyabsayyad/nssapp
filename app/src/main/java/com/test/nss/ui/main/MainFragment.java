@@ -52,13 +52,11 @@ public class MainFragment extends Fragment {
         Typeface typefaceBold = Typeface.createFromAsset(requireActivity().getAssets(), "fonts/google_sans_bold.ttf");
         Typeface typeface = Typeface.createFromAsset(requireActivity().getAssets(), "fonts/google_sans.ttf");
 
-        mu = root.findViewById(R.id.main_mu);
-        mu.setTypeface(typefaceBold);
+
 
         halvesFrame = root.findViewById(R.id.halves_frame);
 
-        dbit = root.findViewById(R.id.main_dbit);
-        dbit.setTypeface(typeface);
+
 
         firstButton = root.findViewById(R.id.firstButton);
         secButton = root.findViewById(R.id.secButton);

@@ -20,7 +20,7 @@ MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         new Handler().postDelayed(() -> {
             Intent i = new Intent(MainActivity.this,
-                    welcome.class);
+                    startActivity.class);
             startActivity(i);
             finish();
         }, SPLASH_SCREEN_TIME_OUT);
