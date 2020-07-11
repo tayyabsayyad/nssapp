@@ -13,4 +13,14 @@
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="signUp">
+        <item name="android:layout_marginRight">18sp</item>
+        <item name="android:inputType">text</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColorHint">#66040404</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minHeight">45dp</item>
+    </style>
 </resources>

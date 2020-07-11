@@ -1,7 +1,7 @@
 package com.test.nss.ui.main;
 
+import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +32,6 @@ public class MainFragment extends Fragment {
     Button secButton;
 
     ImageView home;
-
-    TextView mu;
-    TextView dbit;
     TextView nssFY;
 
     Toolbar toolbar;
@@ -43,20 +40,15 @@ public class MainFragment extends Fragment {
     FrameLayout halvesFrame;
     LinearLayout mainHeader;
 
+    Context mContext;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_main, container, false);
-
+        mContext = requireContext();
         fm = requireActivity().getSupportFragmentManager();
 
-        Typeface typefaceBold = Typeface.createFromAsset(requireActivity().getAssets(), "fonts/google_sans_bold.ttf");
-        Typeface typeface = Typeface.createFromAsset(requireActivity().getAssets(), "fonts/google_sans.ttf");
-
-
-
         halvesFrame = root.findViewById(R.id.halves_frame);
-
-
 
         firstButton = root.findViewById(R.id.firstButton);
         secButton = root.findViewById(R.id.secButton);
@@ -74,9 +66,9 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 mainHeader.setVisibility(View.GONE);
                 firstButton.setTextColor(Color.WHITE);
-                firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
-                secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
-                secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
+                firstButton.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                secButton.setTextColor(ContextCompat.getColor(mContext, R.color.blackish));
+                secButton.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
                 line.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.GONE);
 
@@ -92,9 +84,9 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 mainHeader.setVisibility(View.GONE);
                 secButton.setTextColor(Color.WHITE);
-                secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
-                firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
-                firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
+                secButton.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                firstButton.setTextColor(ContextCompat.getColor(mContext, R.color.blackish));
+                firstButton.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
                 line.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.GONE);
                 if (halvesFrame.getVisibility() == View.GONE)
@@ -134,10 +126,10 @@ public class MainFragment extends Fragment {
     }
 
     private void resetColor() {
-        firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
-        firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
-        secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
-        secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
+        firstButton.setTextColor(ContextCompat.getColor(mContext, R.color.blackish));
+        firstButton.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
+        secButton.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
+        secButton.setTextColor(ContextCompat.getColor(mContext, R.color.blackish));
         line.setVisibility(View.GONE);
     }
 

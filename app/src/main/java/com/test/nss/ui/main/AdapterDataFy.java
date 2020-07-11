@@ -1,11 +1,11 @@
 package com.test.nss.ui.main;
 
-public class UnivListData {
+public class AdapterDataFy {
     private String date;
     private String act;
     private String hours;
 
-    public UnivListData(String date, String act, String hours) {
+    public AdapterDataFy(String date, String act, String hours) {
         this.date = date;
         this.act = act;
         this.hours = hours;

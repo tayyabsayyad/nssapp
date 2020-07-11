@@ -26,11 +26,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.api.RetrofitClient;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
@@ -100,6 +97,14 @@ public class startActivity extends AppCompatActivity {
 
         username.setAdapter(new ArrayAdapter<>(mContext, R.layout.drop_down_start, users));
 
+        startReg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent m = new Intent(mContext, SignupActivity.class);
+                startActivity(m);
+            }
+        });
+
         loginButton.setOnClickListener(view -> {
             if (!isEmpty(username) && !(isEmpty(password))) {
                 Log.e("Start", "onClick: Logging in...");
@@ -146,16 +151,17 @@ public class startActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                        Toast.makeText(startActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(startActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Please Connect to internet", Toast.LENGTH_SHORT).show();
                         Log.e("onFailure", "" + t.getMessage());
                     }
                 });
             } else {
                 if (isEmpty(username) && isEmpty(password)) {
                     Snackbar.make(view, "Enter the details", Snackbar.LENGTH_SHORT).show();
-                    username.requestFocus();
                     username.setText("");
                     password.setText("");
+                    username.requestFocus();
                 } else if (isEmpty(username)) {
                     username.setError("Enter username");
                     username.setText("");

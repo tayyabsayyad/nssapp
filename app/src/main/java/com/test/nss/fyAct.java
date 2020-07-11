@@ -15,12 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.test.nss.ui.main.AreaListDataFy;
-import com.test.nss.ui.main.HoursListData;
-import com.test.nss.ui.main.MyListAdapterAreaFy;
-import com.test.nss.ui.main.MyListAdapterHours;
-import com.test.nss.ui.main.MyListAdapterUniv;
-import com.test.nss.ui.main.UnivListData;
+import com.test.nss.ui.main.AdapterDataFy;
+import com.test.nss.ui.main.MyListAdapterFy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +38,10 @@ public class fyAct extends Fragment {
     RecyclerView areaRecFy;
     RecyclerView hoursRecFy;
 
+    List<AdapterDataFy> univListDataFy;
+    List<AdapterDataFy> adapterDataFy;
+    List<AdapterDataFy> hoursListDataFy;
+
     Button univAct;
     Button areaAct;
     Button hoursAct;
@@ -56,6 +56,11 @@ public class fyAct extends Fragment {
         root = inflater.inflate(R.layout.fragment_fy_act, container, false);
         mContext = requireContext();
 
+        // add data dynamically
+        adapterDataFy = fill_with_data();
+        hoursListDataFy = fill_with_data2();
+        univListDataFy = fill_with_data3();
+
         univ = root.findViewById(R.id.main_univ_fy);
         area = root.findViewById(R.id.main_area_fy);
         clg = root.findViewById(R.id.main_clg_fy);
@@ -65,10 +70,6 @@ public class fyAct extends Fragment {
         univRecFy = root.findViewById(R.id.univRecFy);
         areaRecFy = root.findViewById(R.id.areaRecFy);
         hoursRecFy = root.findViewById(R.id.hoursRecFy);
-
-        /*listView = root.findViewById(R.id.list_hours);
-        listView2 = root.findViewById(R.id.list_act);
-        listView3 = root.findViewById(R.id.list_date);*/
 
         return root;
     }
@@ -103,6 +104,7 @@ public class fyAct extends Fragment {
 
         area.setOnClickListener(v -> {
             mainFy.setVisibility(View.VISIBLE);
+
             univRecFy.setVisibility(View.GONE);
             areaRecFy.setVisibility(View.VISIBLE);
             hoursRecFy.setVisibility(View.GONE);
@@ -110,37 +112,26 @@ public class fyAct extends Fragment {
 
         clg.setOnClickListener(v -> {
             mainFy.setVisibility(View.VISIBLE);
+
             univRecFy.setVisibility(View.GONE);
             areaRecFy.setVisibility(View.GONE);
             hoursRecFy.setVisibility(View.VISIBLE);
         });
 
-        UnivListData[] univListData = new UnivListData[]{
-                new UnivListData("DD/MM/YYYY", "Activity 1", "00"),
-                new UnivListData("DD/MM/YYYY", "Activity 2", "00"),
-                new UnivListData("DD/MM/YYYY", "Activity 3", "00"),
-        };
-
-        HoursListData[] hoursListData = new HoursListData[]{
-                new HoursListData("DD/MM/YYYY", "Activity 1", "00")
-        };
-
-        RecyclerView recyclerViewUniv = (RecyclerView) root.findViewById(R.id.univRecFy);
-        MyListAdapterUniv adapterUniv = new MyListAdapterUniv(univListData);
+        RecyclerView recyclerViewUniv = root.findViewById(R.id.univRecFy);
+        MyListAdapterFy adapterUniv = new MyListAdapterFy(univListDataFy, mContext);
         recyclerViewUniv.setHasFixedSize(true);
         recyclerViewUniv.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewUniv.setAdapter(adapterUniv);
 
-        List<AreaListDataFy> areaListDataFy = fill_with_data();
-
-        RecyclerView recyclerViewArea = (RecyclerView) root.findViewById(R.id.areaRecFy);
-        MyListAdapterAreaFy adapterArea = new MyListAdapterAreaFy(areaListDataFy, mContext);
-        //recyclerViewArea.setHasFixedSize(true);
+        RecyclerView recyclerViewArea = root.findViewById(R.id.areaRecFy);
+        MyListAdapterFy adapterArea = new MyListAdapterFy(adapterDataFy, mContext);
+        recyclerViewArea.setHasFixedSize(true);
         recyclerViewArea.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewArea.setAdapter(adapterArea);
 
-        RecyclerView recyclerViewHours = (RecyclerView) root.findViewById(R.id.hoursRecFy);
-        MyListAdapterHours adapterHours = new MyListAdapterHours(hoursListData);
+        RecyclerView recyclerViewHours = root.findViewById(R.id.hoursRecFy);
+        MyListAdapterFy adapterHours = new MyListAdapterFy(hoursListDataFy, mContext);
         recyclerViewHours.setHasFixedSize(true);
         recyclerViewHours.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewHours.setAdapter(adapterHours);
@@ -156,18 +147,45 @@ public class fyAct extends Fragment {
         }*/
     }
 
-    public List<AreaListDataFy> fill_with_data() {
+    public List<AdapterDataFy> fill_with_data() {
 
-        List<AreaListDataFy> data = new ArrayList<>();
-
-        for (int i = 1; i <= 15; i++) {
-            data.add(new AreaListDataFy("DD/MM/YYYY", "Activity " + i, "00"));
-        }
+        // TODO: Switch to activity or new frag for showing more data
+        ArrayList<AdapterDataFy> data = new ArrayList<>();
         for (int i = 1; i <= 7; i++) {
-            data.add(new AreaListDataFy("", "", ""));
+            data.add(new AdapterDataFy("DD/MM/YYYY", "Activity " + i, "00"));
         }
-        //data.add(new AreaListDataFy("Batman vs Superman", "Following the destruction of Metropolis, Batman embarks on a personal vendetta against Superman ", R.drawable.ic_action_movie));
+        /*for (int i = 1; i <= 7; i++) {
+            data.add(new AdapterDataFy("", "", ""));
+        }*/
 
         return data;
+    }
+
+    public List<AdapterDataFy> fill_with_data2() {
+        ArrayList<AdapterDataFy> data2 = new ArrayList<>();
+
+        // TODO: Switch to activity or new frag for showing more data
+        for (int i = 1; i <= 3; i++) {
+            data2.add(new AdapterDataFy("DD/MM/YYYY", "Activity " + i, "00"));
+        }
+        /*for (int i = 1; i <= 7; i++) {
+            data.add(new AdapterDataFy("", "", ""));
+        }*/
+
+        return data2;
+    }
+
+    public List<AdapterDataFy> fill_with_data3() {
+        ArrayList<AdapterDataFy> data3 = new ArrayList<>();
+
+        // TODO: Switch to activity or new frag for showing more data
+        for (int i = 1; i <= 5; i++) {
+            data3.add(new AdapterDataFy("DD/MM/YYYY", "Activity " + i, "00"));
+        }
+        /*for (int i = 1; i <= 7; i++) {
+            data.add(new AdapterDataFy("", "", ""));
+        }*/
+
+        return data3;
     }
 }

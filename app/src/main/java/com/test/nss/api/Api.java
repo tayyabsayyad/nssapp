@@ -22,4 +22,17 @@ public interface Api {
 
     @GET("/diary/api/helpData/?format=json")
     Call<ResponseBody> getHelpData(@Header("Authorization") String token);
+
+    @POST("/diary/api/selfRegistration/")
+    @FormUrlEncoded
+    Call<ResponseBody> signup(
+            @Header("Authorization") String token,
+            @Field("First_name") String f_name,
+            @Field("Father_name") String fath_name,
+            @Field("Mother_name") String mom_name,
+            @Field("Last_name") String last_name,
+            @Field("VEC") String vec,
+            @Field("Email") String email,
+            @Field("college_name") String college_name
+    );
 }

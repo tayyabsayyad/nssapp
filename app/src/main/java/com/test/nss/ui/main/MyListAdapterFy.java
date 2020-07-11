@@ -15,12 +15,12 @@ import com.test.nss.R;
 import java.util.Collections;
 import java.util.List;
 
-public class MyListAdapterAreaFy extends RecyclerView.Adapter<MyListAdapterAreaFy.ViewHolder> {
-    //private AreaListDataFy[] listdata;
-    List<AreaListDataFy> list = Collections.emptyList();
+public class MyListAdapterFy extends RecyclerView.Adapter<MyListAdapterFy.ViewHolder> {
+    //private AdapterDataFy[] listdata;
+    List<AdapterDataFy> list = Collections.emptyList();
     Context mCon;
 
-    public MyListAdapterAreaFy(List<AreaListDataFy> list, Context mCon) {
+    public MyListAdapterFy(List<AdapterDataFy> list, Context mCon) {
         this.list = list;
         this.mCon = mCon;
     }
@@ -29,13 +29,12 @@ public class MyListAdapterAreaFy extends RecyclerView.Adapter<MyListAdapterAreaF
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem = layoutInflater.inflate(R.layout.adapter_view_area, parent, false);
+        View listItem = layoutInflater.inflate(R.layout.adapter_view_fy, parent, false);
         return new ViewHolder(listItem);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final AreaListDataFy areaListDataFy = list.get(position);
         holder.date.setText(list.get(position).getDate());
         holder.act.setText(list.get(position).getAct());
         holder.hours.setText(list.get(position).getHours());
@@ -46,13 +45,13 @@ public class MyListAdapterAreaFy extends RecyclerView.Adapter<MyListAdapterAreaF
         return list.size();
     }
 
-    public void insert(int position, AreaListDataFy data) {
+    public void insert(int position, AdapterDataFy data) {
         list.add(position, data);
         notifyItemInserted(position);
     }
 
     // Remove a RecyclerView item containing a specified Data object
-    public void remove(AreaListDataFy data) {
+    public void remove(AdapterDataFy data) {
         int position = list.indexOf(data);
         list.remove(position);
         notifyItemRemoved(position);
@@ -67,11 +66,11 @@ public class MyListAdapterAreaFy extends RecyclerView.Adapter<MyListAdapterAreaF
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.date = (TextView) itemView.findViewById(R.id.date_area);
-            this.act = (TextView) itemView.findViewById(R.id.act_area);
-            this.hours = (TextView) itemView.findViewById(R.id.hours_area);
+            this.date = itemView.findViewById(R.id.date);
+            this.act = itemView.findViewById(R.id.act);
+            this.hours = itemView.findViewById(R.id.hours);
 
-            linearLayout = (LinearLayout) itemView.findViewById(R.id.areaLinear);
+            linearLayout = itemView.findViewById(R.id.areaLinear);
         }
     }
 }
