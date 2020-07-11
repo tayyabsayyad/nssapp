@@ -1,4 +1,4 @@
-package com.test.nss;
+package com.test.nss.ui.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+
+import com.test.nss.R;
 
 public class syAct extends Fragment {
 

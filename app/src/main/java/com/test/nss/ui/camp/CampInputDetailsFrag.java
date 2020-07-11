@@ -1,4 +1,4 @@
-package com.test.nss;
+package com.test.nss.ui.camp;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import com.test.nss.R;
 
 public class CampInputDetailsFrag extends Fragment {
 

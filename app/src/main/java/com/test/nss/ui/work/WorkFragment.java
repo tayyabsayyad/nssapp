@@ -16,8 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.test.nss.R;
-import com.test.nss.WorkDetailsFirstFrag;
-import com.test.nss.WorkDetailsSecFrag;
 import com.test.nss.ui.main.MainFragment;
 
 public class WorkFragment extends Fragment {
@@ -47,17 +45,14 @@ public class WorkFragment extends Fragment {
         home = root.findViewById(R.id.homeButton);
         toolbar = requireActivity().findViewById(R.id.toolbar);
 
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MainFragment mainFragment = new MainFragment();
-                FragmentManager fragmentManager = getFragmentManager();
+        home.setOnClickListener(view1 -> {
+            MainFragment mainFragment = new MainFragment();
+            FragmentManager fragmentManager = getFragmentManager();
 
-                assert fragmentManager != null;
-                fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
-                toolbar.setTitle(getString(R.string.main_frag));
-                toolbar.setVisibility(View.VISIBLE);
-            }
+            assert fragmentManager != null;
+            fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
+            toolbar.setTitle(getString(R.string.main_frag));
+            toolbar.setVisibility(View.VISIBLE);
         });
         toolbar.setVisibility(View.GONE);
 
@@ -67,19 +62,16 @@ public class WorkFragment extends Fragment {
             secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
             secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
 
-            fm.beginTransaction().replace(R.id.work_details, new WorkDetailsFirstFrag()).addToBackStack("WorkFrag").commit();
+            fm.beginTransaction().replace(R.id.work_details, new WorkDetailsFirstFrag()).addToBackStack("MainFrag").commit();
         });
 
-        secButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                secButton.setTextColor(Color.WHITE);
-                secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
-                firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
-                firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
+        secButton.setOnClickListener(v -> {
+            secButton.setTextColor(Color.WHITE);
+            secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
+            firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
+            firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
 
-                fm.beginTransaction().replace(R.id.work_details, new WorkDetailsSecFrag()).addToBackStack("WorkFrag").commit();
-            }
+            fm.beginTransaction().replace(R.id.work_details, new WorkDetailsSecFrag()).addToBackStack("MainFrag").commit();
         });
     }
 

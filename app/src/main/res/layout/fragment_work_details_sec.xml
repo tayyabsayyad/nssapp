@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".WorkDetailsSecFrag">
+    tools:context=".ui.work.WorkDetailsSecFrag">
 
 
     <LinearLayout
@@ -16,83 +16,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:background="@color/colorPrimary"
-            android:padding="5dp"
-            android:layout_width="140dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/nature_of_work"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:background="@color/colorPrimary"
-            android:padding="5dp"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="Total hours"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="vertical"
-            android:text="@string/nature_of_work">
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:padding="@dimen/space_10dp"
+            android:text="@string/nature_of_work"
+            android:textColor="@color/white" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:padding="@dimen/space_10dp"
-                android:text="@string/completed_hours"
-                android:textColor="@color/white" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.8"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:padding="@dimen/space_10dp"
+            android:text="Total\nHours"
+            android:textColor="@color/white" />
 
-            <ListView
-                android:id="@+id/comp_hours"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:divider="@color/transparent" />
-        </LinearLayout>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:padding="@dimen/space_10dp"
+            android:text="@string/completed_hours"
+            android:textColor="@color/white" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:padding="@dimen/space_10dp"
-                android:text="@string/remaining_hours"
-                android:textColor="@color/white" />
-
-
-        </LinearLayout>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:padding="@dimen/space_10dp"
+            android:text="@string/remaining_hours"
+            android:textColor="@color/white" />
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/secWorkRec"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/act_bg_lines"
+        app:layout_constraintTop_toBottomOf="@+id/main" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

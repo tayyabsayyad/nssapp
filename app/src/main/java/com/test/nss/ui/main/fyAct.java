@@ -1,4 +1,4 @@
-package com.test.nss;
+package com.test.nss.ui.main;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,8 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.test.nss.ui.main.AdapterDataFy;
-import com.test.nss.ui.main.MyListAdapterFy;
+import com.test.nss.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,9 @@
-package com.test.nss;
+package com.test.nss.ui.camp;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -13,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import com.test.nss.R;
 
 
 public class CampDetailsDays extends Fragment {
@@ -42,22 +43,19 @@ public class CampDetailsDays extends Fragment {
         ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(requireContext(), R.array.days, android.R.layout.simple_list_item_1);
         listView.setAdapter(list);
         //Boolean ch1_checked = Boolean.valueOf(getArguments().getString("is_ch1"));
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String day = parent.getItemAtPosition(position).toString();
-                CampInputDetailsFrag campInputDetailsFrag = new CampInputDetailsFrag();
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            String day = parent.getItemAtPosition(position).toString();
+            CampInputDetailsFrag campInputDetailsFrag = new CampInputDetailsFrag();
 
-                Bundle args = new Bundle();
-                args.putString("whichDay", day);
-                args.putBoolean("is_ch1", is_ch1);
-                args.putBoolean("is_ch2", is_ch2);
-                args.putBoolean("is_ch3", is_ch3);
-                campInputDetailsFrag.setArguments(args);
-                Toast.makeText(getContext(), day, Toast.LENGTH_SHORT).show();
-                FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.camp_frag, campInputDetailsFrag).addToBackStack("CampFrag").commit();
-            }
+            Bundle args = new Bundle();
+            args.putString("whichDay", day);
+            args.putBoolean("is_ch1", is_ch1);
+            args.putBoolean("is_ch2", is_ch2);
+            args.putBoolean("is_ch3", is_ch3);
+            campInputDetailsFrag.setArguments(args);
+            Toast.makeText(getContext(), day, Toast.LENGTH_SHORT).show();
+            FragmentManager fragmentManager = getParentFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.camp_frag, campInputDetailsFrag).addToBackStack("CampFrag").commit();
         });
     }
 }

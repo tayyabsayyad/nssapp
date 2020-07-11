@@ -15,7 +15,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.test.nss.CampDetailsFrag;
 import com.test.nss.R;
 import com.test.nss.ui.main.MainFragment;
 

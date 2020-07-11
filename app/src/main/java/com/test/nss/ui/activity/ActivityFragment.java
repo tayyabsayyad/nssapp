@@ -2,6 +2,7 @@ package com.test.nss.ui.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,23 +35,21 @@ public class ActivityFragment extends Fragment {
     TextView clg_act;
     TextView area_act;
     LinearLayout act_list;
-
+    FragmentManager fm;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_activity, container, false);
 
         home = root.findViewById(R.id.homeButton);
         toolbar = requireActivity().findViewById(R.id.toolbar);
+        fm = requireActivity().getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStackImmediate("ActivityFrag", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fm.popBackStack(this.toString(), 0);
+        }
+
         firstButton = root.findViewById(R.id.firstButton);
         secButton = root.findViewById(R.id.secButton);
-        actDetails = root.findViewById(R.id.act_details);
-        act_list = root.findViewById(R.id.act_list);
-        area_act = root.findViewById(R.id.area_act);
-        line_main = root.findViewById(R.id.line_main);
-        line_main2 = root.findViewById(R.id.line_main2);
-        univ_act = root.findViewById(R.id.univ_act);
-        clg_act = root.findViewById(R.id.clg_act);
-
         return root;
     }
 
@@ -64,7 +63,8 @@ public class ActivityFragment extends Fragment {
             firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
             secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
             secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
-            actDetails.setVisibility(View.VISIBLE);
+
+            fm.beginTransaction().replace(R.id.act_list, new FirstHalfFrag()).addToBackStack("ActivityFrag").commit();
         });
 
         secButton.setOnClickListener(v -> {
@@ -72,7 +72,8 @@ public class ActivityFragment extends Fragment {
             secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
             firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
             firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
-            actDetails.setVisibility(View.VISIBLE);
+
+            fm.beginTransaction().replace(R.id.act_list, new SecHalfFrag()).addToBackStack("ActivityFrag").commit();
         });
 
         home.setOnClickListener(view1 -> {
@@ -84,13 +85,13 @@ public class ActivityFragment extends Fragment {
             toolbar.setTitle(getString(R.string.main_frag));
             toolbar.setVisibility(View.VISIBLE);
         });
+    }
 
-        area_act.setOnClickListener(v -> {
-            line_main.setVisibility(View.GONE);
-            univ_act.setVisibility(View.GONE);
-            line_main2.setVisibility(View.GONE);
-            clg_act.setVisibility(View.GONE);
-            act_list.setVisibility(View.VISIBLE);
-        });
+    public void onDetach() {
+        super.onDetach();
+        if (fm.getBackStackEntryCount() > 0) {
+            Log.e("ActivityFragment", "onDetach: " + fm.getBackStackEntryCount());
+            fm.popBackStack("ActivityFrag", 0);
+        }
     }
 }

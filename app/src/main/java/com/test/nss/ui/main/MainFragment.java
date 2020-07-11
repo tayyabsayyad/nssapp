@@ -20,8 +20,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.test.nss.R;
-import com.test.nss.fyAct;
-import com.test.nss.syAct;
 
 public class MainFragment extends Fragment {
 

@@ -48,8 +48,6 @@ public class HelpFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_help, container, false);
         helpMain = root.findViewById(R.id.help_main);
 
-        toolbar = requireActivity().findViewById(R.id.toolbar);
-
         home = root.findViewById(R.id.homeButton);
 
         poButton = root.findViewById(R.id.poButton);
@@ -70,6 +68,7 @@ public class HelpFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        toolbar = requireActivity().findViewById(R.id.toolbar);
         toolbar.setVisibility(View.GONE);
 
         home.setOnClickListener(v -> {
@@ -85,11 +84,16 @@ public class HelpFragment extends Fragment {
         });
 
         TestAdapter mDbHelper = new TestAdapter(requireContext());
+        mDbHelper.createDatabase();
         mDbHelper.open();
 
-
-        emailPo.setText(MessageFormat.format(getString(R.string.email) + " " + "{0}", mDbHelper.getHelpData().get(0)));
-        contactPo.setText(MessageFormat.format(getString(R.string.contact_no) + " " + "{0}", mDbHelper.getHelpData().get(1)));
+        if (mDbHelper.getHelpData().size() > 0) {
+            emailPo.setText(MessageFormat.format(getString(R.string.email) + " " + "{0}", mDbHelper.getHelpData().get(0)));
+            contactPo.setText(MessageFormat.format(getString(R.string.contact_no) + " " + "{0}", mDbHelper.getHelpData().get(1)));
+        } else {
+            emailPo.setText(getString(R.string.email));
+            contactPo.setText(getString(R.string.contact_no));
+        }
         mDbHelper.close();
 
         helpMain.setOnClickListener(v -> {

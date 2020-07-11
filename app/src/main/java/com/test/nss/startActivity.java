@@ -1,9 +1,11 @@
 package com.test.nss;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -11,7 +13,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.api.RetrofitClient;
@@ -101,13 +103,14 @@ public class startActivity extends AppCompatActivity {
 
         username.setAdapter(new ArrayAdapter<>(mContext, R.layout.drop_down_start, users));
 
-        startReg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent m = new Intent(mContext, SignupActivity.class);
-                startActivity(m);
-            }
+        startReg.setOnClickListener(v -> {
+            Intent m = new Intent(mContext, SignupActivity.class);
+            startActivity(m);
         });
+
+        ActivityCompat.requestPermissions(startActivity.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                1);
 
         loginButton.setOnClickListener(view -> {
             if (!isEmpty(username) && !(isEmpty(password))) {
@@ -184,6 +187,18 @@ public class startActivity extends AppCompatActivity {
 
     private boolean isEmpty(EditText e) {
         return e.getText().toString().trim().length() <= 0;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            } else {
+                finish();
+                Toast.makeText(mContext, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.test.nss;
+package com.test.nss.ui.work;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,25 +10,41 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.test.nss.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class WorkDetailsFirstFrag extends Fragment {
     View root;
     ListView compHours;
     FragmentManager fm;
+    List<AdapterDataWork> workListData;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_work_details_first, container, false);
+        workListData = firstHalfWorkData();
+
         return root;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        compHours = root.findViewById(R.id.comp_hours);
+
+        RecyclerView recyclerViewWork = root.findViewById(R.id.firstWorkRec);
+
+        WorkDataAdapter adapterWork = new WorkDataAdapter(workListData, requireContext());
+        recyclerViewWork.setHasFixedSize(true);
+        recyclerViewWork.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerViewWork.setAdapter(adapterWork);
         /*ArrayList<HashMap<String, String>> formList = new ArrayList<>();
 
         try {
@@ -90,5 +106,15 @@ public class WorkDetailsFirstFrag extends Fragment {
         super.onDetach();
         fm = requireActivity().getSupportFragmentManager();
         fm.popBackStack("WorkFrag", 0);
+    }
+
+    public List<AdapterDataWork> firstHalfWorkData() {
+        ArrayList<AdapterDataWork> data = new ArrayList<>();
+
+        // TODO: Switch to activity or new frag for showing more data
+        data.add(new AdapterDataWork("Area Based Project 1", "40", "00", "40"));
+        data.add(new AdapterDataWork("University/District", "10", "00", "10"));
+        data.add(new AdapterDataWork("College Work", "10", "00", "10"));
+        return data;
     }
 }

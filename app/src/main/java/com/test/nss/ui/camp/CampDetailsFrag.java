@@ -1,4 +1,4 @@
-package com.test.nss;
+package com.test.nss.ui.camp;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import com.test.nss.R;
 
 public class CampDetailsFrag extends Fragment {
 
@@ -44,28 +46,22 @@ public class CampDetailsFrag extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        go_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onDetach();
-                camp_main_details.setVisibility(View.VISIBLE);
-            }
+        go_back.setOnClickListener(v -> {
+            onDetach();
+            camp_main_details.setVisibility(View.VISIBLE);
         });
 
-        go_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CampDetailsDays campDetailsDays = new CampDetailsDays();
-                Bundle args = new Bundle();
-                args.putString("whichDay", whichDay);
-                args.putBoolean("is_ch1", ch1.isChecked());
-                args.putBoolean("is_ch2", ch2.isChecked());
-                args.putBoolean("is_ch3", ch3.isChecked());
-                campDetailsDays.setArguments(args);
+        go_next.setOnClickListener(v -> {
+            CampDetailsDays campDetailsDays = new CampDetailsDays();
+            Bundle args = new Bundle();
+            args.putString("whichDay", whichDay);
+            args.putBoolean("is_ch1", ch1.isChecked());
+            args.putBoolean("is_ch2", ch2.isChecked());
+            args.putBoolean("is_ch3", ch3.isChecked());
+            campDetailsDays.setArguments(args);
 
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsDays).addToBackStack("CampDetailsFrag").commit();
-            }
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsDays).addToBackStack("CampDetailsFrag").commit();
         });
     }
 }
