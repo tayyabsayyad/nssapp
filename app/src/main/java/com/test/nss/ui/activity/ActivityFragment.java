@@ -82,6 +82,7 @@ public class ActivityFragment extends Fragment {
             assert fragmentManager != null;
             fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
             toolbar.setTitle(getString(R.string.main_frag));
+            toolbar.setVisibility(View.VISIBLE);
         });
 
         area_act.setOnClickListener(v -> {

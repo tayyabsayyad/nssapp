@@ -61,10 +61,10 @@ public class ediary extends AppCompatActivity {
     }
 
     // TODO: What the app should do if back pressed
-    /*@Override
+    @Override
     public void onBackPressed() {
-        super.onBackPressed();
-    }*/
+        //super.onBackPressed();
+    }
 
     public void click(View view) {
         Toast.makeText(ediary.this, "Clicked First year", Toast.LENGTH_SHORT).show();

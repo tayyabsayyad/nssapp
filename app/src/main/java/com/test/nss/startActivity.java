@@ -72,6 +72,10 @@ public class startActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
 
+        IntentFilter z = new IntentFilter();
+        z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(checkConn, z);
+
         Spannable spannable = new SpannableStringBuilder("Need an account?");
         spannable.setSpan(
                 new ForegroundColorSpan(Color.BLACK),
@@ -128,9 +132,6 @@ public class startActivity extends AppCompatActivity {
                                 Intent i = new Intent(mContext, ediary.class);
                                 startActivity(i);
                                 finish();
-                                IntentFilter z = new IntentFilter();
-                                z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-                                registerReceiver(checkConn, z);
                             } else {
                                 if (response.errorBody() != null) {
                                     JSONObject j = new JSONObject(response.errorBody().string());

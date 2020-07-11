@@ -110,6 +110,11 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     private boolean isEmpty(EditText e) {
         return e.getText().toString().trim().length() <= 0;
     }

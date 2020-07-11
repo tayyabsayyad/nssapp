@@ -80,6 +80,7 @@ public class HelpFragment extends Fragment {
             fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment).addToBackStack("HelpFrag").commit();
 
             toolbar.setTitle(getString(R.string.main_frag));
+            toolbar.setVisibility(View.VISIBLE);
             onDetach();
         });
 
