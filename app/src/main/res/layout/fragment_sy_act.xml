@@ -10,8 +10,8 @@
         android:id="@+id/frag_sy"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/colorPrimary"
         android:orientation="horizontal"
+        android:background="@drawable/act_bg_lines"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

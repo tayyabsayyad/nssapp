@@ -2,24 +2,25 @@ package com.test.nss.ui.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.test.nss.R;
 import com.test.nss.ui.main.MainFragment;
+
+import static com.test.nss.ediary.blackish;
+import static com.test.nss.ediary.primaryCol;
+import static com.test.nss.ediary.transparent;
 
 public class ActivityFragment extends Fragment {
 
@@ -28,17 +29,15 @@ public class ActivityFragment extends Fragment {
     ImageView home;
     Button firstButton;
     Button secButton;
-    LinearLayout actDetails;
-    View line_main;
-    View line_main2;
-    TextView univ_act;
-    TextView clg_act;
-    TextView area_act;
-    LinearLayout act_list;
+
     FragmentManager fm;
+    TextView toolbarTitle;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_activity, container, false);
+        toolbarTitle = requireActivity().findViewById(R.id.titleTool);
+        toolbarTitle.setText(getString(R.string.main_frag));
 
         home = root.findViewById(R.id.homeButton);
         toolbar = requireActivity().findViewById(R.id.toolbar);
@@ -60,18 +59,18 @@ public class ActivityFragment extends Fragment {
 
         firstButton.setOnClickListener(v -> {
             firstButton.setTextColor(Color.WHITE);
-            firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
-            secButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
-            secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
+            firstButton.setBackgroundColor(primaryCol);
+            secButton.setTextColor(blackish);
+            secButton.setBackgroundColor(transparent);
 
             fm.beginTransaction().replace(R.id.act_list, new FirstHalfFrag()).addToBackStack("ActivityFrag").commit();
         });
 
         secButton.setOnClickListener(v -> {
             secButton.setTextColor(Color.WHITE);
-            secButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
-            firstButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackish));
-            firstButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent));
+            secButton.setBackgroundColor(primaryCol);
+            firstButton.setTextColor(blackish);
+            firstButton.setBackgroundColor(transparent);
 
             fm.beginTransaction().replace(R.id.act_list, new SecHalfFrag()).addToBackStack("ActivityFrag").commit();
         });
@@ -82,7 +81,7 @@ public class ActivityFragment extends Fragment {
 
             assert fragmentManager != null;
             fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment, mainFragment.getTag()).commit();
-            toolbar.setTitle(getString(R.string.main_frag));
+            //toolbar.setTitle(getString(R.string.main_frag));
             toolbar.setVisibility(View.VISIBLE);
         });
     }
@@ -90,7 +89,7 @@ public class ActivityFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         if (fm.getBackStackEntryCount() > 0) {
-            Log.e("ActivityFragment", "onDetach: " + fm.getBackStackEntryCount());
+            //Log.e("ActivityFragment", "onDetach: " + fm.getBackStackEntryCount());
             fm.popBackStack("ActivityFrag", 0);
         }
     }

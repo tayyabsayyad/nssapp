@@ -41,7 +41,7 @@
                 android:layout_gravity="center"
                 android:text="@string/nss_first_year"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="@dimen/text_18sp" />
         </LinearLayout>
     </LinearLayout>
 

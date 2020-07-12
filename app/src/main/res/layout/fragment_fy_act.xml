@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal"
+        android:background="@drawable/act_bg_lines"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,10 +27,10 @@
 
         <View
             android:id="@+id/act_line"
-            android:layout_width="1dp"
+            android:layout_width="0.6dp"
             android:background="@color/blackish"
             android:layout_height="match_parent"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/main_area_fy"
@@ -41,10 +42,10 @@
 
         <View
             android:id="@+id/act_line2"
-            android:layout_width="1dp"
+            android:layout_width="0.6dp"
             android:background="@color/blackish"
             android:layout_height="match_parent"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/main_clg_fy"
@@ -68,7 +69,6 @@
         app:layout_constraintTop_toBottomOf="@+id/frag_fy">
 
         <TextView
-            android:id="@+id/hour_fy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -41,11 +41,16 @@ public class HelpFragment extends Fragment {
     LinearLayout poDetails;
     LinearLayout lead1Details;
     LinearLayout lead2Details;
+    TextView toolbarTitle;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_help, container, false);
+
+        toolbarTitle = requireActivity().findViewById(R.id.titleTool);
+        toolbarTitle.setText(getString(R.string.main_frag));
+
         helpMain = root.findViewById(R.id.help_main);
 
         home = root.findViewById(R.id.homeButton);

@@ -15,11 +15,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.test.nss.R;
+import com.test.nss.ediary;
+
+import static com.test.nss.ediary.blackish;
+import static com.test.nss.ediary.primaryCol;
+import static com.test.nss.ediary.transparent;
 
 public class MainFragment extends Fragment {
 
@@ -39,11 +43,17 @@ public class MainFragment extends Fragment {
     LinearLayout mainHeader;
 
     Context mContext;
+    TextView toolbarTitle;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_main, container, false);
+
         mContext = requireContext();
+
+        toolbarTitle = requireActivity().findViewById(R.id.titleTool);
+        toolbarTitle.setText(getString(R.string.main_frag));
+
         fm = requireActivity().getSupportFragmentManager();
 
         halvesFrame = root.findViewById(R.id.halves_frame);
@@ -64,9 +74,11 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 mainHeader.setVisibility(View.GONE);
                 firstButton.setTextColor(Color.WHITE);
-                firstButton.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
-                secButton.setTextColor(ContextCompat.getColor(mContext, R.color.blackish));
-                secButton.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
+
+                firstButton.setBackgroundColor(primaryCol);
+                secButton.setTextColor(ediary.blackish);
+                secButton.setBackgroundColor(transparent);
+
                 line.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.GONE);
 
@@ -82,9 +94,10 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 mainHeader.setVisibility(View.GONE);
                 secButton.setTextColor(Color.WHITE);
-                secButton.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
-                firstButton.setTextColor(ContextCompat.getColor(mContext, R.color.blackish));
-                firstButton.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
+                secButton.setBackgroundColor(primaryCol);
+                firstButton.setTextColor(blackish);
+                firstButton.setBackgroundColor(transparent);
+
                 line.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.GONE);
                 if (halvesFrame.getVisibility() == View.GONE)
@@ -124,10 +137,10 @@ public class MainFragment extends Fragment {
     }
 
     private void resetColor() {
-        firstButton.setTextColor(ContextCompat.getColor(mContext, R.color.blackish));
-        firstButton.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
-        secButton.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
-        secButton.setTextColor(ContextCompat.getColor(mContext, R.color.blackish));
+        firstButton.setTextColor(blackish);
+        firstButton.setBackgroundColor(transparent);
+        secButton.setBackgroundColor(transparent);
+        secButton.setTextColor(blackish);
         line.setVisibility(View.GONE);
     }
 

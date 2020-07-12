@@ -1,13 +1,13 @@
 package com.test.nss.ui.main;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,15 +20,15 @@ import com.test.nss.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.test.nss.ediary.primaryCol;
+import static com.test.nss.ediary.transparent;
+
 public class fyAct extends Fragment {
 
     View root;
     Button univ;
     Button area;
     Button clg;
-    ListView listView;
-    ListView listView2;
-    ListView listView3;
 
     LinearLayout mainFy;
     Context mContext;
@@ -40,13 +40,6 @@ public class fyAct extends Fragment {
     List<AdapterDataFy> univListDataFy;
     List<AdapterDataFy> adapterDataFy;
     List<AdapterDataFy> hoursListDataFy;
-
-    Button univAct;
-    Button areaAct;
-    Button hoursAct;
-
-    View line;
-    View line2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,6 +92,13 @@ public class fyAct extends Fragment {
             univRecFy.setVisibility(View.VISIBLE);
             areaRecFy.setVisibility(View.GONE);
             hoursRecFy.setVisibility(View.GONE);
+
+            univ.setBackgroundColor(primaryCol);
+            univ.setTextColor(Color.WHITE);
+            area.setBackgroundColor(transparent);
+            area.setTextColor(Color.BLACK);
+            clg.setBackgroundColor(transparent);
+            clg.setTextColor(Color.BLACK);
         });
 
         area.setOnClickListener(v -> {
@@ -107,6 +107,13 @@ public class fyAct extends Fragment {
             univRecFy.setVisibility(View.GONE);
             areaRecFy.setVisibility(View.VISIBLE);
             hoursRecFy.setVisibility(View.GONE);
+
+            area.setBackgroundColor(primaryCol);
+            area.setTextColor(Color.WHITE);
+            univ.setBackgroundColor(transparent);
+            univ.setTextColor(Color.BLACK);
+            clg.setBackgroundColor(transparent);
+            clg.setTextColor(Color.BLACK);
         });
 
         clg.setOnClickListener(v -> {
@@ -115,6 +122,13 @@ public class fyAct extends Fragment {
             univRecFy.setVisibility(View.GONE);
             areaRecFy.setVisibility(View.GONE);
             hoursRecFy.setVisibility(View.VISIBLE);
+
+            clg.setBackgroundColor(primaryCol);
+            clg.setTextColor(Color.WHITE);
+            univ.setBackgroundColor(transparent);
+            univ.setTextColor(Color.BLACK);
+            area.setBackgroundColor(transparent);
+            area.setTextColor(Color.BLACK);
         });
 
         RecyclerView recyclerViewUniv = root.findViewById(R.id.univRecFy);

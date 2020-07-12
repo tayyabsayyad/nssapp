@@ -21,6 +21,10 @@ import static com.test.nss.startActivity.AUTH_TOKEN;
 
 public class ediary extends AppCompatActivity {
 
+    public static int blackish;
+    public static int transparent;
+    public static int primaryCol;
+
     AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
     Button logout;
@@ -32,6 +36,10 @@ public class ediary extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ediary);
         fm = getSupportFragmentManager();
+
+        blackish = this.getColor(R.color.blackish);
+        transparent = this.getColor(R.color.transparent);
+        primaryCol = this.getColor(R.color.colorPrimary);
 
         Toast.makeText(this, AUTH_TOKEN, Toast.LENGTH_SHORT).show();
         drawer = findViewById(R.id.drawer_layout);

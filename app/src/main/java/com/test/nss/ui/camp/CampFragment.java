@@ -28,15 +28,21 @@ public class CampFragment extends Fragment {
     FragmentManager fm;
     LinearLayout camp_main_details;
 
+    TextView toolbarTitle;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_camp, container, false);
+
+        toolbarTitle = requireActivity().findViewById(R.id.titleTool);
+        toolbarTitle.setText(getString(R.string.main_frag));
+
         fm = requireActivity().getSupportFragmentManager();
 
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.popBackStack(this.toString(), 0);
+            fm.popBackStack("CampFrag", 0);
         }
         return root;
     }
@@ -51,7 +57,7 @@ public class CampFragment extends Fragment {
         camp_main_details = root.findViewById(R.id.camp_main_details);
 
         toolbar.setVisibility(View.GONE);
-        camp_main_details.setVisibility(View.VISIBLE);
+        //camp_main_details.setVisibility(View.VISIBLE);
 
         home.setOnClickListener(view1 -> {
             MainFragment mainFragment = new MainFragment();
@@ -72,7 +78,7 @@ public class CampFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        camp_main_details.setVisibility(View.VISIBLE);
+        camp_main_details.setVisibility(View.GONE);
         super.onDetach();
         if (fm.getBackStackEntryCount() > 0) {
             Log.e("CampFrag", "onDetach: " + fm.getBackStackEntryCount());

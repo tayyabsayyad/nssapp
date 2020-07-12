@@ -20,6 +20,6 @@
     android:layout_height="wrap_content"
     android:textColor="@color/blackish"
     android:background="@color/transparent"
-    android:padding="10dp"
+    android:padding="@dimen/space_10dp"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:gravity="center"/>

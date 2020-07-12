@@ -1,6 +1,7 @@
 package com.test.nss.ui.camp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,8 +48,8 @@ public class CampDetailsFrag extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         go_back.setOnClickListener(v -> {
-            onDetach();
             camp_main_details.setVisibility(View.VISIBLE);
+            onDetach();
         });
 
         go_next.setOnClickListener(v -> {
@@ -61,7 +62,18 @@ public class CampDetailsFrag extends Fragment {
             campDetailsDays.setArguments(args);
 
             FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsDays).addToBackStack("CampDetailsFrag").commit();
+            fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsDays).addToBackStack("CampFrag").commit();
         });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        FragmentManager fm = requireActivity().getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            Log.e("CampFrag", "onDetach: " + fm.getBackStackEntryCount());
+            fm.popBackStackImmediate(null, 0);
+            fm.popBackStack("CampFrag", 0);
+        }
     }
 }

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="Log in to your account "
         android:textAllCaps="true"
-        android:textSize="18sp"
+        android:textSize="@dimen/text_18sp"
         android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +39,7 @@
             android:maxLength="40"
             android:textColorHint="#B4B4B4"
             android:padding="8dp"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_14sp" />
 
     </LinearLayout>
 
@@ -66,7 +66,7 @@
             android:padding="8dp"
             android:textColorHint="#B4B4B4"
             android:textColor="@color/blackGrey"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:orientation="horizontal"
-        android:padding="10dp"
+        android:padding="@dimen/space_10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
@@ -135,7 +135,6 @@
             android:layout_marginBottom="10dp"
             android:gravity="center"
             android:paddingBottom="5dp"
-            android:text="HAHA"
             android:textAllCaps="false"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold" />

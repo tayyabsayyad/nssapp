@@ -92,7 +92,7 @@ public class CampInputDetailsFrag extends Fragment {
         FragmentManager fm = getParentFragmentManager();
         Log.e("CampInputDetailsFrag", "onDetach: " + fm.getBackStackEntryCount());
         if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack("CampFragment", 0);
+            fm.popBackStack("CampFrag", 0);
         }
     }
 }
