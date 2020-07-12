@@ -51,6 +51,8 @@ public class CampFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         home = root.findViewById(R.id.homeButton);
+        home.setVisibility(View.VISIBLE);
+
         toolbar = requireActivity().findViewById(R.id.toolbar);
         camp_days = root.findViewById(R.id.camp_days);
         camp_act = root.findViewById(R.id.camp_act);

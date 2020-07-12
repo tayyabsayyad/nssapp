@@ -75,7 +75,7 @@ public class HelpFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         toolbar = requireActivity().findViewById(R.id.toolbar);
         toolbar.setVisibility(View.GONE);
-
+        home.setVisibility(View.VISIBLE);
         home.setOnClickListener(v -> {
             MainFragment mainFragment = new MainFragment();
             FragmentManager fragmentManager = getFragmentManager();

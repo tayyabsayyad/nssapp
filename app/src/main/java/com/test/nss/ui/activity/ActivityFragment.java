@@ -56,7 +56,7 @@ public class ActivityFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         toolbar.setVisibility(View.GONE);
-
+        home.setVisibility(View.VISIBLE);
         firstButton.setOnClickListener(v -> {
             firstButton.setTextColor(Color.WHITE);
             firstButton.setBackgroundColor(primaryCol);

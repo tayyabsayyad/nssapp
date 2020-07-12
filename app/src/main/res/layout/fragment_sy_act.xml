@@ -26,7 +26,7 @@
             android:text="@string/univ" />
 
         <View
-            android:layout_width="1dp"
+            android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@color/blackish" />
 
@@ -39,7 +39,7 @@
             android:text="@string/area2" />
 
         <View
-            android:layout_width="1dp"
+            android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@color/blackish" />
 
@@ -61,6 +61,7 @@
         android:background="@drawable/act_bg_lines"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frag_sy">
 

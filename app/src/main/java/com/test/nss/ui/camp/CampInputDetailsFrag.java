@@ -63,12 +63,12 @@ public class CampInputDetailsFrag extends Fragment {
             checkbox1.setVisibility(View.VISIBLE);
         }
         if (isCh1 && isCh3) {
-            checkbox2.setVisibility(View.VISIBLE);
+            checkbox3.setVisibility(View.VISIBLE);
             checkbox1.setVisibility(View.VISIBLE);
         }
         if (isCh2 && isCh3) {
             checkbox2.setVisibility(View.VISIBLE);
-            checkbox1.setVisibility(View.VISIBLE);
+            checkbox3.setVisibility(View.VISIBLE);
         }
         if (isCh1) {
             checkbox1.setVisibility(View.VISIBLE);
@@ -94,5 +94,7 @@ public class CampInputDetailsFrag extends Fragment {
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack("CampFrag", 0);
         }
+        //toolbar.setTitle(getString(R.string.main_frag));
+        //toolbar.setVisibility(View.VISIBLE);
     }
 }

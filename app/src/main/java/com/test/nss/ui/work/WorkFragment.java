@@ -52,7 +52,7 @@ public class WorkFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         home = root.findViewById(R.id.homeButton);
         toolbar = requireActivity().findViewById(R.id.toolbar);
-
+        home.setVisibility(View.VISIBLE);
         home.setOnClickListener(view1 -> {
             MainFragment mainFragment = new MainFragment();
             FragmentManager fragmentManager = getFragmentManager();

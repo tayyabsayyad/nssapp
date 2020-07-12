@@ -72,6 +72,7 @@ public class MainFragment extends Fragment {
         firstButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                home.setVisibility(View.VISIBLE);
                 mainHeader.setVisibility(View.GONE);
                 firstButton.setTextColor(Color.WHITE);
 
@@ -92,6 +93,7 @@ public class MainFragment extends Fragment {
         secButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                home.setVisibility(View.VISIBLE);
                 mainHeader.setVisibility(View.GONE);
                 secButton.setTextColor(Color.WHITE);
                 secButton.setBackgroundColor(primaryCol);
@@ -117,6 +119,7 @@ public class MainFragment extends Fragment {
         home = root.findViewById(R.id.homeButton);
         toolbar = requireActivity().findViewById(R.id.toolbar);
 
+        home.setVisibility(View.INVISIBLE);
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
