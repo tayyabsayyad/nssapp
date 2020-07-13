@@ -3,7 +3,6 @@ package com.test.nss;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -53,14 +52,11 @@ public class startActivity extends AppCompatActivity {
 
     ArrayList<String> users;
 
-    CheckConn checkConn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-
-        checkConn = new CheckConn();
 
         mContext = startActivity.this;
 
@@ -73,10 +69,6 @@ public class startActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginText);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
-
-        IntentFilter z = new IntentFilter();
-        z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(checkConn, z);
 
         Spannable spannable = new SpannableStringBuilder("Need an account?");
         spannable.setSpan(
@@ -199,11 +191,5 @@ public class startActivity extends AppCompatActivity {
                 Toast.makeText(mContext, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(checkConn);
     }
 }

@@ -1,6 +1,7 @@
 package com.test.nss;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,7 @@ public class ediary extends AppCompatActivity {
     public static int blackish;
     public static int transparent;
     public static int primaryCol;
+    private CheckConn checkConn;
 
     AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
@@ -36,6 +38,12 @@ public class ediary extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ediary);
         fm = getSupportFragmentManager();
+
+        checkConn = new CheckConn();
+
+        IntentFilter z = new IntentFilter();
+        z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(checkConn, z);
 
         blackish = this.getColor(R.color.blackish);
         transparent = this.getColor(R.color.transparent);
@@ -71,7 +79,7 @@ public class ediary extends AppCompatActivity {
     // TODO: What the app should do if back pressed
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        //super.onBackPressed();
     }
 
     public void click(View view) {
@@ -87,5 +95,11 @@ public class ediary extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(checkConn);
     }
 }

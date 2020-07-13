@@ -17,8 +17,8 @@ public interface Api {
             @Field("password") String password
     );
 
-    @GET("/diary/api/dailyactivity")
-    Call<ResponseBody> getAct(@Header("Authorization") String token);
+    @GET("/diary/api/campdetails")
+    Call<ResponseBody> getCampDetails(@Header("Authorization") String token);
 
     @GET("/diary/api/helpData/?format=json")
     Call<ResponseBody> getHelpData(@Header("Authorization") String token);
@@ -31,8 +31,11 @@ public interface Api {
             @Field("Father_name") String fath_name,
             @Field("Mother_name") String mom_name,
             @Field("Last_name") String last_name,
-            @Field("VEC") String vec,
+            @Field("DateOfRegistration") String vec,
             @Field("Email") String email,
             @Field("college_name") String college_name
     );
+
+    @GET("/diary/api/collegenames/")
+    Call<ResponseBody> getClgList(@Header("Authorization") String token);
 }

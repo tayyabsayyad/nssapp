@@ -24,6 +24,7 @@ public class CampFragment extends Fragment {
     ImageView home;
 
     TextView camp_days;
+    TextView camp_details;
     TextView camp_act;
     FragmentManager fm;
     LinearLayout camp_main_details;
@@ -57,6 +58,7 @@ public class CampFragment extends Fragment {
         camp_days = root.findViewById(R.id.camp_days);
         camp_act = root.findViewById(R.id.camp_act);
         camp_main_details = root.findViewById(R.id.camp_main_details);
+        camp_details = root.findViewById(R.id.camp_details);
 
         toolbar.setVisibility(View.GONE);
         //camp_main_details.setVisibility(View.VISIBLE);
@@ -75,6 +77,11 @@ public class CampFragment extends Fragment {
             camp_main_details.setVisibility(View.GONE);
             //fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsFrag).addToBackStack("CampFragment").commit();
             fm.beginTransaction().replace(R.id.camp_frag, new CampDetailsFrag()).addToBackStack("CampFrag").commit();
+        });
+
+        camp_details.setOnClickListener(view1 -> {
+            camp_main_details.setVisibility(View.GONE);
+            fm.beginTransaction().replace(R.id.camp_frag, new CampDetails()).addToBackStack("CampFrag").commit();
         });
     }
 

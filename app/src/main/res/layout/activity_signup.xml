@@ -99,11 +99,9 @@
                 android:id="@+id/dropdown_clg"
                 style="@style/signUp"
                 android:layout_width="0dp"
-                android:layout_height="45dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/signup_roundbg"
-                android:gravity="center"
-                android:paddingStart="18dp" />
+                android:background="@drawable/signup_roundbg" />
         </LinearLayout>
 
         <EditText

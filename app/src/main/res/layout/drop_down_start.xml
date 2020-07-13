@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
-    android:padding="@dimen/margin_15dp"
-    android:layout_width="wrap_content"
+    style="?android:attr/spinnerDropDownItemStyle"
     android:gravity="center"
     android:textColor="@color/grey"
-    android:background="@color/transparent"
-    android:layout_height="wrap_content"
-    android:minWidth="200dp"/>
+    android:layout_width="match_parent"
+    android:layout_height="?attr/dropdownListPreferredItemHeight"
+    android:ellipsize="marquee"
+    android:singleLine="true"
+    android:textAlignment="center" />
