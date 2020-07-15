@@ -20,22 +20,48 @@ public interface Api {
     @GET("/diary/api/campdetails")
     Call<ResponseBody> getCampDetails(@Header("Authorization") String token);
 
-    @GET("/diary/api/helpData/?format=json")
-    Call<ResponseBody> getHelpData(@Header("Authorization") String token);
+    @GET("/diary/api/PoDetials/")
+    Call<ResponseBody> getPoData(@Header("Authorization") String token);
 
     @POST("/diary/api/selfRegistration/")
     @FormUrlEncoded
     Call<ResponseBody> signup(
-            @Header("Authorization") String token,
-            @Field("First_name") String f_name,
-            @Field("Father_name") String fath_name,
-            @Field("Mother_name") String mom_name,
-            @Field("Last_name") String last_name,
-            @Field("DateOfRegistration") String vec,
+            @Field("State") String state,
+            @Field("DateOfRegistration") String dof,
+            @Field("FirstName") String f_name,
+            @Field("FatherName") String fath_name,
+            @Field("MotherName") String mom_name,
+            @Field("LastName") String last_name,
+            @Field("VEC") String vec,
             @Field("Email") String email,
-            @Field("college_name") String college_name
+            @Field("CollegeName") String college_name,
+            @Field("Contact") String contact
     );
 
     @GET("/diary/api/collegenames/")
-    Call<ResponseBody> getClgList(@Header("Authorization") String token);
+    Call<ResponseBody> getClgList();
+
+    @POST("/api/token/logout/")
+    Call<Void> delToken(@Header("Authorization") String token);
+
+    @GET("/diary/api/campactivitylist/")
+    Call<ResponseBody> getCampList(@Header("Authorization") String token);
+
+    @POST("diary/api/campactivities/")
+    @FormUrlEncoded
+    Call<ResponseBody> sendCampDetail(
+            @Header("Authorization") String token,
+            @Field("CollegeName") String clgName,
+            @Field("CampActivityDescription") String desc,
+            @Field("Day") int day,
+            @Field("VEC") String vec,
+            @Field("State") String state,
+            @Field("CampActivityTitle") String campTitle
+    );
+
+    @GET("/diary/api/campactivities/")
+    Call<ResponseBody> getCampActListAll(@Header("Authorization") String token);
+
+    @GET("/diary/api/allactivites/")
+    Call<ResponseBody> getActList(@Header("Authorization") String token);
 }

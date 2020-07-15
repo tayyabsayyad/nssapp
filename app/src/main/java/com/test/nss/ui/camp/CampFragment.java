@@ -76,12 +76,17 @@ public class CampFragment extends Fragment {
         camp_act.setOnClickListener(v -> {
             camp_main_details.setVisibility(View.GONE);
             //fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsFrag).addToBackStack("CampFragment").commit();
-            fm.beginTransaction().replace(R.id.camp_frag, new CampDetailsFrag()).addToBackStack("CampFrag").commit();
+            fm.beginTransaction().replace(R.id.camp_frag, new CampDetailsFrag(), "CampDetailsFrag").addToBackStack("CampFrag").commit();
         });
 
         camp_details.setOnClickListener(view1 -> {
             camp_main_details.setVisibility(View.GONE);
-            fm.beginTransaction().replace(R.id.camp_frag, new CampDetails()).addToBackStack("CampFrag").commit();
+            fm.beginTransaction().replace(R.id.camp_frag, new CampDetails(), "CampDetails").addToBackStack("CampFrag").commit();
+        });
+
+        camp_days.setOnClickListener(view2 -> {
+            camp_main_details.setVisibility(View.GONE);
+            fm.beginTransaction().replace(R.id.camp_frag, new CampActListDetails(), "CampList").addToBackStack("CampFrag").commit();
         });
     }
 

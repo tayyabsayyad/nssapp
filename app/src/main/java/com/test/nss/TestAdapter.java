@@ -70,16 +70,18 @@ public class TestAdapter {
         }
     }
 
-    public void insertHelpData(String post, String name, String email, String contact) {
+    public void insertHelpData(String clgName,
+                               String post, String name, String email,
+                               String contact, String entryYear) {
         try {
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("CollegeName", "");
+            contentValues.put("CollegeName", clgName);
             contentValues.put("Post", post);
             contentValues.put("Name", name);
             contentValues.put("EmailID", email);
             contentValues.put("Contact", contact);
-            contentValues.put("Entry_year", "");
+            contentValues.put("Entry_year", entryYear);
             long row = mDb.insert("Help", null, contentValues);
             if (row != -1)
                 Log.i(TAG, "Entered data");
@@ -93,8 +95,7 @@ public class TestAdapter {
     public void insertCampDetails(String clgName, String campFrom,
                                   String campTo, String campVen,
                                   String campPost, String campTal, String campDist) {
-        //String sql = "DELETE FROM CampDetails";
-        //mDb.execSQL(sql);
+
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -132,6 +133,110 @@ public class TestAdapter {
                 }*/
             }
             return mCur;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public void insertCampActList(String campActName) {
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("CampActivityName", campActName);
+
+            long row = mDb.insert("CampActivityList", null, contentValues);
+            if (row != -1)
+                Log.i(TAG, "Entered data to CampActivityList");
+            else
+                Log.e(TAG, "Something went wrong");
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
+
+    public void insertCampActListAll(String campActTitle, String campActDec, String day) {
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("CampActivityTitle", campActTitle);
+            contentValues.put("CampActivityDescription", campActDec);
+            contentValues.put("CampDay", day);
+
+            long row = mDb.insert("CampActivities", null, contentValues);
+            if (row != -1)
+                Log.i(TAG, "Entered data to CampActivities");
+            else
+                Log.e(TAG, "Something went wrong");
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
+
+    public void insertAct(String clgName, String actType, String actName,
+                          String hours, String assignedDate) {
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("College_Name", clgName);
+            contentValues.put("activityType", actType);
+            contentValues.put("ActivityName", actName);
+            contentValues.put("HoursAssigned", hours);
+            contentValues.put("AssignedDate", assignedDate);
+
+            long row = mDb.insert("ActivityListByAdmin", null, contentValues);
+            if (row != -1)
+                Log.i(TAG, "Entered data to ActivityListByAdmin");
+            else
+                Log.e(TAG, "Something went wrong");
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
+
+    public Cursor getActList() {
+        try {
+            String sql = "SELECT AssignedDate, ActivityName, HoursAssigned FROM ActivityListByAdmin";
+            Cursor mCur2 = mDb.rawQuery(sql, null);
+            Log.e("getCampDetails", "" + mCur2.getCount());
+            if (mCur2.getCount() == 0) {
+                Toast.makeText(mContext, "Too bad no data in ActivityListByAdmin", Toast.LENGTH_SHORT).show();
+            }
+            return mCur2;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Cursor getCampActList() {
+        try {
+            String sql = "SELECT * FROM CampActivityList";
+            Cursor mCur2 = mDb.rawQuery(sql, null);
+            Log.e("getCampDetails", "" + mCur2.getCount());
+            if (mCur2.getCount() == 0) {
+                Toast.makeText(mContext, "Too bad no data in CampActivityList", Toast.LENGTH_SHORT).show();
+            } else {
+
+            }
+            return mCur2;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Cursor getCampActListAll() {
+        try {
+            String sql = "SELECT * FROM CampActivities";
+            Cursor mCur2 = mDb.rawQuery(sql, null);
+            Log.e("getCampDetails", "" + mCur2.getCount());
+            if (mCur2.getCount() == 0) {
+                Toast.makeText(mContext, "Too bad no data in CampActivityList", Toast.LENGTH_SHORT).show();
+            } else {
+
+            }
+            return mCur2;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;

@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
             android:enabled="true"
-            android:text="First Half" />
+            android:text="First Year" />
 
         <View
             android:id="@+id/line_main"
@@ -38,6 +38,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            android:text="Second Half" />
+            android:text="Second Year" />
     </LinearLayout>
 </LinearLayout>

@@ -39,6 +39,7 @@ import retrofit2.Response;
 public class startActivity extends AppCompatActivity {
 
     public static String AUTH_TOKEN;
+    public static String VEC;
 
     TextView startReg;
     TextView startSummary;
@@ -124,6 +125,7 @@ public class startActivity extends AppCompatActivity {
                                 JSONObject j = new JSONObject(response.body().string());
                                 AUTH_TOKEN = j.getString("auth_token");
                                 Log.e("AUTH_TOKEN", AUTH_TOKEN);
+                                VEC = username.getText().toString();
                                 Intent i = new Intent(mContext, ediary.class);
                                 startActivity(i);
                                 finish();

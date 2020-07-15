@@ -20,9 +20,7 @@ public class CampDetailsDays extends Fragment {
 
     View root;
     ListView listView;
-    Boolean is_ch1;
-    Boolean is_ch2;
-    Boolean is_ch3;
+    String actName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,9 +28,8 @@ public class CampDetailsDays extends Fragment {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_camp_details_days, container, false);
         assert getArguments() != null;
-        is_ch1 = getArguments().getBoolean("is_ch1");
-        is_ch2 = getArguments().getBoolean("is_ch2");
-        is_ch3 = getArguments().getBoolean("is_ch3");
+        actName = getArguments().getString("actName");
+
         return root;
     }
 
@@ -42,6 +39,7 @@ public class CampDetailsDays extends Fragment {
         listView = root.findViewById(R.id.camp_days_list);
         ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(requireContext(), R.array.days, android.R.layout.simple_list_item_1);
         listView.setAdapter(list);
+
         //Boolean ch1_checked = Boolean.valueOf(getArguments().getString("is_ch1"));
         listView.setOnItemClickListener((parent, view1, position, id) -> {
             String day = parent.getItemAtPosition(position).toString();
@@ -49,13 +47,12 @@ public class CampDetailsDays extends Fragment {
 
             Bundle args = new Bundle();
             args.putString("whichDay", day);
-            args.putBoolean("is_ch1", is_ch1);
-            args.putBoolean("is_ch2", is_ch2);
-            args.putBoolean("is_ch3", is_ch3);
+            args.putString("actName", actName);
+
             campInputDetailsFrag.setArguments(args);
             Toast.makeText(getContext(), day, Toast.LENGTH_SHORT).show();
             FragmentManager fragmentManager = getParentFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.camp_frag, campInputDetailsFrag).addToBackStack("CampFrag").commit();
+            fragmentManager.beginTransaction().replace(R.id.camp_frag, campInputDetailsFrag, "CampInput").addToBackStack("CampFrag").commit();
         });
     }
 }

@@ -20,8 +20,6 @@ import com.test.nss.R;
 import com.test.nss.TestAdapter;
 import com.test.nss.ui.main.MainFragment;
 
-import java.text.MessageFormat;
-
 public class HelpFragment extends Fragment {
 
     private static final String TAG = "HelpFrag";
@@ -92,9 +90,10 @@ public class HelpFragment extends Fragment {
         mDbHelper.createDatabase();
         mDbHelper.open();
 
+        //mDbHelper.getHelpData().get(0)
         if (mDbHelper.getHelpData().size() > 0) {
-            emailPo.setText(MessageFormat.format(getString(R.string.email) + " " + "{0}", mDbHelper.getHelpData().get(0)));
-            contactPo.setText(MessageFormat.format(getString(R.string.contact_no) + " " + "{0}", mDbHelper.getHelpData().get(1)));
+            emailPo.setText(String.format(getString(R.string.email) + ": %s", mDbHelper.getHelpData().get(0)));
+            contactPo.setText(String.format(getString(R.string.contact_no) + ": %s", mDbHelper.getHelpData().get(1)));
         } else {
             emailPo.setText(getString(R.string.email));
             contactPo.setText(getString(R.string.contact_no));

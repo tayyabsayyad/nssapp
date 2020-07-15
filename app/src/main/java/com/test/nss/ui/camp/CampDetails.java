@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +27,8 @@ public class CampDetails extends Fragment {
     View root;
     List<AdapterCampDetails> campData;
     RecyclerView recCamp;
+    LinearLayout camp_main_details;
+    Button go_back;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,16 +42,25 @@ public class CampDetails extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recCamp = root.findViewById(R.id.camp_details_rec);
+        camp_main_details = requireActivity().findViewById(R.id.camp_main_details);
+        go_back = root.findViewById(R.id.go_back);
+
         CampDataAdapter campDataAdapter = new CampDataAdapter(campData, requireContext());
         recCamp.setHasFixedSize(true);
         recCamp.setLayoutManager(new LinearLayoutManager(requireContext()));
         recCamp.setAdapter(campDataAdapter);
+
+        go_back.setOnClickListener(view1 -> {
+            camp_main_details.setVisibility(View.VISIBLE);
+            onDetach();
+        });
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         FragmentManager fm = requireActivity().getSupportFragmentManager();
+        camp_main_details.setVisibility(View.VISIBLE);
         if (fm.getBackStackEntryCount() > 0) {
             Log.e("CampFrag", "onDetach: " + fm.getBackStackEntryCount());
             fm.popBackStackImmediate(null, 0);
@@ -66,7 +79,6 @@ public class CampDetails extends Fragment {
 
         while (c2.moveToNext()) {
             //Log.e("camp", c2.getString(c2.getColumnIndex("College_name")));
-            //Log.e("camp", c2.getString(c2.getColumnIndex("Camp_taluka")));
             data2.add(new AdapterCampDetails(
                     c2.getString(c2.getColumnIndex("College_name")),
                     c2.getString(c2.getColumnIndex("Camp_from")),

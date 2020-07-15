@@ -22,6 +22,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 
 public class CheckConn extends BroadcastReceiver {
 
@@ -35,19 +36,19 @@ public class CheckConn extends BroadcastReceiver {
         wifiState = Objects.requireNonNull(cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)).getState();
         mobileState = Objects.requireNonNull(cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)).getState();
 
-        if (NetworkInfo.State.CONNECTED != wifiState && NetworkInfo.State.CONNECTED == mobileState) {
+        boolean a = NetworkInfo.State.CONNECTED == wifiState;
+        boolean b = NetworkInfo.State.CONNECTED == mobileState;
+
+        if (a || b) {
             Log.e("CheckConn", "Internet");
-            //Log.e("TOK", ""+startActivity.AUTH_TOKEN);
-            Call<ResponseBody> helpData = RetrofitClient.getInstance().getApi().getHelpData("Token " + startActivity.AUTH_TOKEN);
+            Call<ResponseBody> helpData = RetrofitClient.getInstance().getApi().getPoData("Token " + startActivity.AUTH_TOKEN);
             helpData.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         try {
                             JSONArray j = new JSONArray(response.body().string());
-                                    /*Log.e(TAG, j.getJSONObject(0).getString("Post"));
-                                    Log.e(TAG, j.getJSONObject(0).getString("Full_Name"));
-                                    Log.e(TAG, j.getJSONObject(0).getString("Contact"));*/
+
                             if (j.length() > 0) {
                                 TestAdapter mDbHelper = new TestAdapter(context);
                                 mDbHelper.createDatabase();
@@ -55,12 +56,13 @@ public class CheckConn extends BroadcastReceiver {
                                 deleteData("Help");
                                 for (int i = 0; i < j.length(); i++) {
                                     mDbHelper.insertHelpData(
-                                            j.getJSONObject(i).getString("Post"),
-                                            j.getJSONObject(i).getString("Full_Name"),
-                                            j.getJSONObject(i).getString("Post_Email"),
-                                            j.getJSONObject(i).getString("Contact"));
+                                            j.getJSONObject(i).getString("CollegeName"),
+                                            "Po",
+                                            j.getJSONObject(i).getString("PoName"),
+                                            j.getJSONObject(i).getString("PoEmail"),
+                                            j.getJSONObject(i).getString("PoContact"),
+                                            j.getJSONObject(i).getString("PoStartYear"));
                                 }
-                                mDbHelper.close();
                                 mDbHelper.close();
                             }
                         } catch (JSONException | IOException e) {
@@ -75,9 +77,43 @@ public class CheckConn extends BroadcastReceiver {
                     Log.e("onFailure", t.toString());
                 }
             });
+            //NetworkInfo.State.CONNECTED != wifiState
         } else if (wifiState != null && mobileState != null && NetworkInfo.State.CONNECTED != wifiState) {
             Log.e("CheckConn", "No net");
         }
+
+        Call<ResponseBody> campList = RetrofitClient.getInstance().getApi().getCampList("Token " + startActivity.AUTH_TOKEN);
+        campList.enqueue(new Callback<ResponseBody>() {
+            @Override
+            @EverythingIsNonNull
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        JSONArray j = new JSONArray(response.body().string());
+
+                        if (j.length() > 0) {
+                            TestAdapter mDbHelper = new TestAdapter(context);
+                            mDbHelper.createDatabase();
+                            mDbHelper.open();
+                            deleteData("CampActivityList");
+                            for (int i = 0; i < j.length(); i++) {
+                                mDbHelper.insertCampActList(
+                                        j.getJSONObject(i).getString("CampActivityName"));
+                            }
+                            mDbHelper.close();
+                        }
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            @EverythingIsNonNull
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("Failed:campList", t.toString());
+            }
+        });
 
         Call<ResponseBody> campDetails = RetrofitClient.getInstance().getApi().getCampDetails("Token " + startActivity.AUTH_TOKEN);
         campDetails.enqueue(new Callback<ResponseBody>() {
@@ -116,7 +152,83 @@ public class CheckConn extends BroadcastReceiver {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Log.e("onFailure", t.toString());
+                Log.e("onFailure:campDetails", t.toString());
+            }
+        });
+
+        Call<ResponseBody> campListAll = RetrofitClient.getInstance().getApi().getCampActListAll("Token " + startActivity.AUTH_TOKEN);
+        campListAll.enqueue(new Callback<ResponseBody>() {
+            @Override
+            @EverythingIsNonNull
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        JSONArray j = new JSONArray(response.body().string());
+
+                        if (j.length() > 0) {
+                            TestAdapter mDbHelper = new TestAdapter(context);
+                            mDbHelper.createDatabase();
+                            mDbHelper.open();
+                            deleteData("CampActivities");
+                            for (int i = 0; i < j.length(); i++) {
+                                mDbHelper.insertCampActListAll(
+                                        j.getJSONObject(i).getString("CampActivityTitle"),
+                                        j.getJSONObject(i).getString("CampActivityDescription"),
+                                        j.getJSONObject(i).getString("Day")
+                                );
+                            }
+                            mDbHelper.close();
+                        }
+                    } catch (JSONException | IOException e) {
+                        Log.e("Failed", e.toString());
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            @EverythingIsNonNull
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("onFailure:campListAll", t.toString());
+            }
+        });
+
+        Call<ResponseBody> actList = RetrofitClient.getInstance().getApi().getActList("Token " + startActivity.AUTH_TOKEN);
+        actList.enqueue(new Callback<ResponseBody>() {
+            @Override
+            @EverythingIsNonNull
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        JSONArray j = new JSONArray(response.body().string());
+
+                        if (j.length() > 0) {
+                            TestAdapter mDbHelper = new TestAdapter(context);
+                            mDbHelper.createDatabase();
+                            mDbHelper.open();
+                            deleteData("ActivityListByAdmin");
+                            for (int i = 0; i < j.length(); i++) {
+                                mDbHelper.insertAct(
+                                        j.getJSONObject(i).getString("CollegeName"),
+                                        j.getJSONObject(i).getString("ActivityName"),
+                                        j.getJSONObject(i).getString("AssignedActivityName"),
+                                        j.getJSONObject(i).getString("AssignedHours"),
+                                        j.getJSONObject(i).getString("AssignedDate")
+                                );
+                            }
+                            mDbHelper.close();
+                        }
+                    } catch (JSONException | IOException e) {
+                        Log.e("Failed", e.toString());
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            @EverythingIsNonNull
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("onFailure:campListAll", t.toString());
             }
         });
     }

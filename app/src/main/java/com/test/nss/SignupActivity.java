@@ -5,10 +5,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +23,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -31,6 +36,7 @@ import retrofit2.internal.EverythingIsNonNull;
 public class SignupActivity extends AppCompatActivity {
 
     Spinner dropdownClg;
+
     ArrayList<String> clgList;
     Context mContext;
 
@@ -38,9 +44,13 @@ public class SignupActivity extends AppCompatActivity {
     private EditText fathName;
     private EditText mName;
     private EditText lName;
-    private EditText vec;
+
     private EditText email;
+    private EditText vec;
+    private TextView vecClgPref;
+
     private Button signupPost;
+    private EditText contactNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +58,17 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         mContext = SignupActivity.this;
+        vec = findViewById(R.id.vec_in);
 
         fName = findViewById(R.id.fname);
         fathName = findViewById(R.id.fath_name);
         mName = findViewById(R.id.mom_name);
         lName = findViewById(R.id.last_name);
-        vec = findViewById(R.id.vec_in);
         email = findViewById(R.id.email_in);
         signupPost = findViewById(R.id.signup_post);
         dropdownClg = findViewById(R.id.dropdown_clg);
+        contactNo = findViewById(R.id.contact_no);
+        vecClgPref = findViewById(R.id.vec_clg_pref);
 
         clgList = new ArrayList<>();
 
@@ -64,7 +76,7 @@ public class SignupActivity extends AppCompatActivity {
         //dropdownClg.setAdapter(adapter);
 
         if (isNetworkAvailable()) {
-            Call<ResponseBody> clg = RetrofitClient.getInstance().getApi().getClgList("Token " + "d08a27014e70fd26380f2eb975519aeda19c04e7");
+            Call<ResponseBody> clg = RetrofitClient.getInstance().getApi().getClgList();
             clg.enqueue(new Callback<ResponseBody>() {
                 @Override
                 @EverythingIsNonNull
@@ -74,7 +86,7 @@ public class SignupActivity extends AppCompatActivity {
                             //JSONObject j = new JSONObject(response.body().string());
                             JSONArray jArry = new JSONArray(response.body().string());
                             for (int i = 0; i < jArry.length(); i++) {
-                                clgList.add(jArry.getJSONObject(i).getString("CollegeName"));
+                                clgList.add(jArry.getJSONObject(i).getString("CollegeName") + "-" + jArry.getJSONObject(i).getString("CollegeCode"));
                             }
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(SignupActivity.this, R.layout.drop_down_start, clgList);
                             dropdownClg.setAdapter(adapter);
@@ -94,19 +106,43 @@ public class SignupActivity extends AppCompatActivity {
             //clgList.add("DBIT");
             //clgList.add("RAIT");
 
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String date = sdf.format(new Date());
+
+            dropdownClg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    String clgCode = adapterView.getItemAtPosition(i).toString();
+                    //Toast.makeText(mContext, clgCode, Toast.LENGTH_SHORT).show();
+
+                    vecClgPref.setText("");
+                    clgCode = clgCode.substring(clgCode.indexOf("-") + 1);
+                    vecClgPref.append(clgCode);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
             signupPost.setOnClickListener(v -> {
+                final EditText vec = findViewById(R.id.vec_in);
                 Toast.makeText(mContext, "Signing you up", Toast.LENGTH_SHORT).show();
                 if (!isEmpty(fName) && !isEmpty(fathName) &&
-                        !isEmpty(mName) && !isEmpty(lName) && !isEmpty(vec) && !isEmpty(email) && dropdownClg.getSelectedItem() != null) {
+                        !isEmpty(mName) && !isEmpty(lName) && !isEmpty(vec) && !isEmpty(email) && !isEmpty(contactNo) && !vecClgPref.getText().toString().equals("") && dropdownClg.getSelectedItem() != null) {
+                    String clgItem = dropdownClg.getSelectedItem().toString();
+                    clgItem = clgItem.substring(0, clgItem.indexOf("-"));
                     Call<ResponseBody> signup = RetrofitClient.getInstance().getApi().signup(
-                            "Token " + "d08a27014e70fd26380f2eb975519aeda19c04e7",
+                            "1",
+                            date,
                             fName.getText().toString(),
                             fathName.getText().toString(),
                             mName.getText().toString(),
                             lName.getText().toString(),
-                            vec.getText().toString(),
+                            "MH09" + vecClgPref.getText().toString() + vec.getText().toString(),
                             email.getText().toString(),
-                            dropdownClg.getSelectedItem().toString()
+                            clgItem,
+                            "+91" + contactNo.getText().toString()
                     );
 
                     signup.enqueue(new Callback<ResponseBody>() {
@@ -120,7 +156,7 @@ public class SignupActivity extends AppCompatActivity {
                                 Log.e("onResponse:error", response.errorBody().toString());
                                 try {
                                     JSONObject j = new JSONObject(response.errorBody().string());
-                                    //Log.e("error", j.g
+                                    Log.e("error", j.toString());
                                     Toast.makeText(mContext, j.toString(), Toast.LENGTH_SHORT).show();
                                 } catch (JSONException | IOException e) {
                                     e.printStackTrace();
@@ -146,7 +182,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    private boolean isEmpty(EditText e) {
+    public boolean isEmpty(EditText e) {
         return e.getText().toString().trim().length() <= 0;
     }
 

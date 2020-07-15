@@ -79,6 +79,7 @@
             android:textColor="@color/blackish" />
 
         <View
+            android:visibility="gone"
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@color/blackish" />
@@ -93,11 +94,6 @@
             android:text="Activities"
             android:textColor="@color/blackish" />
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="@color/blackish" />
-
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -110,29 +106,56 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/univRecFy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/act_bg_lines"
+        android:id="@+id/hoursRecFy"
+        android:layout_width="420dp"
+        android:layout_height="400dp"
         android:scrollbars="vertical"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_fy" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/areaRecFy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/act_bg_lines"
+        android:layout_width="420dp"
+        android:layout_height="400dp"
         android:scrollbars="vertical"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_fy" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/hoursRecFy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/act_bg_lines"
+        android:id="@+id/univRecFy"
+        android:layout_width="420dp"
+        android:layout_height="400dp"
         android:scrollbars="vertical"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_fy" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_10dp"
+        android:gravity="end|center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/go_back"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="@dimen/margin_15dp"
+            android:background="@drawable/ripple"
+            android:text="Back"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
