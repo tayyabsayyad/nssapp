@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -62,7 +63,14 @@ public class CampActListDetails extends Fragment {
     public void onDetach() {
         super.onDetach();
         camp_main_details.setVisibility(View.VISIBLE);
+        FragmentManager fm = requireActivity().getSupportFragmentManager();
+
         campActAll.setVisibility(View.GONE);
+        if (fm.getBackStackEntryCount() > 0) {
+            Log.e("CampFrag", "onDetach: " + fm.getBackStackEntryCount());
+            fm.popBackStackImmediate(null, 0);
+            fm.popBackStack("CampList", 0);
+        }
     }
 
     public List<AdapterCampActList> addCampData() {

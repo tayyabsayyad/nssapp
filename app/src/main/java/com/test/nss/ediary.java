@@ -56,7 +56,7 @@ public class ediary extends AppCompatActivity {
         transparent = this.getColor(R.color.transparent);
         primaryCol = this.getColor(R.color.colorPrimary);
 
-        Toast.makeText(this, AUTH_TOKEN, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, AUTH_TOKEN, Toast.LENGTH_SHORT).show();
         drawer = findViewById(R.id.drawer_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         logout = findViewById(R.id.logoutbutton);

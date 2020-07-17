@@ -129,7 +129,9 @@ public class SignupActivity extends AppCompatActivity {
                 final EditText vec = findViewById(R.id.vec_in);
                 Toast.makeText(mContext, "Signing you up", Toast.LENGTH_SHORT).show();
                 if (!isEmpty(fName) && !isEmpty(fathName) &&
-                        !isEmpty(mName) && !isEmpty(lName) && !isEmpty(vec) && !isEmpty(email) && !isEmpty(contactNo) && !vecClgPref.getText().toString().equals("") && dropdownClg.getSelectedItem() != null) {
+                        !isEmpty(mName) && !isEmpty(lName) && !isEmpty(vec) &&
+                        !isEmpty(email) && !isEmpty(contactNo) && !vecClgPref.getText().toString().equals("")
+                        && dropdownClg.getSelectedItem() != null) {
                     String clgItem = dropdownClg.getSelectedItem().toString();
                     clgItem = clgItem.substring(0, clgItem.indexOf("-"));
                     Call<ResponseBody> signup = RetrofitClient.getInstance().getApi().signup(

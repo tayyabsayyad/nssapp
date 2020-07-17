@@ -115,6 +115,45 @@ public class CheckConn extends BroadcastReceiver {
             }
         });
 
+        Call<ResponseBody> clg = RetrofitClient.getInstance().getApi().getClgList();
+        clg.enqueue(new Callback<ResponseBody>() {
+            @Override
+            @EverythingIsNonNull
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        //JSONObject j = new JSONObject(response.body().string());
+                        JSONArray j = new JSONArray(response.body().string());
+                        if (j.length() > 0) {
+                            TestAdapter mDbHelper = new TestAdapter(context);
+                            mDbHelper.createDatabase();
+                            mDbHelper.open();
+                            deleteData("CollegeNames");
+                            for (int i = 0; i < j.length(); i++) {
+                                mDbHelper.insertClgList(
+                                        j.getJSONObject(i).getString("CollegeCode"),
+                                        j.getJSONObject(i).getString("CollegeName")
+                                );
+                            }
+                            //mDbHelper.getCampDetails();
+                            mDbHelper.close();
+                        }
+                        //ArrayAdapter<String> adapter = new ArrayAdapter<>(SignupActivity.this, R.layout.drop_down_start, clgList);
+                        //dropdownClg.setAdapter(adapter);
+                        Log.e("Added college", "");
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            @EverythingIsNonNull
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
+
+
         Call<ResponseBody> campDetails = RetrofitClient.getInstance().getApi().getCampDetails("Token " + startActivity.AUTH_TOKEN);
         campDetails.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -128,7 +167,7 @@ public class CheckConn extends BroadcastReceiver {
                             TestAdapter mDbHelper = new TestAdapter(context);
                             mDbHelper.createDatabase();
                             mDbHelper.open();
-                            deleteData("CampDetails");
+                            deleteData("CampDetails");// Scan for sync state
                             for (int i = 0; i < j.length(); i++) {
                                 mDbHelper.insertCampDetails(
                                         j.getJSONObject(i).getString("CollegeName"),
@@ -140,7 +179,7 @@ public class CheckConn extends BroadcastReceiver {
                                         j.getJSONObject(i).getString("CampDistrict")
                                 );
                             }
-                            mDbHelper.getCampDetails();
+                            //mDbHelper.getCampDetails();
                             mDbHelper.close();
                         }
                     } catch (JSONException | IOException e) {
@@ -206,9 +245,10 @@ public class CheckConn extends BroadcastReceiver {
                             TestAdapter mDbHelper = new TestAdapter(context);
                             mDbHelper.createDatabase();
                             mDbHelper.open();
-                            deleteData("ActivityListByAdmin");
+                            deleteData("ActivityListByAdmin"); //TODO: add table of id
                             for (int i = 0; i < j.length(); i++) {
-                                mDbHelper.insertAct(
+                                mDbHelper.insertActAdmin(
+                                        j.getJSONObject(i).getInt("id"),
                                         j.getJSONObject(i).getString("CollegeName"),
                                         j.getJSONObject(i).getString("ActivityName"),
                                         j.getJSONObject(i).getString("AssignedActivityName"),

@@ -64,4 +64,19 @@ public interface Api {
 
     @GET("/diary/api/allactivites/")
     Call<ResponseBody> getActList(@Header("Authorization") String token);
+
+    @GET("/diary/api/totalhours/")
+    Call<ResponseBody> getHours(@Header("Authorization") String token);
+
+    @POST("/diary/api/dailyactivity/")
+    @FormUrlEncoded
+    Call<ResponseBody> sendActList(
+            @Header("Authorization") String token,
+            @Field("VEC") String vec,
+            @Field("AssignedActivityName") int actAssignName,
+            @Field("Hours") int actHour,
+            @Field("Date") String actDate,
+            @Field("ActivityName") int actName,
+            @Field("State") int s
+    );
 }

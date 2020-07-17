@@ -111,10 +111,10 @@ public class WorkDetailsFirstFrag extends Fragment {
     public List<AdapterDataWork> firstHalfWorkData() {
         ArrayList<AdapterDataWork> data = new ArrayList<>();
 
-        // TODO: Switch to activity or new frag for showing more data
-        data.add(new AdapterDataWork("Area Based Project 1", "40", "00", "40"));
-        data.add(new AdapterDataWork("University/District", "10", "00", "10"));
-        data.add(new AdapterDataWork("College Work", "10", "00", "10"));
+        // TODO: Hours api
+        data.add(new AdapterDataWork("Area Based Project 1-2", "120", "80", "40"));
+        data.add(new AdapterDataWork("University/District", "120", "20", "100"));
+        data.add(new AdapterDataWork("College Work", "120", "20", "100"));
         return data;
     }
 }

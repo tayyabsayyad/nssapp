@@ -80,7 +80,7 @@ public class CampDetailsFrag extends Fragment {
         if (fm.getBackStackEntryCount() > 0) {
             Log.e("CampFrag", "onDetach: " + fm.getBackStackEntryCount());
             fm.popBackStackImmediate(null, 0);
-            fm.popBackStack("CampFrag", 0);
+            fm.popBackStack("CampDetailsFrag", 0);
         }
     }
 

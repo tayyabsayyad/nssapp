@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/constFyAct"
     android:layout_height="match_parent"
     tools:context=".ui.main.fyAct">
 
@@ -21,8 +22,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="?attr/selectableItemBackground"
             android:enabled="true"
+            android:background="?attr/selectableItemBackground"
             android:text="@string/univ" />
 
         <View
@@ -106,55 +107,70 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/hoursRecFy"
-        android:layout_width="420dp"
-        android:layout_height="400dp"
-        android:scrollbars="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_fy" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/areaRecFy"
-        android:layout_width="420dp"
-        android:layout_height="400dp"
-        android:scrollbars="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_fy" />
-
-    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/univRecFy"
-        android:layout_width="420dp"
-        android:layout_height="400dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="125dp"
+        android:layout_marginBottom="@dimen/space_10dp"
+        android:background="@drawable/act_bg_lines"
+        android:padding="5dp"
         android:scrollbars="vertical"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_fy" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/areaRecFy"
+        android:layout_height="match_parent"
+        android:layout_marginTop="125dp"
+        android:layout_marginBottom="@dimen/space_10dp"
+        android:background="@drawable/act_bg_lines"
+        android:padding="5dp"
+        android:visibility="gone"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_fy" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/hoursRecFy"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="125dp"
+        android:layout_marginBottom="@dimen/space_10dp"
+        android:background="@drawable/act_bg_lines"
+        android:padding="5dp"
+        android:visibility="gone"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_fy" />
 
     <LinearLayout
-        android:id="@+id/linearLayout7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_5dp"
+        android:paddingEnd="@dimen/padding_5dp"
         android:layout_marginBottom="@dimen/space_10dp"
         android:gravity="end|center"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <Button
-            android:id="@+id/go_back"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="@dimen/margin_15dp"
-            android:background="@drawable/ripple"
-            android:text="Back"
+            android:id="@+id/add"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_margin="@dimen/space_10dp"
+            android:background="@drawable/ripple_add"
+            android:foreground="@drawable/ic_plus_24"
+            android:visibility="gone"
             android:textAllCaps="false"
             android:textColor="@color/white" />
     </LinearLayout>

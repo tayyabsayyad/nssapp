@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.test.nss.R;
+import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.startActivity;
 
@@ -72,10 +73,23 @@ public class CampInputDetailsFrag extends Fragment {
         campActName.setText(String.format("Activity: %s", actName)); //two
         //campDesc.getText().toString(); //3
 
+        String day = which_day.getText().toString();
+
         submit.setOnClickListener(view1 -> {
+            TestAdapter mDbHelper = new TestAdapter(requireContext());
+            mDbHelper.createDatabase();
+            mDbHelper.open();
+
+            mDbHelper.insertCampActListAll(
+                    campDesc.getText().toString(),
+                    day.substring(day.indexOf(" ") + 1),
+                    actName
+            );
+            mDbHelper.close();
+
             if (isNetworkAvailable()) {
-                String day = which_day.getText().toString();
-                if (!isEmpty(campDesc) && !isEmptyStr(actName) && (which_day.getText().toString().trim().length() > 0) && !isEmptyStr(startActivity.VEC)) {
+                if (!isEmpty(campDesc) && !isEmptyStr(actName)
+                        && (which_day.getText().toString().trim().length() > 0)) {
                     //Log.e("asas", "dasdas"+startActivity.AUTH_TOKEN+startActivity.VEC);
                     Call<ResponseBody> sendCampDetails = RetrofitClient.getInstance().getApi().sendCampDetail(
                             "Token " + startActivity.AUTH_TOKEN,
@@ -90,12 +104,8 @@ public class CampInputDetailsFrag extends Fragment {
                         @EverythingIsNonNull
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if (response.isSuccessful()) {
-                                Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Data Entered to web", Toast.LENGTH_SHORT).show();
                                 //inputDetCamp.setVisibility(View.GONE);
-                                submit.setEnabled(false);
-                                campDesc.setEnabled(false);
-                                campDesc.setBackground(null);
-                                submit.setBackground(null);
                             } else if (response.errorBody() != null) {
                                 try {
                                     Log.e("CampInput", response.errorBody().string());
@@ -111,6 +121,11 @@ public class CampInputDetailsFrag extends Fragment {
                             Log.e("onFailCampDetails", t.toString());
                         }
                     });
+                    Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
+                    submit.setEnabled(false);
+                    campDesc.setEnabled(false);
+                    campDesc.setBackground(null);
+                    submit.setBackground(null);
                 } else if (!isNetworkAvailable()) {
                     Toast.makeText(requireContext(), "Device off", Toast.LENGTH_SHORT).show();
                 } else {

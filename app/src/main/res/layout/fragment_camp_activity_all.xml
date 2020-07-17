@@ -13,7 +13,7 @@
         android:background="@drawable/act_bg_lines"
         android:gravity="center"
         android:padding="4dp"
-        android:text="Camp Activities List"
+        android:text="Camp Days"
         android:textSize="@dimen/text_18sp"
         app:layout_constraintTop_toTopOf="parent" />
 

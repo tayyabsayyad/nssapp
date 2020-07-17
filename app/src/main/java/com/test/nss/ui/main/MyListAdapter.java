@@ -15,12 +15,12 @@ import com.test.nss.R;
 import java.util.Collections;
 import java.util.List;
 
-public class MyListAdapterFy extends RecyclerView.Adapter<MyListAdapterFy.ViewHolder> {
+public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
     //private AdapterDataFy[] listdata;
     List<AdapterDataFy> list = Collections.emptyList();
     Context mCon;
 
-    public MyListAdapterFy(List<AdapterDataFy> list, Context mCon) {
+    public MyListAdapter(List<AdapterDataFy> list, Context mCon) {
         this.list = list;
         this.mCon = mCon;
     }

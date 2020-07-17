@@ -44,6 +44,7 @@ public class MainFragment extends Fragment {
 
     Context mContext;
     TextView toolbarTitle;
+    TextView maLHay;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class MainFragment extends Fragment {
         nssFY = root.findViewById(R.id.nssFY);
 
         toolbar = root.findViewById(R.id.toolbar);
+        maLHay = root.findViewById(R.id.malHay);
 
         mainHeader = root.findViewById(R.id.main_header);
 
@@ -75,7 +77,7 @@ public class MainFragment extends Fragment {
                 home.setVisibility(View.VISIBLE);
                 mainHeader.setVisibility(View.GONE);
                 firstButton.setTextColor(Color.WHITE);
-
+                maLHay.setVisibility(View.GONE);
                 firstButton.setBackgroundColor(primaryCol);
                 secButton.setTextColor(ediary.blackish);
                 secButton.setBackgroundColor(transparent);
@@ -86,7 +88,7 @@ public class MainFragment extends Fragment {
                 if (halvesFrame.getVisibility() == View.GONE)
                     halvesFrame.setVisibility(View.VISIBLE);
                 FragmentManager fragmentManager = getChildFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.halves_frame, new fyAct()).addToBackStack(this.toString()).commit();
+                fragmentManager.beginTransaction().replace(R.id.halves_frame, new fyAct(), "fyAct").addToBackStack("MainFrag").commit();
             }
         });
 
@@ -99,6 +101,7 @@ public class MainFragment extends Fragment {
                 secButton.setBackgroundColor(primaryCol);
                 firstButton.setTextColor(blackish);
                 firstButton.setBackgroundColor(transparent);
+                maLHay.setVisibility(View.GONE);
 
                 line.setVisibility(View.VISIBLE);
                 toolbar.setVisibility(View.GONE);
@@ -106,7 +109,7 @@ public class MainFragment extends Fragment {
                     halvesFrame.setVisibility(View.VISIBLE);
 
                 FragmentManager fragmentManager = getChildFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.halves_frame, new syAct()).addToBackStack(this.toString()).commit();
+                fragmentManager.beginTransaction().replace(R.id.halves_frame, new syAct()).addToBackStack("MainFrag").commit();
             }
         });
 
@@ -118,7 +121,7 @@ public class MainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         home = root.findViewById(R.id.homeButton);
         toolbar = requireActivity().findViewById(R.id.toolbar);
-
+        maLHay.setVisibility(View.VISIBLE);
         home.setVisibility(View.INVISIBLE);
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +134,7 @@ public class MainFragment extends Fragment {
                 }
                 if (fm.getBackStackEntryCount() > 0) {
                     fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    fm.popBackStack(this.toString(), 0);
+                    fm.popBackStack("MainFrag", 0);
                 }
                 halvesFrame.setVisibility(View.GONE);
                 resetColor();
@@ -150,9 +153,10 @@ public class MainFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        maLHay.setVisibility(View.VISIBLE);
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.popBackStack(this.toString(), 0);
+            fm.popBackStack("MainFrag", 0);
         }
     }
 }
