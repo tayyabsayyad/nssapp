@@ -42,9 +42,9 @@ public class fyAct extends Fragment {
     RecyclerView areaRecFy;
     RecyclerView hoursRecFy;
 
-    List<AdapterDataFy> univListDataFy;
-    List<AdapterDataFy> adapterDataFy;
-    List<AdapterDataFy> hoursListDataFy;
+    List<AdapterDataMain> univListDataFy;
+    List<AdapterDataMain> areaDataMain;
+    List<AdapterDataMain> hoursListDataFy;
 
     Button add;
     LinearLayout fragFy;
@@ -153,9 +153,9 @@ public class fyAct extends Fragment {
             area.setTextColor(Color.BLACK);
         });
 
-        adapterDataFy = fill_with_data(11);
-        hoursListDataFy = fill_with_data2(12);
-        univListDataFy = addActData(13);
+        hoursListDataFy = addClgAct(11);
+        areaDataMain = addAreaAct(12);
+        univListDataFy = addUnivData(13);
 
         RecyclerView recyclerViewUniv = root.findViewById(R.id.univRecFy);
         MyListAdapter adapterUniv = new MyListAdapter(univListDataFy, mContext);
@@ -164,7 +164,7 @@ public class fyAct extends Fragment {
         recyclerViewUniv.setAdapter(adapterUniv);
 
         RecyclerView recyclerViewArea = root.findViewById(R.id.areaRecFy);
-        MyListAdapter adapterArea = new MyListAdapter(adapterDataFy, mContext);
+        MyListAdapter adapterArea = new MyListAdapter(areaDataMain, mContext);
         recyclerViewArea.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewArea.setAdapter(adapterArea);
 
@@ -228,31 +228,31 @@ public class fyAct extends Fragment {
         }
     }
 
-    public List<AdapterDataFy> fill_with_data(int whichAct) {
+    public List<AdapterDataMain> addClgAct(int whichAct) {
 
-        ArrayList<AdapterDataFy> data3 = new ArrayList<>();
+        ArrayList<AdapterDataMain> data = new ArrayList<>();
 
         TestAdapter mDbHelper = new TestAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
 
-        Cursor c2 = mDbHelper.getActList(whichAct);
-        Log.e("SSS", "" + c2.getCount());
+        Cursor c = mDbHelper.getActList(whichAct);
+        Log.e("SSS", "" + c.getCount());
 
-        while (c2.moveToNext()) {
+        while (c.moveToNext()) {
             //Log.e("camp", c2.getString(c2.getColumnIndex("College_name")));
-            data3.add(new AdapterDataFy(
-                    c2.getString(c2.getColumnIndex("Date")),
-                    c2.getString(c2.getColumnIndex("ActivityName")),
-                    c2.getString(c2.getColumnIndex("HoursWorked")
+            data.add(new AdapterDataMain(
+                    c.getString(c.getColumnIndex("Date")),
+                    c.getString(c.getColumnIndex("ActivityName")),
+                    c.getString(c.getColumnIndex("HoursWorked")
                     )));
         }
         mDbHelper.close();
-        return data3;
+        return data;
     }
 
-    public List<AdapterDataFy> fill_with_data2(int whichAct) {
-        ArrayList<AdapterDataFy> data2 = new ArrayList<>();
+    public List<AdapterDataMain> addAreaAct(int whichAct) {
+        ArrayList<AdapterDataMain> data2 = new ArrayList<>();
 
         TestAdapter mDbHelper = new TestAdapter(requireContext());
         mDbHelper.createDatabase();
@@ -263,7 +263,7 @@ public class fyAct extends Fragment {
 
         while (c2.moveToNext()) {
             //Log.e("camp", c2.getString(c2.getColumnIndex("College_name")));
-            data2.add(new AdapterDataFy(
+            data2.add(new AdapterDataMain(
                     c2.getString(c2.getColumnIndex("Date")),
                     c2.getString(c2.getColumnIndex("ActivityName")),
                     c2.getString(c2.getColumnIndex("HoursWorked")
@@ -273,25 +273,25 @@ public class fyAct extends Fragment {
         return data2;
     }
 
-    public List<AdapterDataFy> addActData(int whichAct) {
+    public List<AdapterDataMain> addUnivData(int whichAct) {
         Log.e("opening db", "now");
-        ArrayList<AdapterDataFy> data = new ArrayList<>();
+        ArrayList<AdapterDataMain> data3 = new ArrayList<>();
 
         TestAdapter mDbHelper = new TestAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
-        Cursor c2 = mDbHelper.getActList(whichAct);
-        Log.e("SSS", "" + c2.getCount());
+        Cursor c3 = mDbHelper.getActList(whichAct);
+        Log.e("SSS", "" + c3.getCount());
 
-        while (c2.moveToNext()) {
+        while (c3.moveToNext()) {
             //Log.e("camp", c2.getString(c2.getColumnIndex("College_name")));
-            data.add(new AdapterDataFy(
-                    c2.getString(c2.getColumnIndex("Date")),
-                    c2.getString(c2.getColumnIndex("ActivityName")),
-                    c2.getString(c2.getColumnIndex("HoursWorked")
+            data3.add(new AdapterDataMain(
+                    c3.getString(c3.getColumnIndex("Date")),
+                    c3.getString(c3.getColumnIndex("ActivityName")),
+                    c3.getString(c3.getColumnIndex("HoursWorked")
                     )));
         }
         mDbHelper.close();
-        return data;
+        return data3;
     }
 }

@@ -40,10 +40,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/act_header" />
 
-
     <FrameLayout
+        android:layout_height="match_parent"
         android:id="@+id/act_list"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="205dp"
         android:layout_width="match_parent"
         app:layout_constraintTop_toBottomOf="@id/division" />
 </androidx.constraintlayout.widget.ConstraintLayout>

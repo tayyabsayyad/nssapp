@@ -55,7 +55,10 @@ public class AddDetailsActivity extends Fragment {
 
     Button addSend;
     Button add;
+    Button backActDetail;
+
     ConstraintLayout campActIn;
+
     int whichAct;
     int act;
     private TextView actDate;
@@ -85,6 +88,9 @@ public class AddDetailsActivity extends Fragment {
         }
         Log.e("AA", "" + whichAct);
         Log.e("AA", "" + act);
+
+        backActDetail = huh.findViewById(R.id.backActDetail);
+
         return huh;
     }
 
@@ -168,6 +174,11 @@ public class AddDetailsActivity extends Fragment {
                     mDbHelper.createDatabase();
                     mDbHelper.open();
 
+                    Log.e("hmm", "" + whichAct);
+                    Log.e("hmm", "" + actDate.getText().toString());
+                    Log.e("hmm", "" + drpdownactAssignName.getSelectedItem().toString());
+                    Log.e("hmm", "" + actId.getText().toString());
+
                     mDbHelper.insertAct(
                             startActivity.VEC,
                             whichAct,
@@ -180,7 +191,8 @@ public class AddDetailsActivity extends Fragment {
                     if (isNetworkAvailable()) {
                         Log.e("AOO", "" + actName);
                         Log.e("AOO", "" + drpdownactAssignName.getSelectedItem().toString());
-
+                        Log.e("AOO", "" + whichAct);
+                        Log.e("AOO", "" + actId.getText().toString());
 
                         Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
                                 "Token " + startActivity.AUTH_TOKEN,
@@ -219,7 +231,24 @@ public class AddDetailsActivity extends Fragment {
                     }
                 } else
                     Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();
-                onDetach();
+                constFyAct.setVisibility(View.VISIBLE);
+                nssHalvesLinear.setVisibility(View.VISIBLE);
+                add.setVisibility(View.GONE);
+
+                actInputHeader.setVisibility(View.GONE);
+                campActIn.setVisibility(View.GONE);
+            }
+        });
+
+        backActDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                constFyAct.setVisibility(View.VISIBLE);
+                nssHalvesLinear.setVisibility(View.VISIBLE);
+
+                actInputHeader.setVisibility(View.GONE);
+                campActIn.setVisibility(View.GONE);
+                add.setVisibility(View.GONE);
             }
         });
     }
@@ -266,6 +295,7 @@ public class AddDetailsActivity extends Fragment {
     public ArrayList<String> getAssignActList() {
         assert getArguments() != null;
         whichAct = getArguments().getInt("whichAct");
+        Log.e("Hmmm", "" + whichAct);
 
         ArrayList<String> data3 = new ArrayList<>();
 

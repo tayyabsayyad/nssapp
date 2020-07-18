@@ -39,9 +39,9 @@ public class syAct extends Fragment {
     RecyclerView areaRecSy;
     RecyclerView hoursRecSy;
 
-    List<AdapterDataFy> univListDataSy;
-    List<AdapterDataFy> adapterDataSy;
-    List<AdapterDataFy> hoursListDataSy;
+    List<AdapterDataMain> univListDataSy;
+    List<AdapterDataMain> adapterDataSy;
+    List<AdapterDataMain> hoursListDataSy;
 
     Button add;
     int whichAct = -1;
@@ -132,7 +132,7 @@ public class syAct extends Fragment {
         recyclerViewUniv.setAdapter(adapterUniv);
 
         RecyclerView recyclerViewArea = doraemon.findViewById(R.id.areaRecSy);
-        MyListAdapter adapterArea = new MyListAdapter(adapterDataFy, mContext);
+        MyListAdapter adapterArea = new MyListAdapter(adapterDataMain, mContext);
         recyclerViewArea.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewArea.setAdapter(adapterArea);*/
 
@@ -159,12 +159,12 @@ public class syAct extends Fragment {
         });
     }
 
-    public List<AdapterDataFy> fill_with_data2() {
-        ArrayList<AdapterDataFy> data = new ArrayList<>();
+    public List<AdapterDataMain> fill_with_data2() {
+        ArrayList<AdapterDataMain> data = new ArrayList<>();
 
         // TODO: Switch to activity or new frag for showing more data
         for (int i = 1; i <= 12; i++) {
-            data.add(new AdapterDataFy("DD/MM/YYYY", "Activity " + i, "00"));
+            data.add(new AdapterDataMain("DD/MM/YYYY", "Activity " + i, "00"));
         }
         return data;
     }

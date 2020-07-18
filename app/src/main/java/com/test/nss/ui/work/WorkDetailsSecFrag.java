@@ -55,9 +55,9 @@ public class WorkDetailsSecFrag extends Fragment {
         ArrayList<AdapterDataWork> data = new ArrayList<>();
 
         // TODO: Switch to activity or new frag for showing more data
-        data.add(new AdapterDataWork("Area Based Project 1-2", "120", "80", "40"));
-        data.add(new AdapterDataWork("University/District", "120", "20", "100"));
-        data.add(new AdapterDataWork("College Work", "120", "20", "100"));
+        data.add(new AdapterDataWork(getString(R.string.area2), "80", "00", "00"));
+        data.add(new AdapterDataWork(getString(R.string.univ), "20", "00", "00"));
+        data.add(new AdapterDataWork(getString(R.string.clg), "20", "00", "00"));
         return data;
     }
 }

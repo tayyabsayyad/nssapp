@@ -252,11 +252,11 @@ public class TestAdapter {
         }
     }
 
-    public Cursor getActListAdmin() {
+    /*public Cursor getActListAdmin(int yr) {
         try {
-            String sql = "SELECT AssignedDate, ActivityName, HoursAssigned FROM ActivityListByAdmin";
+            String sql = "SELECT * FROM ActivityListByAdmin WHERE activityType LIKE "+yr+'%';
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.e("getCampDetails", "" + mCur2.getCount());
+            Log.e("ActivityListByAdmin", "" + mCur2.getCount());
             if (mCur2.getCount() == 0) {
                 Toast.makeText(mContext, "Too bad no data in ActivityListByAdmin", Toast.LENGTH_SHORT).show();
             }
@@ -265,7 +265,7 @@ public class TestAdapter {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;
         }
-    }
+    }*/
 
     public Cursor getActList(int act) {
         try {

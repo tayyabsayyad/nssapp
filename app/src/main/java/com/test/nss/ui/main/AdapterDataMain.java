@@ -1,11 +1,11 @@
 package com.test.nss.ui.main;
 
-public class AdapterDataFy {
+public class AdapterDataMain {
     private String date;
     private String act;
     private String hours;
 
-    public AdapterDataFy(String date, String act, String hours) {
+    public AdapterDataMain(String date, String act, String hours) {
         this.date = date;
         this.act = act;
         this.hours = hours;
@@ -15,23 +15,12 @@ public class AdapterDataFy {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public String getAct() {
         return act;
-    }
-
-    public void setAct(String act) {
-        this.act = act;
     }
 
     public String getHours() {
         return hours;
     }
 
-    public void setHours(String hours) {
-        this.hours = hours;
-    }
 }

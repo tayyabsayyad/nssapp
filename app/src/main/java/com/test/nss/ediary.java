@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,12 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.test.nss.api.RetrofitClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,6 +44,8 @@ public class ediary extends AppCompatActivity {
     AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
     Button logout;
+    TextView vecNo;
+    TextView name;
 
     FragmentManager fm;
 
@@ -51,6 +60,14 @@ public class ediary extends AppCompatActivity {
         IntentFilter z = new IntentFilter();
         z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(checkConn, z);
+
+        vecNo = findViewById(R.id.vecNoHeader);
+        String k = startActivity.VEC;
+
+//        vecNo.setText(k);
+
+        //vecNo.setText(startActivity.VEC);
+        name = findViewById(R.id.nameHeader);
 
         blackish = this.getColor(R.color.blackish);
         transparent = this.getColor(R.color.transparent);
@@ -72,6 +89,34 @@ public class ediary extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = headerView.findViewById(R.id.nameHeader);
+        TextView navVec = headerView.findViewById(R.id.vecNoHeader);
+        navVec.setText(startActivity.VEC);
+
+        Call<ResponseBody> userDetail = RetrofitClient.getInstance().getApi().getUserDetail(startActivity.VEC);
+        userDetail.enqueue(new Callback<ResponseBody>() {
+            @Override
+            @EverythingIsNonNull
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        JSONObject j = new JSONObject(response.body().string());
+                        //JSONArray Jarray  = j.getJSONArray("FirstName");
+                        navUsername.setText(j.get("FirstName").toString());
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            @EverythingIsNonNull
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
 
         logout.setOnClickListener(view -> {
             fm.popBackStackImmediate();

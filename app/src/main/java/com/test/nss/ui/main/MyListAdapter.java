@@ -16,11 +16,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
-    //private AdapterDataFy[] listdata;
-    List<AdapterDataFy> list = Collections.emptyList();
+    //private AdapterDataMain[] listdata;
+    List<AdapterDataMain> list = Collections.emptyList();
     Context mCon;
 
-    public MyListAdapter(List<AdapterDataFy> list, Context mCon) {
+    public MyListAdapter(List<AdapterDataMain> list, Context mCon) {
         this.list = list;
         this.mCon = mCon;
     }
@@ -29,7 +29,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem = layoutInflater.inflate(R.layout.adapter_view_fy, parent, false);
+        View listItem = layoutInflater.inflate(R.layout.adapter_view_main, parent, false);
         return new ViewHolder(listItem);
     }
 
@@ -45,13 +45,13 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         return list.size();
     }
 
-    public void insert(int position, AdapterDataFy data) {
+    public void insert(int position, AdapterDataMain data) {
         list.add(position, data);
         notifyItemInserted(position);
     }
 
     // Remove a RecyclerView item containing a specified Data object
-    public void remove(AdapterDataFy data) {
+    public void remove(AdapterDataMain data) {
         int position = list.indexOf(data);
         list.remove(position);
         notifyItemRemoved(position);
@@ -70,7 +70,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
             this.act = itemView.findViewById(R.id.act);
             this.hours = itemView.findViewById(R.id.hours);
 
-            linearLayout = itemView.findViewById(R.id.areaLinear);
+            linearLayout = itemView.findViewById(R.id.dataLinear);
         }
     }
 }
