@@ -81,6 +81,9 @@ public interface Api {
             @Field("State") int s
     );
 
+    @GET("/diary/api/dailyactivity/")
+    Call<ResponseBody> getDailyAct(@Header("Authorization") String token);
+
     @GET("/diary/api/selfRegistration/{vec}")
     Call<ResponseBody> getUserDetail(@Path("vec") String vec);
 }

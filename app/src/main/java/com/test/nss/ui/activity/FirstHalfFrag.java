@@ -28,9 +28,9 @@ public class FirstHalfFrag extends Fragment {
 
     View root;
     Context mContext;
-    List<AdapterDataAct> areaListDataFy;
-    List<AdapterDataAct> univListDataFy;
-    List<AdapterDataAct> clgListDataFy;
+    List<AdapterDataAct> areaListDataAct;
+    List<AdapterDataAct> univListDataAct;
+    List<AdapterDataAct> clgListDataAct;
 
     RecyclerView recyclerViewAreaAct;
     RecyclerView recyclerViewUnivAct;
@@ -52,15 +52,16 @@ public class FirstHalfFrag extends Fragment {
         mContext = requireContext();
         backAct = root.findViewById(R.id.backActBtn);
 
-        clgListDataFy = addActData(11);
-        areaListDataFy = addActData(12);
-        univListDataFy = addActData(13);
+        clgListDataAct = addActData(11);
+        areaListDataAct = addActData(12);
+        univListDataAct = addActData(13);
         return root;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         backAct.setVisibility(View.GONE);
         recyclerViewAreaAct = root.findViewById(R.id.areafyList);
         recyclerViewClgAct = root.findViewById(R.id.clgfyList);
@@ -106,17 +107,17 @@ public class FirstHalfFrag extends Fragment {
             }
         });
 
-        MyListAdapterAct adapterAreaAct = new MyListAdapterAct(areaListDataFy, mContext);
+        MyListAdapterAct adapterAreaAct = new MyListAdapterAct(areaListDataAct, mContext);
         recyclerViewAreaAct.setHasFixedSize(true);
         recyclerViewAreaAct.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewAreaAct.setAdapter(adapterAreaAct);
 
-        MyListAdapterAct adapterUnivAct = new MyListAdapterAct(univListDataFy, mContext);
+        MyListAdapterAct adapterUnivAct = new MyListAdapterAct(univListDataAct, mContext);
         recyclerViewUnivAct.setHasFixedSize(true);
         recyclerViewUnivAct.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewUnivAct.setAdapter(adapterUnivAct);
 
-        MyListAdapterAct adapterClgAct = new MyListAdapterAct(clgListDataFy, mContext);
+        MyListAdapterAct adapterClgAct = new MyListAdapterAct(clgListDataAct, mContext);
         recyclerViewClgAct.setHasFixedSize(true);
         recyclerViewClgAct.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewClgAct.setAdapter(adapterClgAct);
@@ -134,24 +135,25 @@ public class FirstHalfFrag extends Fragment {
     }
 
     public List<AdapterDataAct> addActData(int yr) {
-        Log.e("opening db", "now");
-        ArrayList<AdapterDataAct> data = new ArrayList<>();
+        Log.e("opening db", "now for yr:" + yr);
+        ArrayList<AdapterDataAct> data3 = new ArrayList<>();
 
         TestAdapter mDbHelper = new TestAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
 
-        Cursor c2 = mDbHelper.getActAssigActName(yr);
-        Log.e("SSS", "" + c2.getCount());
+        Cursor c3 = mDbHelper.getActAssigActName(yr);
+        Log.e("SSS", "" + c3.getCount());
 
-        while (c2.moveToNext()) {
-            data.add(new AdapterDataAct(
-                    c2.getString(c2.getColumnIndex("ActivityName")),
-                    c2.getString(c2.getColumnIndex("HoursAssigned"))
-            ));
+        while (c3.moveToNext()) {
+            data3.add(new AdapterDataAct(
+                            c3.getString(c3.getColumnIndex("ActivityName")),
+                            c3.getString(c3.getColumnIndex("HoursAssigned"))
+                    )
+            );
         }
         mDbHelper.close();
-        return data;
+        return data3;
     }
 
     @Override

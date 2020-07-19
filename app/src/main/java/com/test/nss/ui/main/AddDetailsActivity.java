@@ -181,7 +181,7 @@ public class AddDetailsActivity extends Fragment {
 
                     mDbHelper.insertAct(
                             startActivity.VEC,
-                            whichAct,
+                            String.valueOf(whichAct),
                             actDate.getText().toString(),
                             drpdownactAssignName.getSelectedItem().toString(),
                             //actId.getText().toString(),

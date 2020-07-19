@@ -1,6 +1,7 @@
 package com.test.nss.ui.camp;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -75,22 +76,29 @@ public class CampInputDetailsFrag extends Fragment {
 
         String day = which_day.getText().toString();
 
+        TestAdapter mDbHelper = new TestAdapter(requireContext());
+        mDbHelper.createDatabase();
+        mDbHelper.open();
+
+        Cursor c = mDbHelper.getCampId(actName);
+        c.moveToFirst();
+        String campId = c.getString(0);
+        mDbHelper.close();
         submit.setOnClickListener(view1 -> {
-            TestAdapter mDbHelper = new TestAdapter(requireContext());
+
             mDbHelper.createDatabase();
             mDbHelper.open();
-
             mDbHelper.insertCampActListAll(
+                    actName,
                     campDesc.getText().toString(),
-                    day.substring(day.indexOf(" ") + 1),
-                    actName
+                    day.substring(day.indexOf(" ") + 1)
             );
             mDbHelper.close();
 
             if (isNetworkAvailable()) {
                 if (!isEmpty(campDesc) && !isEmptyStr(actName)
                         && (which_day.getText().toString().trim().length() > 0)) {
-                    //Log.e("asas", "dasdas"+startActivity.AUTH_TOKEN+startActivity.VEC);
+
                     Call<ResponseBody> sendCampDetails = RetrofitClient.getInstance().getApi().sendCampDetail(
                             "Token " + startActivity.AUTH_TOKEN,
                             "DBIT",
@@ -98,7 +106,7 @@ public class CampInputDetailsFrag extends Fragment {
                             Integer.parseInt(day.substring(day.indexOf(" ") + 1)),
                             startActivity.VEC,
                             "1",
-                            "3");
+                            campId);
                     sendCampDetails.enqueue(new Callback<ResponseBody>() {
                         @Override
                         @EverythingIsNonNull

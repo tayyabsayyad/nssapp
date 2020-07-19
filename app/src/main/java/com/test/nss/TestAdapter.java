@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class TestAdapter {
     protected static final String TAG = "DataAdapter";
@@ -172,11 +173,28 @@ public class TestAdapter {
         }
     }
 
-    public void insertCampActList(String campActName) {
+    public Cursor getCampId(String campActName) {
+        try {
+            String sql = String.format(Locale.ENGLISH, "SELECT CampId FROM CampActivityList WHERE CampActivityName=\"%s\"", campActName);
+            Cursor mCur = mDb.rawQuery(sql, null);
+            Log.e("CollegeNames", "" + mCur.getCount());
+            if (mCur.getCount() == 0) {
+                Toast.makeText(mContext, "Too bad no data in CollegeNames", Toast.LENGTH_SHORT).show();
+            } else {
+            }
+            return mCur;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public void insertCampActList(String campActName, String campId) {
         try {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("CampActivityName", campActName);
+            contentValues.put("CampId", campId);
 
             long row = mDb.insert("CampActivityList", null, contentValues);
             if (row != -1)
@@ -228,7 +246,7 @@ public class TestAdapter {
         }
     }
 
-    public void insertAct(String vec, int actCode,
+    public void insertAct(String vec, String actCode,
                           String assignedDate,
                           String actName,
                           String hours) {
@@ -267,9 +285,10 @@ public class TestAdapter {
         }
     }*/
 
-    public Cursor getActList(int act) {
+    public Cursor getActList(String act) {
         try {
-            String sql = "SELECT Date, ActivityName, HoursWorked FROM DailyActivity WHERE ActivityCode=" + act;
+            //String a = String.format("aaa %d", act);
+            String sql = String.format(Locale.ENGLISH, "SELECT Date, ActivityName, HoursWorked FROM DailyActivity WHERE ActivityCode=\"%s\"", (act));
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.e("getCampDetails", "" + mCur2.getCount());
             if (mCur2.getCount() == 0) {

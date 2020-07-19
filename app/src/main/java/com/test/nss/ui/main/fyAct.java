@@ -59,8 +59,6 @@ public class fyAct extends Fragment {
         root = inflater.inflate(R.layout.fragment_fy_act, container, false);
         mContext = requireContext();
 
-        Log.e("AAA", "AAAA" + whichAct);
-
         // add data dynamically
 
         univ = root.findViewById(R.id.main_univ_fy);
@@ -81,24 +79,6 @@ public class fyAct extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fragFy = root.findViewById(R.id.frag_fy);
-
-        /*TestAdapter mDbHelper = new TestAdapter(mContext);
-        mDbHelper.createDatabase();
-        mDbHelper.open();
-
-        ArrayList<String> c = mDbHelper.getActList();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, R.layout.simple_list_item_2, c);
-        listView.setAdapter(adapter);
-
-        ArrayList<String> c2 = mDbHelper.getActType();
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(mContext, R.layout.simple_list_item_2, c2);
-        listView2.setAdapter(adapter2);
-
-        ArrayList<String> c3 = mDbHelper.getActType();
-        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(mContext, R.layout.simple_list_item_2, c3);
-        listView3.setAdapter(adapter3);
-
-        mDbHelper.close();*/
 
         univ.setOnClickListener(v -> {
             whichAct = 13;
@@ -153,9 +133,9 @@ public class fyAct extends Fragment {
             area.setTextColor(Color.BLACK);
         });
 
-        hoursListDataFy = addClgAct(11);
-        areaDataMain = addAreaAct(12);
-        univListDataFy = addUnivData(13);
+        hoursListDataFy = addAct("First Year College");
+        areaDataMain = addAct("First Year Area Based");
+        univListDataFy = addAct("First Year University");
 
         RecyclerView recyclerViewUniv = root.findViewById(R.id.univRecFy);
         MyListAdapter adapterUniv = new MyListAdapter(univListDataFy, mContext);
@@ -228,7 +208,7 @@ public class fyAct extends Fragment {
         }
     }
 
-    public List<AdapterDataMain> addClgAct(int whichAct) {
+    public List<AdapterDataMain> addAct(String whichAct) {
 
         ArrayList<AdapterDataMain> data = new ArrayList<>();
 
@@ -240,7 +220,7 @@ public class fyAct extends Fragment {
         Log.e("SSS", "" + c.getCount());
 
         while (c.moveToNext()) {
-            //Log.e("camp", c2.getString(c2.getColumnIndex("College_name")));
+
             data.add(new AdapterDataMain(
                     c.getString(c.getColumnIndex("Date")),
                     c.getString(c.getColumnIndex("ActivityName")),
@@ -249,49 +229,5 @@ public class fyAct extends Fragment {
         }
         mDbHelper.close();
         return data;
-    }
-
-    public List<AdapterDataMain> addAreaAct(int whichAct) {
-        ArrayList<AdapterDataMain> data2 = new ArrayList<>();
-
-        TestAdapter mDbHelper = new TestAdapter(requireContext());
-        mDbHelper.createDatabase();
-        mDbHelper.open();
-
-        Cursor c2 = mDbHelper.getActList(whichAct);
-        Log.e("SSS", "" + c2.getCount());
-
-        while (c2.moveToNext()) {
-            //Log.e("camp", c2.getString(c2.getColumnIndex("College_name")));
-            data2.add(new AdapterDataMain(
-                    c2.getString(c2.getColumnIndex("Date")),
-                    c2.getString(c2.getColumnIndex("ActivityName")),
-                    c2.getString(c2.getColumnIndex("HoursWorked")
-                    )));
-        }
-        mDbHelper.close();
-        return data2;
-    }
-
-    public List<AdapterDataMain> addUnivData(int whichAct) {
-        Log.e("opening db", "now");
-        ArrayList<AdapterDataMain> data3 = new ArrayList<>();
-
-        TestAdapter mDbHelper = new TestAdapter(requireContext());
-        mDbHelper.createDatabase();
-        mDbHelper.open();
-        Cursor c3 = mDbHelper.getActList(whichAct);
-        Log.e("SSS", "" + c3.getCount());
-
-        while (c3.moveToNext()) {
-            //Log.e("camp", c2.getString(c2.getColumnIndex("College_name")));
-            data3.add(new AdapterDataMain(
-                    c3.getString(c3.getColumnIndex("Date")),
-                    c3.getString(c3.getColumnIndex("ActivityName")),
-                    c3.getString(c3.getColumnIndex("HoursWorked")
-                    )));
-        }
-        mDbHelper.close();
-        return data3;
     }
 }
