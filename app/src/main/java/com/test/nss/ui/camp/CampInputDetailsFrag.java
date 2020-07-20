@@ -91,7 +91,8 @@ public class CampInputDetailsFrag extends Fragment {
             mDbHelper.insertCampActListAll(
                     actName,
                     campDesc.getText().toString(),
-                    day.substring(day.indexOf(" ") + 1)
+                    day.substring(day.indexOf(" ") + 1),
+                    0
             );
             mDbHelper.close();
 
@@ -130,16 +131,17 @@ public class CampInputDetailsFrag extends Fragment {
                         }
                     });
                     Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
-                    submit.setEnabled(false);
-                    campDesc.setEnabled(false);
-                    campDesc.setBackground(null);
-                    submit.setBackground(null);
+
                 } else if (!isNetworkAvailable()) {
                     Toast.makeText(requireContext(), "Device off", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(requireContext(), "Enter something...", Toast.LENGTH_SHORT).show();
                 }
             }
+            submit.setEnabled(false);
+            campDesc.setEnabled(false);
+            campDesc.setBackground(null);
+            submit.setBackground(null);
         });
     }
 

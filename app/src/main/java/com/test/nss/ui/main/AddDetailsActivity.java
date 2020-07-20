@@ -179,13 +179,15 @@ public class AddDetailsActivity extends Fragment {
                     Log.e("hmm", "" + drpdownactAssignName.getSelectedItem().toString());
                     Log.e("hmm", "" + actId.getText().toString());
 
+                    Log.e("AAUU", actName);
                     mDbHelper.insertAct(
                             startActivity.VEC,
-                            String.valueOf(whichAct),
+                            actName,
                             actDate.getText().toString(),
                             drpdownactAssignName.getSelectedItem().toString(),
                             //actId.getText().toString(),
-                            actHour.getText().toString()
+                            actHour.getText().toString(),
+                            0
                     );
                     mDbHelper.close();
                     if (isNetworkAvailable()) {
@@ -210,7 +212,10 @@ public class AddDetailsActivity extends Fragment {
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                 if (response.isSuccessful() && response.body() != null) {
                                     Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
-
+                                    mDbHelper.createDatabase();
+                                    mDbHelper.open();
+                                    mDbHelper.setSync("DailyActivity", 1);
+                                    mDbHelper.close();
                                     FragmentManager fm = requireActivity().getSupportFragmentManager();
                                     fm.popBackStack("AddDetailsActivity", 0);
                                 } else if (response.errorBody() != null) {
@@ -282,11 +287,11 @@ public class AddDetailsActivity extends Fragment {
         TestAdapter mDbHelper = new TestAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
-        Cursor c2 = mDbHelper.getClgList();
-        Log.e("clgList:", "" + c2.getCount());
+        Cursor c = mDbHelper.getClgList();
+        Log.e("clgList:", "" + c.getCount());
 
-        while (c2.moveToNext()) {
-            data2.add(c2.getString(c2.getColumnIndex("CollegeName")));
+        while (c.moveToNext()) {
+            data2.add(c.getString(c.getColumnIndex("CollegeName")));
         }
         mDbHelper.close();
         return data2;
@@ -302,12 +307,12 @@ public class AddDetailsActivity extends Fragment {
         TestAdapter mDbHelper = new TestAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
-        Cursor c2 = mDbHelper.getActAssigActName(whichAct);
-        Log.e("actAssign:", "" + c2.getCount());
+        Cursor c3 = mDbHelper.getActAssigActName(whichAct);
+        Log.e("actAssign:", "" + c3.getCount());
 
         //c2.moveToFirst();
-        while (c2.moveToNext()) {
-            data3.add(c2.getString(c2.getColumnIndex("ActivityName")));
+        while (c3.moveToNext()) {
+            data3.add(c3.getString(c3.getColumnIndex("ActivityName")));
         }
         mDbHelper.close();
         return data3;

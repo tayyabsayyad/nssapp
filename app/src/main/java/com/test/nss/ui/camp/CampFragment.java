@@ -75,7 +75,6 @@ public class CampFragment extends Fragment {
 
         camp_act.setOnClickListener(v -> {
             camp_main_details.setVisibility(View.GONE);
-            //fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsFrag).addToBackStack("CampFragment").commit();
             fm.beginTransaction().replace(R.id.camp_frag, new CampDetailsFrag(), "CampDetailsFrag").addToBackStack("CampFrag").commit();
         });
 

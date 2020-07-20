@@ -3,10 +3,12 @@ package com.test.nss;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -16,6 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import okhttp3.ResponseBody;
@@ -27,6 +31,29 @@ import retrofit2.internal.EverythingIsNonNull;
 public class CheckConn extends BroadcastReceiver {
 
     Context context1;
+    static boolean isSyncAct = false;
+    static boolean isSyncCamp = false;
+
+    public static <V> Integer getKey(Map<Integer, String> map, String value) {
+        for (Integer key : map.keySet()) {
+            if (value.equals(map.get(key))) {
+                return key;
+            }
+        }
+        return null;
+    }
+
+    public void deleteData(String table) {
+        TestAdapter mDbHelper2 = new TestAdapter(context1);
+        mDbHelper2.createDatabase();
+        mDbHelper2.open();
+        DataBaseHelper mDb2 = new DataBaseHelper(context1);
+        SQLiteDatabase m = mDb2.getWritableDatabase();
+        m.execSQL("DELETE FROM " + table);
+        mDbHelper2.close();
+        mDb2.close();
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         context1 = context;
@@ -78,7 +105,7 @@ public class CheckConn extends BroadcastReceiver {
                 }
             });
             //NetworkInfo.State.CONNECTED != wifiState
-        } else if (wifiState != null && mobileState != null && NetworkInfo.State.CONNECTED != wifiState) {
+        } else if (wifiState != null && mobileState != null) {
             Log.e("CheckConn", "No net");
         }
 
@@ -197,6 +224,78 @@ public class CheckConn extends BroadcastReceiver {
             }
         });
 
+        TestAdapter mDbHelper = new TestAdapter(context);
+        mDbHelper.createDatabase();
+        mDbHelper.open();
+
+        //Cursor c2 = mDbHelper.getActId("");
+        //c.moveToFirst();
+        Map<Integer, String> actIdHash = new HashMap<>();
+        actIdHash.put(11, "First Year University");
+        actIdHash.put(12, "First Year Area Based");
+        actIdHash.put(13, "First Year College");
+        actIdHash.put(21, "Second Year University");
+        actIdHash.put(22, "Second Year Area Based");
+        actIdHash.put(23, "Second Year College");
+
+        Cursor c = mDbHelper.getActListOff();
+        //Log.e("AAAA", ""+c.getCount());
+        //c.moveToFirst();
+        if (c.getCount() > 0) {
+            Log.wtf("AAAAA", "Entering");
+            //Log.e("AAA", c.getString(c.getColumnIndex("ActivityCode")));
+            //int actId = c2.getInt(0);
+            c.moveToFirst();
+            Cursor c2 = mDbHelper.getActAssigActId(c.getString(c.getColumnIndex("ActivityName")));
+            c2.moveToFirst();
+            int count = c.getCount();
+            while (count > 0) {
+                //Log.e("AAA", c.getString(c.getColumnIndex("ActivityCode")) + getKey(actIdHash, c.getString(c.getColumnIndex("ActivityCode"))));
+                Call<ResponseBody> insertActOff = RetrofitClient.getInstance().getApi().sendActList(
+                        "Token " + startActivity.AUTH_TOKEN,
+                        c.getString(c.getColumnIndex("VEC")),
+                        c2.getInt(c2.getColumnIndex("id")),
+                        //c.getInt(c.getColumnIndex("ActivityCode")),
+                        c.getInt(c.getColumnIndex("HoursWorked")),
+                        c.getString(c.getColumnIndex("Date")),
+                        getKey(actIdHash, c.getString(c.getColumnIndex("ActivityCode"))),
+                        1
+                );
+
+                insertActOff.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    @EverythingIsNonNull
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            isSyncAct = true;
+                        } else if (response.errorBody() != null) {
+                            try {
+                                Log.e("Error", response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Log.e("error", e.toString());
+                            }
+                            isSyncAct = false;
+                        } else {
+                            isSyncAct = false;
+                        }
+                    }
+
+                    @Override
+                    @EverythingIsNonNull
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e("ERROR", t.toString());
+                    }
+                });
+                count = count - 1;
+            }
+        }
+        if (isSyncAct) {
+            mDbHelper.setSync("DailyActivity", 1);
+            Toast.makeText(context, "Database Synced", Toast.LENGTH_SHORT).show();
+        }
+        mDbHelper.close();
+
         Call<ResponseBody> insertAct = RetrofitClient.getInstance().getApi().getDailyAct("Token " + startActivity.AUTH_TOKEN);
         insertAct.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -217,7 +316,8 @@ public class CheckConn extends BroadcastReceiver {
                                         j.getJSONObject(i).getString("ActivityName"),
                                         j.getJSONObject(i).getString("Date"),
                                         j.getJSONObject(i).getString("AssignedActivityName"),
-                                        j.getJSONObject(i).getString("Hours")
+                                        j.getJSONObject(i).getString("Hours"),
+                                        1
                                 );
                             }
                             mDbHelper.close();
@@ -235,6 +335,58 @@ public class CheckConn extends BroadcastReceiver {
 
             }
         });
+
+        mDbHelper.createDatabase();
+        mDbHelper.open();
+        Cursor c2 = mDbHelper.getCampActListOff(0);
+        c2.moveToFirst();
+
+        if (c2.getCount() > 0) {
+
+            Cursor c3 = mDbHelper.getCampId(c2.getString(c2.getColumnIndex("CampActivityTitle")));
+            c3.moveToFirst();
+            int cu = c2.getCount();
+            while (cu > 0) {
+                Call<ResponseBody> sendCampDetails = RetrofitClient.getInstance().getApi().sendCampDetail(
+                        "Token " + startActivity.AUTH_TOKEN,
+                        "DBIT",
+                        c2.getString(c2.getColumnIndex("CampActivityDescription")),
+                        c2.getInt(c2.getColumnIndex("CampDay")),
+                        startActivity.VEC,
+                        "1",
+                        c3.getString(c3.getColumnIndex("CampId"))
+                );
+                sendCampDetails.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    @EverythingIsNonNull
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Log.wtf("Easy", "done");
+                        if (response.isSuccessful() && response.body() != null) {
+                            Log.e("Success", "Ye");
+                            isSyncCamp = true;
+                        } else if (response.errorBody() != null) {
+                            try {
+                                Log.e("error:", response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            isSyncCamp = false;
+                        } else
+                            isSyncCamp = false;
+                    }
+
+                    @Override
+                    @EverythingIsNonNull
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
+                cu = cu - 1;
+            }
+        }
+        if (isSyncCamp)
+            mDbHelper.setSync("CampActivities", 1);
+        mDbHelper.close();
 
         Call<ResponseBody> campListAll = RetrofitClient.getInstance().getApi().getCampActListAll("Token " + startActivity.AUTH_TOKEN);
         campListAll.enqueue(new Callback<ResponseBody>() {
@@ -254,7 +406,8 @@ public class CheckConn extends BroadcastReceiver {
                                 mDbHelper.insertCampActListAll(
                                         j.getJSONObject(i).getString("CampActivityTitle"),
                                         j.getJSONObject(i).getString("CampActivityDescription"),
-                                        j.getJSONObject(i).getString("Day")
+                                        j.getJSONObject(i).getString("Day"),
+                                        1
                                 );
                             }
                             mDbHelper.close();
@@ -314,14 +467,4 @@ public class CheckConn extends BroadcastReceiver {
         });
     }
 
-    public void deleteData(String table) {
-        TestAdapter mDbHelper2 = new TestAdapter(context1);
-        mDbHelper2.createDatabase();
-        mDbHelper2.open();
-        DataBaseHelper mDb2 = new DataBaseHelper(context1);
-        SQLiteDatabase m = mDb2.getWritableDatabase();
-        m.execSQL("DELETE FROM " + table);
-        mDbHelper2.close();
-        mDb2.close();
-    }
 }

@@ -40,11 +40,11 @@ public class fyAct extends Fragment {
 
     RecyclerView univRecFy;
     RecyclerView areaRecFy;
-    RecyclerView hoursRecFy;
+    RecyclerView clgRecFy;
 
     List<AdapterDataMain> univListDataFy;
-    List<AdapterDataMain> areaDataMain;
-    List<AdapterDataMain> hoursListDataFy;
+    List<AdapterDataMain> areaDataMainFy;
+    List<AdapterDataMain> clgListDataFy;
 
     Button add;
     LinearLayout fragFy;
@@ -70,7 +70,7 @@ public class fyAct extends Fragment {
 
         univRecFy = root.findViewById(R.id.univRecFy);
         areaRecFy = root.findViewById(R.id.areaRecFy);
-        hoursRecFy = root.findViewById(R.id.hoursRecFy);
+        clgRecFy = root.findViewById(R.id.hoursRecFy);
 
         return root;
     }
@@ -86,7 +86,7 @@ public class fyAct extends Fragment {
             mainFy.setVisibility(View.VISIBLE);
             univRecFy.setVisibility(View.VISIBLE);
             areaRecFy.setVisibility(View.GONE);
-            hoursRecFy.setVisibility(View.GONE);
+            clgRecFy.setVisibility(View.GONE);
             add.setVisibility(View.VISIBLE);
 
             univ.setBackgroundColor(primaryCol);
@@ -105,7 +105,7 @@ public class fyAct extends Fragment {
 
             univRecFy.setVisibility(View.GONE);
             areaRecFy.setVisibility(View.VISIBLE);
-            hoursRecFy.setVisibility(View.GONE);
+            clgRecFy.setVisibility(View.GONE);
 
             area.setBackgroundColor(primaryCol);
             area.setTextColor(Color.WHITE);
@@ -123,7 +123,7 @@ public class fyAct extends Fragment {
             add.setVisibility(View.VISIBLE);
             univRecFy.setVisibility(View.GONE);
             areaRecFy.setVisibility(View.GONE);
-            hoursRecFy.setVisibility(View.VISIBLE);
+            clgRecFy.setVisibility(View.VISIBLE);
 
             clg.setBackgroundColor(primaryCol);
             clg.setTextColor(Color.WHITE);
@@ -133,8 +133,8 @@ public class fyAct extends Fragment {
             area.setTextColor(Color.BLACK);
         });
 
-        hoursListDataFy = addAct("First Year College");
-        areaDataMain = addAct("First Year Area Based");
+        clgListDataFy = addAct("First Year College");
+        areaDataMainFy = addAct("First Year Area Based");
         univListDataFy = addAct("First Year University");
 
         RecyclerView recyclerViewUniv = root.findViewById(R.id.univRecFy);
@@ -144,12 +144,12 @@ public class fyAct extends Fragment {
         recyclerViewUniv.setAdapter(adapterUniv);
 
         RecyclerView recyclerViewArea = root.findViewById(R.id.areaRecFy);
-        MyListAdapter adapterArea = new MyListAdapter(areaDataMain, mContext);
+        MyListAdapter adapterArea = new MyListAdapter(areaDataMainFy, mContext);
         recyclerViewArea.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewArea.setAdapter(adapterArea);
 
         RecyclerView recyclerViewHours = root.findViewById(R.id.hoursRecFy);
-        MyListAdapter adapterHours = new MyListAdapter(hoursListDataFy, mContext);
+        MyListAdapter adapterHours = new MyListAdapter(clgListDataFy, mContext);
         recyclerViewHours.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewHours.setAdapter(adapterHours);
 
@@ -160,7 +160,7 @@ public class fyAct extends Fragment {
             fragFy.setVisibility(View.GONE);
             univRecFy.setVisibility(View.GONE);
             areaRecFy.setVisibility(View.GONE);
-            hoursRecFy.setVisibility(View.GONE);
+            clgRecFy.setVisibility(View.GONE);
             univ.setBackgroundColor(Color.TRANSPARENT);
             clg.setBackgroundColor(Color.TRANSPARENT);
             area.setBackgroundColor(Color.TRANSPARENT);
