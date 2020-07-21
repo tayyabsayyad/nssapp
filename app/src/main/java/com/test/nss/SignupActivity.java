@@ -103,8 +103,6 @@ public class SignupActivity extends AppCompatActivity {
                     clgList.add("");
                 }
             });
-            //clgList.add("DBIT");
-            //clgList.add("RAIT");
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(new Date());
@@ -177,11 +175,6 @@ public class SignupActivity extends AppCompatActivity {
             });
         } else
             Toast.makeText(mContext, "Device is offline", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     public boolean isEmpty(EditText e) {

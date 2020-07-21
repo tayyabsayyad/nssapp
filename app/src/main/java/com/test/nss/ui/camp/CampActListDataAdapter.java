@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.R;
@@ -54,7 +54,7 @@ public class CampActListDataAdapter extends RecyclerView.Adapter<CampActListData
         public TextView campActDesc;
         public TextView campActDay;
 
-        public ConstraintLayout constraintLayout;
+        public CardView cardView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -62,7 +62,7 @@ public class CampActListDataAdapter extends RecyclerView.Adapter<CampActListData
             this.campActDesc = itemView.findViewById(R.id.camp_act_list_desc);
             this.campActDay = itemView.findViewById(R.id.camp_act_list_day);
 
-            constraintLayout = itemView.findViewById(R.id.campActListAllLinear);
+            cardView = itemView.findViewById(R.id.campActListAllCard);
         }
     }
 }

@@ -382,7 +382,7 @@ public class TestAdapter {
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.e("getCampDetails", "" + mCur2.getCount());
             if (mCur2.getCount() == 0) {
-                Toast.makeText(mContext, "Too bad no data in CampActivityList", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "Too bad no data in CampActivityList", Toast.LENGTH_SHORT).show();
             }
             return mCur2;
         } catch (SQLException mSQLException) {
@@ -397,7 +397,7 @@ public class TestAdapter {
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.e("getCampDetails", "" + mCur2.getCount());
             if (mCur2.getCount() == 0) {
-                Toast.makeText(mContext, "Too bad no data in CampActivityList", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "Too bad no data in CampActivityList", Toast.LENGTH_SHORT).show();
             }
             return mCur2;
         } catch (SQLException mSQLException) {
@@ -413,7 +413,7 @@ public class TestAdapter {
             Cursor mCur = mDb.rawQuery(sql, null);
 
             if (mCur.getCount() == 0) {
-                Toast.makeText(mContext, "Too bad no data", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "Too bad no data", Toast.LENGTH_SHORT).show();
             } else {
                 if (mCur.moveToNext()) {
                     res.add(mCur.getString(0));

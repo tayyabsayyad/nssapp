@@ -12,8 +12,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -28,8 +26,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.api.RetrofitClient;
 
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -46,13 +42,10 @@ public class startActivity extends AppCompatActivity {
     TextView startRemember;
     CheckBox startCheck;
     Button loginButton;
-    AutoCompleteTextView username;
+    EditText username;
     EditText password;
 
     Context mContext;
-
-    ArrayList<String> users;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +53,6 @@ public class startActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         mContext = startActivity.this;
-
-        users = new ArrayList<>();
 
         startReg = findViewById(R.id.register);
         startSummary = findViewById(R.id.loginSummary);
@@ -88,13 +79,9 @@ public class startActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
         String getName = sharedPreferences.getString("BKEY", "");
-        users.add(getName);
 
-        username.setDropDownWidth(400);
-        username.setDropDownHorizontalOffset(55);
-        username.setDropDownBackgroundResource(R.drawable.account_roundbg);
-
-        username.setAdapter(new ArrayAdapter<>(mContext, R.layout.drop_down_start, users));
+        username.setText(getName);
+        password.setText(sharedPreferences.getString("AKEY", ""));
 
         startReg.setOnClickListener(v -> {
             Intent m = new Intent(mContext, SignupActivity.class);
@@ -119,6 +106,7 @@ public class startActivity extends AppCompatActivity {
                                     SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
                                     SharedPreferences.Editor eddy = shareit.edit();
                                     eddy.putString("BKEY", username.getText().toString());
+                                    eddy.putString("AKEY", password.getText().toString());
                                     eddy.apply();
                                 }
                                 Log.e("onResponse", "Logged In");
@@ -172,11 +160,11 @@ public class startActivity extends AppCompatActivity {
             }
         });
 
-        loginButton.setOnLongClickListener(v -> {
+        /*loginButton.setOnLongClickListener(v -> {
             Intent m = new Intent(mContext, ediary.class);
             startActivity(m);
             return true;
-        });
+        });*/
     }
 
     private boolean isEmpty(EditText e) {

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.R;
@@ -69,7 +69,7 @@ public class CampDataAdapter extends RecyclerView.Adapter<CampDataAdapter.ViewHo
         public TextView campTaluka;
         public TextView campDistrict;
 
-        public ConstraintLayout constraintLayout;
+        public CardView cardView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -81,7 +81,7 @@ public class CampDataAdapter extends RecyclerView.Adapter<CampDataAdapter.ViewHo
             this.campTaluka = itemView.findViewById(R.id.campTaluka);
             this.campDistrict = itemView.findViewById(R.id.campDistrict);
 
-            constraintLayout = itemView.findViewById(R.id.campDetailsLinear);
+            cardView = itemView.findViewById(R.id.campDetailsCard);
         }
     }
 }

@@ -26,7 +26,6 @@ import java.util.List;
 public class CampDetailsFrag extends Fragment {
 
     Button go_back;
-    Button go_next;
     LinearLayout camp_main_details;
 
     View root;

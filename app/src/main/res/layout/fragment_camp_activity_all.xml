@@ -38,12 +38,9 @@
 
         <Button
             android:id="@+id/go_back"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_marginRight="@dimen/space_10dp"
-            android:background="@drawable/ripple"
-            android:text="Back"
-            android:textAllCaps="false"
-            android:textColor="@color/white" />
+            android:background="@drawable/ic_back_24" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

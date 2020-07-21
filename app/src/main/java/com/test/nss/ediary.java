@@ -2,6 +2,7 @@ package com.test.nss;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -128,6 +129,11 @@ public class ediary extends AppCompatActivity {
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
                         Toast.makeText(ediary.this, "Logged Out", Toast.LENGTH_SHORT).show();
+                        SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
+                        SharedPreferences.Editor eddy = shareit.edit();
+                        eddy.putString("BKEY", "");
+                        eddy.putString("AKEY", "");
+                        eddy.apply();
                     }
                 }
 
