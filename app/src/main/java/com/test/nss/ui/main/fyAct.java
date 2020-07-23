@@ -25,8 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.test.nss.ediary.blackish;
-import static com.test.nss.ediary.primaryCol;
-import static com.test.nss.ediary.transparent;
+import static com.test.nss.ediary.primaryColDark;
 
 public class fyAct extends Fragment {
 
@@ -89,11 +88,11 @@ public class fyAct extends Fragment {
             clgRecFy.setVisibility(View.GONE);
             add.setVisibility(View.VISIBLE);
 
-            univ.setBackgroundColor(primaryCol);
-            univ.setTextColor(Color.WHITE);
-            area.setBackgroundColor(transparent);
+            //univ.setBackgroundColor(primaryCol);
+            univ.setTextColor(primaryColDark);
+            //area.setBackgroundColor(transparent);
             area.setTextColor(Color.BLACK);
-            clg.setBackgroundColor(transparent);
+            //clg.setBackgroundColor(transparent);
             clg.setTextColor(Color.BLACK);
         });
 
@@ -107,11 +106,11 @@ public class fyAct extends Fragment {
             areaRecFy.setVisibility(View.VISIBLE);
             clgRecFy.setVisibility(View.GONE);
 
-            area.setBackgroundColor(primaryCol);
-            area.setTextColor(Color.WHITE);
-            univ.setBackgroundColor(transparent);
+            //area.setBackgroundColor(primaryColDark);
+            area.setTextColor(primaryColDark);
+            //univ.setBackgroundColor(transparent);
             univ.setTextColor(Color.BLACK);
-            clg.setBackgroundColor(transparent);
+            //clg.setBackgroundColor(transparent);
             clg.setTextColor(Color.BLACK);
         });
 
@@ -125,11 +124,11 @@ public class fyAct extends Fragment {
             areaRecFy.setVisibility(View.GONE);
             clgRecFy.setVisibility(View.VISIBLE);
 
-            clg.setBackgroundColor(primaryCol);
-            clg.setTextColor(Color.WHITE);
-            univ.setBackgroundColor(transparent);
+            //clg.setBackgroundColor(primaryColDark);
+            clg.setTextColor(primaryColDark);
+            //univ.setBackgroundColor(transparent);
             univ.setTextColor(Color.BLACK);
-            area.setBackgroundColor(transparent);
+            //area.setBackgroundColor(transparent);
             area.setTextColor(Color.BLACK);
         });
 

@@ -391,6 +391,23 @@ public class TestAdapter {
         }
     }
 
+    public int getSumHours(String actCode){
+        try {
+            String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode=\"%s\"", actCode);
+            Cursor mCur2 = mDb.rawQuery(sql, null);
+            Log.e("sumHours", "" + mCur2.getCount());
+            if (mCur2.getCount() == 0) {
+                //Toast.makeText(mContext, "Too bad no data in CampActivityList", Toast.LENGTH_SHORT).show();
+                return -1;
+            }
+            mCur2.moveToFirst();
+            return Integer.parseInt(mCur2.getString(0));
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
     public Cursor getCampActListOff(int sync) {
         try {
             String sql = "SELECT * FROM CampActivities WHERE sync=" + sync;
@@ -437,6 +454,7 @@ public class TestAdapter {
             throw mSQLException;
         }
     }
+
     /*public Cursor getTestData() {
         try {
             String sql ="SELECT * FROM NatureOfActivity";

@@ -61,6 +61,7 @@ public class AddDetailsActivity extends Fragment {
 
     int whichAct;
     int act;
+    private TextView todayBtn;
     private TextView actDate;
     private EditText actHour;
     private Spinner drpdownactClg;
@@ -109,6 +110,8 @@ public class AddDetailsActivity extends Fragment {
         actDate = huh.findViewById(R.id.actDate);
         actHour = huh.findViewById(R.id.actHour);
 
+        todayBtn = huh.findViewById(R.id.todayBtn);
+
         drpdownactAssignName = huh.findViewById(R.id.drpdown_actAssignName);
         drpdownactClg = huh.findViewById(R.id.drpdown_actClg);
         drpdownactName = huh.findViewById(R.id.drpdown_actName);
@@ -116,6 +119,14 @@ public class AddDetailsActivity extends Fragment {
         actAssignListId = getAssignActListId();
 
         final Calendar cal = Calendar.getInstance();
+        int currDay = cal.get(Calendar.DATE);
+        int currMont = cal.get(Calendar.MONTH)+1;
+        int currYear = cal.get(Calendar.YEAR);
+
+        String todayDate = ""+currYear+"-"+currMont+"-"+currDay;
+        todayBtn.setOnClickListener(view12 -> {
+            actDate.setText(todayDate);
+        });
         actDate.setOnClickListener(view1 -> {
             int dd = cal.get(Calendar.DAY_OF_MONTH);
             int mm = cal.get(Calendar.MONTH);
@@ -137,7 +148,11 @@ public class AddDetailsActivity extends Fragment {
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 i1 = i1 + 1;
                 String date = i + "-" + i1 + "-" + i2;
-                actDate.setText(date);
+
+                if (i2>=currDay && i1>=currMont && i>=currYear)
+                    actDate.setText(date);
+                else
+                    Toast.makeText(requireContext(), "Enter after today's date", Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -159,12 +174,20 @@ public class AddDetailsActivity extends Fragment {
 
             }
         });*/
-
         String actName = getResources().getStringArray(R.array.valOfActNames)[act];
         addSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!actDate.getText().toString().equals("") && drpdownactAssignName.getSelectedItem() != null
+                if(actHour.getText().toString().equals("") || Integer.parseInt(actHour.getText().toString().trim())<=0)
+                    Toast.makeText(requireContext(), "Work atleast an hour and enter", Toast.LENGTH_SHORT).show();
+
+                else if(Integer.parseInt(actHour.getText().toString().trim())>10)
+                    Toast.makeText(requireContext(), "Cannot enter more than 10 hours", Toast.LENGTH_SHORT).show();
+
+                else if (actDate.getText().toString().equals("") || actDate.getText().toString().equals("YYYY/MM/DD"))
+                    Toast.makeText(requireContext(), "Enter Date", Toast.LENGTH_SHORT).show();
+
+                else if (!actDate.getText().toString().equals("") && drpdownactAssignName.getSelectedItem() != null
                         && !isEmpty(actHour)
                         //&& !actId.getText().toString().equals("")
                         && drpdownactClg.getSelectedItem() != null

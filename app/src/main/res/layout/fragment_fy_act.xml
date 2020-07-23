@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
+
             android:id="@+id/main_univ_fy"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -34,6 +35,7 @@
             android:visibility="visible" />
 
         <Button
+
             android:id="@+id/main_area_fy"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -49,6 +51,7 @@
             android:visibility="visible" />
 
         <Button
+
             android:id="@+id/main_clg_fy"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -77,6 +80,7 @@
             android:paddingTop="@dimen/margin_15dp"
             android:paddingBottom="@dimen/space_10dp"
             android:text="Date"
+
             android:textColor="@color/blackish" />
 
         <View
@@ -86,6 +90,7 @@
             android:background="@color/blackish" />
 
         <TextView
+
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -96,36 +101,38 @@
             android:textColor="@color/blackish" />
 
         <TextView
+
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:paddingTop="@dimen/margin_15dp"
             android:paddingBottom="@dimen/margin_15dp"
-            android:text="Completed Hours"
+            android:text="Hours Worked"
             android:textColor="@color/blackish" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="125dp"
         android:id="@+id/univRecFy"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="125dp"
         android:layout_marginBottom="@dimen/space_10dp"
         android:background="@drawable/act_bg_lines"
         android:padding="5dp"
         android:scrollbars="vertical"
         android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/main_fy" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="125dp"
         android:layout_width="match_parent"
         android:id="@+id/areaRecFy"
         android:layout_height="match_parent"
-        android:layout_marginTop="125dp"
         android:layout_marginBottom="@dimen/space_10dp"
         android:background="@drawable/act_bg_lines"
         android:padding="5dp"
@@ -138,10 +145,10 @@
         app:layout_constraintTop_toBottomOf="@+id/main_fy" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="125dp"
         android:id="@+id/hoursRecFy"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="125dp"
         android:layout_marginBottom="@dimen/space_10dp"
         android:background="@drawable/act_bg_lines"
         android:padding="5dp"

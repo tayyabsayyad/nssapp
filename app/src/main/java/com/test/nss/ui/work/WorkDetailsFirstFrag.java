@@ -1,6 +1,8 @@
 package com.test.nss.ui.work;
 
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.R;
+import com.test.nss.TestAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,10 +114,39 @@ public class WorkDetailsFirstFrag extends Fragment {
     public List<AdapterDataWork> firstHalfWorkData() {
         ArrayList<AdapterDataWork> data = new ArrayList<>();
 
-        // TODO: Hours api
-        data.add(new AdapterDataWork(getString(R.string.area), "80", "00", "00"));
-        data.add(new AdapterDataWork(getString(R.string.univ), "20", "00", "00"));
-        data.add(new AdapterDataWork(getString(R.string.clg), "20", "00", "00"));
+        TestAdapter m = new TestAdapter(requireContext());
+        m.createDatabase();
+        m.open();
+        int areaComp = m.getSumHours("First Year Area Based");
+        int clgComp = m.getSumHours("First Year College");
+        int univComp = m.getSumHours("First Year University");
+
+        String areaRemHours;
+        String univRemHours;
+        String clgRemHours;
+
+        if (areaComp>1 && 80-areaComp>0)
+            areaRemHours=String.valueOf(80-areaComp);
+        else
+            areaRemHours = "00";
+
+        if(clgComp>1 && 20-clgComp>0)
+            clgRemHours=String.valueOf(20-clgComp);
+        else
+            clgRemHours="00";
+
+        if (univComp>0 && 20-univComp>0)
+            univRemHours=String.valueOf(20-univComp);
+        else
+            univRemHours="00";
+
+        Log.e("AAA", ""+areaComp);
+        m.close();
+
+
+        data.add(new AdapterDataWork(getString(R.string.area), "80", String.valueOf(areaComp), areaRemHours));
+        data.add(new AdapterDataWork(getString(R.string.univ), "20", String.valueOf(univComp), univRemHours));
+        data.add(new AdapterDataWork(getString(R.string.clg), "20", String.valueOf(clgComp), clgRemHours));
         return data;
     }
 }

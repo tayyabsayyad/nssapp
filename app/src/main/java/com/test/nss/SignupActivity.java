@@ -8,14 +8,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.api.RetrofitClient;
 
 import org.json.JSONArray;
@@ -23,6 +24,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,7 +38,7 @@ import retrofit2.internal.EverythingIsNonNull;
 
 public class SignupActivity extends AppCompatActivity {
 
-    Spinner dropdownClg;
+    AutoCompleteTextView dropdownClg;
 
     ArrayList<String> clgList;
     Context mContext;
@@ -107,30 +110,40 @@ public class SignupActivity extends AppCompatActivity {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(new Date());
 
-            dropdownClg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            //dropdownClg.setHintTextColor(mContext.getColor(R.color.colorPrimary));
+            dropdownClg.setDropDownBackgroundResource(R.drawable.drpdwn_clg_bg);
+            //dropdownClg.
+            dropdownClg.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                public void onClick(View view) {
+                    dropdownClg.showDropDown();
+                }
+            });
+            dropdownClg.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     String clgCode = adapterView.getItemAtPosition(i).toString();
-                    //Toast.makeText(mContext, clgCode, Toast.LENGTH_SHORT).show();
 
                     vecClgPref.setText("");
                     clgCode = clgCode.substring(clgCode.indexOf("-") + 1);
                     vecClgPref.append(clgCode);
                 }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
             });
+
             signupPost.setOnClickListener(v -> {
+
                 final EditText vec = findViewById(R.id.vec_in);
-                Toast.makeText(mContext, "Signing you up", Toast.LENGTH_SHORT).show();
-                if (!isEmpty(fName) && !isEmpty(fathName) &&
+
+                if (vec.getText().toString().trim().length()<5 && vec.getText().toString().trim().length()!=5)
+                    vec.setError("Enter only 5 digits");
+
+                else if (!isEmpty(fName) && !isEmpty(fathName) &&
                         !isEmpty(mName) && !isEmpty(lName) && !isEmpty(vec) &&
                         !isEmpty(email) && !isEmpty(contactNo) && !vecClgPref.getText().toString().equals("")
-                        && dropdownClg.getSelectedItem() != null) {
-                    String clgItem = dropdownClg.getSelectedItem().toString();
+                        && !isEmpty(dropdownClg) && vec.getText().toString().trim().length()==5) {
+                    Snackbar.make(v, "Signing you up!", Snackbar.LENGTH_SHORT).show();
+
+                    String clgItem = dropdownClg.getText().toString();
                     clgItem = clgItem.substring(0, clgItem.indexOf("-"));
                     Call<ResponseBody> signup = RetrofitClient.getInstance().getApi().signup(
                             "1",
@@ -150,14 +163,14 @@ public class SignupActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if (response.isSuccessful()) {
-                                Toast.makeText(mContext, "Signed Up", Toast.LENGTH_SHORT).show();
                                 finish();
                             } else if (response.errorBody() != null) {
                                 Log.e("onResponse:error", response.errorBody().toString());
                                 try {
                                     JSONObject j = new JSONObject(response.errorBody().string());
+
                                     Log.e("error", j.toString());
-                                    Toast.makeText(mContext, j.toString(), Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(mContext, j.toString(), Toast.LENGTH_SHORT).show();
                                 } catch (JSONException | IOException e) {
                                     e.printStackTrace();
                                 }
@@ -186,5 +199,21 @@ public class SignupActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static boolean pingURL(String url) {
+        url = url.replaceFirst("^https", "http"); // Otherwise an exception may be thrown on invalid SSL certificates.
+
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            //connection.setConnectTimeout(timeout);
+            //connection.setReadTimeout(timeout);
+            connection.setRequestMethod("HEAD");
+            int responseCode = connection.getResponseCode();
+            Log.wtf("AAAA", ""+responseCode);
+            return (200 <= responseCode && responseCode <= 399);
+        } catch (IOException exception) {
+            return false;
+        }
     }
 }
