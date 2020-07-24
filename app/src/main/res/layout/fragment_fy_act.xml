@@ -170,7 +170,7 @@
             android:layout_height="45dp"
             android:background="@drawable/ripple_add"
             android:foreground="@drawable/ic_plus_24"
-            android:visibility="visible"
+            android:visibility="gone"
             android:textAllCaps="false"
             android:textColor="@color/white" />
     </LinearLayout>

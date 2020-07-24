@@ -258,7 +258,8 @@ public class TestAdapter {
     public void insertActOff(String vec, String actCode,
                              String assignedDate,
                              String actName,
-                             String hours, int sync) {
+                             String hours,
+                             int sync) {
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -268,7 +269,7 @@ public class TestAdapter {
             contentValues.put("ActivityName", actName);
             contentValues.put("HoursWorked", hours);
             contentValues.put("If_Added", 1);
-            contentValues.put("State", 1);
+            contentValues.put("State", "Submitted");
             contentValues.put("Sync", sync);
 
             long row = mDb.insert("DailyActivity", null, contentValues);
@@ -314,7 +315,7 @@ public class TestAdapter {
     public Cursor getActList(String act) {
         try {
             //String a = String.format("aaa %d", act);
-            String sql = String.format(Locale.ENGLISH, "SELECT Date, ActivityName, HoursWorked, actID FROM DailyActivity WHERE ActivityCode=\"%s\" AND (not State=\"Deleted\")", (act));
+            String sql = String.format(Locale.ENGLISH, "SELECT * FROM DailyActivity WHERE ActivityCode=\"%s\" AND (not State=\"Deleted\")", (act));
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.i(TAG, "getActList: ");
             if (mCur2.getCount() == 0) {
@@ -330,6 +331,34 @@ public class TestAdapter {
     public Cursor getActAssigActName(int act) {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT * FROM ActivityListByAdmin WHERE activityType='%d'", act);
+            Cursor mCur2 = mDb.rawQuery(sql, null);
+            Log.i(TAG, "getActAssigActName: ");
+            if (mCur2.getCount() == 0) {
+            }
+            return mCur2;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Cursor getActAssigActNameOff(String act) {
+        try {
+            String sql = String.format(Locale.ENGLISH, "SELECT * FROM ActivityListByAdmin WHERE activityType LIKE '%s'", act);
+            Cursor mCur2 = mDb.rawQuery(sql, null);
+            Log.i(TAG, "getActAssigActName: ");
+            if (mCur2.getCount() == 0) {
+            }
+            return mCur2;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Cursor getActAssigName(String act) {
+        try {
+            String sql = String.format(Locale.ENGLISH, "SELECT * FROM ActivityListByAdmin WHERE activityName=\"%s\"", act);
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.i(TAG, "getActAssigActName: ");
             if (mCur2.getCount() == 0) {

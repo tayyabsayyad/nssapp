@@ -73,13 +73,13 @@ public class WorkDetailsFirstFrag extends Fragment {
         String univRemHours;
         String clgRemHours;
 
-        if (areaCompOne >= 1 && 80 - areaCompOne > 0)
-            areaRemOneHours = String.valueOf(80 - areaCompOne);
+        if (areaCompOne >= 1 && 40 - areaCompOne > 0)
+            areaRemOneHours = String.valueOf(40 - areaCompOne);
         else
             areaRemOneHours = "00";
 
-        if (areaCompTwo >= 1 && 80 - areaCompTwo > 0)
-            areaRemTwoHours = String.valueOf(80 - areaCompTwo);
+        if (areaCompTwo >= 1 && 40 - areaCompTwo > 0)
+            areaRemTwoHours = String.valueOf(40 - areaCompTwo);
         else
             areaRemTwoHours = "00";
 
@@ -95,8 +95,8 @@ public class WorkDetailsFirstFrag extends Fragment {
 
         m.close();
 
-        data.add(new AdapterDataWork("Area Based 1", "80", String.valueOf(areaCompOne), areaRemOneHours));
-        data.add(new AdapterDataWork("Area Based 2", "80", String.valueOf(areaCompTwo), areaRemTwoHours));
+        data.add(new AdapterDataWork("Area Based 1", "40", String.valueOf(areaCompOne), areaRemOneHours));
+        data.add(new AdapterDataWork("Area Based 2", "40", String.valueOf(areaCompTwo), areaRemTwoHours));
         data.add(new AdapterDataWork(getString(R.string.univ), "20", String.valueOf(univComp), univRemHours));
         data.add(new AdapterDataWork(getString(R.string.clg), "20", String.valueOf(clgComp), clgRemHours));
         return data;

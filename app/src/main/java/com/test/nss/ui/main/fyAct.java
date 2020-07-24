@@ -40,7 +40,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-import static com.test.nss.ediary.blackish;
 import static com.test.nss.ediary.primaryColDark;
 import static com.test.nss.ediary.primaryColLight;
 
@@ -71,6 +70,8 @@ public class fyAct extends Fragment {
     int whichAct;
     int act;
     int newHours = 0;
+
+    MyListAdapter adapterClg;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,6 +130,7 @@ public class fyAct extends Fragment {
             clg.setTextColor(Color.BLACK);
         });
 
+
         clg.setOnClickListener(v -> {
             mainFy.setVisibility(View.VISIBLE);
 
@@ -145,13 +147,9 @@ public class fyAct extends Fragment {
         });
 
         clgListDataFy = addAct("First Year College");
-//        areaDataMainFy = addAct("First Year Area Based One") + addAct("First Year Area Based One");
+        //areaDataMainFy = addAct("First Year Area Based One") + addAct("First Year Area Based One");
         areaDataMainFy = ListUtils.union(addAct("First Year Area Based One"), addAct("First Year Area Based Two"));
-        //areaDataMainFy = addAct("First Year Area Based One");
-        //areaDataMainFy.addAll(addAct("First Year Area Based Two"));
-        Log.e("AA", areaDataMainFy.toString());
 
-        //areaDataMainFy = addAct("First Year Area Based Two");
         univListDataFy = addAct("First Year University");
 
         onClickInterface2 = actID -> {
@@ -356,7 +354,7 @@ public class fyAct extends Fragment {
 
         // Recycler View College
         RecyclerView recyclerViewHours = root.findViewById(R.id.hoursRecFy);
-        MyListAdapter adapterHours = new MyListAdapter(clgListDataFy, mContext, onClickInterface2);
+        adapterClg = new MyListAdapter(clgListDataFy, mContext, onClickInterface2);
 
         SwipeHelper swipeHelperHours = new SwipeHelper(mContext, recyclerViewHours) {
             @Override
@@ -382,12 +380,12 @@ public class fyAct extends Fragment {
                                     dialog.dismiss();
                                     int p = viewHolder.getAdapterPosition();
 
-                                    Log.e("Yes this", adapterHours.list.get(p).getAct());
+                                    Log.e("Yes this", adapterClg.list.get(p).getAct());
                                     if (!input.getText().toString().trim().equals("")) {
                                         newHours = Integer.parseInt(input.getText().toString());
 
                                         if (newHours >= 1 && newHours <= 10) {
-                                            String actName = adapterHours.list.get(p).getAct();
+                                            String actName = adapterClg.list.get(p).getAct();
 
                                             TestAdapter mdb = new TestAdapter(mContext);
                                             mdb.createDatabase();
@@ -398,13 +396,13 @@ public class fyAct extends Fragment {
                                             c.moveToFirst();
 
                                             clgListDataFy.add(p, new AdapterDataMain(
-                                                    adapterHours.list.get(p).getDate(),
-                                                    adapterHours.list.get(p).getAct(),
+                                                    adapterClg.list.get(p).getDate(),
+                                                    adapterClg.list.get(p).getAct(),
                                                     String.valueOf(newHours),
-                                                    adapterHours.list.get(p).getId()));
+                                                    adapterClg.list.get(p).getId()));
 
                                             clgListDataFy.remove(p + 1);
-                                            adapterHours.notifyDataSetChanged();
+                                            adapterClg.notifyDataSetChanged();
 
                                             //TODO: Offline mode needs to be checked
                                             //mdb.setSyncActDetails(0, actID);
@@ -455,7 +453,7 @@ public class fyAct extends Fragment {
                             @Override
                             public void onClick(int pos) {
                                 int actID = Integer.parseInt(clgListDataFy.get(viewHolder.getAdapterPosition()).getId());
-                                String actName = adapterHours.list.get(viewHolder.getAdapterPosition()).getAct();
+                                String actName = adapterClg.list.get(viewHolder.getAdapterPosition()).getAct();
 
                                 TestAdapter mdb = new TestAdapter(mContext);
                                 mdb.createDatabase();
@@ -467,7 +465,7 @@ public class fyAct extends Fragment {
 
                                 Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
                                         "Token " + startActivity.AUTH_TOKEN,
-                                        Integer.parseInt(adapterHours.list.get(viewHolder.getAdapterPosition()).getHours()),
+                                        Integer.parseInt(adapterClg.list.get(viewHolder.getAdapterPosition()).getHours()),
                                         startActivity.VEC,
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
@@ -476,7 +474,7 @@ public class fyAct extends Fragment {
                                 );
 
                                 clgListDataFy.remove(viewHolder.getAdapterPosition());
-                                adapterHours.notifyDataSetChanged();
+                                adapterClg.notifyDataSetChanged();
 
                                 putHours.enqueue(new Callback<ResponseBody>() {
                                     @Override
@@ -497,7 +495,7 @@ public class fyAct extends Fragment {
         };
 
         recyclerViewHours.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerViewHours.setAdapter(adapterHours);
+        recyclerViewHours.setAdapter(adapterClg);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeHelperHours);
         itemTouchHelper.attachToRecyclerView(recyclerViewHours);
@@ -511,18 +509,18 @@ public class fyAct extends Fragment {
         add.setOnClickListener(view1 -> {
             onDetach();
 
-            mainFy.setVisibility(View.GONE);
-            fragFy.setVisibility(View.GONE);
-            univRecFy.setVisibility(View.GONE);
-            areaRecFy.setVisibility(View.GONE);
-            clgRecFy.setVisibility(View.GONE);
-            univ.setBackgroundColor(Color.TRANSPARENT);
-            clg.setBackgroundColor(Color.TRANSPARENT);
-            area.setBackgroundColor(Color.TRANSPARENT);
+            //mainFy.setVisibility(View.GONE);
+            //fragFy.setVisibility(View.GONE);
+            //univRecFy.setVisibility(View.GONE);
+            //areaRecFy.setVisibility(View.GONE);
+            //clgRecFy.setVisibility(View.GONE);
+            //univ.setBackgroundColor(Color.TRANSPARENT);
+            //clg.setBackgroundColor(Color.TRANSPARENT);
+            //area.setBackgroundColor(Color.TRANSPARENT);
 
-            univ.setTextColor(blackish);
-            area.setTextColor(blackish);
-            clg.setTextColor(blackish);
+            //univ.setTextColor(blackish);
+            //area.setTextColor(blackish);
+            //clg.setTextColor(blackish);
 
             AddDetailsActivity detailsActivity = new AddDetailsActivity();
             Bundle args = new Bundle();
@@ -535,14 +533,23 @@ public class fyAct extends Fragment {
 
             FragmentManager fm = requireActivity().getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").addToBackStack("fyAct").commit();
+            adapterArea.notifyDataSetChanged();
+            adapterClg.notifyDataSetChanged();
+            adapterUniv.notifyDataSetChanged();
 
         });
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
     }
 
     // TODO: Check this
     @Override
     public void onDetach() {
         super.onDetach();
+
         FragmentManager fm = requireActivity().getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             Log.e("fyAct", "onDetach: " + fm.getBackStackEntryCount());
@@ -555,13 +562,14 @@ public class fyAct extends Fragment {
 
         ArrayList<AdapterDataMain> data = new ArrayList<>();
 
-        TestAdapter mDbHelper = new TestAdapter(requireContext());
+        TestAdapter mDbHelper = new TestAdapter(mContext);
         mDbHelper.createDatabase();
         mDbHelper.open();
 
         Cursor c = mDbHelper.getActList(whichAct);
         Log.e("SSS", "" + c.getCount());
         while (c.moveToNext()) {
+            Log.e("This", c.getString(c.getColumnIndex("ActivityCode")));
 
             data.add(new AdapterDataMain(
                     c.getString(c.getColumnIndex("Date")),

@@ -29,10 +29,13 @@ import com.test.nss.R;
 import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.startActivity;
+import com.test.nss.ui.onClickInterface2;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -56,7 +59,7 @@ public class AddDetailsActivity extends Fragment {
     Button addSend;
     Button add;
     Button backActDetail;
-
+    onClickInterface2 onClickInterface2;
     ConstraintLayout campActIn;
 
     int whichAct;
@@ -95,202 +98,22 @@ public class AddDetailsActivity extends Fragment {
         return huh;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        constFyAct.setVisibility(View.GONE);
-        nssHalvesLinear.setVisibility(View.GONE);
-        actInputHeader.setVisibility(View.VISIBLE);
-        clgCode = huh.findViewById(R.id.clgCode);
-        addSend = huh.findViewById(R.id.addSend);
-        campActIn = huh.findViewById(R.id.camp_act_in);
-        add = requireActivity().findViewById(R.id.add);
-        actId = huh.findViewById(R.id.actdetailId);
-
-        actDate = huh.findViewById(R.id.actDate);
-        actHour = huh.findViewById(R.id.actHour);
-
-        todayBtn = huh.findViewById(R.id.todayBtn);
-
-        drpdownactAssignName = huh.findViewById(R.id.drpdown_actAssignName);
-        drpdownactClg = huh.findViewById(R.id.drpdown_actClg);
-        drpdownactName = huh.findViewById(R.id.drpdown_actName);
-
-        actAssignListId = getAssignActListId();
-
-        final Calendar cal = Calendar.getInstance();
-        int currDay = cal.get(Calendar.DATE);
-        int currMont = cal.get(Calendar.MONTH)+1;
-        int currYear = cal.get(Calendar.YEAR);
-
-        String todayDate = ""+currYear+"-"+currMont+"-"+currDay;
-        todayBtn.setOnClickListener(view12 -> {
-            actDate.setText(todayDate);
-        });
-        actDate.setOnClickListener(view1 -> {
-            int dd = cal.get(Calendar.DAY_OF_MONTH);
-            int mm = cal.get(Calendar.MONTH);
-            int yr = cal.get(Calendar.YEAR);
-
-            DatePickerDialog d = new DatePickerDialog(
-                    requireContext(),
-                    R.style.datePick,
-                    onDateSetListener,
-                    yr, mm, dd
-            );
-            if (d.getWindow() != null)
-                //d.getWindow().set(new ColorDrawable(requireContext().getColor(R.color.bla)));
-                d.show();
-        });
-
-        onDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                i1 = i1 + 1;
-                String date = i + "-" + i1 + "-" + i2;
-
-                if (i2>=currDay && i1>=currMont && i>=currYear)
-                    actDate.setText(date);
-                else
-                    Toast.makeText(requireContext(), "Enter after today's date", Toast.LENGTH_SHORT).show();
+    public static <V> Integer getKey(Map<Integer, String> map, String value) {
+        for (Integer key : map.keySet()) {
+            if (value.equals(map.get(key))) {
+                return key;
             }
-        };
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, clgList);
-        drpdownactClg.setAdapter(adapter);
-
-        ArrayAdapter<String> a = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, actAssignList);
-        drpdownactAssignName.setAdapter(a);
-
-        /*drpdownactAssignName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                actId.setText(actAssignList.get(i));
-                Log.e("AA", actAssignList.get(i));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });*/
-        String actName = getResources().getStringArray(R.array.valOfActNames)[act];
-        addSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(actHour.getText().toString().equals("") || Integer.parseInt(actHour.getText().toString().trim())<=0)
-                    Toast.makeText(requireContext(), "Work atleast an hour and enter", Toast.LENGTH_SHORT).show();
-
-                else if(Integer.parseInt(actHour.getText().toString().trim())>10)
-                    Toast.makeText(requireContext(), "Cannot enter more than 10 hours", Toast.LENGTH_SHORT).show();
-
-                else if (actDate.getText().toString().equals("") || actDate.getText().toString().equals("YYYY/MM/DD"))
-                    Toast.makeText(requireContext(), "Enter Date", Toast.LENGTH_SHORT).show();
-
-                else if (!actDate.getText().toString().equals("") && drpdownactAssignName.getSelectedItem() != null
-                        && !isEmpty(actHour)
-                        //&& !actId.getText().toString().equals("")
-                        && drpdownactClg.getSelectedItem() != null
-                        && drpdownactName.getSelectedItem() != null) {
-                    actId.setText(actAssignListId.get(drpdownactAssignName.getSelectedItemPosition()));
-                    TestAdapter mDbHelper = new TestAdapter(requireContext());
-                    mDbHelper.createDatabase();
-                    mDbHelper.open();
-
-                    Log.e("hmm", "" + whichAct);
-                    Log.e("hmm", "" + actDate.getText().toString());
-                    Log.e("hmm", "" + drpdownactAssignName.getSelectedItem().toString());
-                    Log.e("hmm", "" + actId.getText().toString());
-
-                    Log.e("AAUU", actName);
-                    mDbHelper.insertActOff(
-                            startActivity.VEC,
-                            actName,
-                            actDate.getText().toString(),
-                            drpdownactAssignName.getSelectedItem().toString(),
-                            //actId.getText().toString(),
-                            actHour.getText().toString(),
-                            0
-                    );
-                    mDbHelper.close();
-                    if (isNetworkAvailable()) {
-                        Log.e("AOO", "" + actName);
-                        Log.e("AOO", "" + drpdownactAssignName.getSelectedItem().toString());
-                        Log.e("AOO", "" + whichAct);
-                        Log.e("AOO", "" + actId.getText().toString());
-
-                        Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
-                                "Token " + startActivity.AUTH_TOKEN,
-                                startActivity.VEC,
-                                Integer.parseInt(actId.getText().toString()),// AAA
-                                Integer.parseInt(actHour.getText().toString()),
-                                actDate.getText().toString(),
-                                //drpdownactAssignName.getSelectedItem().toString(),
-                                whichAct,
-                                1
-                        );
-                        pushActList.enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            @EverythingIsNonNull
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful() && response.body() != null) {
-                                    Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
-                                    mDbHelper.createDatabase();
-                                    mDbHelper.open();
-                                    mDbHelper.setSync("DailyActivity", 1);
-                                    mDbHelper.close();
-                                    FragmentManager fm = requireActivity().getSupportFragmentManager();
-                                    fm.popBackStack("AddDetailsActivity", 0);
-                                } else if (response.errorBody() != null) {
-                                    try {
-                                        Log.e("onResponse:error", response.errorBody().string());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-
-                            @Override
-                            @EverythingIsNonNull
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                Log.e("onFail", t.toString());
-                            }
-                        });
-                    }
-                } else
-                    Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();
-                constFyAct.setVisibility(View.VISIBLE);
-                nssHalvesLinear.setVisibility(View.VISIBLE);
-                add.setVisibility(View.GONE);
-
-                actInputHeader.setVisibility(View.GONE);
-                campActIn.setVisibility(View.GONE);
-            }
-        });
-
-        backActDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                constFyAct.setVisibility(View.VISIBLE);
-                nssHalvesLinear.setVisibility(View.VISIBLE);
-
-                actInputHeader.setVisibility(View.GONE);
-                campActIn.setVisibility(View.GONE);
-                add.setVisibility(View.GONE);
-            }
-        });
+        }
+        return null;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        constFyAct.setVisibility(View.VISIBLE);
-        nssHalvesLinear.setVisibility(View.VISIBLE);
-        add.setVisibility(View.GONE);
-
-        actInputHeader.setVisibility(View.GONE);
-        campActIn.setVisibility(View.GONE);
-        //FragmentManager fm = requireActivity().getSupportFragmentManager();
+    public static <K> String getRoot(Map<String, Integer> map, Integer value) {
+        for (String key : map.keySet()) {
+            if (value.equals(map.get(key))) {
+                return key;
+            }
+        }
+        return null;
     }
 
     private boolean isNetworkAvailable() {
@@ -320,6 +143,212 @@ public class AddDetailsActivity extends Fragment {
         return data2;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        constFyAct.setVisibility(View.GONE);
+        nssHalvesLinear.setVisibility(View.GONE);
+        actInputHeader.setVisibility(View.VISIBLE);
+        clgCode = huh.findViewById(R.id.clgCode);
+        addSend = huh.findViewById(R.id.addSend);
+        campActIn = huh.findViewById(R.id.camp_act_in);
+        add = requireActivity().findViewById(R.id.add);
+        actId = huh.findViewById(R.id.actdetailId);
+
+        actDate = huh.findViewById(R.id.actDate);
+        actHour = huh.findViewById(R.id.actHour);
+
+        todayBtn = huh.findViewById(R.id.todayBtn);
+
+        drpdownactAssignName = huh.findViewById(R.id.drpdown_actAssignName);
+        drpdownactClg = huh.findViewById(R.id.drpdown_actClg);
+        drpdownactName = huh.findViewById(R.id.drpdown_actName);
+
+        actAssignListId = getAssignActListId();
+
+        final Calendar cal = Calendar.getInstance();
+        int currDay = cal.get(Calendar.DATE);
+        int currMont = cal.get(Calendar.MONTH) + 1;
+        int currYear = cal.get(Calendar.YEAR);
+
+        String todayDate = "" + currYear + "-" + currMont + "-" + currDay;
+        todayBtn.setOnClickListener(view12 -> {
+            actDate.setText(todayDate);
+        });
+        actDate.setOnClickListener(view1 -> {
+            int dd = cal.get(Calendar.DAY_OF_MONTH);
+            int mm = cal.get(Calendar.MONTH);
+            int yr = cal.get(Calendar.YEAR);
+
+            DatePickerDialog d = new DatePickerDialog(
+                    requireContext(),
+                    R.style.datePick,
+                    onDateSetListener,
+                    yr, mm, dd
+            );
+            if (d.getWindow() != null)
+                //d.getWindow().set(new ColorDrawable(requireContext().getColor(R.color.bla)));
+                d.show();
+        });
+
+        onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                i1 = i1 + 1;
+                String date = i + "-" + i1 + "-" + i2;
+
+                if (i2 >= currDay && i1 >= currMont && i >= currYear)
+                    actDate.setText(date);
+                else
+                    Toast.makeText(requireContext(), "Enter after today's date", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, clgList);
+        drpdownactClg.setAdapter(adapter);
+
+        Map<String, Integer> actIdHash = new HashMap<>();
+        actIdHash.put("First Year University", 13);
+        actIdHash.put("First Year Area Based One", 121);
+        actIdHash.put("First Year Area Based Two", 122);
+        actIdHash.put("First Year College", 11);
+        actIdHash.put("Second Year University", 23);
+        actIdHash.put("Second Year Area Based One", 221);
+        actIdHash.put("Second Year Area Based Two", 222);
+        actIdHash.put("Second Year College", 21);
+        ArrayAdapter<String> a = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, actAssignList);
+        drpdownactAssignName.setAdapter(a);
+
+        String actName = getResources().getStringArray(R.array.valOfActNames)[act];
+        addSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (actHour.getText().toString().equals("") || Integer.parseInt(actHour.getText().toString().trim()) <= 0)
+                    Toast.makeText(requireContext(), "Work atleast an hour and enter", Toast.LENGTH_SHORT).show();
+
+                else if (Integer.parseInt(actHour.getText().toString().trim()) > 10)
+                    Toast.makeText(requireContext(), "Cannot enter more than 10 hours", Toast.LENGTH_SHORT).show();
+
+                else if (actDate.getText().toString().equals("") || actDate.getText().toString().equals("YYYY/MM/DD"))
+                    Toast.makeText(requireContext(), "Enter Date", Toast.LENGTH_SHORT).show();
+
+                else if (!actDate.getText().toString().equals("") && drpdownactAssignName.getSelectedItem() != null
+                        && !isEmpty(actHour)
+                        //&& !actId.getText().toString().equals("")
+                        && drpdownactClg.getSelectedItem() != null
+                        && drpdownactName.getSelectedItem() != null) {
+                    actId.setText(actAssignListId.get(drpdownactAssignName.getSelectedItemPosition()));
+
+                    TestAdapter mDbHelper = new TestAdapter(requireContext());
+                    mDbHelper.createDatabase();
+                    mDbHelper.open();
+
+                    String activityName = drpdownactAssignName.getSelectedItem().toString();
+
+                    Log.e("hmm", "" + whichAct);
+                    Log.e("hmm", "" + actDate.getText().toString());
+                    Log.e("hmm", "" + drpdownactAssignName.getSelectedItem().toString());
+                    Log.e("hmm", "" + actId.getText().toString());
+
+
+                    Cursor m = mDbHelper.getActAssigName(activityName);
+                    m.moveToFirst();
+
+                    String actName = getRoot(actIdHash, m.getInt(m.getColumnIndex("activityType")));
+                    mDbHelper.insertActOff(
+                            startActivity.VEC,
+                            actName,
+                            actDate.getText().toString(),
+                            drpdownactAssignName.getSelectedItem().toString(),
+                            //actId.getText().toString(),
+                            actHour.getText().toString(),
+                            0
+                    );
+
+                    if (isNetworkAvailable()) {
+                        Log.e("AOO", "" + actName);
+                        Log.e("AOO", "" + drpdownactAssignName.getSelectedItem().toString());
+                        Log.e("AOO", "" + whichAct);
+                        Log.e("AOO", "" + actId.getText().toString());
+
+                        Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
+                                "Token " + startActivity.AUTH_TOKEN,
+                                startActivity.VEC,
+                                m.getInt(m.getColumnIndex("id")),// AAA
+                                Integer.parseInt(actHour.getText().toString()),
+                                actDate.getText().toString(),
+                                //drpdownactAssignName.getSelectedItem().toString(),
+                                m.getInt(m.getColumnIndex("activityType")),
+                                1
+                        );
+                        m.close();
+                        pushActList.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            @EverythingIsNonNull
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                if (response.isSuccessful() && response.body() != null) {
+                                    Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
+                                    mDbHelper.createDatabase();
+                                    mDbHelper.open();
+                                    mDbHelper.setSync("DailyActivity", 1);
+                                    mDbHelper.close();
+                                    FragmentManager fm = requireActivity().getSupportFragmentManager();
+                                    fm.popBackStack("AddDetailsActivity", 0);
+                                } else if (response.errorBody() != null) {
+                                    try {
+                                        Log.e("onResponse:error", response.errorBody().string());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            @EverythingIsNonNull
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                Log.e("onFail", t.toString());
+                            }
+                        });
+                    }
+                    mDbHelper.close();
+                } else
+                    Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();
+                constFyAct.setVisibility(View.VISIBLE);
+                nssHalvesLinear.setVisibility(View.VISIBLE);
+                add.setVisibility(View.GONE);
+
+                actInputHeader.setVisibility(View.GONE);
+                campActIn.setVisibility(View.GONE);
+
+            }
+        });
+
+        backActDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                constFyAct.setVisibility(View.VISIBLE);
+                nssHalvesLinear.setVisibility(View.VISIBLE);
+
+                actInputHeader.setVisibility(View.GONE);
+                campActIn.setVisibility(View.GONE);
+                add.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        constFyAct.setVisibility(View.VISIBLE);
+        nssHalvesLinear.setVisibility(View.VISIBLE);
+        add.setVisibility(View.GONE);
+
+        actInputHeader.setVisibility(View.GONE);
+        campActIn.setVisibility(View.GONE);
+        //FragmentManager fm = requireActivity().getSupportFragmentManager();
+    }
+
     public ArrayList<String> getAssignActList() {
         assert getArguments() != null;
         whichAct = getArguments().getInt("whichAct");
@@ -330,7 +359,7 @@ public class AddDetailsActivity extends Fragment {
         TestAdapter mDbHelper = new TestAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
-        Cursor c3 = mDbHelper.getActAssigActName(whichAct);
+        Cursor c3 = mDbHelper.getActAssigActNameOff(whichAct + "%");
         Log.e("actAssign:", "" + c3.getCount());
 
         //c2.moveToFirst();
@@ -350,7 +379,7 @@ public class AddDetailsActivity extends Fragment {
         TestAdapter mDbHelper = new TestAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
-        Cursor c2 = mDbHelper.getActAssigActName(whichAct);
+        Cursor c2 = mDbHelper.getActAssigActNameOff(whichAct + "%");
         Log.e("actAssign:", "" + c2.getCount());
 
         //c2.moveToFirst();
