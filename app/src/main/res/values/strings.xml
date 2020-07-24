@@ -49,19 +49,19 @@
 
     <string-array name="valOfActNames">
         <item>First Year University</item>
-        <item>First Year Area Based</item>
+        <item>First Year Area Based One</item>
         <item>First Year College</item>
         <item>Second Year University</item>
-        <item>Second Year Area Based</item>
+        <item>Second Year Area Based Two</item>
         <item>Second Year College</item>
     </string-array>
 
     <string-array name="labelOfActNames">
         <item>11</item>
-        <item>12</item>
+        <item>121</item>
         <item>13</item>
         <item>21</item>
-        <item>22</item>
+        <item>222</item>
         <item>23</item>
     </string-array>
 </resources>

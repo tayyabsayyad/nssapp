@@ -1,7 +1,6 @@
 package com.test.nss.ui.main;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.test.nss.MyButtonClickListener;
 import com.test.nss.R;
 import com.test.nss.SwipeHelper;
 import com.test.nss.TestAdapter;
@@ -31,7 +29,8 @@ import com.test.nss.api.RetrofitClient;
 import com.test.nss.startActivity;
 import com.test.nss.ui.onClickInterface2;
 
-import java.io.IOException;
+import org.apache.commons.collections4.ListUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +41,8 @@ import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
 import static com.test.nss.ediary.blackish;
-import static com.test.nss.ediary.primaryCol;
 import static com.test.nss.ediary.primaryColDark;
+import static com.test.nss.ediary.primaryColLight;
 
 public class fyAct extends Fragment {
 
@@ -53,7 +52,6 @@ public class fyAct extends Fragment {
     Button clg;
 
     LinearLayout mainFy;
-    MyButtonClickListener myButtonClickListener;
 
     Context mContext;
 
@@ -111,11 +109,8 @@ public class fyAct extends Fragment {
             clgRecFy.setVisibility(View.GONE);
             add.setVisibility(View.VISIBLE);
 
-            //univ.setBackgroundColor(primaryCol);
             univ.setTextColor(primaryColDark);
-            //area.setBackgroundColor(transparent);
             area.setTextColor(Color.BLACK);
-            //clg.setBackgroundColor(transparent);
             clg.setTextColor(Color.BLACK);
         });
 
@@ -129,11 +124,8 @@ public class fyAct extends Fragment {
             areaRecFy.setVisibility(View.VISIBLE);
             clgRecFy.setVisibility(View.GONE);
 
-            //area.setBackgroundColor(primaryColDark);
             area.setTextColor(primaryColDark);
-            //univ.setBackgroundColor(transparent);
             univ.setTextColor(Color.BLACK);
-            //clg.setBackgroundColor(transparent);
             clg.setTextColor(Color.BLACK);
         });
 
@@ -147,16 +139,19 @@ public class fyAct extends Fragment {
             areaRecFy.setVisibility(View.GONE);
             clgRecFy.setVisibility(View.VISIBLE);
 
-            //clg.setBackgroundColor(primaryColDark);
             clg.setTextColor(primaryColDark);
-            //univ.setBackgroundColor(transparent);
             univ.setTextColor(Color.BLACK);
-            //area.setBackgroundColor(transparent);
             area.setTextColor(Color.BLACK);
         });
 
         clgListDataFy = addAct("First Year College");
-        areaDataMainFy = addAct("First Year Area Based");
+//        areaDataMainFy = addAct("First Year Area Based One") + addAct("First Year Area Based One");
+        areaDataMainFy = ListUtils.union(addAct("First Year Area Based One"), addAct("First Year Area Based Two"));
+        //areaDataMainFy = addAct("First Year Area Based One");
+        //areaDataMainFy.addAll(addAct("First Year Area Based Two"));
+        Log.e("AA", areaDataMainFy.toString());
+
+        //areaDataMainFy = addAct("First Year Area Based Two");
         univListDataFy = addAct("First Year University");
 
         onClickInterface2 = actID -> {
@@ -164,90 +159,88 @@ public class fyAct extends Fragment {
 
         };
 
+        // Recycler View Univ
         RecyclerView recyclerViewUniv = root.findViewById(R.id.univRecFy);
         MyListAdapter adapterUniv = new MyListAdapter(univListDataFy, mContext, onClickInterface2);
-        recyclerViewUniv.setHasFixedSize(true);
-        recyclerViewUniv.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerViewUniv.setAdapter(adapterUniv);
 
-        RecyclerView recyclerViewArea = root.findViewById(R.id.areaRecFy);
-        MyListAdapter adapterArea = new MyListAdapter(areaDataMainFy, mContext, onClickInterface2);
-        recyclerViewArea.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerViewArea.setAdapter(adapterArea);
-
-        RecyclerView recyclerViewHours = root.findViewById(R.id.hoursRecFy);
-        MyListAdapter adapterHours = new MyListAdapter(clgListDataFy, mContext, onClickInterface2);
-
-
-        SwipeHelper swipeHelper = new SwipeHelper(mContext, recyclerViewHours) {
+        SwipeHelper swipeHelperUniv = new SwipeHelper(mContext, recyclerViewUniv) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
                 underlayButtons.add(new SwipeHelper.UnderlayButton(
+                        mContext,
                         "Edit",
-                        R.drawable.ic_back_24,
-                        primaryCol,
+                        R.drawable.ic_edit_24,
+                        primaryColLight,
                         new SwipeHelper.UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
-                                ///Log.e("HMm", "E");
-                                int actID = Integer.parseInt(clgListDataFy.get(viewHolder.getAdapterPosition()).getId());
+                                int actID = Integer.parseInt(univListDataFy.get(viewHolder.getAdapterPosition()).getId());
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
                                 View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
                                 EditText input = (EditText) viewInflated.findViewById(R.id.input);
                                 builder.setView(viewInflated);
 
-                                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
+                                builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
 
-                                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        if (!input.getText().toString().trim().equals("")) {
-                                            newHours = Integer.parseInt(input.getText().toString());
+                                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                                    dialog.dismiss();
+                                    int p = viewHolder.getAdapterPosition();
 
-                                            if (newHours >= 1 && newHours <= 10) {
-                                                adapterHours.notifyDataSetChanged();
-                                                TestAdapter mdb = new TestAdapter(mContext);
-                                                mdb.createDatabase();
-                                                mdb.open();
-                                                mdb.setDetails(newHours, actID);
-                                                mdb.setSyncActDetails(0, actID);
-                                                mdb.close();
-                                                adapterHours.notifyDataSetChanged();
-                                                Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                                        "Token " + startActivity.AUTH_TOKEN,
-                                                        newHours,
-                                                        String.valueOf(actID));
-                                                putHours.enqueue(new Callback<ResponseBody>() {
-                                                    @Override
-                                                    @EverythingIsNonNull
-                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                        if (response.isSuccessful() && response.body() != null)
-                                                            Log.e("YA", "DONE");
-                                                        else if (response.errorBody() != null) {
-                                                            try {
-                                                                Log.e("Error", "" + response.errorBody().string());
-                                                            } catch (IOException e) {
-                                                                e.printStackTrace();
-                                                            }
-                                                        }
-                                                    }
+                                    Log.e("Yes this", adapterUniv.list.get(p).getAct());
+                                    if (!input.getText().toString().trim().equals("")) {
+                                        newHours = Integer.parseInt(input.getText().toString());
 
-                                                    @Override
-                                                    @EverythingIsNonNull
-                                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                        Log.e("Error:onFailure", t.toString());
-                                                    }
-                                                });
-                                            } else
-                                                Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
-                                        }
+                                        if (newHours >= 1 && newHours <= 10) {
+                                            String actName = adapterUniv.list.get(p).getAct();
+
+                                            TestAdapter mdb = new TestAdapter(mContext);
+                                            mdb.createDatabase();
+                                            mdb.open();
+                                            mdb.setDetails(newHours, actID);
+
+                                            Cursor c = mdb.getActAssigActNameAdmin(actName);
+                                            c.moveToFirst();
+
+                                            univListDataFy.add(p, new AdapterDataMain(
+                                                    adapterUniv.list.get(p).getDate(),
+                                                    adapterUniv.list.get(p).getAct(),
+                                                    String.valueOf(newHours),
+                                                    adapterUniv.list.get(p).getId()));
+
+                                            univListDataFy.remove(p + 1);
+                                            adapterUniv.notifyDataSetChanged();
+
+                                            //TODO: Offline mode needs to be checked
+                                            //mdb.setSyncActDetails(0, actID);
+
+                                            Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
+                                                    "Token " + startActivity.AUTH_TOKEN,
+                                                    newHours,
+                                                    startActivity.VEC,
+                                                    Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
+                                                    Integer.parseInt(c.getString(c.getColumnIndex("id"))),
+                                                    3,
+
+                                                    actID
+                                            );
+                                            c.close();
+                                            mdb.close();
+                                            putHours.enqueue(new Callback<ResponseBody>() {
+                                                @Override
+                                                @EverythingIsNonNull
+                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                                }
+
+                                                @Override
+                                                @EverythingIsNonNull
+                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                    Log.e("Error:onFailure", t.toString());
+                                                }
+                                            });
+                                        } else
+                                            Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
                                     }
                                 });
 
@@ -260,12 +253,260 @@ public class fyAct extends Fragment {
             }
         };
 
+        recyclerViewUniv.setLayoutManager(new LinearLayoutManager(mContext));
+        recyclerViewUniv.setAdapter(adapterUniv);
+
+        // Recycler View Area
+        RecyclerView recyclerViewArea = root.findViewById(R.id.areaRecFy);
+        MyListAdapter adapterArea = new MyListAdapter(areaDataMainFy, mContext, onClickInterface2);
+
+        SwipeHelper swipeHelperArea = new SwipeHelper(mContext, recyclerViewArea) {
+            @Override
+            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+                underlayButtons.add(new SwipeHelper.UnderlayButton(
+                        mContext,
+                        "Edit",
+                        R.drawable.ic_edit_24,
+                        primaryColLight,
+                        new SwipeHelper.UnderlayButtonClickListener() {
+                            @Override
+                            public void onClick(int pos) {
+                                int actID = Integer.parseInt(areaDataMainFy.get(viewHolder.getAdapterPosition()).getId());
+                                AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
+                                View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
+
+                                EditText input = (EditText) viewInflated.findViewById(R.id.input);
+                                builder.setView(viewInflated);
+
+                                builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
+
+                                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                                    dialog.dismiss();
+                                    int p = viewHolder.getAdapterPosition();
+
+                                    Log.e("Yes this", adapterArea.list.get(p).getAct());
+                                    if (!input.getText().toString().trim().equals("")) {
+                                        newHours = Integer.parseInt(input.getText().toString());
+
+                                        if (newHours >= 1 && newHours <= 10) {
+                                            String actName = adapterArea.list.get(p).getAct();
+
+                                            TestAdapter mdb = new TestAdapter(mContext);
+                                            mdb.createDatabase();
+                                            mdb.open();
+                                            mdb.setDetails(newHours, actID);
+
+                                            Cursor c = mdb.getActAssigActNameAdmin(actName);
+                                            c.moveToFirst();
+
+                                            areaDataMainFy.add(p, new AdapterDataMain(
+                                                    adapterArea.list.get(p).getDate(),
+                                                    adapterArea.list.get(p).getAct(),
+                                                    String.valueOf(newHours),
+                                                    adapterArea.list.get(p).getId()));
+
+                                            areaDataMainFy.remove(p + 1);
+                                            adapterArea.notifyDataSetChanged();
+
+                                            //TODO: Offline mode needs to be checked
+                                            //mdb.setSyncActDetails(0, actID);
+
+                                            Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
+                                                    "Token " + startActivity.AUTH_TOKEN,
+                                                    newHours,
+                                                    startActivity.VEC,
+                                                    Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
+                                                    Integer.parseInt(c.getString(c.getColumnIndex("id"))),
+                                                    3,
+
+                                                    actID
+                                            );
+                                            c.close();
+                                            mdb.close();
+                                            putHours.enqueue(new Callback<ResponseBody>() {
+                                                @Override
+                                                @EverythingIsNonNull
+                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                                }
+
+                                                @Override
+                                                @EverythingIsNonNull
+                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                    Log.e("Error:onFailure", t.toString());
+                                                }
+                                            });
+                                        } else
+                                            Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                                if (viewInflated.getParent() != null)
+                                    ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
+                                builder.show();
+                            }
+                        }
+                ));
+            }
+        };
+
+
+        recyclerViewArea.setLayoutManager(new LinearLayoutManager(mContext));
+        recyclerViewArea.setAdapter(adapterArea);
+
+        // Recycler View College
+        RecyclerView recyclerViewHours = root.findViewById(R.id.hoursRecFy);
+        MyListAdapter adapterHours = new MyListAdapter(clgListDataFy, mContext, onClickInterface2);
+
+        SwipeHelper swipeHelperHours = new SwipeHelper(mContext, recyclerViewHours) {
+            @Override
+            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+                underlayButtons.add(new SwipeHelper.UnderlayButton(
+                        mContext,
+                        "",
+                        R.drawable.ic_edit_24,
+                        primaryColLight,
+                        new SwipeHelper.UnderlayButtonClickListener() {
+                            @Override
+                            public void onClick(int pos) {
+                                int actID = Integer.parseInt(clgListDataFy.get(viewHolder.getAdapterPosition()).getId());
+                                AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
+                                View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
+
+                                EditText input = (EditText) viewInflated.findViewById(R.id.input);
+                                builder.setView(viewInflated);
+
+                                builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
+
+                                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                                    dialog.dismiss();
+                                    int p = viewHolder.getAdapterPosition();
+
+                                    Log.e("Yes this", adapterHours.list.get(p).getAct());
+                                    if (!input.getText().toString().trim().equals("")) {
+                                        newHours = Integer.parseInt(input.getText().toString());
+
+                                        if (newHours >= 1 && newHours <= 10) {
+                                            String actName = adapterHours.list.get(p).getAct();
+
+                                            TestAdapter mdb = new TestAdapter(mContext);
+                                            mdb.createDatabase();
+                                            mdb.open();
+                                            mdb.setDetails(newHours, actID);
+
+                                            Cursor c = mdb.getActAssigActNameAdmin(actName);
+                                            c.moveToFirst();
+
+                                            clgListDataFy.add(p, new AdapterDataMain(
+                                                    adapterHours.list.get(p).getDate(),
+                                                    adapterHours.list.get(p).getAct(),
+                                                    String.valueOf(newHours),
+                                                    adapterHours.list.get(p).getId()));
+
+                                            clgListDataFy.remove(p + 1);
+                                            adapterHours.notifyDataSetChanged();
+
+                                            //TODO: Offline mode needs to be checked
+                                            //mdb.setSyncActDetails(0, actID);
+
+                                            Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
+                                                    "Token " + startActivity.AUTH_TOKEN,
+                                                    newHours,
+                                                    startActivity.VEC,
+                                                    Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
+                                                    Integer.parseInt(c.getString(c.getColumnIndex("id"))),
+                                                    3,
+
+                                                    actID
+                                            );
+
+                                            c.close();
+                                            mdb.close();
+                                            putHours.enqueue(new Callback<ResponseBody>() {
+                                                @Override
+                                                @EverythingIsNonNull
+                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                                }
+
+                                                @Override
+                                                @EverythingIsNonNull
+                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                    Log.e("Error:onFailure", t.toString());
+                                                }
+                                            });
+                                        } else
+                                            Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                                if (viewInflated.getParent() != null)
+                                    ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
+                                builder.show();
+                            }
+                        }
+                ));
+                underlayButtons.add(new SwipeHelper.UnderlayButton(
+                        mContext,
+                        "",
+                        R.drawable.ic_del_24,
+                        primaryColLight,
+                        new UnderlayButtonClickListener() {
+                            @Override
+                            public void onClick(int pos) {
+                                int actID = Integer.parseInt(clgListDataFy.get(viewHolder.getAdapterPosition()).getId());
+                                String actName = adapterHours.list.get(viewHolder.getAdapterPosition()).getAct();
+
+                                TestAdapter mdb = new TestAdapter(mContext);
+                                mdb.createDatabase();
+                                mdb.open();
+                                mdb.dropDetails(actID);
+
+                                Cursor c2 = mdb.getActAssigActNameAdmin(actName);
+                                c2.moveToFirst();
+
+                                Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
+                                        "Token " + startActivity.AUTH_TOKEN,
+                                        Integer.parseInt(adapterHours.list.get(viewHolder.getAdapterPosition()).getHours()),
+                                        startActivity.VEC,
+                                        Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
+                                        Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
+                                        4,
+                                        actID
+                                );
+
+                                clgListDataFy.remove(viewHolder.getAdapterPosition());
+                                adapterHours.notifyDataSetChanged();
+
+                                putHours.enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                    }
+                                });
+                                mdb.close();
+                            }
+                        }
+                ));
+            }
+        };
+
         recyclerViewHours.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewHours.setAdapter(adapterHours);
 
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeHelper);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeHelperHours);
         itemTouchHelper.attachToRecyclerView(recyclerViewHours);
+
+        ItemTouchHelper itemTouchHelper2 = new ItemTouchHelper(swipeHelperArea);
+        itemTouchHelper2.attachToRecyclerView(recyclerViewArea);
+
+        ItemTouchHelper itemTouchHelper3 = new ItemTouchHelper(swipeHelperUniv);
+        itemTouchHelper3.attachToRecyclerView(recyclerViewUniv);
 
         add.setOnClickListener(view1 -> {
             onDetach();

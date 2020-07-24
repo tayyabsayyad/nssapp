@@ -67,6 +67,7 @@ public interface Api {
     @GET("/diary/api/allactivites/")
     Call<ResponseBody> getActList(@Header("Authorization") String token);
 
+    //TODO: merge with api
     @GET("/diary/api/totalhours/")
     Call<ResponseBody> getHours(@Header("Authorization") String token);
 
@@ -88,9 +89,15 @@ public interface Api {
     @GET("/diary/api/selfRegistration/{vec}")
     Call<ResponseBody> getUserDetail(@Path("vec") String vec);
 
-    @PATCH("/api/dailyactivity/{id}/")
+    @PATCH("/diary/dailyactivity/{id2}/")
+    @FormUrlEncoded
     Call<ResponseBody> putHour(@Header("Authorization") String token,
-                               @Header("Hours") int hours,
-                               @Path("id") String id
+                               @Field("Hours") int hours,
+                               @Field("VEC") String vec,
+                               @Field("ActivityName") int actName,
+                               @Field("AssignedActivityName") int actId,
+                               @Field("State") int s,
+
+                               @Path("id2") int id2
     );
 }

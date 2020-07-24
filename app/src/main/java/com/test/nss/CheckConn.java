@@ -229,10 +229,12 @@ public class CheckConn extends BroadcastReceiver {
             //c.moveToFirst();
             Map<Integer, String> actIdHash = new HashMap<>();
             actIdHash.put(11, "First Year University");
-            actIdHash.put(12, "First Year Area Based");
+            actIdHash.put(121, "First Year Area Based One");
+            actIdHash.put(122, "First Year Area Based Two");
             actIdHash.put(13, "First Year College");
             actIdHash.put(21, "Second Year University");
-            actIdHash.put(22, "Second Year Area Based");
+            actIdHash.put(221, "Second Year Area Based One");
+            actIdHash.put(222, "Second Year Area Based Two");
             actIdHash.put(23, "Second Year College");
 
             Cursor c = mDbHelper.getActListOff();
@@ -317,6 +319,7 @@ public class CheckConn extends BroadcastReceiver {
                                             j.getJSONObject(i).getString("Date"),
                                             j.getJSONObject(i).getString("AssignedActivityName"),
                                             j.getJSONObject(i).getString("Hours"),
+                                            j.getJSONObject(i).getString("State"),
                                             1
                                     );
                                 }

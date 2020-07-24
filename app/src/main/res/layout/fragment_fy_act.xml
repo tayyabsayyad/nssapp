@@ -117,8 +117,6 @@
         android:id="@+id/univRecFy"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/space_10dp"
-        android:background="@drawable/act_bg_lines"
         android:padding="5dp"
         android:scrollbars="vertical"
         android:visibility="gone"
@@ -133,8 +131,6 @@
         android:layout_width="match_parent"
         android:id="@+id/areaRecFy"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/space_10dp"
-        android:background="@drawable/act_bg_lines"
         android:padding="5dp"
         android:visibility="gone"
         android:scrollbars="vertical"
@@ -149,8 +145,6 @@
         android:id="@+id/hoursRecFy"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/space_10dp"
-        android:background="@drawable/act_bg_lines"
         android:padding="5dp"
         android:visibility="gone"
         android:scrollbars="vertical"
@@ -166,7 +160,7 @@
         android:paddingStart="@dimen/padding_5dp"
         android:paddingEnd="@dimen/padding_5dp"
         android:layout_marginBottom="@dimen/space_10dp"
-        android:gravity="end|center"
+        android:gravity="bottom|center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -174,10 +168,9 @@
             android:id="@+id/add"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_margin="@dimen/space_10dp"
             android:background="@drawable/ripple_add"
             android:foreground="@drawable/ic_plus_24"
-            android:visibility="gone"
+            android:visibility="visible"
             android:textAllCaps="false"
             android:textColor="@color/white" />
     </LinearLayout>

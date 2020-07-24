@@ -62,34 +62,41 @@ public class WorkDetailsFirstFrag extends Fragment {
         TestAdapter m = new TestAdapter(requireContext());
         m.createDatabase();
         m.open();
-        int areaComp = m.getSumHours("First Year Area Based");
+        int areaCompOne = m.getSumHours("First Year Area Based One");
+        int areaCompTwo = m.getSumHours("First Year Area Based Two");
         int clgComp = m.getSumHours("First Year College");
         int univComp = m.getSumHours("First Year University");
 
-        String areaRemHours;
+        Log.i("TAG", "firstHalfWorkData: " + areaCompTwo);
+        String areaRemOneHours;
+        String areaRemTwoHours;
         String univRemHours;
         String clgRemHours;
 
-        if (areaComp > 1 && 80 - areaComp > 0)
-            areaRemHours = String.valueOf(80 - areaComp);
+        if (areaCompOne >= 1 && 80 - areaCompOne > 0)
+            areaRemOneHours = String.valueOf(80 - areaCompOne);
         else
-            areaRemHours = "00";
+            areaRemOneHours = "00";
 
-        if (clgComp > 1 && 20 - clgComp > 0)
+        if (areaCompTwo >= 1 && 80 - areaCompTwo > 0)
+            areaRemTwoHours = String.valueOf(80 - areaCompTwo);
+        else
+            areaRemTwoHours = "00";
+
+        if (clgComp >= 1 && 20 - clgComp > 0)
             clgRemHours = String.valueOf(20 - clgComp);
         else
             clgRemHours = "00";
 
-        if (univComp > 0 && 20 - univComp > 0)
+        if (univComp >= 1 && 20 - univComp > 0)
             univRemHours = String.valueOf(20 - univComp);
         else
             univRemHours = "00";
 
-        Log.e("AAA", "" + areaComp);
         m.close();
 
-
-        data.add(new AdapterDataWork(getString(R.string.area), "80", String.valueOf(areaComp), areaRemHours));
+        data.add(new AdapterDataWork("Area Based 1", "80", String.valueOf(areaCompOne), areaRemOneHours));
+        data.add(new AdapterDataWork("Area Based 2", "80", String.valueOf(areaCompTwo), areaRemTwoHours));
         data.add(new AdapterDataWork(getString(R.string.univ), "20", String.valueOf(univComp), univRemHours));
         data.add(new AdapterDataWork(getString(R.string.clg), "20", String.valueOf(clgComp), clgRemHours));
         return data;

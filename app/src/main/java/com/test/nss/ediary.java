@@ -41,6 +41,7 @@ public class ediary extends AppCompatActivity {
     public static int blackish;
     public static int transparent;
     public static int primaryCol;
+    public static int primaryColLight;
     private CheckConn checkConn;
 
     AppBarConfiguration mAppBarConfiguration;
@@ -74,6 +75,7 @@ public class ediary extends AppCompatActivity {
         blackish = this.getColor(R.color.blackish);
         transparent = this.getColor(R.color.transparent);
         primaryCol = this.getColor(R.color.colorPrimary);
+        primaryColLight = this.getColor(R.color.colorPrimaryLight);
         primaryColDark = this.getColor(R.color.colorPrimaryDark);
 
         //Toast.makeText(this, AUTH_TOKEN, Toast.LENGTH_SHORT).show();
