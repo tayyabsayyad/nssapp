@@ -313,6 +313,7 @@ public class CheckConn extends BroadcastReceiver {
                                     mDbHelper.insertAct(
                                             j.getJSONObject(i).getString("VEC"),
                                             j.getJSONObject(i).getString("ActivityName"),
+                                            j.getJSONObject(i).getString("id"),
                                             j.getJSONObject(i).getString("Date"),
                                             j.getJSONObject(i).getString("AssignedActivityName"),
                                             j.getJSONObject(i).getString("Hours"),

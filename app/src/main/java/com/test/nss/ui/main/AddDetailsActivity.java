@@ -203,7 +203,7 @@ public class AddDetailsActivity extends Fragment {
                     Log.e("hmm", "" + actId.getText().toString());
 
                     Log.e("AAUU", actName);
-                    mDbHelper.insertAct(
+                    mDbHelper.insertActOff(
                             startActivity.VEC,
                             actName,
                             actDate.getText().toString(),

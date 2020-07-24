@@ -6,6 +6,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -86,4 +87,10 @@ public interface Api {
 
     @GET("/diary/api/selfRegistration/{vec}")
     Call<ResponseBody> getUserDetail(@Path("vec") String vec);
+
+    @PATCH("/api/dailyactivity/{id}/")
+    Call<ResponseBody> putHour(@Header("Authorization") String token,
+                               @Header("Hours") int hours,
+                               @Path("id") String id
+    );
 }

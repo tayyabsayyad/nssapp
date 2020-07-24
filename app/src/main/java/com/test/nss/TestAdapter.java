@@ -240,9 +240,35 @@ public class TestAdapter {
     }
 
     public void insertAct(String vec, String actCode,
+                          String id,
                           String assignedDate,
                           String actName,
                           String hours, int sync) {
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("actID", id);
+            contentValues.put("VEC", vec);
+            contentValues.put("ActivityCode", actCode);
+            contentValues.put("Date", assignedDate);
+            contentValues.put("ActivityName", actName);
+            contentValues.put("HoursWorked", hours);
+            contentValues.put("If_Added", 1);
+            contentValues.put("Sync", sync);
+
+            long row = mDb.insert("DailyActivity", null, contentValues);
+            if (row != -1)
+                Log.i(TAG, "Entered data to DailyActivity");
+
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
+
+    public void insertActOff(String vec, String actCode,
+                             String assignedDate,
+                             String actName,
+                             String hours, int sync) {
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -314,7 +340,7 @@ public class TestAdapter {
     public Cursor getActList(String act) {
         try {
             //String a = String.format("aaa %d", act);
-            String sql = String.format(Locale.ENGLISH, "SELECT Date, ActivityName, HoursWorked FROM DailyActivity WHERE ActivityCode=\"%s\"", (act));
+            String sql = String.format(Locale.ENGLISH, "SELECT Date, ActivityName, HoursWorked, actID FROM DailyActivity WHERE ActivityCode=\"%s\"", (act));
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.e("getCampDetails", "" + mCur2.getCount());
             if (mCur2.getCount() == 0) {
@@ -439,6 +465,26 @@ public class TestAdapter {
             }
             mCur.close();
             return res;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public void setDetails(int hour, int id) {
+        try {
+            String sql = String.format(Locale.ENGLISH, "UPDATE DailyActivity SET HoursWorked = %d WHERE actId=\"%d\"", hour, id);
+            mDb.execSQL(sql);
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public void setSyncActDetails(int sync, int actId) {
+        try {
+            String sql = String.format(Locale.ENGLISH, "UPDATE DailyActivity SET Sync = %d WHERE actID=\"%d\"", sync, actId);
+            mDb.execSQL(sql);
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;

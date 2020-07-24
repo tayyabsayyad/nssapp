@@ -11,18 +11,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.R;
+import com.test.nss.ui.onClickInterface2;
 
 import java.util.Collections;
 import java.util.List;
 
 public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
     //private AdapterDataMain[] listdata;
+
     List<AdapterDataMain> list = Collections.emptyList();
     Context mCon;
+    onClickInterface2 onClickInterface2;
 
-    public MyListAdapter(List<AdapterDataMain> list, Context mCon) {
+    public MyListAdapter(List<AdapterDataMain> list, Context mCon, onClickInterface2 onClickInterface2) {
         this.list = list;
         this.mCon = mCon;
+        this.onClickInterface2 = onClickInterface2;
     }
 
     @NonNull
@@ -38,6 +42,13 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         holder.date.setText(list.get(position).getDate());
         holder.act.setText(list.get(position).getAct());
         holder.hours.setText(list.get(position).getHours());
+        holder.actId.setText(list.get(position).getId());
+        holder.hours.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickInterface2.click(Integer.parseInt(list.get(position).getId()));
+            }
+        });
     }
 
     @Override
@@ -61,6 +72,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         public TextView date;
         public TextView act;
         public TextView hours;
+        public TextView actId;
 
         public LinearLayout linearLayout;
 
@@ -69,6 +81,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
             this.date = itemView.findViewById(R.id.date);
             this.act = itemView.findViewById(R.id.act);
             this.hours = itemView.findViewById(R.id.hours);
+            this.actId = itemView.findViewById(R.id.actID);
 
             linearLayout = itemView.findViewById(R.id.dataLinear);
         }

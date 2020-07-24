@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.R;
+import com.test.nss.ui.onClickInterface2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,8 @@ public class syAct extends Fragment {
     Button add;
     int whichAct = -1;
     LinearLayout fragSy;
+
+    onClickInterface2 onClickInterface2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -136,8 +140,13 @@ public class syAct extends Fragment {
         recyclerViewArea.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewArea.setAdapter(adapterArea);*/
 
+
+        onClickInterface2 = hour -> {
+            Toast.makeText(mContext, "" + hour, Toast.LENGTH_SHORT).show();
+        };
+
         RecyclerView recyclerViewHours = doraemon.findViewById(R.id.hoursRecSy);
-        MyListAdapter adapterHours = new MyListAdapter(hoursListDataSy, mContext);
+        MyListAdapter adapterHours = new MyListAdapter(hoursListDataSy, mContext, onClickInterface2);
         recyclerViewHours.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewHours.setAdapter(adapterHours);
 
@@ -164,7 +173,7 @@ public class syAct extends Fragment {
 
         // TODO: Switch to activity or new frag for showing more data
         for (int i = 1; i <= 12; i++) {
-            data.add(new AdapterDataMain("DD/MM/YYYY", "Activity " + i, "00"));
+            data.add(new AdapterDataMain("DD/MM/YYYY", "Activity " + i, "00", ""));
         }
         return data;
     }
