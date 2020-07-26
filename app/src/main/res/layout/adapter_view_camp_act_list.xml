@@ -15,6 +15,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:fontFamily="@font/google_sans"
+            android:textColor="@color/grey"
             android:id="@+id/camp_act_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -4,43 +4,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent"
     tools:context=".ui.work.WorkFragment">
 
-    <include
-        android:id="@+id/mainFY_camp"
-        layout="@layout/nss_fy_common" />
-
-    <LinearLayout
-        android:layout_marginTop="@dimen/padding_5dp"
-        android:id="@+id/work_header"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/colorPrimary"
-        android:foreground="@drawable/main_border"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainFY_camp">
-
-        <TextView
-            android:id="@+id/camp_header"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="CAMP"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_22sp" />
-    </LinearLayout>
-
     <FrameLayout
+        android:layout_marginTop="@dimen/space_10dp"
         android:id="@+id/camp_frag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="130dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/work_header">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/camp_main_details"
@@ -53,6 +29,8 @@
             android:visibility="visible">
 
             <TextView
+                android:fontFamily="@font/nunito_regular"
+                android:textColor="@color/blackish"
                 android:id="@+id/camp_act"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -67,6 +45,8 @@
                 android:visibility="visible" />
 
             <TextView
+                android:fontFamily="@font/nunito_regular"
+                android:textColor="@color/blackish"
                 android:id="@+id/camp_days"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -81,6 +61,8 @@
                 android:visibility="visible" />
 
             <TextView
+                android:fontFamily="@font/nunito_regular"
+                android:textColor="@color/blackish"
                 android:id="@+id/camp_details"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -89,5 +71,4 @@
                 android:textSize="@dimen/text_18sp" />
         </LinearLayout>
     </FrameLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

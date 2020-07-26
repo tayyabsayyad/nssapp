@@ -4,31 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.activity.ActivityFragment">
-
-    <include
-        android:id="@+id/mainFY_act"
-        layout="@layout/nss_fy_common" />
-
-    <LinearLayout
-        android:id="@+id/act_header"
-        android:layout_height="70dp"
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/padding_5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/colorPrimary"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainFY_act">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Activity List"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_22sp" />
-    </LinearLayout>
 
     <include
         android:id="@+id/division"
@@ -38,12 +15,19 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/act_header" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/line_main_bot"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/blackish"
+        app:layout_constraintTop_toBottomOf="@id/division" />
 
     <FrameLayout
         android:layout_height="match_parent"
         android:id="@+id/act_list"
-        android:layout_marginTop="205dp"
+        android:layout_marginTop="70dp"
         android:layout_width="match_parent"
         app:layout_constraintTop_toBottomOf="@id/division" />
 </androidx.constraintlayout.widget.ConstraintLayout>

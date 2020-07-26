@@ -8,6 +8,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface Api {
@@ -96,6 +97,20 @@ public interface Api {
                                @Field("VEC") String vec,
                                @Field("ActivityName") int actName,
                                @Field("AssignedActivityName") int actId,
+                               @Field("State") int s,
+
+                               @Path("id2") int id2
+    );
+
+    @PUT("/diary/campactivity/{id2}/")
+    @FormUrlEncoded
+    Call<ResponseBody> putCamp(@Header("Authorization") String token,
+
+                               @Field("VEC") String vec,
+                               @Field("CampActivityTitle") int actId,
+                               @Field("CampActivityDescription") String desc,
+                               @Field("Day") int id,
+                               @Field("CollegeName") String clgName,
                                @Field("State") int s,
 
                                @Path("id2") int id2

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -23,7 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.R;
-import com.test.nss.SwipeHelper;
+import com.test.nss.SwipeHelperRight;
 import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.startActivity;
@@ -41,7 +42,7 @@ import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
 import static com.test.nss.ediary.primaryColDark;
-import static com.test.nss.ediary.primaryColLight;
+import static com.test.nss.ediary.transparent;
 
 public class fyAct extends Fragment {
 
@@ -64,8 +65,12 @@ public class fyAct extends Fragment {
 
     onClickInterface2 onClickInterface2;
 
+    CardView cardViewMain;
+
     Button add;
     LinearLayout fragFy;
+
+    LinearLayout actHeaderInput;
 
     int whichAct;
     int act;
@@ -81,6 +86,9 @@ public class fyAct extends Fragment {
         mContext = requireContext();
 
         // add data dynamically
+        cardViewMain = root.findViewById(R.id.details_main_card);
+        actHeaderInput = requireActivity().findViewById(R.id.actHeaderInput);
+        actHeaderInput.setVisibility(View.GONE);
 
         univ = root.findViewById(R.id.main_univ_fy);
         area = root.findViewById(R.id.main_area_fy);
@@ -161,15 +169,15 @@ public class fyAct extends Fragment {
         RecyclerView recyclerViewUniv = root.findViewById(R.id.univRecFy);
         MyListAdapter adapterUniv = new MyListAdapter(univListDataFy, mContext, onClickInterface2);
 
-        SwipeHelper swipeHelperUniv = new SwipeHelper(mContext, recyclerViewUniv) {
+        SwipeHelperRight swipeHelperRightUniv = new SwipeHelperRight(mContext, recyclerViewUniv) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                underlayButtons.add(new SwipeHelper.UnderlayButton(
+                underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                         mContext,
                         "Edit",
                         R.drawable.ic_edit_24,
-                        primaryColLight,
-                        new SwipeHelper.UnderlayButtonClickListener() {
+                        transparent,
+                        new SwipeHelperRight.UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
                                 int actID = Integer.parseInt(univListDataFy.get(viewHolder.getAdapterPosition()).getId());
@@ -185,7 +193,6 @@ public class fyAct extends Fragment {
                                     dialog.dismiss();
                                     int p = viewHolder.getAdapterPosition();
 
-                                    Log.e("Yes this", adapterUniv.list.get(p).getAct());
                                     if (!input.getText().toString().trim().equals("")) {
                                         newHours = Integer.parseInt(input.getText().toString());
 
@@ -248,6 +255,63 @@ public class fyAct extends Fragment {
                             }
                         }
                 ));
+                underlayButtons.add(new SwipeHelperRight.UnderlayButton(
+                        mContext,
+                        "",
+                        R.drawable.ic_del_24,
+                        transparent,
+                        new UnderlayButtonClickListener() {
+                            @Override
+                            public void onClick(int pos) {
+                                int p;
+                                if (viewHolder.getAdapterPosition() == -1)
+                                    p = viewHolder.getAdapterPosition() + 1;
+
+                                else if (viewHolder.getAdapterPosition() == areaDataMainFy.size())
+                                    p = viewHolder.getAdapterPosition() - 1;
+                                else
+                                    p = viewHolder.getAdapterPosition();
+
+
+                                int actID = Integer.parseInt(univListDataFy.get(p).getId());
+                                String actName = adapterUniv.list.get(p).getAct();
+
+                                TestAdapter mdb = new TestAdapter(mContext);
+                                mdb.createDatabase();
+                                mdb.open();
+
+                                Cursor c2 = mdb.getActAssigActNameAdmin(actName);
+                                c2.moveToFirst();
+
+                                Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
+                                        "Token " + startActivity.AUTH_TOKEN,
+                                        Integer.parseInt(adapterUniv.list.get(p).getHours()),
+                                        startActivity.VEC,
+                                        Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
+                                        Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
+                                        4,
+                                        actID
+                                );
+
+                                mdb.dropDetails(actID);
+                                univListDataFy.remove(p);
+                                adapterUniv.notifyItemRemoved(p);
+
+                                putHours.enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                    }
+                                });
+                                mdb.close();
+                            }
+                        }
+                ));
             }
         };
 
@@ -258,15 +322,15 @@ public class fyAct extends Fragment {
         RecyclerView recyclerViewArea = root.findViewById(R.id.areaRecFy);
         MyListAdapter adapterArea = new MyListAdapter(areaDataMainFy, mContext, onClickInterface2);
 
-        SwipeHelper swipeHelperArea = new SwipeHelper(mContext, recyclerViewArea) {
+        SwipeHelperRight swipeHelperRightArea = new SwipeHelperRight(mContext, recyclerViewArea) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                underlayButtons.add(new SwipeHelper.UnderlayButton(
+                underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                         mContext,
                         "Edit",
                         R.drawable.ic_edit_24,
-                        primaryColLight,
-                        new SwipeHelper.UnderlayButtonClickListener() {
+                        transparent,
+                        new SwipeHelperRight.UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
                                 int actID = Integer.parseInt(areaDataMainFy.get(viewHolder.getAdapterPosition()).getId());
@@ -345,9 +409,67 @@ public class fyAct extends Fragment {
                             }
                         }
                 ));
+
+                underlayButtons.add(new SwipeHelperRight.UnderlayButton(
+                        mContext,
+                        "",
+                        R.drawable.ic_del_24,
+                        transparent,
+                        new UnderlayButtonClickListener() {
+                            @Override
+                            public void onClick(int pos) {
+                                int p;
+                                if (viewHolder.getAdapterPosition() == -1)
+                                    p = viewHolder.getAdapterPosition() + 1;
+
+                                else if (viewHolder.getAdapterPosition() == areaDataMainFy.size())
+                                    p = viewHolder.getAdapterPosition() - 1;
+                                else
+                                    p = viewHolder.getAdapterPosition();
+
+                                Log.e("Damn here it is:", "onClick: " + p + viewHolder.getAdapterPosition());
+
+                                int actID = Integer.parseInt(areaDataMainFy.get(p).getId());
+                                String actName = adapterArea.list.get(p).getAct();
+
+                                TestAdapter mdb = new TestAdapter(mContext);
+                                mdb.createDatabase();
+                                mdb.open();
+
+                                Cursor c2 = mdb.getActAssigActNameAdmin(actName);
+                                c2.moveToFirst();
+
+                                Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
+                                        "Token " + startActivity.AUTH_TOKEN,
+                                        Integer.parseInt(adapterArea.list.get(p).getHours()),
+                                        startActivity.VEC,
+                                        Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
+                                        Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
+                                        4,
+                                        actID
+                                );
+
+                                mdb.dropDetails(actID);
+                                areaDataMainFy.remove(p);
+                                adapterArea.notifyItemRemoved(p);
+
+                                putHours.enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                    }
+                                });
+                                mdb.close();
+                            }
+                        }
+                ));
             }
         };
-
 
         recyclerViewArea.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewArea.setAdapter(adapterArea);
@@ -356,15 +478,15 @@ public class fyAct extends Fragment {
         RecyclerView recyclerViewHours = root.findViewById(R.id.hoursRecFy);
         adapterClg = new MyListAdapter(clgListDataFy, mContext, onClickInterface2);
 
-        SwipeHelper swipeHelperHours = new SwipeHelper(mContext, recyclerViewHours) {
+        SwipeHelperRight swipeHelperRightHours = new SwipeHelperRight(mContext, recyclerViewHours) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                underlayButtons.add(new SwipeHelper.UnderlayButton(
+                underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                         mContext,
                         "",
                         R.drawable.ic_edit_24,
-                        primaryColLight,
-                        new SwipeHelper.UnderlayButtonClickListener() {
+                        transparent,
+                        new SwipeHelperRight.UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
                                 int actID = Integer.parseInt(clgListDataFy.get(viewHolder.getAdapterPosition()).getId());
@@ -444,28 +566,38 @@ public class fyAct extends Fragment {
                             }
                         }
                 ));
-                underlayButtons.add(new SwipeHelper.UnderlayButton(
+
+                underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                         mContext,
                         "",
                         R.drawable.ic_del_24,
-                        primaryColLight,
-                        new UnderlayButtonClickListener() {
+                        transparent,
+                        new SwipeHelperRight.UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
-                                int actID = Integer.parseInt(clgListDataFy.get(viewHolder.getAdapterPosition()).getId());
-                                String actName = adapterClg.list.get(viewHolder.getAdapterPosition()).getAct();
+                                int p;
+                                if (viewHolder.getAdapterPosition() == -1)
+                                    p = viewHolder.getAdapterPosition() + 1;
+
+                                else if (viewHolder.getAdapterPosition() == areaDataMainFy.size())
+                                    p = viewHolder.getAdapterPosition() - 1;
+                                else
+                                    p = viewHolder.getAdapterPosition();
+
+                                Log.e("HERE", "onClick: " + p);
+                                int actID = Integer.parseInt(clgListDataFy.get(p).getId());
+                                String actName = adapterClg.list.get(p).getAct();
 
                                 TestAdapter mdb = new TestAdapter(mContext);
                                 mdb.createDatabase();
                                 mdb.open();
-                                mdb.dropDetails(actID);
 
                                 Cursor c2 = mdb.getActAssigActNameAdmin(actName);
                                 c2.moveToFirst();
 
                                 Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
                                         "Token " + startActivity.AUTH_TOKEN,
-                                        Integer.parseInt(adapterClg.list.get(viewHolder.getAdapterPosition()).getHours()),
+                                        Integer.parseInt(adapterClg.list.get(p).getHours()),
                                         startActivity.VEC,
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
@@ -473,8 +605,9 @@ public class fyAct extends Fragment {
                                         actID
                                 );
 
-                                clgListDataFy.remove(viewHolder.getAdapterPosition());
-                                adapterClg.notifyDataSetChanged();
+                                mdb.dropDetails(actID);
+                                clgListDataFy.remove(p);
+                                adapterClg.notifyItemRemoved(p);
 
                                 putHours.enqueue(new Callback<ResponseBody>() {
                                     @Override
@@ -489,34 +622,34 @@ public class fyAct extends Fragment {
                                 });
                                 mdb.close();
                             }
-                        }
-                ));
+                        }));
             }
         };
 
         recyclerViewHours.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewHours.setAdapter(adapterClg);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeHelperHours);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeHelperRightHours);
         itemTouchHelper.attachToRecyclerView(recyclerViewHours);
 
-        ItemTouchHelper itemTouchHelper2 = new ItemTouchHelper(swipeHelperArea);
+        ItemTouchHelper itemTouchHelper2 = new ItemTouchHelper(swipeHelperRightArea);
         itemTouchHelper2.attachToRecyclerView(recyclerViewArea);
 
-        ItemTouchHelper itemTouchHelper3 = new ItemTouchHelper(swipeHelperUniv);
+        ItemTouchHelper itemTouchHelper3 = new ItemTouchHelper(swipeHelperRightUniv);
         itemTouchHelper3.attachToRecyclerView(recyclerViewUniv);
 
         add.setOnClickListener(view1 -> {
             onDetach();
 
-            //mainFy.setVisibility(View.GONE);
-            //fragFy.setVisibility(View.GONE);
-            //univRecFy.setVisibility(View.GONE);
-            //areaRecFy.setVisibility(View.GONE);
-            //clgRecFy.setVisibility(View.GONE);
-            //univ.setBackgroundColor(Color.TRANSPARENT);
-            //clg.setBackgroundColor(Color.TRANSPARENT);
-            //area.setBackgroundColor(Color.TRANSPARENT);
+            mainFy.setVisibility(View.GONE);
+            fragFy.setVisibility(View.GONE);
+            univRecFy.setVisibility(View.GONE);
+            areaRecFy.setVisibility(View.GONE);
+            clgRecFy.setVisibility(View.GONE);
+            cardViewMain.setVisibility(View.GONE);
+            univ.setBackgroundColor(Color.TRANSPARENT);
+            clg.setBackgroundColor(Color.TRANSPARENT);
+            area.setBackgroundColor(Color.TRANSPARENT);
 
             //univ.setTextColor(blackish);
             //area.setTextColor(blackish);

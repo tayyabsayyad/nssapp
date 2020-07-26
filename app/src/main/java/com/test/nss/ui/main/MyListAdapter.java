@@ -43,12 +43,6 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         holder.act.setText(list.get(position).getAct());
         holder.hours.setText(list.get(position).getHours());
         holder.actId.setText(list.get(position).getId());
-        holder.hours.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickInterface2.click(Integer.parseInt(list.get(position).getId()));
-            }
-        });
     }
 
     @Override

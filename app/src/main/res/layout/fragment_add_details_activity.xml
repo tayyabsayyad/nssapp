@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
-            app:cardBackgroundColor="#ffc3f3"
+            android:background="@drawable/act_bg_lines_card"
             android:layout_marginStart="@dimen/padding_5dp"
             android:layout_marginEnd="@dimen/padding_5dp"
             android:layout_width="match_parent"
@@ -27,37 +27,44 @@
             app:cardCornerRadius="@dimen/padding_4dp"
             android:orientation="vertical">
 
-            <TextView
-                android:textColor="@color/blackish"
-                android:layout_marginBottom="40dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/space_10dp"
-                android:layout_marginTop="@dimen/space_10dp"
-                android:gravity="center"
-                android:paddingEnd="@dimen/margin_15dp"
-                android:text="Assigned Activity Name:"
-                android:textSize="@dimen/text_18sp" />
-
-            <TextView
-                android:id="@+id/actdetailId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
-
-            <Spinner
-                android:layout_marginTop="40dp"
-                android:id="@+id/drpdown_actAssignName"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_5dp"
-                android:minHeight="30dp"
-                android:paddingStart="@dimen/padding_5dp" />
+                android:layout_height="match_parent"
+                android:background="@drawable/act_bg_lines_card"
+                android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/space_10dp"
+                    android:layout_marginTop="@dimen/space_10dp"
+                    android:fontFamily="@font/google_sans"
+                    android:gravity="center"
+                    android:paddingStart="1dp"
+                    android:text="Assigned Activity Name:"
+                    android:textColor="@color/blackish"
+                    android:textSize="@dimen/text_18sp" />
+
+                <TextView
+                    android:id="@+id/actdetailId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <Spinner
+                    android:id="@+id/drpdown_actAssignName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2.5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="@dimen/padding_5dp"
+                    android:minHeight="30dp" />
+
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            app:cardBackgroundColor="#f6afff"
+            android:background="@drawable/act_bg_lines_card"
             android:layout_marginStart="@dimen/padding_5dp"
             android:layout_marginTop="@dimen/space_10dp"
             android:layout_marginEnd="@dimen/padding_5dp"
@@ -66,89 +73,100 @@
             android:layout_marginBottom="@dimen/space_10dp"
             android:elevation="@dimen/space_10dp"
             app:cardCornerRadius="@dimen/padding_4dp"
-            android:background="@drawable/act_bg_lines"
             android:orientation="vertical">
 
-            <TextView
-                android:textColor="@color/blackish"
-                android:layout_marginBottom="40dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/space_10dp"
-                android:layout_marginTop="@dimen/space_10dp"
-                android:gravity="center"
-                android:paddingEnd="@dimen/margin_15dp"
-                android:text="Assigned Hours:"
-                android:textSize="@dimen/text_18sp" />
-
-            <EditText
-                android:id="@+id/actHour"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/space_10dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="@dimen/padding_5dp"
-                android:background="@color/transparent"
-                android:hint="1-10"
-                android:inputType="number"
-                android:maxLength="2"
-                android:minHeight="30dp" />
+                android:layout_height="wrap_content"
+                android:background="@drawable/act_bg_lines_card"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/space_10dp"
+                    android:layout_marginTop="@dimen/space_10dp"
+                    android:fontFamily="@font/google_sans"
+                    android:gravity="center"
+                    android:text="Assigned Hours:"
+                    android:textColor="@color/blackish"
+                    android:textSize="@dimen/text_18sp" />
+
+                <EditText
+                    android:id="@+id/actHour"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/space_10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="@dimen/padding_5dp"
+                    android:background="@color/transparent"
+                    android:fontFamily="@font/google_sans"
+                    android:hint="1-10"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:minHeight="30dp" />
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            app:cardBackgroundColor="#d0a4ff"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_marginStart="@dimen/padding_5dp"
             android:elevation="@dimen/space_10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/padding_5dp"
+            android:layout_marginEnd="@dimen/padding_5dp"
+            android:background="@drawable/act_bg_lines_card"
             android:layout_marginBottom="@dimen/padding_5dp"
             app:cardCornerRadius="@dimen/padding_4dp"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_marginBottom="40dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/space_10dp"
-                android:layout_marginTop="@dimen/space_10dp"
-                android:gravity="center"
-                android:text="Activity Date:"
-                android:textColor="@color/blackish"
-                android:textSize="@dimen/text_18sp" />
-
             <LinearLayout
-                android:gravity="end|center"
                 android:layout_width="match_parent"
-                android:layout_height="40dp">
+                android:layout_height="wrap_content"
+                android:background="@drawable/act_bg_lines_card"
+                android:orientation="vertical">
 
                 <TextView
+                    android:fontFamily="@font/google_sans"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/space_10dp"
+                    android:layout_marginTop="@dimen/space_10dp"
+                    android:gravity="center"
+                    android:text="Activity Date:"
+                    android:textColor="@color/blackish"
+                    android:textSize="@dimen/text_18sp" />
 
+                <LinearLayout
                     android:focusable="true"
                     android:clickable="true"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="15dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:id="@+id/todayBtn"
-                    android:gravity="center"
-                    android:textSize="15sp"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:text="Today"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <TextView
-                android:id="@+id/actDate"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/space_10dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="@dimen/padding_5dp"
-                android:hint="YYYY/MM/DD"
-                android:inputType="text"
-                android:minHeight="30dp"
-                android:textSize="@dimen/text_18sp" />
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center"
+                    android:layout_marginTop="-5dp"
+                    android:background="?attr/background">
 
+                    <TextView
+                        android:id="@+id/todayBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:fontFamily="@font/google_sans_bold"
+                        android:text="Today"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/actDate"
+                    android:fontFamily="@font/google_sans"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/space_10dp"
+                    android:hint="YYYY/MM/DD"
+                    android:inputType="text"
+                    android:minHeight="30dp"
+                    android:textSize="@dimen/text_18sp" />
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <LinearLayout

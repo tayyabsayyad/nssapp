@@ -9,7 +9,7 @@
         android:id="@+id/nav_main"
         android:name="com.test.nss.ui.main.MainFragment"
         tools:layout="@layout/fragment_main"
-        android:label="@string/main_frag"/>
+        android:label="@string/menu_main_frag" />
     <fragment
         android:id="@+id/nav_acti"
         android:name="com.test.nss.ui.activity.ActivityFragment"

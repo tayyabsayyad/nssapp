@@ -410,9 +410,13 @@ public class CheckConn extends BroadcastReceiver {
                                 deleteData("CampActivities");
                                 for (int i = 0; i < j.length(); i++) {
                                     mDbHelper.insertCampActListAll(
+                                            j.getJSONObject(i).getInt("id"),
+                                            j.getJSONObject(i).getString("CollegeName"),
+                                            j.getJSONObject(i).getString("State"),
                                             j.getJSONObject(i).getString("CampActivityTitle"),
                                             j.getJSONObject(i).getString("CampActivityDescription"),
                                             j.getJSONObject(i).getString("Day"),
+                                            startActivity.VEC,
                                             1
                                     );
                                 }

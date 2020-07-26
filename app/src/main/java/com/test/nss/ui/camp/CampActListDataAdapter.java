@@ -37,6 +37,7 @@ public class CampActListDataAdapter extends RecyclerView.Adapter<CampActListData
         holder.campActTitle.setText(list.get(position).getCampTitle());
         holder.campActDesc.setText(list.get(position).getCampDesc());
         holder.campActDay.setText(list.get(position).getCampDay());
+        holder.campId.setText(list.get(position).getCampId());
     }
 
     @Override
@@ -53,6 +54,7 @@ public class CampActListDataAdapter extends RecyclerView.Adapter<CampActListData
         public TextView campActTitle;
         public TextView campActDesc;
         public TextView campActDay;
+        public TextView campId;
 
         public CardView cardView;
 
@@ -61,6 +63,7 @@ public class CampActListDataAdapter extends RecyclerView.Adapter<CampActListData
             this.campActTitle = itemView.findViewById(R.id.camp_act_list_title);
             this.campActDesc = itemView.findViewById(R.id.camp_act_list_desc);
             this.campActDay = itemView.findViewById(R.id.camp_act_list_day);
+            this.campId = itemView.findViewById(R.id.camp_id);
 
             cardView = itemView.findViewById(R.id.campActListAllCard);
         }

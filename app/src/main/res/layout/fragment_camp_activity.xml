@@ -5,6 +5,8 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:fontFamily="@font/google_sans_bold"
+        android:textColor="@color/blackGrey"
         android:visibility="visible"
         android:id="@+id/camp_act"
         android:layout_width="match_parent"

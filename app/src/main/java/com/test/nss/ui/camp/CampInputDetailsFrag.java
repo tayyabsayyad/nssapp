@@ -91,7 +91,7 @@ public class CampInputDetailsFrag extends Fragment {
                     && (!isEmptyStr(which_day.getText().toString()))) {
                 mDbHelper.createDatabase();
                 mDbHelper.open();
-                mDbHelper.insertCampActListAll(
+                mDbHelper.insertCampActListAllOff(
                         actName,
                         campDesc.getText().toString(),
                         day.substring(day.indexOf(" ") + 1),

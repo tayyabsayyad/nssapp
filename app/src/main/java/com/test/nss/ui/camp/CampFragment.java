@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,12 +15,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.test.nss.R;
-import com.test.nss.ui.main.MainFragment;
 
 public class CampFragment extends Fragment {
     View root;
     Toolbar toolbar;
-    ImageView home;
 
     TextView camp_days;
     TextView camp_details;
@@ -37,7 +34,7 @@ public class CampFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_camp, container, false);
 
         toolbarTitle = requireActivity().findViewById(R.id.titleTool);
-        toolbarTitle.setText(getString(R.string.main_frag));
+        toolbarTitle.setText(getString(R.string.menu_camp));
 
         fm = requireActivity().getSupportFragmentManager();
 
@@ -51,8 +48,6 @@ public class CampFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        home = root.findViewById(R.id.homeButton);
-        home.setVisibility(View.VISIBLE);
 
         toolbar = requireActivity().findViewById(R.id.toolbar);
         camp_days = root.findViewById(R.id.camp_days);
@@ -60,18 +55,8 @@ public class CampFragment extends Fragment {
         camp_main_details = root.findViewById(R.id.camp_main_details);
         camp_details = root.findViewById(R.id.camp_details);
 
-        toolbar.setVisibility(View.GONE);
+        toolbar.setVisibility(View.VISIBLE);
         //camp_main_details.setVisibility(View.VISIBLE);
-
-        home.setOnClickListener(view1 -> {
-            MainFragment mainFragment = new MainFragment();
-            FragmentManager fragmentManager = getFragmentManager();
-
-            assert fragmentManager != null;
-            fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, mainFragment).addToBackStack("CampFrag").commit();
-            toolbar.setTitle(getString(R.string.main_frag));
-            toolbar.setVisibility(View.VISIBLE);
-        });
 
         camp_act.setOnClickListener(v -> {
             camp_main_details.setVisibility(View.GONE);

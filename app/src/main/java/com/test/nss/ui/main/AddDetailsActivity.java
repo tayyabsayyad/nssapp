@@ -59,8 +59,10 @@ public class AddDetailsActivity extends Fragment {
     Button addSend;
     Button add;
     Button backActDetail;
-    onClickInterface2 onClickInterface2;
+
     ConstraintLayout campActIn;
+    LinearLayout actHeaderInput;
+    TextView malHay;
 
     int whichAct;
     int act;
@@ -71,6 +73,15 @@ public class AddDetailsActivity extends Fragment {
     private Spinner drpdownactName;
     private Spinner drpdownactAssignName;
 
+    public static <K> String getRoot(Map<String, Integer> map, Integer value) {
+        for (String key : map.keySet()) {
+            if (value.equals(map.get(key))) {
+                return key;
+            }
+        }
+        return null;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,10 +89,12 @@ public class AddDetailsActivity extends Fragment {
         huh = inflater.inflate(R.layout.fragment_add_details_activity, container, false);
         clgList = getClgList();
         actAssignList = getAssignActList();
+        actHeaderInput = requireActivity().findViewById(R.id.actHeaderInput);
 
+        actHeaderInput.setVisibility(View.VISIBLE);
         constFyAct = requireActivity().findViewById(R.id.constFyAct);
         nssHalvesLinear = requireActivity().findViewById(R.id.nss_halves_Linear);
-        actInputHeader = requireActivity().findViewById(R.id.actInputHeader);
+        malHay = requireActivity().findViewById(R.id.malHay);
 
         if (getArguments() != null) {
             whichAct = getArguments().getInt("whichAct");
@@ -96,24 +109,6 @@ public class AddDetailsActivity extends Fragment {
         backActDetail = huh.findViewById(R.id.backActDetail);
 
         return huh;
-    }
-
-    public static <V> Integer getKey(Map<Integer, String> map, String value) {
-        for (Integer key : map.keySet()) {
-            if (value.equals(map.get(key))) {
-                return key;
-            }
-        }
-        return null;
-    }
-
-    public static <K> String getRoot(Map<String, Integer> map, Integer value) {
-        for (String key : map.keySet()) {
-            if (value.equals(map.get(key))) {
-                return key;
-            }
-        }
-        return null;
     }
 
     private boolean isNetworkAvailable() {
@@ -148,7 +143,7 @@ public class AddDetailsActivity extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         constFyAct.setVisibility(View.GONE);
         nssHalvesLinear.setVisibility(View.GONE);
-        actInputHeader.setVisibility(View.VISIBLE);
+
         clgCode = huh.findViewById(R.id.clgCode);
         addSend = huh.findViewById(R.id.addSend);
         campActIn = huh.findViewById(R.id.camp_act_in);
@@ -219,7 +214,7 @@ public class AddDetailsActivity extends Fragment {
         ArrayAdapter<String> a = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, actAssignList);
         drpdownactAssignName.setAdapter(a);
 
-        String actName = getResources().getStringArray(R.array.valOfActNames)[act];
+        //String actName = getResources().getStringArray(R.array.valOfActNames)[act];
         addSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -315,9 +310,8 @@ public class AddDetailsActivity extends Fragment {
                     Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();
                 constFyAct.setVisibility(View.VISIBLE);
                 nssHalvesLinear.setVisibility(View.VISIBLE);
-                add.setVisibility(View.GONE);
+                add.setVisibility(View.VISIBLE);
 
-                actInputHeader.setVisibility(View.GONE);
                 campActIn.setVisibility(View.GONE);
 
             }
@@ -328,10 +322,10 @@ public class AddDetailsActivity extends Fragment {
             public void onClick(View view) {
                 constFyAct.setVisibility(View.VISIBLE);
                 nssHalvesLinear.setVisibility(View.VISIBLE);
-
-                actInputHeader.setVisibility(View.GONE);
+                actHeaderInput.setVisibility(View.GONE);
                 campActIn.setVisibility(View.GONE);
-                add.setVisibility(View.GONE);
+                malHay.setVisibility(View.VISIBLE);
+                add.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -342,10 +336,11 @@ public class AddDetailsActivity extends Fragment {
 
         constFyAct.setVisibility(View.VISIBLE);
         nssHalvesLinear.setVisibility(View.VISIBLE);
-        add.setVisibility(View.GONE);
+        add.setVisibility(View.VISIBLE);
 
-        actInputHeader.setVisibility(View.GONE);
         campActIn.setVisibility(View.GONE);
+        actHeaderInput.setVisibility(View.GONE);
+        malHay.setVisibility(View.VISIBLE);
         //FragmentManager fm = requireActivity().getSupportFragmentManager();
     }
 

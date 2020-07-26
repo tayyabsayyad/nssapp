@@ -5,40 +5,41 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:background="@color/white"
         android:id="@+id/nss_halves_Linear"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="5dp"
-        android:background="#FAFAFA"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainFY_main">
 
         <Button
+            android:background="@color/transparent"
             android:layout_weight="1"
             android:id="@+id/firstButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
             android:enabled="true"
+            android:fontFamily="@font/google_sans_bold"
             android:text="First Year" />
 
         <View
-            android:id="@+id/line_main"
-            android:layout_width="1.5dp"
+            android:id="@+id/line_fy"
+            android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@color/blackish"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
+            android:background="@color/transparent"
+            android:fontFamily="@font/google_sans_bold"
             android:layout_weight="1"
             android:id="@+id/secButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
             android:text="Second Year" />
     </LinearLayout>
 </LinearLayout>

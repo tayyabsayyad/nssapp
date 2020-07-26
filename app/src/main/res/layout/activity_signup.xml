@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="180dp"
+        android:layout_marginTop="160dp"
         android:layout_marginEnd="20dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +86,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginBottom="25dp"
+            android:layout_marginBottom="20dp"
             android:layout_width="330dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -96,35 +96,43 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="18dp"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:background="@drawable/signup_roundbg"
                 android:foreground="@color/transparent"
                 android:gravity="center"
                 android:textAlignment="center"
                 android:textColor="@color/blackish" />
 
-            <EditText
-                android:id="@+id/vec_in"
-                android:maxLength="5"
-                android:layout_weight="0.8"
-                style="@style/signUp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:background="@drawable/signup_roundbg"
-                android:hint="VEC" />
-
             <AutoCompleteTextView
-                android:hint="tap to get list"
                 android:id="@+id/dropdown_clg"
                 style="@style/signUp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.9"
-                android:background="@drawable/signup_roundbg" />
+                android:layout_weight="1"
+                android:background="@drawable/signup_roundbg"
+                android:hint="tap to get list" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="330dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/vec_in"
+                android:maxLength="5"
+                android:layout_height="match_parent"
+                style="@style/signUp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:background="@drawable/signup_roundbg"
+                android:hint="Enter last 5 digit for VEC" />
         </LinearLayout>
 
         <EditText
+            android:layout_marginTop="20dp"
             android:id="@+id/email_in"
             style="@style/signUp"
             android:layout_width="match_parent"
@@ -136,7 +144,8 @@
         <LinearLayout
             android:layout_width="330dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:orientation="horizontal">
 
             <EditText

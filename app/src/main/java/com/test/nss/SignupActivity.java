@@ -190,6 +190,7 @@ public class SignupActivity extends AppCompatActivity {
             Toast.makeText(mContext, "Device is offline", Toast.LENGTH_SHORT).show();
     }
 
+
     public boolean isEmpty(EditText e) {
         return e.getText().toString().trim().length() <= 0;
     }
@@ -200,7 +201,7 @@ public class SignupActivity extends AppCompatActivity {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
+    
     public static boolean pingURL(String url) {
         url = url.replaceFirst("^https", "http"); // Otherwise an exception may be thrown on invalid SSL certificates.
 

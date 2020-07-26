@@ -6,11 +6,13 @@
     android:background="@drawable/login">
 
     <TextView
+        android:fontFamily="@font/google_sans"
+        android:text="Login to your account "
         android:id="@+id/loginSummary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log in to your account "
-        android:textAllCaps="true"
+        android:textAllCaps="false"
+        android:textColor="@color/blackish"
         android:textSize="@dimen/text_18sp"
         android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
@@ -21,7 +23,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="150dp"
         android:background="@drawable/account_roundbg"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,8 +31,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
+            android:layout_width="230dp"
+            android:layout_marginEnd="20dp"
+            android:drawableStart="@drawable/ic_user_16"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/google_sans"
             android:id="@+id/username"
-            android:layout_width="200dp"
+            android:paddingStart="10dp"
             android:layout_height="45dp"
             android:background="@android:color/transparent"
             android:gravity="center"
@@ -55,8 +62,13 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <EditText
+            android:layout_width="230dp"
+            android:layout_marginEnd="20dp"
+            android:drawableStart="@drawable/ic_key_16"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/google_sans"
             android:id="@+id/password"
-            android:layout_width="200dp"
+            android:paddingStart="10dp"
             android:layout_height="45dp"
             android:background="@android:color/transparent"
             android:gravity="center"
@@ -70,10 +82,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginStart="@dimen/space_10dp"
+        android:layout_marginTop="10dp"
         android:id="@+id/linearLayout4"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:paddingStart="@dimen/space_10dp"
         android:orientation="horizontal"
         android:padding="@dimen/space_10dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -88,6 +102,7 @@
             android:layout_marginStart="20dp" />
 
         <TextView
+            android:fontFamily="@font/google_sans"
             android:id="@+id/remember"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -108,6 +123,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
     <Button
+        android:fontFamily="@font/google_sans_bold"
         android:id="@+id/loginText"
         android:layout_width="160dp"
         android:layout_height="40dp"
@@ -129,6 +145,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
+            android:fontFamily="@font/google_sans_bold"
             android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

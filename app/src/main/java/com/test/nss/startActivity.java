@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -47,6 +46,18 @@ public class startActivity extends AppCompatActivity {
 
     Context mContext;
 
+    Thread thread = new Thread(new Runnable() {
+
+        @Override
+        public void run() {
+            try {
+                //Your code goes here
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,11 +79,6 @@ public class startActivity extends AppCompatActivity {
                 0, 7,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         startReg.setText(spannable);
-        Typeface typefaceBold = Typeface.createFromAsset(getAssets(), "fonts/google_sans_bold.ttf");
-        startReg.setTypeface(typefaceBold);
-
-        Typeface typefaceReg = Typeface.createFromAsset(getAssets(), "fonts/google_sans.ttf");
-        startSummary.setTypeface(typefaceReg);
 
         startRemember.setOnClickListener(view ->
                 startCheck.setChecked(!startCheck.isChecked()));
@@ -165,8 +171,8 @@ public class startActivity extends AppCompatActivity {
             startActivity(m);
             return true;
         });*/
+        thread.start();
     }
-
     private boolean isEmpty(EditText e) {
         return e.getText().toString().trim().length() <= 0;
     }

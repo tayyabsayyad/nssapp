@@ -1,15 +1,12 @@
 package com.test.nss.ui.main;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,8 +19,7 @@ import com.test.nss.R;
 import com.test.nss.ediary;
 
 import static com.test.nss.ediary.blackish;
-import static com.test.nss.ediary.primaryCol;
-import static com.test.nss.ediary.transparent;
+import static com.test.nss.ediary.primaryColDark;
 
 public class MainFragment extends Fragment {
 
@@ -33,18 +29,15 @@ public class MainFragment extends Fragment {
     Button firstButton;
     Button secButton;
 
-    ImageView home;
-    TextView nssFY;
-
     Toolbar toolbar;
 
     FragmentManager fm;
     FrameLayout halvesFrame;
-    LinearLayout mainHeader;
 
     Context mContext;
     TextView toolbarTitle;
     TextView maLHay;
+    View lineMain;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -53,7 +46,7 @@ public class MainFragment extends Fragment {
         mContext = requireContext();
 
         toolbarTitle = requireActivity().findViewById(R.id.titleTool);
-        toolbarTitle.setText(getString(R.string.main_frag));
+        toolbarTitle.setText(getString(R.string.menu_main_frag));
 
         fm = requireActivity().getSupportFragmentManager();
 
@@ -62,28 +55,22 @@ public class MainFragment extends Fragment {
         firstButton = root.findViewById(R.id.firstButton);
         secButton = root.findViewById(R.id.secButton);
 
-        home = root.findViewById(R.id.homeButton);
-        line = root.findViewById(R.id.line_main);
-        nssFY = root.findViewById(R.id.nssFY);
+        line = root.findViewById(R.id.line_main_bot);
 
         toolbar = root.findViewById(R.id.toolbar);
         maLHay = root.findViewById(R.id.malHay);
 
-        mainHeader = root.findViewById(R.id.main_header);
-
         firstButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                home.setVisibility(View.VISIBLE);
-                mainHeader.setVisibility(View.GONE);
-                firstButton.setTextColor(Color.WHITE);
+                firstButton.setTextColor(primaryColDark);
                 maLHay.setVisibility(View.GONE);
-                firstButton.setBackgroundColor(primaryCol);
+                //firstButton.setBackgroundColor(primaryCol);
                 secButton.setTextColor(ediary.blackish);
-                secButton.setBackgroundColor(transparent);
+                //secButton.setBackgroundColor(transparent);
 
-                line.setVisibility(View.VISIBLE);
-                toolbar.setVisibility(View.GONE);
+                line.setVisibility(View.GONE);
+                toolbar.setVisibility(View.VISIBLE);
 
                 if (halvesFrame.getVisibility() == View.GONE)
                     halvesFrame.setVisibility(View.VISIBLE);
@@ -95,16 +82,14 @@ public class MainFragment extends Fragment {
         secButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                home.setVisibility(View.VISIBLE);
-                mainHeader.setVisibility(View.GONE);
-                secButton.setTextColor(Color.WHITE);
-                secButton.setBackgroundColor(primaryCol);
+                secButton.setTextColor(primaryColDark);
+                //secButton.setBackgroundColor(primaryCol);
                 firstButton.setTextColor(blackish);
-                firstButton.setBackgroundColor(transparent);
-                maLHay.setVisibility(View.GONE);
+                //firstButton.setBackgroundColor(transparent);
+                maLHay.setVisibility(View.VISIBLE);
 
-                line.setVisibility(View.VISIBLE);
-                toolbar.setVisibility(View.GONE);
+                line.setVisibility(View.GONE);
+                toolbar.setVisibility(View.VISIBLE);
                 if (halvesFrame.getVisibility() == View.GONE)
                     halvesFrame.setVisibility(View.VISIBLE);
 
@@ -119,35 +104,11 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        home = root.findViewById(R.id.homeButton);
+
         toolbar = requireActivity().findViewById(R.id.toolbar);
         maLHay.setVisibility(View.VISIBLE);
-        home.setVisibility(View.INVISIBLE);
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                toolbar.setTitle(getString(R.string.main_frag));
-                toolbar.setVisibility(View.VISIBLE);
-                if (mainHeader.getVisibility() == View.GONE || mainHeader.getVisibility() == View.INVISIBLE) {
-                    mainHeader.setVisibility(View.VISIBLE);
-                }
-                if (fm.getBackStackEntryCount() > 0) {
-                    fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    fm.popBackStack("MainFrag", 0);
-                }
-                halvesFrame.setVisibility(View.GONE);
-                resetColor();
-            }
-        });
-    }
-
-    private void resetColor() {
-        firstButton.setTextColor(blackish);
-        firstButton.setBackgroundColor(transparent);
-        secButton.setBackgroundColor(transparent);
-        secButton.setTextColor(blackish);
-        line.setVisibility(View.GONE);
+        toolbar.setVisibility(View.VISIBLE);
     }
 
     @Override

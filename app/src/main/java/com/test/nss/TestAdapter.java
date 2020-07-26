@@ -188,7 +188,32 @@ public class TestAdapter {
         }
     }
 
-    public void insertCampActListAll(String campActTitle, String campActDec, String day, int sync) {
+    public void insertCampActListAll(int id, String clgName, String state,
+                                     String campActTitle, String campActDec,
+                                     String day, String vec, int sync) {
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("id", id);
+            contentValues.put("College_Name", clgName);
+            contentValues.put("State", state);
+
+            contentValues.put("CampActivityTitle", campActTitle);
+            contentValues.put("CampActivityDescription", campActDec);
+            contentValues.put("CampDay", day);
+            contentValues.put("VEC", vec);
+            contentValues.put("Sync", sync);
+
+            long row = mDb.insert("CampActivities", null, contentValues);
+            if (row != -1)
+                Log.i(TAG, "insertCampActListAll: ");
+
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
+
+    public void insertCampActListAllOff(String campActTitle, String campActDec, String day, int sync) {
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -314,8 +339,7 @@ public class TestAdapter {
 
     public Cursor getActList(String act) {
         try {
-            //String a = String.format("aaa %d", act);
-            String sql = String.format(Locale.ENGLISH, "SELECT * FROM DailyActivity WHERE ActivityCode=\"%s\" AND (not State=\"Deleted\")", (act));
+            String sql = String.format(Locale.ENGLISH, "SELECT * FROM DailyActivity WHERE ActivityCode=\"%s\"", (act));
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.i(TAG, "getActList: ");
             if (mCur2.getCount() == 0) {
@@ -328,9 +352,9 @@ public class TestAdapter {
         }
     }
 
-    public Cursor getActAssigActName(int act) {
+    /*public Cursor getActAssigActName(int act) {
         try {
-            String sql = String.format(Locale.ENGLISH, "SELECT * FROM ActivityListByAdmin WHERE activityType='%d'", act);
+            String sql = String.format(Locale.ENGLISH, "SELECT * FROM DailyActivity WHERE activityType='%d' AND (not State=\"Deleted\")", act);
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.i(TAG, "getActAssigActName: ");
             if (mCur2.getCount() == 0) {
@@ -340,7 +364,7 @@ public class TestAdapter {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;
         }
-    }
+    }*/
 
     public Cursor getActAssigActNameOff(String act) {
         try {
@@ -412,9 +436,39 @@ public class TestAdapter {
         }
     }
 
+    public Cursor getCampActListId(String actName) {
+        try {
+            String sql = String.format("SELECT CampId FROM CampActivityList WHERE CampActivityName=\"%s\"", actName);
+            Cursor mCur2 = mDb.rawQuery(sql, null);
+            Log.i(TAG, "getCampActList: ");
+            if (mCur2.getCount() == 0) {
+                //Log.e(mContext, "Too bad no data in CampActivityList", )();
+            }
+            return mCur2;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Cursor getCampActListAllById(int id) {
+        try {
+            String sql = "SELECT * FROM CampActivities WHERE id=" + id;
+            Cursor mCur2 = mDb.rawQuery(sql, null);
+            Log.i(TAG, "getCampActListAll: ");
+            if (mCur2.getCount() == 0) {
+                //Log.e(mContext, "Too bad no data in CampActivityList", )();
+            }
+            return mCur2;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
     public Cursor getCampActListAll() {
         try {
-            String sql = "SELECT * FROM CampActivities";
+            String sql = "SELECT * FROM CampActivities WHERE (not State=\"Deleted\")";
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.i(TAG, "getCampActListAll: ");
             if (mCur2.getCount() == 0) {
@@ -429,11 +483,11 @@ public class TestAdapter {
 
     public int getSumHours(String actCode){
         try {
-            String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode=\"%s\"", actCode);
+            String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode=\"%s\" AND (not State=\"Deleted\")", actCode);
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.i(TAG, "getSumHours: ");
             if (mCur2.getCount() == 0) {
-                //Log.e(mContext, "Too bad no data in CampActivityList", )();
+                //Log.e(mContext, "Too bad no data in DailyActivity", )();
                 return -1;
             }
             mCur2.moveToFirst();
@@ -494,6 +548,26 @@ public class TestAdapter {
     public void dropDetails(int id) {
         try {
             String sql = String.format(Locale.ENGLISH, "DELETE FROM DailyActivity WHERE actID=\"%d\"", id);
+            mDb.execSQL(sql);
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public void setDetailsCamp(String desc, int day, int id) {
+        try {
+            String sql = String.format(Locale.ENGLISH, "UPDATE CampActivities SET CampActivityDescription = \"%s\", CampDay = %d WHERE id=\"%d\"", desc, day, id);
+            mDb.execSQL(sql);
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public void dropDetailsCamp(int id) {
+        try {
+            String sql = String.format(Locale.ENGLISH, "DELETE FROM CampActivities WHERE id=\"%d\"", id);
             mDb.execSQL(sql);
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());

@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.test.nss.R;
 import com.test.nss.TestAdapter;
 
+import org.apache.commons.collections4.ListUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +54,9 @@ public class FirstHalfFrag extends Fragment {
         mContext = requireContext();
         backAct = root.findViewById(R.id.backActBtn);
 
-        clgListDataAct = addActData(11);
-        areaListDataAct = addActData(12);
-        univListDataAct = addActData(13);
+        clgListDataAct = addActData("First Year College");
+        areaListDataAct = ListUtils.union(addActData("First Year Area Based One"), addActData("First Year Area Based Two"));
+        univListDataAct = addActData("First Year University");
         return root;
     }
 
@@ -134,7 +136,7 @@ public class FirstHalfFrag extends Fragment {
         });
     }
 
-    public List<AdapterDataAct> addActData(int yr) {
+    public List<AdapterDataAct> addActData(String yr) {
         Log.e("opening db", "now for yr:" + yr);
         ArrayList<AdapterDataAct> data3 = new ArrayList<>();
 
@@ -142,13 +144,13 @@ public class FirstHalfFrag extends Fragment {
         mDbHelper.createDatabase();
         mDbHelper.open();
 
-        Cursor c3 = mDbHelper.getActAssigActName(yr);
+        Cursor c3 = mDbHelper.getActList(yr);
         Log.e("SSS", "" + c3.getCount());
 
         while (c3.moveToNext()) {
             data3.add(new AdapterDataAct(
                             c3.getString(c3.getColumnIndex("ActivityName")),
-                            c3.getString(c3.getColumnIndex("HoursAssigned"))
+                    c3.getString(c3.getColumnIndex("HoursWorked"))
                     )
             );
         }
