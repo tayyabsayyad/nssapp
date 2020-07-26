@@ -88,11 +88,14 @@ public class CampActListDetails extends Fragment {
                         );
 
                         builder2.setPositiveButton("Yes", (dialog, which) -> {
-                                    dialog.dismiss();
-                                    TestAdapter mdb = new TestAdapter(mContext);
-                                    mdb.createDatabase();
-                                    mdb.open();
+                            dialog.dismiss();
 
+
+                            TestAdapter mdb = new TestAdapter(mContext);
+                            mdb.createDatabase();
+                            mdb.open();
+
+                            Log.e("asas", "onSwiped: "+campData.get(l).getCampId());
                                     Cursor c = mdb.getCampActListAllById(Integer.parseInt(campData.get(l).getCampId()));
                                     Cursor c2 = mdb.getCampActListId(campData.get(l).getCampTitle());
                                     c.moveToFirst();

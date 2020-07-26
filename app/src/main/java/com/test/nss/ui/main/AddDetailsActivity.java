@@ -29,7 +29,6 @@ import com.test.nss.R;
 import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.startActivity;
-import com.test.nss.ui.onClickInterface2;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -246,7 +245,7 @@ public class AddDetailsActivity extends Fragment {
                     Log.e("hmm", "" + actId.getText().toString());
 
 
-                    Cursor m = mDbHelper.getActAssigName(activityName);
+                    Cursor m = mDbHelper.getActAssigActNameAdmin(activityName);
                     m.moveToFirst();
 
                     String actName = getRoot(actIdHash, m.getInt(m.getColumnIndex("activityType")));
@@ -312,6 +311,8 @@ public class AddDetailsActivity extends Fragment {
                 nssHalvesLinear.setVisibility(View.VISIBLE);
                 add.setVisibility(View.VISIBLE);
 
+                actHeaderInput.setVisibility(View.GONE);
+                malHay.setVisibility(View.VISIBLE);
                 campActIn.setVisibility(View.GONE);
 
             }

@@ -62,6 +62,12 @@ public interface Api {
             @Field("CampActivityTitle") String campTitle
     );
 
+    @GET("/diary/api/selfRegistration/")
+    Call<ResponseBody> insertUsers(@Header("Authorization") String token);
+
+    @GET("/diary/api/leaders/")
+    Call<ResponseBody> insertLeaders(@Header("Authorization") String token);
+
     @GET("/diary/api/campactivities/")
     Call<ResponseBody> getCampActListAll(@Header("Authorization") String token);
 

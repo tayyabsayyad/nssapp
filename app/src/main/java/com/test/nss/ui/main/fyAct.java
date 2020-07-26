@@ -180,7 +180,17 @@ public class fyAct extends Fragment {
                         new SwipeHelperRight.UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
-                                int actID = Integer.parseInt(univListDataFy.get(viewHolder.getAdapterPosition()).getId());
+
+                                int p;
+                                if (viewHolder.getAdapterPosition() == -1)
+                                    p = viewHolder.getAdapterPosition() + 1;
+
+                                else if (viewHolder.getAdapterPosition() == univListDataFy.size())
+                                    p = viewHolder.getAdapterPosition() - 1;
+                                else
+                                    p = viewHolder.getAdapterPosition();
+
+                                int actID = Integer.parseInt(univListDataFy.get(p).getId());
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
                                 View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
@@ -191,7 +201,6 @@ public class fyAct extends Fragment {
 
                                 builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
                                     dialog.dismiss();
-                                    int p = viewHolder.getAdapterPosition();
 
                                     if (!input.getText().toString().trim().equals("")) {
                                         newHours = Integer.parseInt(input.getText().toString());
@@ -267,11 +276,10 @@ public class fyAct extends Fragment {
                                 if (viewHolder.getAdapterPosition() == -1)
                                     p = viewHolder.getAdapterPosition() + 1;
 
-                                else if (viewHolder.getAdapterPosition() == areaDataMainFy.size())
+                                else if (viewHolder.getAdapterPosition() == univListDataFy.size())
                                     p = viewHolder.getAdapterPosition() - 1;
                                 else
                                     p = viewHolder.getAdapterPosition();
-
 
                                 int actID = Integer.parseInt(univListDataFy.get(p).getId());
                                 String actName = adapterUniv.list.get(p).getAct();
@@ -333,7 +341,17 @@ public class fyAct extends Fragment {
                         new SwipeHelperRight.UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
-                                int actID = Integer.parseInt(areaDataMainFy.get(viewHolder.getAdapterPosition()).getId());
+
+                                int p;
+                                if (viewHolder.getAdapterPosition() == -1)
+                                    p = viewHolder.getAdapterPosition() + 1;
+
+                                else if (viewHolder.getAdapterPosition() == areaDataMainFy.size())
+                                    p = viewHolder.getAdapterPosition() - 1;
+                                else
+                                    p = viewHolder.getAdapterPosition();
+
+                                int actID = Integer.parseInt(areaDataMainFy.get(p).getId());
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
                                 View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
@@ -344,7 +362,6 @@ public class fyAct extends Fragment {
 
                                 builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
                                     dialog.dismiss();
-                                    int p = viewHolder.getAdapterPosition();
 
                                     Log.e("Yes this", adapterArea.list.get(p).getAct());
                                     if (!input.getText().toString().trim().equals("")) {
@@ -427,7 +444,7 @@ public class fyAct extends Fragment {
                                 else
                                     p = viewHolder.getAdapterPosition();
 
-                                Log.e("Damn here it is:", "onClick: " + p + viewHolder.getAdapterPosition());
+                                //Log.e("Damn here it is:", "onClick: " + p + viewHolder.getAdapterPosition());
 
                                 int actID = Integer.parseInt(areaDataMainFy.get(p).getId());
                                 String actName = adapterArea.list.get(p).getAct();
@@ -489,7 +506,16 @@ public class fyAct extends Fragment {
                         new SwipeHelperRight.UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
-                                int actID = Integer.parseInt(clgListDataFy.get(viewHolder.getAdapterPosition()).getId());
+                                int p;
+                                if (viewHolder.getAdapterPosition() == -1)
+                                    p = viewHolder.getAdapterPosition() + 1;
+
+                                else if (viewHolder.getAdapterPosition() == univListDataFy.size())
+                                    p = viewHolder.getAdapterPosition() - 1;
+                                else
+                                    p = viewHolder.getAdapterPosition();
+
+                                int actID = Integer.parseInt(clgListDataFy.get(p).getId());
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
                                 View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
@@ -500,7 +526,7 @@ public class fyAct extends Fragment {
 
                                 builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
                                     dialog.dismiss();
-                                    int p = viewHolder.getAdapterPosition();
+
 
                                     Log.e("Yes this", adapterClg.list.get(p).getAct());
                                     if (!input.getText().toString().trim().equals("")) {
@@ -579,7 +605,7 @@ public class fyAct extends Fragment {
                                 if (viewHolder.getAdapterPosition() == -1)
                                     p = viewHolder.getAdapterPosition() + 1;
 
-                                else if (viewHolder.getAdapterPosition() == areaDataMainFy.size())
+                                else if (viewHolder.getAdapterPosition() == clgListDataFy.size())
                                     p = viewHolder.getAdapterPosition() - 1;
                                 else
                                     p = viewHolder.getAdapterPosition();

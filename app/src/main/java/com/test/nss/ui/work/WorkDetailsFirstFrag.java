@@ -1,5 +1,6 @@
 package com.test.nss.ui.work;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class WorkDetailsFirstFrag extends Fragment {
     View root;
-    ListView compHours;
+    public Context context;
     FragmentManager fm;
     List<AdapterDataWork> workListData;
 
@@ -35,6 +36,10 @@ public class WorkDetailsFirstFrag extends Fragment {
         workListData = firstHalfWorkData();
 
         return root;
+    }
+
+    public WorkDetailsFirstFrag(Context context){
+        this.context = context;
     }
 
     @Override
@@ -59,7 +64,7 @@ public class WorkDetailsFirstFrag extends Fragment {
     public List<AdapterDataWork> firstHalfWorkData() {
         ArrayList<AdapterDataWork> data = new ArrayList<>();
 
-        TestAdapter m = new TestAdapter(requireContext());
+        TestAdapter m = new TestAdapter(context);
         m.createDatabase();
         m.open();
         int areaCompOne = m.getSumHours("First Year Area Based One");
@@ -97,8 +102,8 @@ public class WorkDetailsFirstFrag extends Fragment {
 
         data.add(new AdapterDataWork("Area Based 1", "40", String.valueOf(areaCompOne), areaRemOneHours));
         data.add(new AdapterDataWork("Area Based 2", "40", String.valueOf(areaCompTwo), areaRemTwoHours));
-        data.add(new AdapterDataWork(getString(R.string.univ), "20", String.valueOf(univComp), univRemHours));
-        data.add(new AdapterDataWork(getString(R.string.clg), "20", String.valueOf(clgComp), clgRemHours));
+        data.add(new AdapterDataWork("University", "20", String.valueOf(univComp), univRemHours));
+        data.add(new AdapterDataWork("College", "20", String.valueOf(clgComp), clgRemHours));
         return data;
     }
 }

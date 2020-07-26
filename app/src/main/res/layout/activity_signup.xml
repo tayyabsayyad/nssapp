@@ -106,9 +106,11 @@
             <AutoCompleteTextView
                 android:id="@+id/dropdown_clg"
                 style="@style/signUp"
+                android:paddingEnd="12dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:drawableEnd="@drawable/ic_arrow_down"
                 android:background="@drawable/signup_roundbg"
                 android:hint="tap to get list" />
         </LinearLayout>

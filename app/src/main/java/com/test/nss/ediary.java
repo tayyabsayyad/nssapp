@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,11 +22,14 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 import com.test.nss.api.RetrofitClient;
+import com.test.nss.ui.work.AdapterDataWork;
+import com.test.nss.ui.work.WorkDetailsFirstFrag;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -43,10 +47,11 @@ public class ediary extends AppCompatActivity {
     public static int primaryCol;
     public static int primaryColLight;
     private CheckConn checkConn;
+    List<AdapterDataWork> dataWorkList;
 
     AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
-    Button logout;
+    ImageView logout;
     TextView vecNo;
     TextView name;
 
@@ -124,6 +129,7 @@ public class ediary extends AppCompatActivity {
         });
 
         logout.setOnClickListener(view -> {
+            Toast.makeText(ediary.this, "Logged Out", Toast.LENGTH_SHORT).show();
             fm.popBackStackImmediate();
 
             Call<Void> helpData = RetrofitClient.getInstance().getApi().delToken("Token " + startActivity.AUTH_TOKEN);
@@ -132,7 +138,6 @@ public class ediary extends AppCompatActivity {
                 @EverythingIsNonNull
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
-                        Toast.makeText(ediary.this, "Logged Out", Toast.LENGTH_SHORT).show();
                         SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
                         SharedPreferences.Editor eddy = shareit.edit();
                         eddy.putString("BKEY", "");
@@ -155,20 +160,6 @@ public class ediary extends AppCompatActivity {
         });
     }
 
-    // TODO: What the app should do if back pressed
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    public void click(View view) {
-        Toast.makeText(ediary.this, "Clicked First year", Toast.LENGTH_SHORT).show();
-    }
-
-    public void click2(View view) {
-        Toast.makeText(ediary.this, "Clicked second year", Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -178,6 +169,10 @@ public class ediary extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        WorkDetailsFirstFrag wf = new WorkDetailsFirstFrag(ediary.this);
+        dataWorkList = wf.firstHalfWorkData();
+        Log.e("Oh", "onCreate: "+dataWorkList.get(0).getCompHours());
+
         super.onDestroy();
         unregisterReceiver(checkConn);
     }

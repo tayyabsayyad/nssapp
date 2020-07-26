@@ -1,5 +1,6 @@
 package com.test.nss.ui.help;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,12 @@ public class HelpFragment extends Fragment {
 
     TextView emailPo;
     TextView contactPo;
+
+    TextView emailLead1;
+    TextView contactLead1;
+
+    TextView emailLead2;
+    TextView contactLead2;
 
     ConstraintLayout helpMain;
 
@@ -59,6 +66,12 @@ public class HelpFragment extends Fragment {
         emailPo = root.findViewById(R.id.emailPO);
         contactPo = root.findViewById(R.id.contactPO);
 
+        emailLead1 = root.findViewById(R.id.emailLead1);
+        contactLead1 = root.findViewById(R.id.contactLead1);
+
+        emailLead2 = root.findViewById(R.id.emailLead2);
+        contactLead2 = root.findViewById(R.id.contactLead2);
+
         return root;
     }
 
@@ -75,13 +88,32 @@ public class HelpFragment extends Fragment {
         //mDbHelper.getHelpData().get(0)
         if (mDbHelper.getHelpData().size() > 0) {
             emailPo.setText(String.format(getString(R.string.email) + ": %s", mDbHelper.getHelpData().get(0)));
-            contactPo.setText(String.format(getString(R.string.contact_no) + ": %s", mDbHelper.getHelpData().get(1)));
+            contactPo.setText(String.format(getString(R.string.contact_no) + ": +%s", mDbHelper.getHelpData().get(1)));
         } else {
             emailPo.setText(getString(R.string.email));
             contactPo.setText(getString(R.string.contact_no));
         }
-        mDbHelper.close();
 
+        Cursor c2 = mDbHelper.getLeaders();
+        c2.moveToFirst();
+        if (c2.getCount() > 0) {
+            emailLead1.setText(String.format(getString(R.string.email) + ": %s", c2.getString(c2.getColumnIndex("Email"))));
+            contactLead1.setText(String.format(getString(R.string.contact_no) + ": +%s", c2.getString(c2.getColumnIndex("Contact"))));
+        } else {
+            emailLead1.setText(getString(R.string.email));
+            contactLead1.setText(getString(R.string.contact_no));
+        }
+
+        c2.moveToNext();
+        if (c2.getCount() > 0) {
+            emailLead2.setText(String.format(getString(R.string.email) + ": %s", c2.getString(c2.getColumnIndex("Email"))));
+            contactLead2.setText(String.format(getString(R.string.contact_no) + ": +%s", c2.getString(c2.getColumnIndex("Contact"))));
+        } else {
+            emailLead2.setText(getString(R.string.email));
+            contactLead2.setText(getString(R.string.contact_no));
+        }
+
+        mDbHelper.close();
         helpMain.setOnClickListener(v -> {
             if (poDetails.getVisibility() == View.VISIBLE)
                 poDetails.setVisibility(View.GONE);

@@ -1,9 +1,13 @@
 package com.test.nss;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -127,6 +131,11 @@ public class SignupActivity extends AppCompatActivity {
                     vecClgPref.setText("");
                     clgCode = clgCode.substring(clgCode.indexOf("-") + 1);
                     vecClgPref.append(clgCode);
+
+                    String s = adapterView.getItemAtPosition(i).toString();
+                            //spannable.toString().indexOf("-"), spannable.toString().length();
+                            s = s.substring(0, s.indexOf("-"));
+                    dropdownClg.setText(s);
                 }
             });
 

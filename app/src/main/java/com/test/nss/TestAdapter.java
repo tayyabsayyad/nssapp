@@ -251,6 +251,45 @@ public class TestAdapter {
         }
     }
 
+    public void insertUsers(String clgId,
+                            String vec,
+                            String fname,
+                            String lname,
+                            String email,
+                            String contact) {
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("College_name", clgId);
+            contentValues.put("VEC", vec);
+            contentValues.put("First_name", fname);
+            contentValues.put("Last_name", lname);
+            contentValues.put("Email", email);
+            contentValues.put("Contact", contact);
+
+            long row = mDb.insert("Registration", null, contentValues);
+            if (row != -1)
+                Log.i(TAG, "insertUsers: ");
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
+
+    public void insertLeaders(String vec, String clgName) {
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("VEC", vec);
+            contentValues.put("CollegeName", clgName);
+
+            long row = mDb.insert("Leaders", null, contentValues);
+            if (row != -1)
+                Log.i(TAG, "insertLeaders: ");
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
+
     public void insertAct(String vec, String actCode,
                           String id,
                           String assignedDate,
@@ -321,7 +360,22 @@ public class TestAdapter {
         }
     }
 
-    public Cursor getActId(String actCode) {
+    public Cursor getLeaders() {
+        try {
+            //String a = String.format("aaa %d", act);
+            String sql = "SELECT * FROM Registration a, Leaders b WHERE a.VEC=b.VEC";
+            Cursor mCur = mDb.rawQuery(sql, null);
+            Log.i(TAG, "getActListOff: ");
+            if (mCur.getCount() == 0) {
+            }
+            return mCur;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    /*public Cursor getActId(String actCode) {
         try {
             //String a = String.format("aaa %d", act);
             String sql = "SELECT * FROM CampActivityListByAdmin WHERE AssignedActivityName=" + actCode;
@@ -335,11 +389,11 @@ public class TestAdapter {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;
         }
-    }
+    }*/
 
     public Cursor getActList(String act) {
         try {
-            String sql = String.format(Locale.ENGLISH, "SELECT * FROM DailyActivity WHERE ActivityCode=\"%s\"", (act));
+            String sql = String.format(Locale.ENGLISH, "SELECT * FROM DailyActivity WHERE ActivityCode=\"%s\" AND (not State=\"Deleted\")", (act));
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.i(TAG, "getActList: ");
             if (mCur2.getCount() == 0) {
@@ -380,20 +434,6 @@ public class TestAdapter {
         }
     }
 
-    public Cursor getActAssigName(String act) {
-        try {
-            String sql = String.format(Locale.ENGLISH, "SELECT * FROM ActivityListByAdmin WHERE activityName=\"%s\"", act);
-            Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getActAssigActName: ");
-            if (mCur2.getCount() == 0) {
-            }
-            return mCur2;
-        } catch (SQLException mSQLException) {
-            Log.e(TAG, "getTestData >>" + mSQLException.toString());
-            throw mSQLException;
-        }
-    }
-
     public Cursor getActAssigActNameAdmin(String act) {
         try {
             String sql = String.format("SELECT * FROM ActivityListByAdmin WHERE ActivityName=\"%s\"", act);
@@ -407,9 +447,9 @@ public class TestAdapter {
             throw mSQLException;
         }
     }
-    public Cursor getActAssigActId(String actName) {
+    public Cursor getActAllAdmin(int actName) {
         try {
-            String sql = String.format(Locale.ENGLISH, "SELECT * FROM ActivityListByAdmin WHERE ActivityName=\"%s\"", actName);
+            String sql = String.format(Locale.ENGLISH, "SELECT * FROM ActivityListByAdmin WHERE activityType=%d", actName);
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.i(TAG, "getActAssigActId: ");
             if (mCur2.getCount() == 0) {
@@ -468,7 +508,7 @@ public class TestAdapter {
 
     public Cursor getCampActListAll() {
         try {
-            String sql = "SELECT * FROM CampActivities WHERE (not State=\"Deleted\")";
+            String sql = "SELECT * FROM CampActivities";
             Cursor mCur2 = mDb.rawQuery(sql, null);
             Log.i(TAG, "getCampActListAll: ");
             if (mCur2.getCount() == 0) {

@@ -54,9 +54,9 @@ public class FirstHalfFrag extends Fragment {
         mContext = requireContext();
         backAct = root.findViewById(R.id.backActBtn);
 
-        clgListDataAct = addActData("First Year College");
-        areaListDataAct = ListUtils.union(addActData("First Year Area Based One"), addActData("First Year Area Based Two"));
-        univListDataAct = addActData("First Year University");
+        clgListDataAct = addActData(11);
+        areaListDataAct = ListUtils.union(addActData(121), addActData(122));
+        univListDataAct = addActData(13);
         return root;
     }
 
@@ -136,7 +136,7 @@ public class FirstHalfFrag extends Fragment {
         });
     }
 
-    public List<AdapterDataAct> addActData(String yr) {
+    public List<AdapterDataAct> addActData(int yr) {
         Log.e("opening db", "now for yr:" + yr);
         ArrayList<AdapterDataAct> data3 = new ArrayList<>();
 
@@ -144,13 +144,13 @@ public class FirstHalfFrag extends Fragment {
         mDbHelper.createDatabase();
         mDbHelper.open();
 
-        Cursor c3 = mDbHelper.getActList(yr);
+        Cursor c3 = mDbHelper.getActAllAdmin(yr);
         Log.e("SSS", "" + c3.getCount());
 
         while (c3.moveToNext()) {
             data3.add(new AdapterDataAct(
                             c3.getString(c3.getColumnIndex("ActivityName")),
-                    c3.getString(c3.getColumnIndex("HoursWorked"))
+                            c3.getString(c3.getColumnIndex("HoursAssigned"))
                     )
             );
         }

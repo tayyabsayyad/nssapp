@@ -247,7 +247,7 @@ public class CheckConn extends BroadcastReceiver {
 
                 int count = c.getCount();
                 while (count>0) {
-                    Cursor c2 = mDbHelper.getActAssigActId(c.getString(c.getColumnIndex("ActivityName")));
+                    Cursor c2 = mDbHelper.getActAssigActNameAdmin(c.getString(c.getColumnIndex("ActivityName")));
                     c2.moveToFirst();
 
                     Call<ResponseBody> insertActOff = RetrofitClient.getInstance().getApi().sendActList(
@@ -473,6 +473,82 @@ public class CheckConn extends BroadcastReceiver {
                 @EverythingIsNonNull
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Log.e("onFailure:campListAll", t.toString());
+                }
+            });
+
+            Call<ResponseBody> insertUsers = RetrofitClient.getInstance().getApi().insertUsers("Token " + startActivity.AUTH_TOKEN);
+            insertUsers.enqueue(new Callback<ResponseBody>() {
+                @Override
+                @EverythingIsNonNull
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        try {
+                            JSONArray j = new JSONArray(response.body().string());
+
+                            if (j.length() >= 0) {
+                                TestAdapter mDbHelper = new TestAdapter(context);
+                                mDbHelper.createDatabase();
+                                mDbHelper.open();
+                                deleteData("Registration");
+                                for (int i = 0; i < j.length(); i++) {
+                                    mDbHelper.insertUsers(
+                                            j.getJSONObject(i).getString("CollegeName"),
+                                            j.getJSONObject(i).getString("VEC"),
+                                            j.getJSONObject(i).getString("FirstName"),
+                                            j.getJSONObject(i).getString("LastName"),
+                                            j.getJSONObject(i).getString("Email"),
+                                            j.getJSONObject(i).getString("Contact")
+                                    );
+                                }
+                                mDbHelper.close();
+                            }
+                        } catch (JSONException | IOException e) {
+                            Log.e("Failed", e.toString());
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                @EverythingIsNonNull
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
+
+            Call<ResponseBody> insertLeaders = RetrofitClient.getInstance().getApi().insertLeaders("Token " + startActivity.AUTH_TOKEN);
+            insertLeaders.enqueue(new Callback<ResponseBody>() {
+                @Override
+                @EverythingIsNonNull
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        try {
+                            JSONArray j = new JSONArray(response.body().string());
+
+                            if (j.length() >= 0) {
+                                TestAdapter mDbHelper = new TestAdapter(context);
+                                mDbHelper.createDatabase();
+                                mDbHelper.open();
+                                deleteData("Leaders");
+                                for (int i = 0; i < j.length(); i++) {
+                                    mDbHelper.insertLeaders(
+                                            j.getJSONObject(i).getString("VEC"),
+                                            j.getJSONObject(i).getString("CollegeName")
+                                    );
+                                }
+                                mDbHelper.close();
+                            }
+                        } catch (JSONException | IOException e) {
+                            Log.e("Failed", e.toString());
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                @EverythingIsNonNull
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
                 }
             });
         } else if (wifiState != null && mobileState != null) {

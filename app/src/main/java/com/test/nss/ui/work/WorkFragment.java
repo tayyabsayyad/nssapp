@@ -56,7 +56,7 @@ public class WorkFragment extends Fragment {
             secButton.setTextColor(blackish);
             secButton.setBackgroundColor(transparent);
 
-            fm.beginTransaction().replace(R.id.work_details, new WorkDetailsFirstFrag()).addToBackStack("MainFrag").commit();
+            fm.beginTransaction().replace(R.id.work_details, new WorkDetailsFirstFrag(requireContext())).addToBackStack("MainFrag").commit();
         });
 
         secButton.setOnClickListener(v -> {
