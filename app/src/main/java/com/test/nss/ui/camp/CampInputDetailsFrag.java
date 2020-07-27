@@ -23,7 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.R;
 import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
-import com.test.nss.startActivity;
+import com.test.nss.ediary;
 
 import java.io.IOException;
 
@@ -102,11 +102,11 @@ public class CampInputDetailsFrag extends Fragment {
                 if (isNetworkAvailable()) {
 
                     Call<ResponseBody> sendCampDetails = RetrofitClient.getInstance().getApi().sendCampDetail(
-                            "Token " + startActivity.AUTH_TOKEN,
+                            "Token " + ediary.AUTH_TOKEN,
                             "DBIT",
                             campDesc.getText().toString(),
                             Integer.parseInt(day.substring(day.indexOf(" ") + 1)),
-                            startActivity.VEC,
+                            ediary.VEC,
                             "1",
                             campId);
                     sendCampDetails.enqueue(new Callback<ResponseBody>() {

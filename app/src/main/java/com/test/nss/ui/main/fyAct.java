@@ -27,7 +27,7 @@ import com.test.nss.R;
 import com.test.nss.SwipeHelperRight;
 import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
-import com.test.nss.startActivity;
+import com.test.nss.ediary;
 import com.test.nss.ui.onClickInterface2;
 
 import org.apache.commons.collections4.ListUtils;
@@ -110,7 +110,7 @@ public class fyAct extends Fragment {
         fragFy = root.findViewById(R.id.frag_fy);
 
         univ.setOnClickListener(v -> {
-            whichAct = 13;
+            whichAct = 11;
             act = 0;
             mainFy.setVisibility(View.VISIBLE);
             univRecFy.setVisibility(View.VISIBLE);
@@ -142,7 +142,7 @@ public class fyAct extends Fragment {
         clg.setOnClickListener(v -> {
             mainFy.setVisibility(View.VISIBLE);
 
-            whichAct = 11;
+            whichAct = 13;
             act = 2;
             add.setVisibility(View.VISIBLE);
             univRecFy.setVisibility(View.GONE);
@@ -162,7 +162,6 @@ public class fyAct extends Fragment {
 
         onClickInterface2 = actID -> {
             Toast.makeText(mContext, "" + actID, Toast.LENGTH_SHORT).show();
-
         };
 
         // Recycler View Univ
@@ -194,7 +193,7 @@ public class fyAct extends Fragment {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
                                 View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
-                                EditText input = (EditText) viewInflated.findViewById(R.id.input);
+                                EditText input = viewInflated.findViewById(R.id.input);
                                 builder.setView(viewInflated);
 
                                 builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
@@ -229,9 +228,9 @@ public class fyAct extends Fragment {
                                             //mdb.setSyncActDetails(0, actID);
 
                                             Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                                    "Token " + startActivity.AUTH_TOKEN,
+                                                    "Token " + ediary.AUTH_TOKEN,
                                                     newHours,
-                                                    startActivity.VEC,
+                                                    ediary.VEC,
                                                     Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
                                                     Integer.parseInt(c.getString(c.getColumnIndex("id"))),
                                                     3,
@@ -292,9 +291,9 @@ public class fyAct extends Fragment {
                                 c2.moveToFirst();
 
                                 Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                        "Token " + startActivity.AUTH_TOKEN,
+                                        "Token " + ediary.AUTH_TOKEN,
                                         Integer.parseInt(adapterUniv.list.get(p).getHours()),
-                                        startActivity.VEC,
+                                        ediary.VEC,
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
                                         4,
@@ -355,7 +354,7 @@ public class fyAct extends Fragment {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
                                 View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
-                                EditText input = (EditText) viewInflated.findViewById(R.id.input);
+                                EditText input = viewInflated.findViewById(R.id.input);
                                 builder.setView(viewInflated);
 
                                 builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
@@ -391,9 +390,9 @@ public class fyAct extends Fragment {
                                             //mdb.setSyncActDetails(0, actID);
 
                                             Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                                    "Token " + startActivity.AUTH_TOKEN,
+                                                    "Token " + ediary.AUTH_TOKEN,
                                                     newHours,
-                                                    startActivity.VEC,
+                                                    ediary.VEC,
                                                     Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
                                                     Integer.parseInt(c.getString(c.getColumnIndex("id"))),
                                                     3,
@@ -457,9 +456,9 @@ public class fyAct extends Fragment {
                                 c2.moveToFirst();
 
                                 Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                        "Token " + startActivity.AUTH_TOKEN,
+                                        "Token " + ediary.AUTH_TOKEN,
                                         Integer.parseInt(adapterArea.list.get(p).getHours()),
-                                        startActivity.VEC,
+                                        ediary.VEC,
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
                                         4,
@@ -519,7 +518,7 @@ public class fyAct extends Fragment {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
                                 View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
-                                EditText input = (EditText) viewInflated.findViewById(R.id.input);
+                                EditText input = viewInflated.findViewById(R.id.input);
                                 builder.setView(viewInflated);
 
                                 builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
@@ -556,9 +555,9 @@ public class fyAct extends Fragment {
                                             //mdb.setSyncActDetails(0, actID);
 
                                             Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                                    "Token " + startActivity.AUTH_TOKEN,
+                                                    "Token " + ediary.AUTH_TOKEN,
                                                     newHours,
-                                                    startActivity.VEC,
+                                                    ediary.VEC,
                                                     Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
                                                     Integer.parseInt(c.getString(c.getColumnIndex("id"))),
                                                     3,
@@ -622,9 +621,9 @@ public class fyAct extends Fragment {
                                 c2.moveToFirst();
 
                                 Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                        "Token " + startActivity.AUTH_TOKEN,
+                                        "Token " + ediary.AUTH_TOKEN,
                                         Integer.parseInt(adapterClg.list.get(p).getHours()),
-                                        startActivity.VEC,
+                                        ediary.VEC,
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
                                         4,
@@ -726,7 +725,7 @@ public class fyAct extends Fragment {
         mDbHelper.open();
 
         Cursor c = mDbHelper.getActList(whichAct);
-        Log.e("SSS", "" + c.getCount());
+        Log.e("SSSHHH", "" + c.getCount());
         while (c.moveToNext()) {
             Log.e("This", c.getString(c.getColumnIndex("ActivityCode")));
 

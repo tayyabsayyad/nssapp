@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.test.nss.R;
 import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
-import com.test.nss.startActivity;
+import com.test.nss.ediary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,22 +95,22 @@ public class CampActListDetails extends Fragment {
                             mdb.createDatabase();
                             mdb.open();
 
-                            Log.e("asas", "onSwiped: "+campData.get(l).getCampId());
-                                    Cursor c = mdb.getCampActListAllById(Integer.parseInt(campData.get(l).getCampId()));
-                                    Cursor c2 = mdb.getCampActListId(campData.get(l).getCampTitle());
-                                    c.moveToFirst();
-                                    c2.moveToFirst();
+                            Log.e("asas", "onSwiped: " + campData.get(l).getCampId());
+                            Cursor c = mdb.getCampActListAllById(Integer.parseInt(campData.get(l).getCampId()));
+                            Cursor c2 = mdb.getCampActListId(campData.get(l).getCampTitle());
+                            c.moveToFirst();
+                            c2.moveToFirst();
 
-                                    Call<ResponseBody> putCamp = RetrofitClient.getInstance().getApi().putCamp(
-                                            "Token " + startActivity.AUTH_TOKEN,
-                                            startActivity.VEC,
-                                            c2.getInt(c2.getColumnIndex("CampId")),
-                                            c.getString(c.getColumnIndex("CampActivityDescription")),
-                                            c.getInt(c.getColumnIndex("CampDay")),
-                                            c.getString(c.getColumnIndex("College_Name")),
-                                            3,
-                                            c.getInt(c.getColumnIndex("id"))
-                                    );
+                            Call<ResponseBody> putCamp = RetrofitClient.getInstance().getApi().putCamp(
+                                    "Token " + ediary.AUTH_TOKEN,
+                                    ediary.VEC,
+                                    c2.getInt(c2.getColumnIndex("CampId")),
+                                    c.getString(c.getColumnIndex("CampActivityDescription")),
+                                    c.getInt(c.getColumnIndex("CampDay")),
+                                    c.getString(c.getColumnIndex("College_Name")),
+                                    3,
+                                    c.getInt(c.getColumnIndex("id"))
+                            );
 
                                     mdb.dropDetailsCamp(Integer.parseInt(campData.get(l).getCampId()));
                                     Toast.makeText(mContext, "" + campData.get(l).getCampId(), Toast.LENGTH_SHORT).show();
@@ -145,8 +145,8 @@ public class CampActListDetails extends Fragment {
                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
                         View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.camp_new_input_layout, (ViewGroup) view, false);
 
-                        EditText inputDesc = (EditText) viewInflated.findViewById(R.id.inputDesc);
-                        EditText inputDay = (EditText) viewInflated.findViewById(R.id.inputDay);
+                        EditText inputDesc = viewInflated.findViewById(R.id.inputDesc);
+                        EditText inputDay = viewInflated.findViewById(R.id.inputDay);
 
                         builder.setView(viewInflated);
                         Log.e("Here", "onSwiped: " + p + " " + campData.get(p).getCampId());
@@ -161,13 +161,15 @@ public class CampActListDetails extends Fragment {
                             String desc = inputDesc.getText().toString().trim();
                             String day = inputDay.getText().toString().trim();
 
-                            if (desc.equals(""))
+                            if (desc.equals("")) {
                                 Toast.makeText(mContext, "Please enter Camp Description", Toast.LENGTH_SHORT).show();
-
-                            else if (day.equals("")) {
+                                campDataAdapter.notifyItemChanged(p);
+                            } else if (day.equals("")) {
                                 Toast.makeText(mContext, "Please enter Camp Day", Toast.LENGTH_SHORT).show();
+                                campDataAdapter.notifyItemChanged(p);
                             } else if (Integer.parseInt(day) <= 0 || Integer.parseInt(day) > 7) {
                                 Toast.makeText(mContext, "Fill between 1 to 7", Toast.LENGTH_SHORT).show();
+                                campDataAdapter.notifyItemChanged(p);
                             } else {
                                 dialog.dismiss();
                                 Log.e("Here", "onSwiped: " + p + " " + campData.get(p).getCampId());
@@ -192,8 +194,8 @@ public class CampActListDetails extends Fragment {
                                 c2.moveToFirst();
 
                                 Call<ResponseBody> putCamp = RetrofitClient.getInstance().getApi().putCamp(
-                                        "Token " + startActivity.AUTH_TOKEN,
-                                        startActivity.VEC,
+                                        "Token " + ediary.AUTH_TOKEN,
+                                        ediary.VEC,
                                         c2.getInt(c2.getColumnIndex("CampId")),
                                         c.getString(c.getColumnIndex("CampActivityDescription")),
                                         c.getInt(c.getColumnIndex("CampDay")),

@@ -121,4 +121,17 @@ public interface Api {
 
                                @Path("id2") int id2
     );
+
+    @PUT("/diary/workhours/{id}/")
+    @FormUrlEncoded
+    Call<ResponseBody> insertHour(@Header("Authorization") String token,
+                                  @Field("CompletedHours") int compHour,
+                                  @Field("RemainingHours") int remHour,
+                                  @Field("VEC") String vec,
+                                  @Field("ActivityName") int actName,
+                                  @Field("Level") String level,
+
+                                  @Path("id") int id
+
+    );
 }

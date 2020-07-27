@@ -68,7 +68,7 @@ public class CheckConn extends BroadcastReceiver {
 
         if (a || b) {
             Log.e("CheckConn", "Internet");
-            Call<ResponseBody> helpData = RetrofitClient.getInstance().getApi().getPoData("Token " + startActivity.AUTH_TOKEN);
+            Call<ResponseBody> helpData = RetrofitClient.getInstance().getApi().getPoData("Token " + ediary.AUTH_TOKEN);
             helpData.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -106,7 +106,7 @@ public class CheckConn extends BroadcastReceiver {
             });
             //NetworkInfo.State.CONNECTED != wifiState
 
-            Call<ResponseBody> campList = RetrofitClient.getInstance().getApi().getCampList("Token " + startActivity.AUTH_TOKEN);
+            Call<ResponseBody> campList = RetrofitClient.getInstance().getApi().getCampList("Token " + ediary.AUTH_TOKEN);
             campList.enqueue(new Callback<ResponseBody>() {
                 @Override
                 @EverythingIsNonNull
@@ -180,7 +180,7 @@ public class CheckConn extends BroadcastReceiver {
             });
 
 
-            Call<ResponseBody> campDetails = RetrofitClient.getInstance().getApi().getCampDetails("Token " + startActivity.AUTH_TOKEN);
+            Call<ResponseBody> campDetails = RetrofitClient.getInstance().getApi().getCampDetails("Token " + ediary.AUTH_TOKEN);
             campDetails.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -251,7 +251,7 @@ public class CheckConn extends BroadcastReceiver {
                     c2.moveToFirst();
 
                     Call<ResponseBody> insertActOff = RetrofitClient.getInstance().getApi().sendActList(
-                            "Token " + startActivity.AUTH_TOKEN,
+                            "Token " + ediary.AUTH_TOKEN,
                             c.getString(c.getColumnIndex("VEC")),
                             c2.getInt(c2.getColumnIndex("id")),
                             //c.getInt(c.getColumnIndex("ActivityCode")),
@@ -297,7 +297,7 @@ public class CheckConn extends BroadcastReceiver {
             }
             mDbHelper.close();
 
-            Call<ResponseBody> insertAct = RetrofitClient.getInstance().getApi().getDailyAct("Token " + startActivity.AUTH_TOKEN);
+            Call<ResponseBody> insertAct = RetrofitClient.getInstance().getApi().getDailyAct("Token " + ediary.AUTH_TOKEN);
             insertAct.enqueue(new Callback<ResponseBody>() {
                 @Override
                 @EverythingIsNonNull
@@ -353,11 +353,11 @@ public class CheckConn extends BroadcastReceiver {
                     Cursor c3 = mDbHelper.getCampId(c2.getString(c2.getColumnIndex("CampActivityTitle")));
                     c3.moveToFirst();
                     Call<ResponseBody> sendCampDetails = RetrofitClient.getInstance().getApi().sendCampDetail(
-                            "Token " + startActivity.AUTH_TOKEN,
+                            "Token " + ediary.AUTH_TOKEN,
                             "DBIT",
                             c2.getString(c2.getColumnIndex("CampActivityDescription")),
                             c2.getInt(c2.getColumnIndex("CampDay")),
-                            startActivity.VEC,
+                            ediary.VEC,
                             "1",
                             c3.getString(c3.getColumnIndex("CampId"))
                     );
@@ -394,7 +394,7 @@ public class CheckConn extends BroadcastReceiver {
                 mDbHelper.setSync("CampActivities", 1);
             mDbHelper.close();
 
-            Call<ResponseBody> campListAll = RetrofitClient.getInstance().getApi().getCampActListAll("Token " + startActivity.AUTH_TOKEN);
+            Call<ResponseBody> campListAll = RetrofitClient.getInstance().getApi().getCampActListAll("Token " + ediary.AUTH_TOKEN);
             campListAll.enqueue(new Callback<ResponseBody>() {
                 @Override
                 @EverythingIsNonNull
@@ -416,7 +416,7 @@ public class CheckConn extends BroadcastReceiver {
                                             j.getJSONObject(i).getString("CampActivityTitle"),
                                             j.getJSONObject(i).getString("CampActivityDescription"),
                                             j.getJSONObject(i).getString("Day"),
-                                            startActivity.VEC,
+                                            ediary.VEC,
                                             1
                                     );
                                 }
@@ -436,7 +436,7 @@ public class CheckConn extends BroadcastReceiver {
                 }
             });
 
-            Call<ResponseBody> actList = RetrofitClient.getInstance().getApi().getActList("Token " + startActivity.AUTH_TOKEN);
+            Call<ResponseBody> actList = RetrofitClient.getInstance().getApi().getActList("Token " + ediary.AUTH_TOKEN);
             actList.enqueue(new Callback<ResponseBody>() {
                 @Override
                 @EverythingIsNonNull
@@ -476,7 +476,7 @@ public class CheckConn extends BroadcastReceiver {
                 }
             });
 
-            Call<ResponseBody> insertUsers = RetrofitClient.getInstance().getApi().insertUsers("Token " + startActivity.AUTH_TOKEN);
+            Call<ResponseBody> insertUsers = RetrofitClient.getInstance().getApi().insertUsers("Token " + ediary.AUTH_TOKEN);
             insertUsers.enqueue(new Callback<ResponseBody>() {
                 @Override
                 @EverythingIsNonNull
@@ -516,7 +516,7 @@ public class CheckConn extends BroadcastReceiver {
                 }
             });
 
-            Call<ResponseBody> insertLeaders = RetrofitClient.getInstance().getApi().insertLeaders("Token " + startActivity.AUTH_TOKEN);
+            Call<ResponseBody> insertLeaders = RetrofitClient.getInstance().getApi().insertLeaders("Token " + ediary.AUTH_TOKEN);
             insertLeaders.enqueue(new Callback<ResponseBody>() {
                 @Override
                 @EverythingIsNonNull

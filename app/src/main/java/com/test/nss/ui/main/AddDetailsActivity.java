@@ -28,7 +28,7 @@ import androidx.fragment.app.FragmentManager;
 import com.test.nss.R;
 import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
-import com.test.nss.startActivity;
+import com.test.nss.ediary;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +46,6 @@ public class AddDetailsActivity extends Fragment {
     View huh;
     ConstraintLayout constFyAct;
     LinearLayout nssHalvesLinear;
-    LinearLayout actInputHeader;
     ArrayList<String> clgList;
     ArrayList<String> actAssignList;
     ArrayList<String> actAssignListId;
@@ -202,14 +201,14 @@ public class AddDetailsActivity extends Fragment {
         drpdownactClg.setAdapter(adapter);
 
         Map<String, Integer> actIdHash = new HashMap<>();
-        actIdHash.put("First Year University", 13);
+        actIdHash.put("First Year University", 11);
         actIdHash.put("First Year Area Based One", 121);
         actIdHash.put("First Year Area Based Two", 122);
-        actIdHash.put("First Year College", 11);
-        actIdHash.put("Second Year University", 23);
+        actIdHash.put("First Year College", 13);
+        actIdHash.put("Second Year University", 21);
         actIdHash.put("Second Year Area Based One", 221);
         actIdHash.put("Second Year Area Based Two", 222);
-        actIdHash.put("Second Year College", 21);
+        actIdHash.put("Second Year College", 23);
         ArrayAdapter<String> a = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, actAssignList);
         drpdownactAssignName.setAdapter(a);
 
@@ -250,7 +249,7 @@ public class AddDetailsActivity extends Fragment {
 
                     String actName = getRoot(actIdHash, m.getInt(m.getColumnIndex("activityType")));
                     mDbHelper.insertActOff(
-                            startActivity.VEC,
+                            ediary.VEC,
                             actName,
                             actDate.getText().toString(),
                             drpdownactAssignName.getSelectedItem().toString(),
@@ -266,8 +265,8 @@ public class AddDetailsActivity extends Fragment {
                         Log.e("AOO", "" + actId.getText().toString());
 
                         Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
-                                "Token " + startActivity.AUTH_TOKEN,
-                                startActivity.VEC,
+                                "Token " + ediary.AUTH_TOKEN,
+                                ediary.VEC,
                                 m.getInt(m.getColumnIndex("id")),// AAA
                                 Integer.parseInt(actHour.getText().toString()),
                                 actDate.getText().toString(),

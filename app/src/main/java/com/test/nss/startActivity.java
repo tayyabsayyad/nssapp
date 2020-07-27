@@ -33,8 +33,8 @@ import retrofit2.Response;
 
 public class startActivity extends AppCompatActivity {
 
-    public static String AUTH_TOKEN;
-    public static String VEC;
+    String AUTH_TOKEN;
+    String VEC;
 
     TextView startReg;
     TextView startSummary;
@@ -84,9 +84,9 @@ public class startActivity extends AppCompatActivity {
                 startCheck.setChecked(!startCheck.isChecked()));
 
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
-        String getName = sharedPreferences.getString("BKEY", "");
+        //String getName = sharedPreferences.getString("BKEY", "");
 
-        username.setText(getName);
+        username.setText(sharedPreferences.getString("BKEY", ""));
         password.setText(sharedPreferences.getString("AKEY", ""));
 
         startReg.setOnClickListener(v -> {
@@ -108,19 +108,24 @@ public class startActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                         try {
                             if (response.isSuccessful() && response.body() != null) {
+                                SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
+                                SharedPreferences.Editor eddy = shareit.edit();
                                 if (startCheck.isChecked()) {
-                                    SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
-                                    SharedPreferences.Editor eddy = shareit.edit();
                                     eddy.putString("BKEY", username.getText().toString());
                                     eddy.putString("AKEY", password.getText().toString());
-                                    eddy.apply();
                                 }
+                                eddy.putInt("logged", 1);
+
                                 Log.e("onResponse", "Logged In");
                                 JSONObject j = new JSONObject(response.body().string());
                                 AUTH_TOKEN = j.getString("auth_token");
                                 Log.e("AUTH_TOKEN", AUTH_TOKEN);
                                 VEC = username.getText().toString();
+                                eddy.putString("AUTH_TOKEN", AUTH_TOKEN);
+                                eddy.putString("VEC", VEC);
+                                eddy.apply();
                                 Intent i = new Intent(mContext, ediary.class);
+
                                 startActivity(i);
                                 finish();
                             } else {

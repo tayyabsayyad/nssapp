@@ -6,11 +6,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -37,8 +37,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-import static com.test.nss.startActivity.AUTH_TOKEN;
-
 public class ediary extends AppCompatActivity {
 
     public static int primaryColDark;
@@ -57,10 +55,19 @@ public class ediary extends AppCompatActivity {
 
     FragmentManager fm;
 
+    public static String AUTH_TOKEN;
+    public static String VEC;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ediary);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
+
+        AUTH_TOKEN = sharedPreferences.getString("AUTH_TOKEN", "");
+        VEC = sharedPreferences.getString("VEC", "");
+
         fm = getSupportFragmentManager();
 
         checkConn = new CheckConn();
@@ -70,11 +77,11 @@ public class ediary extends AppCompatActivity {
         registerReceiver(checkConn, z);
 
         vecNo = findViewById(R.id.vecNoHeader);
-        String k = startActivity.VEC;
+        String k = ediary.VEC;
 
 //        vecNo.setText(k);
 
-        //vecNo.setText(startActivity.VEC);
+        //vecNo.setText(ediary.VEC);
         name = findViewById(R.id.nameHeader);
 
         blackish = this.getColor(R.color.blackish);
@@ -103,9 +110,9 @@ public class ediary extends AppCompatActivity {
         View headerView = navigationView.getHeaderView(0);
         TextView navUsername = headerView.findViewById(R.id.nameHeader);
         TextView navVec = headerView.findViewById(R.id.vecNoHeader);
-        navVec.setText(startActivity.VEC);
+        navVec.setText(ediary.VEC);
 
-        Call<ResponseBody> userDetail = RetrofitClient.getInstance().getApi().getUserDetail(startActivity.VEC);
+        Call<ResponseBody> userDetail = RetrofitClient.getInstance().getApi().getUserDetail(ediary.VEC);
         userDetail.enqueue(new Callback<ResponseBody>() {
             @Override
             @EverythingIsNonNull
@@ -129,35 +136,54 @@ public class ediary extends AppCompatActivity {
         });
 
         logout.setOnClickListener(view -> {
-            Toast.makeText(ediary.this, "Logged Out", Toast.LENGTH_SHORT).show();
-            fm.popBackStackImmediate();
+            AlertDialog.Builder builder2 = new AlertDialog.Builder(ediary.this, R.style.delDialog);
+            builder2.setTitle("Do you want to logout?");
 
-            Call<Void> helpData = RetrofitClient.getInstance().getApi().delToken("Token " + startActivity.AUTH_TOKEN);
-            helpData.enqueue(new Callback<Void>() {
-                @Override
-                @EverythingIsNonNull
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
-                        SharedPreferences.Editor eddy = shareit.edit();
-                        eddy.putString("BKEY", "");
-                        eddy.putString("AKEY", "");
-                        eddy.apply();
+            builder2.setPositiveButton("Yes", (dialog, which) -> {
+                dialog.dismiss();
+
+                SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
+                SharedPreferences.Editor eddy = shareit.edit();
+                eddy.putInt("logged", 0);
+                eddy.apply();
+
+                Toast.makeText(ediary.this, "Logged Out", Toast.LENGTH_SHORT).show();
+                fm.popBackStackImmediate();
+
+                Call<Void> helpData = RetrofitClient.getInstance().getApi().delToken("Token " + ediary.AUTH_TOKEN);
+                helpData.enqueue(new Callback<Void>() {
+                    @Override
+                    @EverythingIsNonNull
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
+                            SharedPreferences.Editor eddy = shareit.edit();
+                            eddy.putString("BKEY", "");
+                            eddy.putString("AKEY", "");
+                            eddy.apply();
+                        }
                     }
-                }
 
-                @Override
-                @EverythingIsNonNull
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e("Ediary:logout", t.toString());
-                }
+                    @Override
+                    @EverythingIsNonNull
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e("Ediary:logout", t.toString());
+                    }
+                });
+                Intent i = new Intent(ediary.this, startActivity.class);
+                startActivity(i);
+                finish();
+                Toast.makeText(ediary.this, "Logged Out!", Toast.LENGTH_SHORT).show();
+                AUTH_TOKEN = "";
             });
-            Intent i = new Intent(ediary.this, startActivity.class);
-            startActivity(i);
-            finish();
-            Toast.makeText(ediary.this, "Logged Out!", Toast.LENGTH_SHORT).show();
-            AUTH_TOKEN = "";
+
+            builder2.setNegativeButton("No", (dialog, which) -> {
+                dialog.dismiss();
+            });
+
+            builder2.show();
         });
+
     }
 
     @Override
@@ -167,13 +193,123 @@ public class ediary extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    @Override
-    protected void onDestroy() {
+    private void add() {
         WorkDetailsFirstFrag wf = new WorkDetailsFirstFrag(ediary.this);
         dataWorkList = wf.firstHalfWorkData();
-        Log.e("Oh", "onCreate: "+dataWorkList.get(0).getCompHours());
+        Log.e("Oh", "onDestroy: " + dataWorkList.get(0).getCompHours());
+        Call<ResponseBody> insertHourZero = RetrofitClient.getInstance().getApi().insertHour(
+                "Token " + ediary.AUTH_TOKEN,
+                Integer.parseInt(dataWorkList.get(0).getCompHours()),
+                Integer.parseInt(dataWorkList.get(0).getRemHours()),
+                ediary.VEC,
+                121,
+                "Area Based Level One",
+                30
+        );
+        insertHourZero.enqueue(new Callback<ResponseBody>() {
+            @Override
+            @EverythingIsNonNull
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful())
+                    Log.e("Done", "onResponse: ");
+                else if (response.errorBody() != null) {
+                    try {
+                        JSONObject j = new JSONObject(response.errorBody().string());
+                        Log.e("Error", j.toString());
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
+                        Log.e("error", e.toString());
+                    }
+                }
+            }
 
+            @Override
+            @EverythingIsNonNull
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
+
+        Call<ResponseBody> insertHourOne = RetrofitClient.getInstance().getApi().insertHour(
+                "Token " + ediary.AUTH_TOKEN,
+                Integer.parseInt(dataWorkList.get(1).getCompHours()),
+                Integer.parseInt(dataWorkList.get(1).getRemHours()),
+                ediary.VEC,
+                122,
+                "Area Based Level Two",
+                31
+        );
+        insertHourOne.enqueue(new Callback<ResponseBody>() {
+            @Override
+            @EverythingIsNonNull
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            @EverythingIsNonNull
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+
+        Call<ResponseBody> insertHourTwo = RetrofitClient.getInstance().getApi().insertHour(
+                "Token " + ediary.AUTH_TOKEN,
+                Integer.parseInt(dataWorkList.get(2).getCompHours()),
+                Integer.parseInt(dataWorkList.get(2).getRemHours()),
+                ediary.VEC,
+                11,
+                "College Level",
+                32
+        );
+        insertHourTwo.enqueue(new Callback<ResponseBody>() {
+            @Override
+            @EverythingIsNonNull
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            @EverythingIsNonNull
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+
+        Call<ResponseBody> insertHourThr = RetrofitClient.getInstance().getApi().insertHour(
+                "Token " + ediary.AUTH_TOKEN,
+                Integer.parseInt(dataWorkList.get(3).getCompHours()),
+                Integer.parseInt(dataWorkList.get(3).getRemHours()),
+                ediary.VEC,
+                13,
+                "University Level",
+                29
+        );
+
+        insertHourThr.enqueue(new Callback<ResponseBody>() {
+            @Override
+            @EverythingIsNonNull
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            @EverythingIsNonNull
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        add();
+    }
+
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
+        add();
         unregisterReceiver(checkConn);
     }
 }

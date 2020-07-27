@@ -1,13 +1,10 @@
 package com.test.nss;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -28,8 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,6 +55,7 @@ public class SignupActivity extends AppCompatActivity {
     private Button signupPost;
     private EditText contactNo;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +120,25 @@ public class SignupActivity extends AppCompatActivity {
                     dropdownClg.showDropDown();
                 }
             });
+            /*dropdownClg.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent event) {
+                    final int DRAWABLE_LEFT = 0;
+                    final int DRAWABLE_TOP = 1;
+                    final int DRAWABLE_RIGHT = 2;
+                    final int DRAWABLE_BOTTOM = 3;
+
+                    if(event.getAction() == MotionEvent.ACTION_UP) {
+                        if(event.getRawX() >= (dropdownClg.getRight() - dropdownClg.getCompoundDrawables()[R.drawable.ic_arrow_down].getBounds().width())) {
+                            // your action here
+                            dropdownClg.showDropDown();
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            });*/
+
             dropdownClg.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -133,72 +149,88 @@ public class SignupActivity extends AppCompatActivity {
                     vecClgPref.append(clgCode);
 
                     String s = adapterView.getItemAtPosition(i).toString();
-                            //spannable.toString().indexOf("-"), spannable.toString().length();
-                            s = s.substring(0, s.indexOf("-"));
+                    //spannable.toString().indexOf("-"), spannable.toString().length();
+                    s = s.substring(0, s.indexOf("-"));
                     dropdownClg.setText(s);
                 }
             });
 
             signupPost.setOnClickListener(v -> {
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
                 final EditText vec = findViewById(R.id.vec_in);
 
-                if (vec.getText().toString().trim().length()<5 && vec.getText().toString().trim().length()!=5)
-                    vec.setError("Enter only 5 digits");
-
-                else if (!isEmpty(fName) && !isEmpty(fathName) &&
+                if (!isEmpty(fName) && !isEmpty(fathName) &&
                         !isEmpty(mName) && !isEmpty(lName) && !isEmpty(vec) &&
                         !isEmpty(email) && !isEmpty(contactNo) && !vecClgPref.getText().toString().equals("")
-                        && !isEmpty(dropdownClg) && vec.getText().toString().trim().length()==5) {
-                    Snackbar.make(v, "Signing you up!", Snackbar.LENGTH_SHORT).show();
+                        && !isEmpty(dropdownClg) && vec.getText().toString().trim().length() == 5) {
 
-                    String clgItem = dropdownClg.getText().toString();
-                    clgItem = clgItem.substring(0, clgItem.indexOf("-"));
-                    Call<ResponseBody> signup = RetrofitClient.getInstance().getApi().signup(
-                            "1",
-                            date,
-                            fName.getText().toString(),
-                            fathName.getText().toString(),
-                            mName.getText().toString(),
-                            lName.getText().toString(),
-                            "MH09" + vecClgPref.getText().toString() + vec.getText().toString(),
-                            email.getText().toString(),
-                            clgItem,
-                            "+91" + contactNo.getText().toString()
-                    );
+                    if (!email.getText().toString().trim().matches(emailPattern))
+                        Toast.makeText(mContext, "Please enter proper email", Toast.LENGTH_SHORT).show();
+                    if (vec.getText().toString().trim().length() < 5 && vec.getText().toString().trim().length() != 5)
+                        vec.setError("Enter only 5 digits");
+                    else {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(mContext, R.style.delDialog);
+                        builder2.setTitle("Confirm");
+                        builder2.setMessage("Your vec is: " + "MH09" + vecClgPref.getText().toString() + vec.getText().toString());
 
-                    signup.enqueue(new Callback<ResponseBody>() {
-                        @EverythingIsNonNull
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            if (response.isSuccessful()) {
-                                finish();
-                            } else if (response.errorBody() != null) {
-                                Log.e("onResponse:error", response.errorBody().toString());
-                                try {
-                                    JSONObject j = new JSONObject(response.errorBody().string());
+                        builder2.setPositiveButton("Yes", (dialog, which) -> {
+                            dialog.dismiss();
 
-                                    Log.e("error", j.toString());
-                                    //Toast.makeText(mContext, j.toString(), Toast.LENGTH_SHORT).show();
-                                } catch (JSONException | IOException e) {
-                                    e.printStackTrace();
+                            Snackbar.make(v, "Signing you up!", Snackbar.LENGTH_SHORT).show();
+
+                            String clgItem = dropdownClg.getText().toString();
+                            //clgItem = clgItem.substring(0, clgItem.indexOf("-"));
+                            Call<ResponseBody> signup = RetrofitClient.getInstance().getApi().signup(
+                                    "1",
+                                    date,
+                                    fName.getText().toString(),
+                                    fathName.getText().toString(),
+                                    mName.getText().toString(),
+                                    lName.getText().toString(),
+                                    "MH09" + vecClgPref.getText().toString() + vec.getText().toString(),
+                                    email.getText().toString(),
+                                    clgItem,
+                                    "+91" + contactNo.getText().toString()
+                            );
+
+                            signup.enqueue(new Callback<ResponseBody>() {
+                                @EverythingIsNonNull
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    if (response.isSuccessful()) {
+                                        finish();
+                                    } else if (response.errorBody() != null) {
+                                        Log.e("onResponse:error", response.errorBody().toString());
+                                        try {
+                                            JSONObject j = new JSONObject(response.errorBody().string());
+                                            //j.getJSONObject()
+                                            Log.e("error", j.toString());
+                                            //Toast.makeText(mContext, j.toString(), Toast.LENGTH_SHORT).show();
+                                        } catch (JSONException | IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
                                 }
-                            }
-                        }
 
-                        @EverythingIsNonNull
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            Log.e("SignUp", t.toString());
-                        }
-                    });
+                                @EverythingIsNonNull
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                    Log.e("SignUp", t.toString());
+                                }
+                            });
+                        });
+                        builder2.setNegativeButton("No", (dialog, which) -> {
+                            dialog.dismiss();
+                        });
+                        builder2.show();
+                    }
                 } else
                     Toast.makeText(mContext, "Please Enter all details", Toast.LENGTH_SHORT).show();
             });
         } else
             Toast.makeText(mContext, "Device is offline", Toast.LENGTH_SHORT).show();
     }
-
 
     public boolean isEmpty(EditText e) {
         return e.getText().toString().trim().length() <= 0;
@@ -209,21 +241,5 @@ public class SignupActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-    
-    public static boolean pingURL(String url) {
-        url = url.replaceFirst("^https", "http"); // Otherwise an exception may be thrown on invalid SSL certificates.
-
-        try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-            //connection.setConnectTimeout(timeout);
-            //connection.setReadTimeout(timeout);
-            connection.setRequestMethod("HEAD");
-            int responseCode = connection.getResponseCode();
-            Log.wtf("AAAA", ""+responseCode);
-            return (200 <= responseCode && responseCode <= 399);
-        } catch (IOException exception) {
-            return false;
-        }
     }
 }
