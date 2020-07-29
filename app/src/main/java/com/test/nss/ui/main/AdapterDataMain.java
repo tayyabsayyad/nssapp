@@ -5,12 +5,14 @@ public class AdapterDataMain {
     private String act;
     private String hours;
     private String id;
+    private int isApproved;
 
-    public AdapterDataMain(String date, String act, String hours, String id) {
+    public AdapterDataMain(String date, String act, String hours, String id, int isApproved) {
         this.date = date;
         this.act = act;
         this.hours = hours;
         this.id = id;
+        this.isApproved = isApproved;
 
     }
 
@@ -28,5 +30,9 @@ public class AdapterDataMain {
 
     public String getId() {
         return id;
+    }
+
+    public int isApproved() {
+        return isApproved;
     }
 }

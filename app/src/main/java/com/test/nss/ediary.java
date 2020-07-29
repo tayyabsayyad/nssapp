@@ -3,6 +3,7 @@ package com.test.nss;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -63,6 +64,11 @@ public class ediary extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ediary);
 
+        checkConn = new CheckConn();
+        IntentFilter z = new IntentFilter();
+        z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(checkConn, z);
+
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
 
         AUTH_TOKEN = sharedPreferences.getString("AUTH_TOKEN", "");
@@ -70,18 +76,7 @@ public class ediary extends AppCompatActivity {
 
         fm = getSupportFragmentManager();
 
-        checkConn = new CheckConn();
-
-        IntentFilter z = new IntentFilter();
-        z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(checkConn, z);
-
         vecNo = findViewById(R.id.vecNoHeader);
-        String k = ediary.VEC;
-
-//        vecNo.setText(k);
-
-        //vecNo.setText(ediary.VEC);
         name = findViewById(R.id.nameHeader);
 
         blackish = this.getColor(R.color.blackish);
@@ -125,6 +120,14 @@ public class ediary extends AppCompatActivity {
                     } catch (JSONException | IOException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    TestAdapter mDbHelper = new TestAdapter(ediary.this);
+                    mDbHelper.createDatabase();
+                    mDbHelper.open();
+                    Cursor m = mDbHelper.getRegDetails(VEC);
+                    m.moveToFirst();
+                    navUsername.setText(m.getString(m.getColumnIndex("First_name")));
+                    mDbHelper.close();
                 }
             }
 
@@ -137,7 +140,7 @@ public class ediary extends AppCompatActivity {
 
         logout.setOnClickListener(view -> {
             AlertDialog.Builder builder2 = new AlertDialog.Builder(ediary.this, R.style.delDialog);
-            builder2.setTitle("Do you want to logout?");
+            builder2.setMessage("Do you want to logout?");
 
             builder2.setPositiveButton("Yes", (dialog, which) -> {
                 dialog.dismiss();
@@ -196,7 +199,6 @@ public class ediary extends AppCompatActivity {
     private void add() {
         WorkDetailsFirstFrag wf = new WorkDetailsFirstFrag(ediary.this);
         dataWorkList = wf.firstHalfWorkData();
-        Log.e("Oh", "onDestroy: " + dataWorkList.get(0).getCompHours());
         Call<ResponseBody> insertHourZero = RetrofitClient.getInstance().getApi().insertHour(
                 "Token " + ediary.AUTH_TOKEN,
                 Integer.parseInt(dataWorkList.get(0).getCompHours()),

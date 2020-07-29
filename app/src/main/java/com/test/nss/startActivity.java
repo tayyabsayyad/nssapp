@@ -86,8 +86,8 @@ public class startActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
         //String getName = sharedPreferences.getString("BKEY", "");
 
-        username.setText(sharedPreferences.getString("BKEY", ""));
-        password.setText(sharedPreferences.getString("AKEY", ""));
+        //username.setText(sharedPreferences.getString("BKEY", ""));
+        //password.setText(sharedPreferences.getString("AKEY", ""));
 
         startReg.setOnClickListener(v -> {
             Intent m = new Intent(mContext, SignupActivity.class);
@@ -111,10 +111,8 @@ public class startActivity extends AppCompatActivity {
                                 SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
                                 SharedPreferences.Editor eddy = shareit.edit();
                                 if (startCheck.isChecked()) {
-                                    eddy.putString("BKEY", username.getText().toString());
-                                    eddy.putString("AKEY", password.getText().toString());
+                                    eddy.putInt("logged", 1);
                                 }
-                                eddy.putInt("logged", 1);
 
                                 Log.e("onResponse", "Logged In");
                                 JSONObject j = new JSONObject(response.body().string());

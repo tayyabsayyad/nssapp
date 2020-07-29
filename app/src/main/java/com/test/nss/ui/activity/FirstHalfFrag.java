@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,12 +64,12 @@ public class FirstHalfFrag extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Toast.makeText(requireContext(), "These are the assigned activities by PO", Toast.LENGTH_SHORT).show();
 
         backAct.setVisibility(View.GONE);
         recyclerViewAreaAct = root.findViewById(R.id.areafyList);
         recyclerViewClgAct = root.findViewById(R.id.clgfyList);
         recyclerViewUnivAct = root.findViewById(R.id.univfyList);
-
 
         actDetails = root.findViewById(R.id.act_details);
 

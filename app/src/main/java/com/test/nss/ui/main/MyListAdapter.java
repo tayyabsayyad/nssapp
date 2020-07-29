@@ -1,6 +1,8 @@
 package com.test.nss.ui.main;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.R;
-import com.test.nss.ui.onClickInterface2;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,12 +22,10 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
 
     List<AdapterDataMain> list = Collections.emptyList();
     Context mCon;
-    onClickInterface2 onClickInterface2;
 
-    public MyListAdapter(List<AdapterDataMain> list, Context mCon, onClickInterface2 onClickInterface2) {
+    public MyListAdapter(List<AdapterDataMain> list, Context mCon) {
         this.list = list;
         this.mCon = mCon;
-        this.onClickInterface2 = onClickInterface2;
     }
 
     @NonNull
@@ -43,6 +42,15 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         holder.act.setText(list.get(position).getAct());
         holder.hours.setText(list.get(position).getHours());
         holder.actId.setText(list.get(position).getId());
+        if (list.get(position).isApproved() == 1) {
+            holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
+            holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
+            holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
+
+            holder.date.setTextColor(Color.parseColor("#008f00"));
+            holder.act.setTextColor(Color.parseColor("#008f00"));
+            holder.hours.setTextColor(Color.parseColor("#008f00"));
+        }
     }
 
     @Override

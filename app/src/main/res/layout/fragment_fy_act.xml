@@ -160,7 +160,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_gravity="bottom"
             android:layout_marginBottom="@dimen/space_10dp"
             android:gravity="center"
@@ -168,6 +168,7 @@
             android:paddingEnd="@dimen/padding_5dp">
 
             <Button
+                android:layout_gravity="bottom"
                 android:id="@+id/add"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -175,7 +176,7 @@
                 android:foreground="@drawable/ic_plus_24"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:visibility="gone" />
+                android:visibility="visible" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,13 +1,14 @@
 package com.test.nss.ui.camp;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.R;
@@ -32,6 +33,12 @@ public class CampActDataAdapter extends RecyclerView.Adapter<CampActDataAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem = layoutInflater.inflate(R.layout.adapter_view_camp_act_list, parent, false);
+        listItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("hmm", "onClick: ");
+            }
+        });
         return new ViewHolder(listItem);
     }
 
@@ -66,13 +73,13 @@ public class CampActDataAdapter extends RecyclerView.Adapter<CampActDataAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView campListName;
 
-        public ConstraintLayout constraintLayout;
+        public CardView CardView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.campListName = itemView.findViewById(R.id.camp_act_name);
 
-            constraintLayout = itemView.findViewById(R.id.campActListLinear);
+            CardView = itemView.findViewById(R.id.campActListCard);
         }
     }
 }

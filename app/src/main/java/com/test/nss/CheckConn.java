@@ -68,6 +68,7 @@ public class CheckConn extends BroadcastReceiver {
 
         if (a || b) {
             Log.e("CheckConn", "Internet");
+
             Call<ResponseBody> helpData = RetrofitClient.getInstance().getApi().getPoData("Token " + ediary.AUTH_TOKEN);
             helpData.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -323,6 +324,7 @@ public class CheckConn extends BroadcastReceiver {
                                             1
                                     );
                                 }
+                                mDbHelper.setApproved();
                                 mDbHelper.close();
                             }
                         } catch (JSONException | IOException e) {

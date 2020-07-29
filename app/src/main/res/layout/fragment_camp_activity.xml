@@ -21,10 +21,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
-        android:background="@drawable/act_bg_lines"
         android:id="@+id/recCampList"
         android:layout_width="match_parent"
         android:scrollbars="vertical"

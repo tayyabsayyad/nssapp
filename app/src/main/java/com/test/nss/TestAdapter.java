@@ -49,27 +49,6 @@ public class TestAdapter {
         mDbHelper.close();
     }
 
-    public ArrayList<String> getActType() {
-        ArrayList<String> mylistAct = new ArrayList<>();
-        try {
-            String sql = "SELECT * FROM NatureOfActivity";
-            Cursor mCur = mDb.rawQuery(sql, null);
-
-            if (mCur.getCount() == 0) {
-                Log.e(TAG, "getActType: ");
-            } else {
-                while (mCur.moveToNext()) {
-                    mylistAct.add(mCur.getString(0));
-                }
-            }
-            mCur.close();
-            return mylistAct;
-        } catch (SQLException mSQLException) {
-            Log.e(TAG, "getTestData >>" + mSQLException.toString());
-            throw mSQLException;
-        }
-    }
-
     public void insertHelpData(String clgName,
                                String post, String name, String email,
                                String contact, String entryYear) {
@@ -82,9 +61,8 @@ public class TestAdapter {
             contentValues.put("EmailID", email);
             contentValues.put("Contact", contact);
             contentValues.put("Entry_year", entryYear);
-            long row = mDb.insert("Help", null, contentValues);
-            if (row != -1)
-                Log.i(TAG, "Entered data");
+            mDb.insert("Help", null, contentValues);
+            //Log.i(TAG, "Entered data");
 
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
@@ -105,9 +83,7 @@ public class TestAdapter {
             contentValues.put("Camp_post", campPost);
             contentValues.put("Camp_taluka", campTal);
             contentValues.put("Camp_district", campDist);
-            long row = mDb.insert("CampDetails", null, contentValues);
-            if (row != -1)
-                Log.i(TAG, "Entered data to CampDetails");
+            mDb.insert("CampDetails", null, contentValues);
 
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
@@ -118,7 +94,6 @@ public class TestAdapter {
         try {
             String sql = "SELECT * FROM CampDetails";
             Cursor mCur = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getCampDetails: ");
             if (mCur.getCount() == 0) {
             }
             return mCur;
@@ -132,7 +107,6 @@ public class TestAdapter {
         try {
             String sql = "SELECT CollegeName FROM CollegeNames";
             Cursor mCur = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getClgList: ");
             if (mCur.getCount() == 0) {
             }
             return mCur;
@@ -149,9 +123,7 @@ public class TestAdapter {
             contentValues.put("College_id", clgId);
             contentValues.put("CollegeName", clgName);
 
-            long row = mDb.insert("CollegeNames", null, contentValues);
-            if (row != -1)
-                Log.i(TAG, "insertClgList: ");
+            mDb.insert("CollegeNames", null, contentValues);
 
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
@@ -163,7 +135,6 @@ public class TestAdapter {
             String sql = String.format(Locale.ENGLISH, "SELECT CampId FROM CampActivityList WHERE CampActivityName=\"%s\"", campActName);
             Cursor mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() == 0) {
-                Log.i(TAG, "getCampId: ");
             } else {
             }
             return mCur;
@@ -180,9 +151,7 @@ public class TestAdapter {
             contentValues.put("CampActivityName", campActName);
             contentValues.put("CampId", campId);
 
-            long row = mDb.insert("CampActivityList", null, contentValues);
-            if (row != -1)
-                Log.i(TAG, "insertCampActList: ");
+            mDb.insert("CampActivityList", null, contentValues);
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
         }
@@ -204,9 +173,7 @@ public class TestAdapter {
             contentValues.put("VEC", vec);
             contentValues.put("Sync", sync);
 
-            long row = mDb.insert("CampActivities", null, contentValues);
-            if (row != -1)
-                Log.i(TAG, "insertCampActListAll: ");
+            mDb.insert("CampActivities", null, contentValues);
 
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
@@ -222,9 +189,7 @@ public class TestAdapter {
             contentValues.put("CampDay", day);
             contentValues.put("Sync", sync);
 
-            long row = mDb.insert("CampActivities", null, contentValues);
-            if (row != -1)
-                Log.i(TAG, "insertCampActListAll: ");
+            mDb.insert("CampActivities", null, contentValues);
 
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
@@ -243,9 +208,7 @@ public class TestAdapter {
             contentValues.put("HoursAssigned", hours);
             contentValues.put("AssignedDate", assignedDate);
 
-            long row = mDb.insert("ActivityListByAdmin", null, contentValues);
-            if (row != -1)
-                Log.i(TAG, "insertActAdmin: ");
+            mDb.insert("ActivityListByAdmin", null, contentValues);
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
         }
@@ -267,9 +230,7 @@ public class TestAdapter {
             contentValues.put("Email", email);
             contentValues.put("Contact", contact);
 
-            long row = mDb.insert("Registration", null, contentValues);
-            if (row != -1)
-                Log.i(TAG, "insertUsers: ");
+            mDb.insert("Registration", null, contentValues);
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
         }
@@ -282,9 +243,7 @@ public class TestAdapter {
             contentValues.put("VEC", vec);
             contentValues.put("CollegeName", clgName);
 
-            long row = mDb.insert("Leaders", null, contentValues);
-            if (row != -1)
-                Log.i(TAG, "insertLeaders: ");
+            mDb.insert("Leaders", null, contentValues);
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
         }
@@ -310,10 +269,7 @@ public class TestAdapter {
             contentValues.put("If_Added", 1);
             contentValues.put("Sync", sync);
 
-            long row = mDb.insert("DailyActivity", null, contentValues);
-            if (row != -1)
-                Log.i(TAG, "insertAct: ");
-
+            mDb.insert("DailyActivity", null, contentValues);
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
         }
@@ -336,9 +292,7 @@ public class TestAdapter {
             contentValues.put("State", "Submitted");
             contentValues.put("Sync", sync);
 
-            long row = mDb.insert("DailyActivity", null, contentValues);
-            if (row != -1)
-                Log.i(TAG, "insertActOff: ");
+            mDb.insert("DailyActivity", null, contentValues);
 
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
@@ -350,7 +304,6 @@ public class TestAdapter {
             //String a = String.format("aaa %d", act);
             String sql = "SELECT * FROM DailyActivity WHERE sync=0";
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getActListOff: ");
             if (mCur2.getCount() == 0) {
             }
             return mCur2;
@@ -365,7 +318,20 @@ public class TestAdapter {
             //String a = String.format("aaa %d", act);
             String sql = "SELECT * FROM Registration a, Leaders b WHERE a.VEC=b.VEC";
             Cursor mCur = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getActListOff: ");
+            if (mCur.getCount() == 0) {
+            }
+            return mCur;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Cursor getRegDetails(String vec) {
+        try {
+            //String a = String.format("aaa %d", act);
+            String sql = String.format("SELECT * FROM Registration WHERE VEC=\"%s\"", vec);
+            Cursor mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() == 0) {
             }
             return mCur;
@@ -395,7 +361,6 @@ public class TestAdapter {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT * FROM DailyActivity WHERE ActivityCode=\"%s\" AND (not State=\"Deleted\")", (act));
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getActList: ");
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in DailyActivity", )();
             }
@@ -424,7 +389,6 @@ public class TestAdapter {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT * FROM ActivityListByAdmin WHERE activityType LIKE '%s'", act);
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getActAssigActName: ");
             if (mCur2.getCount() == 0) {
             }
             return mCur2;
@@ -438,7 +402,6 @@ public class TestAdapter {
         try {
             String sql = String.format("SELECT * FROM ActivityListByAdmin WHERE ActivityName=\"%s\"", act);
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getActAssigActNameAdmin: ");
             if (mCur2.getCount() == 0) {
             }
             return mCur2;
@@ -451,7 +414,6 @@ public class TestAdapter {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT * FROM ActivityListByAdmin WHERE activityType=%d", actName);
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getActAssigActId: ");
             if (mCur2.getCount() == 0) {
             }
             return mCur2;
@@ -465,7 +427,6 @@ public class TestAdapter {
         try {
             String sql = "SELECT * FROM CampActivityList";
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getCampActList: ");
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in CampActivityList", )();
             }
@@ -480,7 +441,6 @@ public class TestAdapter {
         try {
             String sql = String.format("SELECT CampId FROM CampActivityList WHERE CampActivityName=\"%s\"", actName);
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getCampActList: ");
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in CampActivityList", )();
             }
@@ -495,7 +455,6 @@ public class TestAdapter {
         try {
             String sql = "SELECT * FROM CampActivities WHERE id=" + id;
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getCampActListAll: ");
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in CampActivityList", )();
             }
@@ -510,7 +469,6 @@ public class TestAdapter {
         try {
             String sql = "SELECT * FROM CampActivities";
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getCampActListAll: ");
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in CampActivityList", )();
             }
@@ -521,11 +479,9 @@ public class TestAdapter {
         }
     }
 
-    public int getSumHours(String actCode){
-        try {
-            String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode=\"%s\" AND (not State=\"Deleted\")", actCode);
-            Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getSumHours: ");
+    public int getSumHours(String actCode) {
+        String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode=\"%s\" AND (not State=\"Deleted\") AND State=\"Approved\"", actCode);
+        try (Cursor mCur2 = mDb.rawQuery(sql, null)) {
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in DailyActivity", )();
                 return -1;
@@ -542,7 +498,6 @@ public class TestAdapter {
         try {
             String sql = "SELECT * FROM CampActivities WHERE sync=" + sync;
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            Log.i(TAG, "getCampActListOff: ");
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in CampActivityList", )();
             }
@@ -582,6 +537,14 @@ public class TestAdapter {
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;
+        }
+    }
+
+    public void setApproved() {
+        try {
+            mDb.execSQL("UPDATE DailyActivity SET If_Approved=1 WHERE State=\"Approved\"");
+        } catch (SQLException e) {
+            Log.e(TAG, "setApproved: " + e.getMessage());
         }
     }
 

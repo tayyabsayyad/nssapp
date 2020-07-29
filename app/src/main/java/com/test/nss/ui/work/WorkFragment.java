@@ -27,6 +27,7 @@ public class WorkFragment extends Fragment {
     Button secButton;
     FragmentManager fm;
     TextView toolbarTitle;
+    TextView hoursInfo;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -36,9 +37,10 @@ public class WorkFragment extends Fragment {
         toolbarTitle = requireActivity().findViewById(R.id.titleTool);
         toolbarTitle.setText(getString(R.string.menu_work_hours));
 
+        hoursInfo = root.findViewById(R.id.hoursInfo);
+
         firstButton = root.findViewById(R.id.firstButton);
         secButton = root.findViewById(R.id.secButton);
-        fm = requireActivity().getSupportFragmentManager();
 
         return root;
     }
@@ -49,13 +51,14 @@ public class WorkFragment extends Fragment {
         toolbar = requireActivity().findViewById(R.id.toolbar);
 
         toolbar.setVisibility(View.VISIBLE);
+        fm = requireActivity().getSupportFragmentManager();
 
         firstButton.setOnClickListener(v -> {
             firstButton.setTextColor(primaryColDark);
             firstButton.setBackgroundColor(transparent);
             secButton.setTextColor(blackish);
             secButton.setBackgroundColor(transparent);
-
+            hoursInfo.setVisibility(View.GONE);
             fm.beginTransaction().replace(R.id.work_details, new WorkDetailsFirstFrag(requireContext())).addToBackStack("MainFrag").commit();
         });
 
@@ -64,7 +67,7 @@ public class WorkFragment extends Fragment {
             secButton.setBackgroundColor(transparent);
             firstButton.setTextColor(blackish);
             firstButton.setBackgroundColor(transparent);
-
+            hoursInfo.setVisibility(View.GONE);
             fm.beginTransaction().replace(R.id.work_details, new WorkDetailsSecFrag()).addToBackStack("MainFrag").commit();
         });
     }

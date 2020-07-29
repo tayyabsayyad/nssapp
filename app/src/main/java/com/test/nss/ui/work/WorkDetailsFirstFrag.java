@@ -2,11 +2,9 @@ package com.test.nss.ui.work;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -72,7 +70,8 @@ public class WorkDetailsFirstFrag extends Fragment {
         int clgComp = m.getSumHours("First Year College");
         int univComp = m.getSumHours("First Year University");
 
-        Log.i("TAG", "firstHalfWorkData: " + areaCompTwo);
+        m.close();
+        //Log.i("TAG", "firstHalfWorkData: " + areaCompTwo);
         String areaRemOneHours;
         String areaRemTwoHours;
         String univRemHours;
@@ -80,25 +79,31 @@ public class WorkDetailsFirstFrag extends Fragment {
 
         if (areaCompOne >= 1 && 40 - areaCompOne > 0)
             areaRemOneHours = String.valueOf(40 - areaCompOne);
+        else if (areaCompOne == 0)
+            areaRemOneHours = "40";
         else
             areaRemOneHours = "00";
 
         if (areaCompTwo >= 1 && 40 - areaCompTwo > 0)
             areaRemTwoHours = String.valueOf(40 - areaCompTwo);
+        else if (areaCompTwo == 0)
+            areaRemTwoHours = "40";
         else
             areaRemTwoHours = "00";
 
         if (clgComp >= 1 && 20 - clgComp > 0)
             clgRemHours = String.valueOf(20 - clgComp);
+        else if (clgComp == 0)
+            clgRemHours = "20";
         else
             clgRemHours = "00";
 
         if (univComp >= 1 && 20 - univComp > 0)
             univRemHours = String.valueOf(20 - univComp);
+        else if (univComp == 0)
+            univRemHours = "20";
         else
             univRemHours = "00";
-
-        m.close();
 
         data.add(new AdapterDataWork("Area Based 1", "40", String.valueOf(areaCompOne), areaRemOneHours));
         data.add(new AdapterDataWork("Area Based 2", "40", String.valueOf(areaCompTwo), areaRemTwoHours));

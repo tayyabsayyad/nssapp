@@ -62,7 +62,7 @@ public class CampActListDetails extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        Toast.makeText(mContext, "Swipe left on list to modify", Toast.LENGTH_SHORT).show();
         recCampList = root.findViewById(R.id.recCampListAll);
         CampActListDataAdapter campDataAdapter = new CampActListDataAdapter(campData, mContext);
 
@@ -80,7 +80,7 @@ public class CampActListDetails extends Fragment {
                         int l = viewHolder.getAdapterPosition();
 
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(mContext, R.style.delDialog);
-                        builder2.setTitle("Are you sure?");
+                        builder2.setMessage("Are you sure?");
                         builder2.setNegativeButton("No", (dialog, which) -> {
                                     dialog.cancel();
                                     campDataAdapter.notifyItemChanged(l);

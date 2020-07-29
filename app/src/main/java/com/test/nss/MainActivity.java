@@ -27,6 +27,7 @@ MainActivity extends AppCompatActivity {
             if (sharedPreferences.getInt("logged", 0) == 1) {
                 Intent intent = new Intent(MainActivity.this, ediary.class);
                 startActivity(intent);
+                finish();
             } else {
                 Intent i = new Intent(MainActivity.this,
                         startActivity.class);

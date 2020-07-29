@@ -37,7 +37,6 @@ public class MainFragment extends Fragment {
     Context mContext;
     TextView toolbarTitle;
     TextView maLHay;
-    View lineMain;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -107,6 +106,8 @@ public class MainFragment extends Fragment {
 
         toolbar = requireActivity().findViewById(R.id.toolbar);
         maLHay.setVisibility(View.VISIBLE);
+
+        //navUsername.setText(m.getString(m.getColumnIndex("VEC")));
 
         toolbar.setVisibility(View.VISIBLE);
     }

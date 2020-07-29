@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -85,6 +86,7 @@ public class AddDetailsActivity extends Fragment {
                              Bundle savedInstanceState) {
 
         huh = inflater.inflate(R.layout.fragment_add_details_activity, container, false);
+
         clgList = getClgList();
         actAssignList = getAssignActList();
         actHeaderInput = requireActivity().findViewById(R.id.actHeaderInput);
@@ -201,14 +203,14 @@ public class AddDetailsActivity extends Fragment {
         drpdownactClg.setAdapter(adapter);
 
         Map<String, Integer> actIdHash = new HashMap<>();
-        actIdHash.put("First Year University", 11);
+        actIdHash.put("First Year College", 11);
         actIdHash.put("First Year Area Based One", 121);
         actIdHash.put("First Year Area Based Two", 122);
-        actIdHash.put("First Year College", 13);
-        actIdHash.put("Second Year University", 21);
+        actIdHash.put("First Year University", 13);
+        actIdHash.put("Second Year College", 21);
         actIdHash.put("Second Year Area Based One", 221);
         actIdHash.put("Second Year Area Based Two", 222);
-        actIdHash.put("Second Year College", 23);
+        actIdHash.put("Second Year University", 23);
         ArrayAdapter<String> a = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, actAssignList);
         drpdownactAssignName.setAdapter(a);
 
@@ -304,15 +306,15 @@ public class AddDetailsActivity extends Fragment {
                         });
                     }
                     mDbHelper.close();
+                    constFyAct.setVisibility(View.VISIBLE);
+                    nssHalvesLinear.setVisibility(View.VISIBLE);
+                    add.setVisibility(View.VISIBLE);
+
+                    actHeaderInput.setVisibility(View.GONE);
+                    malHay.setVisibility(View.VISIBLE);
+                    campActIn.setVisibility(View.GONE);
                 } else
                     Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();
-                constFyAct.setVisibility(View.VISIBLE);
-                nssHalvesLinear.setVisibility(View.VISIBLE);
-                add.setVisibility(View.VISIBLE);
-
-                actHeaderInput.setVisibility(View.GONE);
-                malHay.setVisibility(View.VISIBLE);
-                campActIn.setVisibility(View.GONE);
 
             }
         });
@@ -320,12 +322,23 @@ public class AddDetailsActivity extends Fragment {
         backActDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                constFyAct.setVisibility(View.VISIBLE);
-                nssHalvesLinear.setVisibility(View.VISIBLE);
-                actHeaderInput.setVisibility(View.GONE);
-                campActIn.setVisibility(View.GONE);
-                malHay.setVisibility(View.VISIBLE);
-                add.setVisibility(View.VISIBLE);
+                androidx.appcompat.app.AlertDialog.Builder builder2 = new AlertDialog.Builder(requireContext(), R.style.delDialog);
+                builder2.setMessage("Exit without saving?");
+
+                builder2.setNegativeButton("No", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+
+                builder2.setPositiveButton("Yes", (dialog, which) -> {
+                    dialog.cancel();
+                    constFyAct.setVisibility(View.VISIBLE);
+                    nssHalvesLinear.setVisibility(View.VISIBLE);
+                    actHeaderInput.setVisibility(View.GONE);
+                    campActIn.setVisibility(View.GONE);
+                    malHay.setVisibility(View.VISIBLE);
+                    add.setVisibility(View.VISIBLE);
+                });
+                builder2.show();
             }
         });
     }
@@ -368,7 +381,7 @@ public class AddDetailsActivity extends Fragment {
     public ArrayList<String> getAssignActListId() {
         assert getArguments() != null;
         whichAct = getArguments().getInt("whichAct");
-
+        Log.e("AA", "getAssignActListId: " + whichAct);
         ArrayList<String> dataId = new ArrayList<>();
 
         TestAdapter mDbHelper = new TestAdapter(requireContext());
