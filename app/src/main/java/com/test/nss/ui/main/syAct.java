@@ -164,7 +164,7 @@ public class syAct extends Fragment {
 
         // TODO: Switch to activity or new frag for showing more data
         for (int i = 1; i <= 12; i++) {
-            data.add(new AdapterDataMain("DD/MM/YYYY", "Activity " + i, "00", "", 0));
+            data.add(new AdapterDataMain("DD/MM/YYYY", "Activity " + i, "00", "", 0, ""));
         }
         return data;
     }

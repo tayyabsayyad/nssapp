@@ -59,42 +59,32 @@ public class MainFragment extends Fragment {
         toolbar = root.findViewById(R.id.toolbar);
         maLHay = root.findViewById(R.id.malHay);
 
-        firstButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firstButton.setTextColor(primaryColDark);
-                maLHay.setVisibility(View.GONE);
-                //firstButton.setBackgroundColor(primaryCol);
-                secButton.setTextColor(ediary.blackish);
-                //secButton.setBackgroundColor(transparent);
+        firstButton.setOnClickListener(v -> {
+            firstButton.setTextColor(primaryColDark);
+            secButton.setTextColor(ediary.blackish);
+            maLHay.setVisibility(View.GONE);
 
-                line.setVisibility(View.GONE);
-                toolbar.setVisibility(View.VISIBLE);
+            line.setVisibility(View.GONE);
+            toolbar.setVisibility(View.VISIBLE);
+            if (halvesFrame.getVisibility() == View.GONE)
+                halvesFrame.setVisibility(View.VISIBLE);
 
-                if (halvesFrame.getVisibility() == View.GONE)
-                    halvesFrame.setVisibility(View.VISIBLE);
-                FragmentManager fragmentManager = getChildFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.halves_frame, new fyAct(), "fyAct").addToBackStack("MainFrag").commit();
-            }
+            FragmentManager fragmentManager = getChildFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.halves_frame, new fyAct(), "fyAct").addToBackStack("MainFrag").commit();
         });
 
-        secButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                secButton.setTextColor(primaryColDark);
-                //secButton.setBackgroundColor(primaryCol);
-                firstButton.setTextColor(blackish);
-                //firstButton.setBackgroundColor(transparent);
-                maLHay.setVisibility(View.VISIBLE);
+        secButton.setOnClickListener(v -> {
+            secButton.setTextColor(primaryColDark);
+            firstButton.setTextColor(blackish);
+            maLHay.setVisibility(View.VISIBLE);
 
-                line.setVisibility(View.GONE);
-                toolbar.setVisibility(View.VISIBLE);
-                if (halvesFrame.getVisibility() == View.GONE)
-                    halvesFrame.setVisibility(View.VISIBLE);
+            line.setVisibility(View.GONE);
+            toolbar.setVisibility(View.VISIBLE);
+            if (halvesFrame.getVisibility() == View.GONE)
+                halvesFrame.setVisibility(View.VISIBLE);
 
-                FragmentManager fragmentManager = getChildFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.halves_frame, new syAct()).addToBackStack("MainFrag").commit();
-            }
+            FragmentManager fragmentManager = getChildFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.halves_frame, new syAct()).addToBackStack("MainFrag").commit();
         });
 
         return root;

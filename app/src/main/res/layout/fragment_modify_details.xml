@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.leader.ModifyVolunteer">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardModify"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="@dimen/space_10dp"
+        android:layout_marginBottom="2dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/univ"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:enabled="true"
+                android:fontFamily="@font/google_sans_bold"
+                android:text="@string/univ" />
+
+            <View
+                android:id="@+id/act_line"
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/blackish"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/area"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:fontFamily="@font/google_sans_bold"
+                android:text="@string/area" />
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/blackish"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/clg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:fontFamily="@font/google_sans_bold"
+                android:text="@string/clg" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="60dp"
+            android:background="@color/blackish"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/detailsVol"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="60dp"
+            android:orientation="horizontal"
+            android:visibility="invisible">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:fontFamily="@font/nunito_semibold"
+                android:gravity="center"
+                android:paddingTop="@dimen/margin_15dp"
+                android:paddingBottom="@dimen/margin_15dp"
+                android:text="Date"
+                android:textColor="@color/blackish" />
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/blackish"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:fontFamily="@font/nunito_semibold"
+                android:gravity="center"
+                android:paddingTop="@dimen/margin_15dp"
+                android:paddingBottom="@dimen/margin_15dp"
+                android:text="Activity"
+                android:textColor="@color/blackish" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:fontFamily="@font/nunito_semibold"
+                android:gravity="center"
+                android:paddingStart="@dimen/space_10dp"
+                android:paddingTop="@dimen/margin_15dp"
+                android:paddingBottom="@dimen/margin_15dp"
+                android:text="Hours"
+                android:textColor="@color/blackish" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:fontFamily="@font/nunito_semibold"
+                android:gravity="center"
+                android:paddingTop="@dimen/margin_15dp"
+                android:paddingBottom="@dimen/margin_15dp"
+                android:text="Approved"
+                android:textColor="@color/blackish" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recVecDetailUniv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="110dp"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recVecDetailArea"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="110dp"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recVecDetailClg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="110dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="@dimen/margin_15dp"
+            android:layout_marginBottom="@dimen/padding_5dp"
+            android:background="@drawable/ic_back_24" />
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

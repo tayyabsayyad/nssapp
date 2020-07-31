@@ -6,7 +6,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
 
     <string name="menu_main_frag">Home</string>
     <string name="menu_activity">Activity List</string>
@@ -65,4 +64,9 @@
         <item>222</item>
         <item>21</item>
     </string-array>
+
+    <string name="home">Home</string>
+    <string name="menu_leader">Leader</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 </resources>

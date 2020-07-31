@@ -83,12 +83,6 @@ public class startActivity extends AppCompatActivity {
         startRemember.setOnClickListener(view ->
                 startCheck.setChecked(!startCheck.isChecked()));
 
-        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
-        //String getName = sharedPreferences.getString("BKEY", "");
-
-        //username.setText(sharedPreferences.getString("BKEY", ""));
-        //password.setText(sharedPreferences.getString("AKEY", ""));
-
         startReg.setOnClickListener(v -> {
             Intent m = new Intent(mContext, SignupActivity.class);
             startActivity(m);
@@ -110,11 +104,11 @@ public class startActivity extends AppCompatActivity {
                             if (response.isSuccessful() && response.body() != null) {
                                 SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
                                 SharedPreferences.Editor eddy = shareit.edit();
+
+                                Log.e("onResponse", "Logged In");
                                 if (startCheck.isChecked()) {
                                     eddy.putInt("logged", 1);
                                 }
-
-                                Log.e("onResponse", "Logged In");
                                 JSONObject j = new JSONObject(response.body().string());
                                 AUTH_TOKEN = j.getString("auth_token");
                                 Log.e("AUTH_TOKEN", AUTH_TOKEN);
@@ -123,7 +117,6 @@ public class startActivity extends AppCompatActivity {
                                 eddy.putString("VEC", VEC);
                                 eddy.apply();
                                 Intent i = new Intent(mContext, ediary.class);
-
                                 startActivity(i);
                                 finish();
                             } else {
@@ -176,6 +169,7 @@ public class startActivity extends AppCompatActivity {
         });*/
         thread.start();
     }
+
     private boolean isEmpty(EditText e) {
         return e.getText().toString().trim().length() <= 0;
     }

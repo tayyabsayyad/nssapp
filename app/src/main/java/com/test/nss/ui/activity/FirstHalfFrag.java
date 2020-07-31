@@ -77,37 +77,28 @@ public class FirstHalfFrag extends Fragment {
         clgAct = root.findViewById(R.id.clg_act);
         univAct = root.findViewById(R.id.univ_act);
 
-        areaAct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                backAct.setVisibility(View.VISIBLE);
-                actDetails.setVisibility(View.GONE);
-                recyclerViewAreaAct.setVisibility(View.VISIBLE);
-                recyclerViewClgAct.setVisibility(View.GONE);
-                recyclerViewUnivAct.setVisibility(View.GONE);
-            }
+        areaAct.setOnClickListener(view14 -> {
+            backAct.setVisibility(View.VISIBLE);
+            actDetails.setVisibility(View.GONE);
+            recyclerViewAreaAct.setVisibility(View.VISIBLE);
+            recyclerViewClgAct.setVisibility(View.GONE);
+            recyclerViewUnivAct.setVisibility(View.GONE);
         });
 
-        clgAct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                backAct.setVisibility(View.VISIBLE);
-                actDetails.setVisibility(View.GONE);
-                recyclerViewClgAct.setVisibility(View.VISIBLE);
-                recyclerViewAreaAct.setVisibility(View.GONE);
-                recyclerViewUnivAct.setVisibility(View.GONE);
-            }
+        clgAct.setOnClickListener(view13 -> {
+            backAct.setVisibility(View.VISIBLE);
+            actDetails.setVisibility(View.GONE);
+            recyclerViewClgAct.setVisibility(View.VISIBLE);
+            recyclerViewAreaAct.setVisibility(View.GONE);
+            recyclerViewUnivAct.setVisibility(View.GONE);
         });
 
-        univAct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                backAct.setVisibility(View.VISIBLE);
-                actDetails.setVisibility(View.GONE);
-                recyclerViewUnivAct.setVisibility(View.VISIBLE);
-                recyclerViewClgAct.setVisibility(View.GONE);
-                recyclerViewAreaAct.setVisibility(View.GONE);
-            }
+        univAct.setOnClickListener(view12 -> {
+            backAct.setVisibility(View.VISIBLE);
+            actDetails.setVisibility(View.GONE);
+            recyclerViewUnivAct.setVisibility(View.VISIBLE);
+            recyclerViewClgAct.setVisibility(View.GONE);
+            recyclerViewAreaAct.setVisibility(View.GONE);
         });
 
         MyListAdapterAct adapterAreaAct = new MyListAdapterAct(areaListDataAct, mContext);
@@ -125,15 +116,12 @@ public class FirstHalfFrag extends Fragment {
         recyclerViewClgAct.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewClgAct.setAdapter(adapterClgAct);
 
-        backAct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                backAct.setVisibility(View.GONE);
-                actDetails.setVisibility(View.VISIBLE);
-                recyclerViewUnivAct.setVisibility(View.GONE);
-                recyclerViewAreaAct.setVisibility(View.GONE);
-                recyclerViewClgAct.setVisibility(View.GONE);
-            }
+        backAct.setOnClickListener(view1 -> {
+            backAct.setVisibility(View.GONE);
+            actDetails.setVisibility(View.VISIBLE);
+            recyclerViewUnivAct.setVisibility(View.GONE);
+            recyclerViewAreaAct.setVisibility(View.GONE);
+            recyclerViewClgAct.setVisibility(View.GONE);
         });
     }
 

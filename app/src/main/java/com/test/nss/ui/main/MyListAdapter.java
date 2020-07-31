@@ -50,6 +50,22 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
             holder.date.setTextColor(Color.parseColor("#008f00"));
             holder.act.setTextColor(Color.parseColor("#008f00"));
             holder.hours.setTextColor(Color.parseColor("#008f00"));
+        } else if (list.get(position).getState().equals("LeaderDelete")) {
+            holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
+            holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
+            holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
+
+            holder.date.setTextColor(mCon.getColor(R.color.red));
+            holder.act.setTextColor(mCon.getColor(R.color.red));
+            holder.hours.setTextColor(mCon.getColor(R.color.red));
+        } else if (list.get(position).getState().equals("LeaderModified")) {
+            holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
+            holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
+            holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
+
+            holder.date.setTextColor(mCon.getColor(R.color.kesar));
+            holder.act.setTextColor(mCon.getColor(R.color.kesar));
+            holder.hours.setTextColor(mCon.getColor(R.color.kesar));
         }
     }
 

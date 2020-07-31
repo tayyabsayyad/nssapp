@@ -90,7 +90,6 @@ public class CampActListDetails extends Fragment {
                         builder2.setPositiveButton("Yes", (dialog, which) -> {
                             dialog.dismiss();
 
-
                             TestAdapter mdb = new TestAdapter(mContext);
                             mdb.createDatabase();
                             mdb.open();

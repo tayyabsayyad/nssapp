@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -186,17 +185,14 @@ public class AddDetailsActivity extends Fragment {
                 d.show();
         });
 
-        onDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                i1 = i1 + 1;
-                String date = i + "-" + i1 + "-" + i2;
+        onDateSetListener = (datePicker, i, i1, i2) -> {
+            i1 = i1 + 1;
+            String date = i + "-" + i1 + "-" + i2;
 
-                if (i2 >= currDay && i1 >= currMont && i >= currYear)
-                    actDate.setText(date);
-                else
-                    Toast.makeText(requireContext(), "Enter after today's date", Toast.LENGTH_SHORT).show();
-            }
+            if (i2 >= currDay && i1 >= currMont && i >= currYear)
+                actDate.setText(date);
+            else
+                Toast.makeText(requireContext(), "Enter after today's date", Toast.LENGTH_SHORT).show();
         };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, clgList);
@@ -215,131 +211,125 @@ public class AddDetailsActivity extends Fragment {
         drpdownactAssignName.setAdapter(a);
 
         //String actName = getResources().getStringArray(R.array.valOfActNames)[act];
-        addSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (actHour.getText().toString().equals("") || Integer.parseInt(actHour.getText().toString().trim()) <= 0)
-                    Toast.makeText(requireContext(), "Work atleast an hour and enter", Toast.LENGTH_SHORT).show();
+        addSend.setOnClickListener(view13 -> {
+            if (actHour.getText().toString().equals("") || Integer.parseInt(actHour.getText().toString().trim()) <= 0)
+                Toast.makeText(requireContext(), "Work atleast an hour and enter", Toast.LENGTH_SHORT).show();
 
-                else if (Integer.parseInt(actHour.getText().toString().trim()) > 10)
-                    Toast.makeText(requireContext(), "Cannot enter more than 10 hours", Toast.LENGTH_SHORT).show();
+            else if (Integer.parseInt(actHour.getText().toString().trim()) > 10)
+                Toast.makeText(requireContext(), "Cannot enter more than 10 hours", Toast.LENGTH_SHORT).show();
 
-                else if (actDate.getText().toString().equals("") || actDate.getText().toString().equals("YYYY/MM/DD"))
-                    Toast.makeText(requireContext(), "Enter Date", Toast.LENGTH_SHORT).show();
+            else if (actDate.getText().toString().equals("") || actDate.getText().toString().equals("YYYY/MM/DD"))
+                Toast.makeText(requireContext(), "Enter Date", Toast.LENGTH_SHORT).show();
 
-                else if (!actDate.getText().toString().equals("") && drpdownactAssignName.getSelectedItem() != null
-                        && !isEmpty(actHour)
-                        //&& !actId.getText().toString().equals("")
-                        && drpdownactClg.getSelectedItem() != null
-                        && drpdownactName.getSelectedItem() != null) {
-                    actId.setText(actAssignListId.get(drpdownactAssignName.getSelectedItemPosition()));
+            else if (!actDate.getText().toString().equals("") && drpdownactAssignName.getSelectedItem() != null
+                    && !isEmpty(actHour)
+                    //&& !actId.getText().toString().equals("")
+                    && drpdownactClg.getSelectedItem() != null
+                    && drpdownactName.getSelectedItem() != null) {
+                actId.setText(actAssignListId.get(drpdownactAssignName.getSelectedItemPosition()));
 
-                    TestAdapter mDbHelper = new TestAdapter(requireContext());
-                    mDbHelper.createDatabase();
-                    mDbHelper.open();
+                TestAdapter mDbHelper = new TestAdapter(requireContext());
+                mDbHelper.createDatabase();
+                mDbHelper.open();
 
-                    String activityName = drpdownactAssignName.getSelectedItem().toString();
+                String activityName = drpdownactAssignName.getSelectedItem().toString();
 
-                    Log.e("hmm", "" + whichAct);
-                    Log.e("hmm", "" + actDate.getText().toString());
-                    Log.e("hmm", "" + drpdownactAssignName.getSelectedItem().toString());
-                    Log.e("hmm", "" + actId.getText().toString());
+                Log.e("hmm", "" + whichAct);
+                Log.e("hmm", "" + actDate.getText().toString());
+                Log.e("hmm", "" + drpdownactAssignName.getSelectedItem().toString());
+                Log.e("hmm", "" + actId.getText().toString());
 
 
-                    Cursor m = mDbHelper.getActAssigActNameAdmin(activityName);
-                    m.moveToFirst();
+                Cursor m = mDbHelper.getActAssigActNameAdmin(activityName);
+                m.moveToFirst();
 
-                    String actName = getRoot(actIdHash, m.getInt(m.getColumnIndex("activityType")));
-                    mDbHelper.insertActOff(
+                String actName = getRoot(actIdHash, m.getInt(m.getColumnIndex("activityType")));
+                mDbHelper.insertActOff(
+                        ediary.VEC,
+                        actName,
+                        actDate.getText().toString(),
+                        drpdownactAssignName.getSelectedItem().toString(),
+                        //actId.getText().toString(),
+                        actHour.getText().toString(),
+                        0
+                );
+
+                if (isNetworkAvailable()) {
+                    Log.e("AOO", "" + actName);
+                    Log.e("AOO", "" + drpdownactAssignName.getSelectedItem().toString());
+                    Log.e("AOO", "" + whichAct);
+                    Log.e("AOO", "" + actId.getText().toString());
+
+                    Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
+                            "Token " + ediary.AUTH_TOKEN,
                             ediary.VEC,
-                            actName,
+                            m.getInt(m.getColumnIndex("id")),// AAA
+                            Integer.parseInt(actHour.getText().toString()),
                             actDate.getText().toString(),
-                            drpdownactAssignName.getSelectedItem().toString(),
-                            //actId.getText().toString(),
-                            actHour.getText().toString(),
-                            0
+                            //drpdownactAssignName.getSelectedItem().toString(),
+                            m.getInt(m.getColumnIndex("activityType")),
+                            1
                     );
-
-                    if (isNetworkAvailable()) {
-                        Log.e("AOO", "" + actName);
-                        Log.e("AOO", "" + drpdownactAssignName.getSelectedItem().toString());
-                        Log.e("AOO", "" + whichAct);
-                        Log.e("AOO", "" + actId.getText().toString());
-
-                        Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
-                                "Token " + ediary.AUTH_TOKEN,
-                                ediary.VEC,
-                                m.getInt(m.getColumnIndex("id")),// AAA
-                                Integer.parseInt(actHour.getText().toString()),
-                                actDate.getText().toString(),
-                                //drpdownactAssignName.getSelectedItem().toString(),
-                                m.getInt(m.getColumnIndex("activityType")),
-                                1
-                        );
-                        m.close();
-                        pushActList.enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            @EverythingIsNonNull
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful() && response.body() != null) {
-                                    Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
-                                    mDbHelper.createDatabase();
-                                    mDbHelper.open();
-                                    mDbHelper.setSync("DailyActivity", 1);
-                                    mDbHelper.close();
-                                    FragmentManager fm = requireActivity().getSupportFragmentManager();
-                                    fm.popBackStack("AddDetailsActivity", 0);
-                                } else if (response.errorBody() != null) {
-                                    try {
-                                        Log.e("onResponse:error", response.errorBody().string());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                    m.close();
+                    pushActList.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        @EverythingIsNonNull
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
+                                mDbHelper.createDatabase();
+                                mDbHelper.open();
+                                mDbHelper.setSync("DailyActivity", 1);
+                                mDbHelper.close();
+                                FragmentManager fm = requireActivity().getSupportFragmentManager();
+                                fm.popBackStack("AddDetailsActivity", 0);
+                            } else if (response.errorBody() != null) {
+                                try {
+                                    Log.e("onResponse:error", response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
                             }
+                        }
 
-                            @Override
-                            @EverythingIsNonNull
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                Log.e("onFail", t.toString());
-                            }
-                        });
-                    }
-                    mDbHelper.close();
-                    constFyAct.setVisibility(View.VISIBLE);
-                    nssHalvesLinear.setVisibility(View.VISIBLE);
-                    add.setVisibility(View.VISIBLE);
+                        @Override
+                        @EverythingIsNonNull
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Log.e("onFail", t.toString());
+                        }
+                    });
+                }
+                mDbHelper.close();
+                constFyAct.setVisibility(View.VISIBLE);
+                nssHalvesLinear.setVisibility(View.VISIBLE);
+                add.setVisibility(View.VISIBLE);
 
-                    actHeaderInput.setVisibility(View.GONE);
-                    malHay.setVisibility(View.VISIBLE);
-                    campActIn.setVisibility(View.GONE);
-                } else
-                    Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();
+                actHeaderInput.setVisibility(View.GONE);
+                malHay.setVisibility(View.VISIBLE);
+                campActIn.setVisibility(View.GONE);
+            } else
+                Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();
 
-            }
         });
 
-        backActDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                androidx.appcompat.app.AlertDialog.Builder builder2 = new AlertDialog.Builder(requireContext(), R.style.delDialog);
-                builder2.setMessage("Exit without saving?");
+        backActDetail.setOnClickListener(view14 -> {
+            AlertDialog.Builder builder2 = new AlertDialog.Builder(requireContext(), R.style.delDialog);
+            builder2.setMessage("Exit without saving?");
 
-                builder2.setNegativeButton("No", (dialog, which) -> {
-                    dialog.dismiss();
-                });
+            builder2.setNegativeButton("No", (dialog, which) -> {
+                dialog.dismiss();
+            });
 
-                builder2.setPositiveButton("Yes", (dialog, which) -> {
-                    dialog.cancel();
-                    constFyAct.setVisibility(View.VISIBLE);
-                    nssHalvesLinear.setVisibility(View.VISIBLE);
-                    actHeaderInput.setVisibility(View.GONE);
-                    campActIn.setVisibility(View.GONE);
-                    malHay.setVisibility(View.VISIBLE);
-                    add.setVisibility(View.VISIBLE);
-                });
-                builder2.show();
-            }
+            builder2.setPositiveButton("Yes", (dialog, which) -> {
+                dialog.cancel();
+                constFyAct.setVisibility(View.VISIBLE);
+                nssHalvesLinear.setVisibility(View.VISIBLE);
+                actHeaderInput.setVisibility(View.GONE);
+                campActIn.setVisibility(View.GONE);
+                malHay.setVisibility(View.VISIBLE);
+                add.setVisibility(View.VISIBLE);
+            });
+            builder2.show();
         });
     }
 

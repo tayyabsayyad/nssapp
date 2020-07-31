@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -45,35 +46,41 @@ public class ediary extends AppCompatActivity {
     public static int transparent;
     public static int primaryCol;
     public static int primaryColLight;
-    private CheckConn checkConn;
+    public static int red;
+    public static int green;
+    public static int kesar;
+    public static String AUTH_TOKEN;
+    public static String VEC;
+    public static int isLeader;
+    public static int leaderId;
     List<AdapterDataWork> dataWorkList;
-
     AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
     ImageView logout;
     TextView vecNo;
     TextView name;
-
     FragmentManager fm;
-
-    public static String AUTH_TOKEN;
-    public static String VEC;
+    CheckConn checkConn;
+    IntentFilter z;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ediary);
-
-        checkConn = new CheckConn();
+        /*checkConn = new CheckConn();
         IntentFilter z = new IntentFilter();
         z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(checkConn, z);
+        registerReceiver(checkConn, z);*/
 
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
 
         AUTH_TOKEN = sharedPreferences.getString("AUTH_TOKEN", "");
         VEC = sharedPreferences.getString("VEC", "");
+        isLeader = sharedPreferences.getInt("isLeader", 0);
+        leaderId = sharedPreferences.getInt("leaderId", 0);
 
+        Log.e("isLeader", "onCreate: " + isLeader + leaderId);
         fm = getSupportFragmentManager();
 
         vecNo = findViewById(R.id.vecNoHeader);
@@ -84,6 +91,9 @@ public class ediary extends AppCompatActivity {
         primaryCol = this.getColor(R.color.colorPrimary);
         primaryColLight = this.getColor(R.color.colorPrimaryLight);
         primaryColDark = this.getColor(R.color.colorPrimaryDark);
+        red = this.getColor(R.color.red);
+        green = this.getColor(R.color.greenNic);
+        kesar = this.getColor(R.color.kesar);
 
         //Toast.makeText(this, AUTH_TOKEN, Toast.LENGTH_SHORT).show();
         drawer = findViewById(R.id.drawer_layout);
@@ -95,7 +105,7 @@ public class ediary extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_main,
-                R.id.nav_acti, R.id.nav_work, R.id.nav_camp, R.id.nav_help)
+                R.id.nav_acti, R.id.nav_work, R.id.nav_camp, R.id.nav_leader, R.id.nav_help)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -103,6 +113,13 @@ public class ediary extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         View headerView = navigationView.getHeaderView(0);
+        Menu m = navigationView.getMenu();
+        if (isLeader == 1)
+            m.getItem(4).setVisible(true);
+
+        else if (isLeader == 0)
+            m.getItem(4).setVisible(false);
+
         TextView navUsername = headerView.findViewById(R.id.nameHeader);
         TextView navVec = headerView.findViewById(R.id.vecNoHeader);
         navVec.setText(ediary.VEC);
@@ -148,6 +165,8 @@ public class ediary extends AppCompatActivity {
                 SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
                 SharedPreferences.Editor eddy = shareit.edit();
                 eddy.putInt("logged", 0);
+                eddy.putInt("isLeader", 0);
+                eddy.putInt("leaderId", 0);
                 eddy.apply();
 
                 Toast.makeText(ediary.this, "Logged Out", Toast.LENGTH_SHORT).show();
@@ -161,8 +180,6 @@ public class ediary extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
                             SharedPreferences.Editor eddy = shareit.edit();
-                            eddy.putString("BKEY", "");
-                            eddy.putString("AKEY", "");
                             eddy.apply();
                         }
                     }
@@ -183,10 +200,8 @@ public class ediary extends AppCompatActivity {
             builder2.setNegativeButton("No", (dialog, which) -> {
                 dialog.dismiss();
             });
-
             builder2.show();
         });
-
     }
 
     @Override
@@ -200,7 +215,7 @@ public class ediary extends AppCompatActivity {
         WorkDetailsFirstFrag wf = new WorkDetailsFirstFrag(ediary.this);
         dataWorkList = wf.firstHalfWorkData();
         Call<ResponseBody> insertHourZero = RetrofitClient.getInstance().getApi().insertHour(
-                "Token " + ediary.AUTH_TOKEN,
+                "Token " + AUTH_TOKEN,
                 Integer.parseInt(dataWorkList.get(0).getCompHours()),
                 Integer.parseInt(dataWorkList.get(0).getRemHours()),
                 ediary.VEC,
@@ -212,12 +227,10 @@ public class ediary extends AppCompatActivity {
             @Override
             @EverythingIsNonNull
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful())
-                    Log.e("Done", "onResponse: ");
-                else if (response.errorBody() != null) {
+                if (response.errorBody() != null) {
                     try {
                         JSONObject j = new JSONObject(response.errorBody().string());
-                        Log.e("Error", j.toString());
+                        Log.e("Error here", j.toString());
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
                         Log.e("error", e.toString());
@@ -303,15 +316,25 @@ public class ediary extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        checkConn = new CheckConn();
+        z = new IntentFilter();
+        z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(checkConn, z);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         add();
+        unregisterReceiver(checkConn);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         add();
-        unregisterReceiver(checkConn);
+        //unregisterReceiver(checkConn);
     }
 }

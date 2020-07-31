@@ -214,6 +214,16 @@ public class TestAdapter {
         }
     }
 
+    public void resetUsers(String vec) {
+        try {
+            String sql = String.format("DELETE FROM Registration WHERE (not VEC=\"%s\")", vec);
+            mDb.execSQL(sql);
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
     public void insertUsers(String clgId,
                             String vec,
                             String fname,
@@ -242,8 +252,31 @@ public class TestAdapter {
 
             contentValues.put("VEC", vec);
             contentValues.put("CollegeName", clgName);
-
             mDb.insert("Leaders", null, contentValues);
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
+
+    public void insertVolAct(int id,
+                             String date,
+                             int hours,
+                             String vec,
+                             String actName,
+                             String assActName,
+                             String state) {
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("id", id);
+            contentValues.put("Date", date);
+            contentValues.put("Hours", hours);
+            contentValues.put("VEC", vec);
+            contentValues.put("ActivityName", actName);
+            contentValues.put("AssignedActivityName", assActName);
+            contentValues.put("State", state);
+
+            mDb.insert("VolAct", null, contentValues);
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
         }
@@ -313,10 +346,61 @@ public class TestAdapter {
         }
     }
 
+    //TODO: Del
     public Cursor getLeaders() {
         try {
             //String a = String.format("aaa %d", act);
             String sql = "SELECT * FROM Registration a, Leaders b WHERE a.VEC=b.VEC";
+            Cursor mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() == 0) {
+            }
+            return mCur;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Cursor getVec() {
+        try {
+            String sql = "SELECT DISTINCT VEC FROM VolAct";
+            Cursor mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() == 0) {
+                //Log.e(TAG, "getVec: " + "Empty");
+            }
+            return mCur;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public void setStateVolAct(String state, int id) {
+        try {
+            String sql = String.format(Locale.ENGLISH, "UPDATE VolAct SET State = \"%s\" WHERE id=\"%d\"", state, id);
+            mDb.execSQL(sql);
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Cursor getVolState(int id) {
+        try {
+            String sql = String.format(Locale.ENGLISH, "SELECT * FROM VolAct WHERE id=\"%d\"", id);
+            Cursor mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() == 0) {
+            }
+            return mCur;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Cursor getVolDetails(String actName, String vec) {
+        try {
+            String sql = String.format("SELECT * FROM VolAct WHERE ActivityName=\"%s\" AND VEC=\"%s\"", actName, vec);
             Cursor mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() == 0) {
             }
@@ -410,6 +494,7 @@ public class TestAdapter {
             throw mSQLException;
         }
     }
+
     public Cursor getActAllAdmin(int actName) {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT * FROM ActivityListByAdmin WHERE activityType=%d", actName);
@@ -530,9 +615,9 @@ public class TestAdapter {
         }
     }
 
-    public void setDetails(int hour, int id) {
+    public void setDetails(int hour, String state, int id) {
         try {
-            String sql = String.format(Locale.ENGLISH, "UPDATE DailyActivity SET HoursWorked = %d WHERE actId=\"%d\"", hour, id);
+            String sql = String.format(Locale.ENGLISH, "UPDATE DailyActivity SET HoursWorked = %d, State = \"%s\" WHERE actId=\"%d\"", hour, state, id);
             mDb.execSQL(sql);
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -540,9 +625,12 @@ public class TestAdapter {
         }
     }
 
-    public void setApproved() {
+    public void setApproved(String table) {
         try {
-            mDb.execSQL("UPDATE DailyActivity SET If_Approved=1 WHERE State=\"Approved\"");
+            String sql = String.format("UPDATE %s SET If_Approved=1 WHERE State=\"Approved\"", table);
+            String sq2 = String.format("UPDATE %s SET If_Approved=0 WHERE (not State=\"Approved\")", table);
+            mDb.execSQL(sql);
+            mDb.execSQL(sq2);
         } catch (SQLException e) {
             Log.e(TAG, "setApproved: " + e.getMessage());
         }

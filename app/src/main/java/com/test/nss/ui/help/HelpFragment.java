@@ -95,8 +95,7 @@ public class HelpFragment extends Fragment {
         }
 
         Cursor c2 = mDbHelper.getLeaders();
-        c2.moveToFirst();
-        if (c2.getCount() > 0) {
+        if (c2.moveToNext()) {
             emailLead1.setText(String.format(getString(R.string.email) + ": %s", c2.getString(c2.getColumnIndex("Email"))));
             contactLead1.setText(String.format(getString(R.string.contact_no) + ": +%s", c2.getString(c2.getColumnIndex("Contact"))));
         } else {
@@ -104,8 +103,8 @@ public class HelpFragment extends Fragment {
             contactLead1.setText(getString(R.string.contact_no));
         }
 
-        c2.moveToNext();
-        if (c2.getCount() > 0) {
+        //c2.moveToNext();
+        if (c2.moveToNext()) {
             emailLead2.setText(String.format(getString(R.string.email) + ": %s", c2.getString(c2.getColumnIndex("Email"))));
             contactLead2.setText(String.format(getString(R.string.contact_no) + ": +%s", c2.getString(c2.getColumnIndex("Contact"))));
         } else {

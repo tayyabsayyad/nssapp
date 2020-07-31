@@ -33,7 +33,7 @@ public abstract class SwipeHelperRight extends ItemTouchHelper.SimpleCallback {
     private List<UnderlayButton> buttons;
     private GestureDetector gestureDetector;
     private int swipedPos = -1;
-    private float swipeThreshold = 0.5f;
+    private float swipeThreshold = .5f;
     private Map<Integer, List<UnderlayButton>> buttonsBuffer;
     private Queue<Integer> recoverQueue;
 

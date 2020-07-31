@@ -108,6 +108,19 @@ public interface Api {
                                @Path("id2") int id2
     );
 
+    @PUT("/diary/dailyactivity/{id2}/")
+    @FormUrlEncoded
+    Call<ResponseBody> putApprove(@Header("Authorization") String token,
+                                  @Field("Hours") int hours,
+                                  @Field("VEC") String vec,
+                                  @Field("ActivityName") int actName,
+                                  @Field("AssignedActivityName") int actId,
+                                  @Field("State") int s,
+                                  @Field("ApprovedBy") int by,
+
+                                  @Path("id2") int id2
+    );
+
     @PUT("/diary/campactivity/{id2}/")
     @FormUrlEncoded
     Call<ResponseBody> putCamp(@Header("Authorization") String token,
@@ -134,4 +147,10 @@ public interface Api {
                                   @Path("id") int id
 
     );
+
+    @GET("/diary/api/IsLeader/")
+    Call<ResponseBody> isLeader(@Header("Authorization") String token);
+
+    @GET("/diary/api/allVolDailyAct/")
+    Call<ResponseBody> volAct(@Header("Authorization") String token);
 }

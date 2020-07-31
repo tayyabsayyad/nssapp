@@ -174,7 +174,8 @@ public class fyAct extends Fragment {
         SwipeHelperRight swipeHelperRightUniv = new SwipeHelperRight(mContext, recyclerViewUniv) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                if (adapterUniv.list.get(viewHolder.getAdapterPosition()).isApproved() != 1) {
+                if (!adapterUniv.list.get(viewHolder.getAdapterPosition()).getState().equals("Approved") ||
+                        adapterUniv.list.get(viewHolder.getAdapterPosition()).isApproved() != 1) {
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                             mContext,
                             "Edit",
@@ -215,7 +216,7 @@ public class fyAct extends Fragment {
                                             TestAdapter mdb = new TestAdapter(mContext);
                                             mdb.createDatabase();
                                             mdb.open();
-                                            mdb.setDetails(newHours, actID);
+                                            mdb.setDetails(newHours, "Modified", actID);
 
                                             Cursor c = mdb.getActAssigActNameAdmin(actName);
                                             c.moveToFirst();
@@ -225,12 +226,13 @@ public class fyAct extends Fragment {
                                                             adapterUniv.list.get(p).getAct(),
                                                             String.valueOf(newHours),
                                                             adapterUniv.list.get(p).getId(),
-                                                            adapterUniv.list.get(p).isApproved()
+                                                            adapterUniv.list.get(p).isApproved(),
+                                                            "Modified"
                                                     )
                                             );
 
                                             univListDataFy.remove(p + 1);
-                                            adapterUniv.notifyDataSetChanged();
+                                            adapterUniv.notifyItemInserted(p);
 
                                             //TODO: Offline mode needs to be checked
                                             //mdb.setSyncActDetails(0, actID);
@@ -339,7 +341,8 @@ public class fyAct extends Fragment {
         SwipeHelperRight swipeHelperRightArea = new SwipeHelperRight(mContext, recyclerViewArea) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                if (adapterArea.list.get(viewHolder.getAdapterPosition()).isApproved() != 1) {
+                if (!adapterArea.list.get(viewHolder.getAdapterPosition()).getState().equals("Approved") ||
+                        adapterArea.list.get(viewHolder.getAdapterPosition()).isApproved() != 1) {
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                             mContext,
                             "Edit",
@@ -378,7 +381,7 @@ public class fyAct extends Fragment {
                                             TestAdapter mdb = new TestAdapter(mContext);
                                             mdb.createDatabase();
                                             mdb.open();
-                                            mdb.setDetails(newHours, actID);
+                                            mdb.setDetails(newHours, "Modified", actID);
 
                                             Cursor c = mdb.getActAssigActNameAdmin(actName);
                                             c.moveToFirst();
@@ -388,12 +391,13 @@ public class fyAct extends Fragment {
                                                             adapterArea.list.get(p).getAct(),
                                                             String.valueOf(newHours),
                                                             adapterArea.list.get(p).getId(),
-                                                            adapterArea.list.get(p).isApproved()
+                                                            adapterArea.list.get(p).isApproved(),
+                                                            "Modified"
                                                     )
                                             );
 
                                             areaDataMainFy.remove(p + 1);
-                                            adapterArea.notifyDataSetChanged();
+                                            adapterArea.notifyItemInserted(p);
 
                                             //TODO: Offline mode needs to be checked
                                             //mdb.setSyncActDetails(0, actID);
@@ -456,6 +460,7 @@ public class fyAct extends Fragment {
 
                                 TestAdapter mdb = new TestAdapter(mContext);
                                 mdb.createDatabase();
+
                                 mdb.open();
 
                                 Cursor c2 = mdb.getActAssigActNameAdmin(actName);
@@ -505,7 +510,7 @@ public class fyAct extends Fragment {
         SwipeHelperRight swipeHelperRightHours = new SwipeHelperRight(mContext, recyclerViewHours) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                if (adapterClg.list.get(viewHolder.getAdapterPosition()).isApproved() != 1) {
+                if (!adapterClg.list.get(viewHolder.getAdapterPosition()).getState().equals("Approved") || adapterClg.list.get(viewHolder.getAdapterPosition()).isApproved() != 1) {
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                             mContext,
                             "",
@@ -542,7 +547,7 @@ public class fyAct extends Fragment {
                                             TestAdapter mdb = new TestAdapter(mContext);
                                             mdb.createDatabase();
                                             mdb.open();
-                                            mdb.setDetails(newHours, actID);
+                                            mdb.setDetails(newHours, "Modified", actID);
 
                                             Cursor c = mdb.getActAssigActNameAdmin(actName);
                                             c.moveToFirst();
@@ -552,11 +557,12 @@ public class fyAct extends Fragment {
                                                     adapterClg.list.get(p).getAct(),
                                                     String.valueOf(newHours),
                                                     adapterClg.list.get(p).getId(),
-                                                    adapterClg.list.get(p).isApproved()
+                                                    adapterClg.list.get(p).isApproved(),
+                                                    "Modified"
                                             ));
 
                                             clgListDataFy.remove(p + 1);
-                                            adapterClg.notifyDataSetChanged();
+                                            adapterClg.notifyItemInserted(p);
 
                                             //TODO: Offline mode needs to be checked
                                             //mdb.setSyncActDetails(0, actID);
@@ -618,6 +624,7 @@ public class fyAct extends Fragment {
 
                                 TestAdapter mdb = new TestAdapter(mContext);
                                 mdb.createDatabase();
+
                                 mdb.open();
 
                                 Cursor c2 = mdb.getActAssigActNameAdmin(actName);
@@ -688,14 +695,11 @@ public class fyAct extends Fragment {
             args.putInt("act", act);
             detailsActivity.setArguments(args);
 
-            //Log.e("AA", "" + whichAct);
-            //Log.e("AA", "" + act);
-
             FragmentManager fm = requireActivity().getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").addToBackStack("fyAct").commit();
-            adapterArea.notifyDataSetChanged();
-            adapterClg.notifyDataSetChanged();
-            adapterUniv.notifyDataSetChanged();
+            //adapterArea.notifyDataSetChanged();
+            //adapterClg.notifyDataSetChanged();
+            //adapterUniv.notifyDataSetChanged();
         });
     }
 
@@ -735,7 +739,8 @@ public class fyAct extends Fragment {
                             c.getString(c.getColumnIndex("ActivityName")),
                             c.getString(c.getColumnIndex("HoursWorked")),
                             c.getString(c.getColumnIndex("actID")),
-                            c.getInt(c.getColumnIndex("If_Approved"))
+                            c.getInt(c.getColumnIndex("If_Approved")),
+                            c.getString(c.getColumnIndex("State"))
                     )
             );
         }

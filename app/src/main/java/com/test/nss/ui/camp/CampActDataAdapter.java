@@ -33,24 +33,14 @@ public class CampActDataAdapter extends RecyclerView.Adapter<CampActDataAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem = layoutInflater.inflate(R.layout.adapter_view_camp_act_list, parent, false);
-        listItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e("hmm", "onClick: ");
-            }
-        });
+        listItem.setOnClickListener(view -> Log.e("hmm", "onClick: "));
         return new ViewHolder(listItem);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.campListName.setText(list.get(position).getCampListName());
-        holder.campListName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickInterface.setClick(list.get(position).getCampListName());
-            }
-        });
+        holder.campListName.setOnClickListener(view -> onClickInterface.setClick(list.get(position).getCampListName()));
     }
 
     @Override
