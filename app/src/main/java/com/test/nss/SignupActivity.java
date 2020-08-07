@@ -2,6 +2,8 @@ package com.test.nss;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -29,6 +31,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -92,7 +96,7 @@ public class SignupActivity extends AppCompatActivity {
                             for (int i = 0; i < jArry.length(); i++) {
                                 clgList.add(jArry.getJSONObject(i).getString("CollegeName") + "-" + jArry.getJSONObject(i).getString("CollegeCode"));
                             }
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(SignupActivity.this, R.layout.drop_down_start, clgList);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, R.layout.drop_down_start, clgList);
                             dropdownClg.setAdapter(adapter);
                             Log.e("Added college", "");
                         } catch (JSONException | IOException e) {
@@ -108,18 +112,53 @@ public class SignupActivity extends AppCompatActivity {
                 }
             });
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Call<ResponseBody> clg2 = RetrofitClient.getInstance().getApi().getClgList();
+            clg2.enqueue(new Callback<ResponseBody>() {
+                @Override
+                @EverythingIsNonNull
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        try {
+                            //JSONObject j = new JSONObject(response.body().string());
+                            JSONArray j = new JSONArray(response.body().string());
+                            if (j.length() >= 0) {
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(mContext);
+                                mDbHelper.createDatabase();
+                                mDbHelper.open();
+                                deleteData("CollegeNames");
+                                for (int i = 0; i < j.length(); i++) {
+                                    mDbHelper.insertClgList(
+                                            j.getJSONObject(i).getString("CollegeCode"),
+                                            j.getJSONObject(i).getString("CollegeName"),
+                                            j.getJSONObject(i).getString("State")
+                                    );
+                                }
+                                //mDbHelper.getCampDetails();
+                                mDbHelper.close();
+                            }
+                            //ArrayAdapter<String> adapter = new ArrayAdapter<>(SignupActivity.this, R.layout.drop_down_start, clgList);
+                            //dropdownClg.setAdapter(adapter);
+                            Log.e("Added college", "");
+                        } catch (JSONException | IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                @EverythingIsNonNull
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                }
+            });
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             String date = sdf.format(new Date());
 
             //dropdownClg.setHintTextColor(mContext.getColor(R.color.colorPrimary));
             dropdownClg.setDropDownBackgroundResource(R.drawable.drpdwn_clg_bg);
             //dropdownClg.
-            dropdownClg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dropdownClg.showDropDown();
-                }
-            });
+
+            dropdownClg.setOnClickListener(view -> dropdownClg.showDropDown());
             /*dropdownClg.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
@@ -139,6 +178,7 @@ public class SignupActivity extends AppCompatActivity {
                 }
             });*/
 
+
             dropdownClg.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -146,12 +186,25 @@ public class SignupActivity extends AppCompatActivity {
 
                     vecClgPref.setText("");
                     clgCode = clgCode.substring(clgCode.indexOf("-") + 1);
-                    vecClgPref.append(clgCode);
+                    //vecClgPref.append(clgCode);
 
                     String s = adapterView.getItemAtPosition(i).toString();
                     //spannable.toString().indexOf("-"), spannable.toString().length();
                     s = s.substring(0, s.indexOf("-"));
-                    dropdownClg.setText(s);
+                    DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                    mdb.createDatabase();
+                    mdb.open();
+                    Cursor c = mdb.getClgState(s);
+                    c.moveToFirst();
+                    if (!c.getString(c.getColumnIndex("State")).equals("Closed")) {
+                        dropdownClg.setText(s);
+                        vecClgPref.append(clgCode);
+                    } else {
+                        dropdownClg.setError("The college is not accepting");
+                        dropdownClg.setText("");
+                        vecClgPref.append("");
+                    }
+                    mdb.close();
                 }
             });
 
@@ -163,7 +216,7 @@ public class SignupActivity extends AppCompatActivity {
                 if (!isEmpty(fName) && !isEmpty(fathName) &&
                         !isEmpty(mName) && !isEmpty(lName) && !isEmpty(vec) &&
                         !isEmpty(email) && !isEmpty(contactNo) && !vecClgPref.getText().toString().equals("")
-                        && !isEmpty(dropdownClg) && vec.getText().toString().trim().length() == 5) {
+                        && !isEmpty(dropdownClg) && vec.getText().toString().trim().length() > 0) {
 
                     if (!email.getText().toString().trim().matches(emailPattern))
                         Toast.makeText(mContext, "Please enter proper email", Toast.LENGTH_SHORT).show();
@@ -176,8 +229,6 @@ public class SignupActivity extends AppCompatActivity {
 
                         builder2.setPositiveButton("Yes", (dialog, which) -> {
                             dialog.dismiss();
-
-                            Snackbar.make(v, "Signing you up!", Snackbar.LENGTH_SHORT).show();
 
                             String clgItem = dropdownClg.getText().toString();
                             //clgItem = clgItem.substring(0, clgItem.indexOf("-"));
@@ -200,13 +251,24 @@ public class SignupActivity extends AppCompatActivity {
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                     if (response.isSuccessful()) {
                                         finish();
+                                        Snackbar.make(v, "Signing you up!", Snackbar.LENGTH_SHORT).show();
+                                        Toast.makeText(SignupActivity.this, "An email will be sent once PO confirms", Toast.LENGTH_SHORT).show();
                                     } else if (response.errorBody() != null) {
                                         Log.e("onResponse:error", response.errorBody().toString());
                                         try {
                                             JSONObject j = new JSONObject(response.errorBody().string());
-                                            //j.getJSONObject()
+
+                                            if (!j.isNull("Contact")) {
+                                                Toast.makeText(mContext, "" + j.getJSONArray("Contact").getString(0), Toast.LENGTH_SHORT).show();
+                                                contactNo.setError("Enter correct number");
+                                                contactNo.requestFocus();
+                                            } if (!j.isNull("Email")) {
+                                                Toast.makeText(mContext, "" + j.getJSONArray("Email").getString(0), Toast.LENGTH_SHORT).show();
+                                                contactNo.setError("Enter correct number");
+                                                email.setError("");
+                                            } else
+                                                Toast.makeText(mContext, "Recheck and sign up again", Toast.LENGTH_SHORT).show();
                                             Log.e("error", j.toString());
-                                            //Toast.makeText(mContext, j.toString(), Toast.LENGTH_SHORT).show();
                                         } catch (JSONException | IOException e) {
                                             e.printStackTrace();
                                         }
@@ -241,5 +303,22 @@ public class SignupActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    public void deleteData(String table) {
+        DatabaseAdapter mDbHelper2 = new DatabaseAdapter(mContext);
+        mDbHelper2.createDatabase();
+        mDbHelper2.open();
+        DataBaseHelper mDb2 = new DataBaseHelper(mContext);
+        SQLiteDatabase m = mDb2.getWritableDatabase();
+        m.execSQL("DELETE FROM " + table);
+        mDbHelper2.close();
+        m.close();
+        mDb2.close();
     }
 }

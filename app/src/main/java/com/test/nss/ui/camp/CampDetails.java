@@ -16,8 +16,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
-import com.test.nss.TestAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +71,7 @@ public class CampDetails extends Fragment {
     public List<AdapterCampDetails> addCampData() {
         ArrayList<AdapterCampDetails> data2 = new ArrayList<>();
 
-        TestAdapter mDbHelper = new TestAdapter(requireContext());
+        DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
         Cursor c2 = mDbHelper.getCampDetails();

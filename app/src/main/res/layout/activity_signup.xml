@@ -92,6 +92,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/vec_clg_pref"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -104,11 +105,12 @@
                 android:textColor="@color/blackish" />
 
             <AutoCompleteTextView
+                android:paddingStart="40dp"
                 android:id="@+id/dropdown_clg"
+                android:textAlignment="center"
                 style="@style/signUp"
-                android:paddingEnd="12dp"
                 android:layout_width="0dp"
-                android:inputType="textFilter"
+                android:inputType="textNoSuggestions|textFilter"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableEnd="@drawable/ic_arrow_down"

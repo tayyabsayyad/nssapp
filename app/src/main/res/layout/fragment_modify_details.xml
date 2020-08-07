@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="@dimen/space_10dp"
+        android:layout_marginEnd="@dimen/padding_5dp"
         android:layout_marginBottom="2dp"
         app:cardCornerRadius="5dp"
         app:cardElevation="12dp"
@@ -157,13 +157,18 @@
             android:layout_marginTop="110dp"
             android:visibility="gone" />
 
-        <Button
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/back"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
             android:layout_gravity="end|bottom"
-            android:layout_marginEnd="@dimen/margin_15dp"
-            android:layout_marginBottom="@dimen/padding_5dp"
-            android:background="@drawable/ic_back_24" />
+            app:rippleColor="#FAFAFA"
+            app:elevation="0dp"
+            app:backgroundTint="@color/colorPrimaryLight"
+            android:src="@drawable/ic_back_32"
+            app:fabCustomSize="45dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_10dp"
+            android:layout_marginBottom="@dimen/space_10dp"
+            android:visibility="visible" />
     </androidx.cardview.widget.CardView>
 </FrameLayout>

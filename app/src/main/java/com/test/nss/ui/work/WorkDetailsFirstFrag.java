@@ -13,8 +13,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
-import com.test.nss.TestAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +62,7 @@ public class WorkDetailsFirstFrag extends Fragment {
     public List<AdapterDataWork> firstHalfWorkData() {
         ArrayList<AdapterDataWork> data = new ArrayList<>();
 
-        TestAdapter m = new TestAdapter(context);
+        DatabaseAdapter m = new DatabaseAdapter(context);
         m.createDatabase();
         m.open();
         int areaCompOne = m.getSumHours("First Year Area Based One");
@@ -70,45 +70,51 @@ public class WorkDetailsFirstFrag extends Fragment {
         int clgComp = m.getSumHours("First Year College");
         int univComp = m.getSumHours("First Year University");
 
+        int areaLvlOne = m.getHours("Area Based Level One");
+        int areaLvlTwo = m.getHours("Area Based Level Two");
+        int clgLvl = m.getHours("College Level");
+        int univLvl = m.getHours("University Level");
+
         m.close();
         //Log.i("TAG", "firstHalfWorkData: " + areaCompTwo);
-        String areaRemOneHours;
-        String areaRemTwoHours;
-        String univRemHours;
-        String clgRemHours;
+        int areaRemOneHours;
+        int areaRemTwoHours;
+        int univRemHours;
+        int clgRemHours;
 
-        if (areaCompOne >= 1 && 40 - areaCompOne > 0)
-            areaRemOneHours = String.valueOf(40 - areaCompOne);
+        if (areaCompOne >= 1 && areaLvlOne - areaCompOne > 0)
+            areaRemOneHours = areaLvlOne - areaCompOne;
         else if (areaCompOne == 0)
-            areaRemOneHours = "40";
+            areaRemOneHours = areaLvlOne;
         else
-            areaRemOneHours = "00";
+            areaRemOneHours = Integer.parseInt("00");
 
-        if (areaCompTwo >= 1 && 40 - areaCompTwo > 0)
-            areaRemTwoHours = String.valueOf(40 - areaCompTwo);
+        if (areaCompTwo >= 1 && areaLvlTwo - areaCompTwo > 0)
+            areaRemTwoHours = areaLvlTwo - areaCompTwo;
         else if (areaCompTwo == 0)
-            areaRemTwoHours = "40";
+            areaRemTwoHours = areaLvlTwo;
         else
-            areaRemTwoHours = "00";
+            areaRemTwoHours = Integer.parseInt("00");
 
-        if (clgComp >= 1 && 20 - clgComp > 0)
-            clgRemHours = String.valueOf(20 - clgComp);
+        if (clgComp >= 1 && clgLvl - clgComp > 0)
+            clgRemHours = clgLvl - clgComp;
         else if (clgComp == 0)
-            clgRemHours = "20";
+            clgRemHours = clgLvl;
         else
-            clgRemHours = "00";
+            clgRemHours = Integer.parseInt("00");
 
-        if (univComp >= 1 && 20 - univComp > 0)
-            univRemHours = String.valueOf(20 - univComp);
+        if (univComp >= 1 && univLvl - univComp > 0)
+            univRemHours = univLvl - univComp;
         else if (univComp == 0)
-            univRemHours = "20";
+            univRemHours = univLvl;
         else
-            univRemHours = "00";
+            univRemHours = Integer.parseInt("00");
 
-        data.add(new AdapterDataWork("Area Based 1", "40", String.valueOf(areaCompOne), areaRemOneHours));
-        data.add(new AdapterDataWork("Area Based 2", "40", String.valueOf(areaCompTwo), areaRemTwoHours));
-        data.add(new AdapterDataWork("University", "20", String.valueOf(univComp), univRemHours));
-        data.add(new AdapterDataWork("College", "20", String.valueOf(clgComp), clgRemHours));
+        data.add(new AdapterDataWork("Area Based 1", String.valueOf(areaLvlOne), String.valueOf(areaCompOne), String.valueOf(areaRemOneHours)));
+        data.add(new AdapterDataWork("Area Based 2", String.valueOf(areaLvlTwo), String.valueOf(areaCompTwo), String.valueOf(areaRemTwoHours)));
+        data.add(new AdapterDataWork("University", String.valueOf(univLvl), String.valueOf(univComp), String.valueOf(univRemHours)));
+        data.add(new AdapterDataWork("College", String.valueOf(clgLvl), String.valueOf(clgComp), String.valueOf(clgRemHours)));
+
         return data;
     }
 }

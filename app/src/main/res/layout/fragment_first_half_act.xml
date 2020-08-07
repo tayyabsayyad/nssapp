@@ -9,9 +9,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
+        android:layout_margin="@dimen/padding_5dp"
         app:cardCornerRadius="2dp"
-        app:cardElevation="2dp"
+        app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -20,35 +20,60 @@
             android:id="@+id/act_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/act_bg_lines"
             android:orientation="vertical"
-            android:paddingTop="@dimen/padding_5dp"
-            android:paddingBottom="@dimen/padding_5dp"
             android:visibility="visible">
 
             <TextView
-                android:id="@+id/area_act"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="15dp"
+                android:focusable="true"
+                android:clickable="true"
+                android:background="@drawable/ripple_light"
+                android:id="@+id/area_act1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:fontFamily="@font/google_sans"
                 android:gravity="center"
-                android:text="@string/area"
+                android:text="@string/area1"
+                android:textColor="@color/blackGrey"
+                android:paddingEnd="@dimen/space_10dp"
+                android:drawableEnd="@drawable/ic_arrow_down"
+                android:textSize="@dimen/text_18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey"
+                android:visibility="visible" />
+
+            <TextView
+                android:focusable="true"
+                android:clickable="true"
+                android:background="@drawable/ripple_light"
+                android:id="@+id/area_act2"
+                android:paddingEnd="@dimen/space_10dp"
+                android:drawableEnd="@drawable/ic_arrow_down"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:fontFamily="@font/google_sans"
+                android:gravity="center"
+                android:text="@string/area2"
                 android:textColor="@color/blackGrey"
                 android:textSize="@dimen/text_18sp" />
 
             <View
-                android:id="@+id/line_main"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/blackish"
+                android:background="@color/grey"
                 android:visibility="visible" />
 
             <TextView
+                android:focusable="true"
+                android:clickable="true"
+                android:background="@drawable/ripple_light"
                 android:id="@+id/univ_act"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="15dp"
+                android:paddingEnd="@dimen/space_10dp"
+                android:drawableEnd="@drawable/ic_arrow_down"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:fontFamily="@font/google_sans"
                 android:gravity="center"
                 android:text="University/District"
@@ -56,27 +81,38 @@
                 android:textSize="@dimen/text_18sp" />
 
             <View
-                android:id="@+id/line_main2"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/blackish"
+                android:background="@color/grey"
                 android:visibility="visible" />
 
             <TextView
+                android:focusable="true"
+                android:clickable="true"
+                android:background="@drawable/ripple_light"
                 android:id="@+id/clg_act"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingEnd="@dimen/space_10dp"
+                android:drawableEnd="@drawable/ic_arrow_down"
                 android:fontFamily="@font/google_sans"
                 android:gravity="center"
-                android:text="@string/clg"
+                android:text="@string/college_work"
                 android:textColor="@color/blackGrey"
                 android:textSize="@dimen/text_18sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/areafyList"
+        android:id="@+id/areafyListOne"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/space_3dp"
+        android:layout_marginTop="120dp"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/areafyListTwo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/space_3dp"
@@ -109,12 +145,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:rippleColor="@color/colorPrimaryLight"
+            app:elevation="4dp"
+            app:backgroundTint="@color/white"
+            android:src="@drawable/ic_back_32"
+            app:fabCustomSize="45dp"
             android:id="@+id/backActBtn"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_margin="@dimen/space_10dp"
-            android:background="@drawable/ic_back_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_10dp"
+            android:layout_marginBottom="@dimen/space_10dp"
             android:visibility="visible" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

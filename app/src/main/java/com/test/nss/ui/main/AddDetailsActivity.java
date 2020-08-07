@@ -25,8 +25,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
-import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
 
@@ -56,6 +57,7 @@ public class AddDetailsActivity extends Fragment {
 
     Button addSend;
     Button add;
+    Button add2;
     Button backActDetail;
 
     ConstraintLayout campActIn;
@@ -124,7 +126,7 @@ public class AddDetailsActivity extends Fragment {
     public ArrayList<String> getClgList() {
         ArrayList<String> data2 = new ArrayList<>();
 
-        TestAdapter mDbHelper = new TestAdapter(requireContext());
+        DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
         Cursor c = mDbHelper.getClgList();
@@ -147,6 +149,8 @@ public class AddDetailsActivity extends Fragment {
         addSend = huh.findViewById(R.id.addSend);
         campActIn = huh.findViewById(R.id.camp_act_in);
         add = requireActivity().findViewById(R.id.add);
+        add2 = requireActivity().findViewById(R.id.add2);
+
         actId = huh.findViewById(R.id.actdetailId);
 
         actDate = huh.findViewById(R.id.actDate);
@@ -189,10 +193,10 @@ public class AddDetailsActivity extends Fragment {
             i1 = i1 + 1;
             String date = i + "-" + i1 + "-" + i2;
 
-            if (i2 >= currDay && i1 >= currMont && i >= currYear)
+            if (i2 > currDay-8 && i2 <= currDay  && i1 >= currMont && i >= currYear)
                 actDate.setText(date);
             else
-                Toast.makeText(requireContext(), "Enter after today's date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Enter today's date or 8 days before", Toast.LENGTH_SHORT).show();
         };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, clgList);
@@ -228,7 +232,7 @@ public class AddDetailsActivity extends Fragment {
                     && drpdownactName.getSelectedItem() != null) {
                 actId.setText(actAssignListId.get(drpdownactAssignName.getSelectedItemPosition()));
 
-                TestAdapter mDbHelper = new TestAdapter(requireContext());
+                DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
                 mDbHelper.createDatabase();
                 mDbHelper.open();
 
@@ -302,7 +306,7 @@ public class AddDetailsActivity extends Fragment {
                 mDbHelper.close();
                 constFyAct.setVisibility(View.VISIBLE);
                 nssHalvesLinear.setVisibility(View.VISIBLE);
-                add.setVisibility(View.VISIBLE);
+//                add.setVisibility(View.VISIBLE);
 
                 actHeaderInput.setVisibility(View.GONE);
                 malHay.setVisibility(View.VISIBLE);
@@ -327,7 +331,7 @@ public class AddDetailsActivity extends Fragment {
                 actHeaderInput.setVisibility(View.GONE);
                 campActIn.setVisibility(View.GONE);
                 malHay.setVisibility(View.VISIBLE);
-                add.setVisibility(View.VISIBLE);
+//                add.setVisibility(View.VISIBLE);
             });
             builder2.show();
         });
@@ -339,7 +343,10 @@ public class AddDetailsActivity extends Fragment {
 
         constFyAct.setVisibility(View.VISIBLE);
         nssHalvesLinear.setVisibility(View.VISIBLE);
-        add.setVisibility(View.VISIBLE);
+        /*if (add2.getVisibility()==View.VISIBLE)
+        add2.setVisibility(View.GONE);
+        else
+            add.setVisibility(View.GONE);*/
 
         campActIn.setVisibility(View.GONE);
         actHeaderInput.setVisibility(View.GONE);
@@ -354,7 +361,7 @@ public class AddDetailsActivity extends Fragment {
 
         ArrayList<String> data3 = new ArrayList<>();
 
-        TestAdapter mDbHelper = new TestAdapter(requireContext());
+        DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
         Cursor c3 = mDbHelper.getActAssigActNameOff(whichAct + "%");
@@ -374,7 +381,7 @@ public class AddDetailsActivity extends Fragment {
         Log.e("AA", "getAssignActListId: " + whichAct);
         ArrayList<String> dataId = new ArrayList<>();
 
-        TestAdapter mDbHelper = new TestAdapter(requireContext());
+        DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
         Cursor c2 = mDbHelper.getActAssigActNameOff(whichAct + "%");

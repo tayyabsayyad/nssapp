@@ -5,139 +5,124 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
-import com.test.nss.TestAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HelpFragment extends Fragment {
 
-    private static final String TAG = "HelpFrag";
     View root;
     Toolbar toolbar;
 
+    TextView namePo;
     TextView emailPo;
     TextView contactPo;
+    TextView clgPo;
 
-    TextView emailLead1;
-    TextView contactLead1;
-
-    TextView emailLead2;
-    TextView contactLead2;
-
-    ConstraintLayout helpMain;
-
-    Button poButton;
-    Button lead1Button;
-    Button lead2Button;
-
-    LinearLayout poDetails;
-    LinearLayout lead1Details;
-    LinearLayout lead2Details;
     TextView toolbarTitle;
+    ImageView nssLogo;
+    CardView contactUs;
+
+    List<AdapterDataHelp> dataLeaderHelpList;
+    RecyclerView recyclerView;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_help, container, false);
 
+        toolbar = requireActivity().findViewById(R.id.toolbar);
+        dataLeaderHelpList = addHelpData();
+
+        //toolbar.setVisibility(View.GONE);
+        nssLogo = requireActivity().findViewById(R.id.nss_logo);
+
+        nssLogo.setVisibility(View.GONE);
         toolbarTitle = requireActivity().findViewById(R.id.titleTool);
         toolbarTitle.setText(getString(R.string.menu_help));
 
-        helpMain = root.findViewById(R.id.help_main);
+        recyclerView = root.findViewById(R.id.leaderRecDet);
+        MyListAdapterHelp campActDataAdapter = new MyListAdapterHelp(dataLeaderHelpList, requireContext());
 
-        poButton = root.findViewById(R.id.poButton);
-        poDetails = root.findViewById(R.id.poDetails);
-
-        lead1Button = root.findViewById(R.id.lead1button);
-        lead1Details = root.findViewById(R.id.lead1Details);
-
-        lead2Button = root.findViewById(R.id.lead2Button);
-        lead2Details = root.findViewById(R.id.lead2Details);
-
-        emailPo = root.findViewById(R.id.emailPO);
-        contactPo = root.findViewById(R.id.contactPO);
-
-        emailLead1 = root.findViewById(R.id.emailLead1);
-        contactLead1 = root.findViewById(R.id.contactLead1);
-
-        emailLead2 = root.findViewById(R.id.emailLead2);
-        contactLead2 = root.findViewById(R.id.contactLead2);
-
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.setAdapter(campActDataAdapter);
         return root;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        toolbar = requireActivity().findViewById(R.id.toolbar);
-        toolbar.setVisibility(View.VISIBLE);
 
-        TestAdapter mDbHelper = new TestAdapter(requireContext());
+        contactUs = root.findViewById(R.id.contactUs);
+        Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.shake);
+        contactUs.startAnimation(animation);
+
+        emailPo = root.findViewById(R.id.poEmail);
+        contactPo = root.findViewById(R.id.poNo);
+        namePo = root.findViewById(R.id.poName);
+        clgPo = root.findViewById(R.id.poClg);
+
+        DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
 
-        //mDbHelper.getHelpData().get(0)
+        contactUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                contactUs.startAnimation(animation);
+            }
+        });
         if (mDbHelper.getHelpData().size() > 0) {
-            emailPo.setText(String.format(getString(R.string.email) + ": %s", mDbHelper.getHelpData().get(0)));
-            contactPo.setText(String.format(getString(R.string.contact_no) + ": +%s", mDbHelper.getHelpData().get(1)));
+            clgPo.setText(mDbHelper.getHelpData().get(0));
+            namePo.setText(mDbHelper.getHelpData().get(1));
+            emailPo.setText(String.format(getString(R.string.email) + " %s", mDbHelper.getHelpData().get(2)));
+            contactPo.setText(String.format(getString(R.string.contact_no) + " +%s", mDbHelper.getHelpData().get(3)));
         } else {
             emailPo.setText(getString(R.string.email));
             contactPo.setText(getString(R.string.contact_no));
         }
-
-        Cursor c2 = mDbHelper.getLeaders();
-        if (c2.moveToNext()) {
-            emailLead1.setText(String.format(getString(R.string.email) + ": %s", c2.getString(c2.getColumnIndex("Email"))));
-            contactLead1.setText(String.format(getString(R.string.contact_no) + ": +%s", c2.getString(c2.getColumnIndex("Contact"))));
-        } else {
-            emailLead1.setText(getString(R.string.email));
-            contactLead1.setText(getString(R.string.contact_no));
-        }
-
-        //c2.moveToNext();
-        if (c2.moveToNext()) {
-            emailLead2.setText(String.format(getString(R.string.email) + ": %s", c2.getString(c2.getColumnIndex("Email"))));
-            contactLead2.setText(String.format(getString(R.string.contact_no) + ": +%s", c2.getString(c2.getColumnIndex("Contact"))));
-        } else {
-            emailLead2.setText(getString(R.string.email));
-            contactLead2.setText(getString(R.string.contact_no));
-        }
-
         mDbHelper.close();
-        helpMain.setOnClickListener(v -> {
-            if (poDetails.getVisibility() == View.VISIBLE)
-                poDetails.setVisibility(View.GONE);
-            if (lead1Details.getVisibility() == View.VISIBLE)
-                lead1Details.setVisibility(View.GONE);
-            if (lead2Details.getVisibility() == View.VISIBLE)
-                lead2Details.setVisibility(View.GONE);
-        });
+    }
 
-        poButton.setOnClickListener(v -> {
-            lead1Details.setVisibility(View.GONE);
-            lead2Details.setVisibility(View.GONE);
-            poDetails.setVisibility(View.VISIBLE);
-        });
+    public List<AdapterDataHelp> addHelpData() {
+        ArrayList<AdapterDataHelp> data3 = new ArrayList<>();
 
-        lead1Button.setOnClickListener(v -> {
-            lead2Details.setVisibility(View.GONE);
-            poDetails.setVisibility(View.GONE);
-            lead1Details.setVisibility(View.VISIBLE);
-        });
+        DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
+        mDbHelper.createDatabase();
+        mDbHelper.open();
+        Cursor c3 = mDbHelper.getLeaders();
 
-        lead2Button.setOnClickListener(v -> {
-            lead1Details.setVisibility(View.GONE);
-            poDetails.setVisibility(View.GONE);
-            lead2Details.setVisibility(View.VISIBLE);
-        });
+        while (c3.moveToNext()) {
+            data3.add(new AdapterDataHelp(
+                    c3.getString(c3.getColumnIndex("Name")),
+                    "Email: "+c3.getString(c3.getColumnIndex("Email")),
+                    "Contact No: "+c3.getString(c3.getColumnIndex("Contact")),
+                    c3.getString(c3.getColumnIndex("CollegeName"))
+            ));
+        }
+        mDbHelper.close();
+        return data3;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        nssLogo.setVisibility(View.VISIBLE);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,8 @@ public class MyListAdapterLeader extends RecyclerView.Adapter<MyListAdapterLeade
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.volunteerVec.setText(list.get(position).getvolVec());
-        holder.volunteerVec.setOnClickListener(new View.OnClickListener() {
+        holder.volunteerName.setText(list.get(position).getVolName());
+        holder.actDataCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onClickInterface.setClick(list.get(position).getvolVec());
@@ -55,14 +57,16 @@ public class MyListAdapterLeader extends RecyclerView.Adapter<MyListAdapterLeade
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView volunteerVec;
+        public TextView volunteerName;
 
-        public CardView actDataCard;
+        public LinearLayout actDataCard;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.volunteerVec = itemView.findViewById(R.id.vol_vec);
+            this.volunteerName = itemView.findViewById(R.id.vol_name);
 
-            actDataCard = itemView.findViewById(R.id.leaderDataCard);
+            actDataCard = itemView.findViewById(R.id.cardLinear);
         }
     }
 }

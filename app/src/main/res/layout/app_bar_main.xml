@@ -32,6 +32,7 @@
                 android:layout_height="45dp">
 
                 <ImageView
+                    android:id="@+id/nss_logo"
                     android:layout_gravity="end"
                     android:scaleType="centerInside"
                     android:adjustViewBounds="true"

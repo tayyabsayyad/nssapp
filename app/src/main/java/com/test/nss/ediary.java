@@ -1,9 +1,12 @@
 package com.test.nss;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -51,40 +54,37 @@ public class ediary extends AppCompatActivity {
     public static int kesar;
     public static String AUTH_TOKEN;
     public static String VEC;
+
     public static int isLeader;
     public static int leaderId;
+    public static String name;
+
     List<AdapterDataWork> dataWorkList;
     AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
     ImageView logout;
-    TextView vecNo;
-    TextView name;
+
     FragmentManager fm;
     CheckConn checkConn;
     IntentFilter z;
 
+    public static boolean isFirst;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ediary);
-        /*checkConn = new CheckConn();
-        IntentFilter z = new IntentFilter();
-        z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(checkConn, z);*/
 
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
 
         AUTH_TOKEN = sharedPreferences.getString("AUTH_TOKEN", "");
         VEC = sharedPreferences.getString("VEC", "");
+
         isLeader = sharedPreferences.getInt("isLeader", 0);
         leaderId = sharedPreferences.getInt("leaderId", 0);
+        name = sharedPreferences.getString("name", "");
 
-        Log.e("isLeader", "onCreate: " + isLeader + leaderId);
         fm = getSupportFragmentManager();
-
-        vecNo = findViewById(R.id.vecNoHeader);
-        name = findViewById(R.id.nameHeader);
 
         blackish = this.getColor(R.color.blackish);
         transparent = this.getColor(R.color.transparent);
@@ -122,42 +122,25 @@ public class ediary extends AppCompatActivity {
 
         TextView navUsername = headerView.findViewById(R.id.nameHeader);
         TextView navVec = headerView.findViewById(R.id.vecNoHeader);
-        navVec.setText(ediary.VEC);
+        navVec.setText(VEC);
 
-        Call<ResponseBody> userDetail = RetrofitClient.getInstance().getApi().getUserDetail(ediary.VEC);
-        userDetail.enqueue(new Callback<ResponseBody>() {
-            @Override
-            @EverythingIsNonNull
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        JSONObject j = new JSONObject(response.body().string());
-                        //JSONArray Jarray  = j.getJSONArray("FirstName");
-                        navUsername.setText(j.get("FirstName").toString());
-                    } catch (JSONException | IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    TestAdapter mDbHelper = new TestAdapter(ediary.this);
-                    mDbHelper.createDatabase();
-                    mDbHelper.open();
-                    Cursor m = mDbHelper.getRegDetails(VEC);
-                    m.moveToFirst();
-                    navUsername.setText(m.getString(m.getColumnIndex("First_name")));
-                    mDbHelper.close();
-                }
-            }
-
-            @Override
-            @EverythingIsNonNull
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
+        DatabaseAdapter mdb = new DatabaseAdapter(ediary.this);
+        mdb.createDatabase();
+        mdb.open();
+        Cursor c = mdb.getRegDetails(VEC);
+        c.moveToFirst();
+        navUsername.setText(String.format("%s %s", c.getString(c.getColumnIndex("First_name")), c.getString(c.getColumnIndex("Last_name"))));
+        //Log.e("Here", "onCreate: "+c.getString(c.getColumnIndex("State")));
+        isFirst = c.getString(c.getColumnIndex("State")).equals("First Year");
+        mdb.close();
 
         logout.setOnClickListener(view -> {
             AlertDialog.Builder builder2 = new AlertDialog.Builder(ediary.this, R.style.delDialog);
             builder2.setMessage("Do you want to logout?");
+
+            builder2.setNegativeButton("No", (dialog, which) -> {
+                dialog.dismiss();
+            });
 
             builder2.setPositiveButton("Yes", (dialog, which) -> {
                 dialog.dismiss();
@@ -178,9 +161,6 @@ public class ediary extends AppCompatActivity {
                     @EverythingIsNonNull
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
-                            SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
-                            SharedPreferences.Editor eddy = shareit.edit();
-                            eddy.apply();
                         }
                     }
 
@@ -197,11 +177,10 @@ public class ediary extends AppCompatActivity {
                 AUTH_TOKEN = "";
             });
 
-            builder2.setNegativeButton("No", (dialog, which) -> {
-                dialog.dismiss();
-            });
             builder2.show();
         });
+
+        Log.e("Here", "onCreate: "+isFirst);
     }
 
     @Override
@@ -316,8 +295,8 @@ public class ediary extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         checkConn = new CheckConn();
         z = new IntentFilter();
         z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
@@ -331,10 +310,17 @@ public class ediary extends AppCompatActivity {
         unregisterReceiver(checkConn);
     }
 
-    @Override
+    /*@Override
     protected void onDestroy() {
         super.onDestroy();
         add();
         //unregisterReceiver(checkConn);
+    }*/
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

@@ -88,7 +88,7 @@
                     android:layout_marginTop="@dimen/space_10dp"
                     android:fontFamily="@font/google_sans"
                     android:gravity="center"
-                    android:text="Assigned Hours:"
+                    android:text="Hours Worked:"
                     android:textColor="@color/blackish"
                     android:textSize="@dimen/text_18sp" />
 

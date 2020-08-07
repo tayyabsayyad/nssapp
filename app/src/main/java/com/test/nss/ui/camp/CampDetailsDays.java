@@ -52,7 +52,7 @@ public class CampDetailsDays extends Fragment {
             campInputDetailsFrag.setArguments(args);
             Toast.makeText(getContext(), day, Toast.LENGTH_SHORT).show();
             FragmentManager fragmentManager = getParentFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.camp_frag, campInputDetailsFrag, "CampInput").addToBackStack("CampInput").commit();
+            fragmentManager.beginTransaction().replace(R.id.camp_frag, campInputDetailsFrag, "CampInput").addToBackStack("CampFrag").commit();
         });
     }
 }

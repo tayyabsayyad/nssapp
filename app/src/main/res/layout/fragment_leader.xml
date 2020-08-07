@@ -6,34 +6,89 @@
     android:layout_height="match_parent"
     tools:context=".ui.leader.Leader">
 
-    <include
-        android:id="@+id/nss_halves"
-        layout="@layout/nss_halves_fy_common"
+    <LinearLayout
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/line_details_bot"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/space_10dp"
+        android:paddingStart="@dimen/space_10dp"
+        android:paddingEnd="@dimen/space_10dp"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="60dp"
-        android:background="@color/blackish"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="70dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/volAct"
+            android:focusable="true"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            app:cardCornerRadius="4dp"
+            android:elevation="4dp"
+            app:cardBackgroundColor="@color/white"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="50dp">
+
+            <TextView
+                android:textColor="@color/blackish"
+                android:text="Pending list"
+                android:fontFamily="@font/google_sans_bold"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.cardview.widget.CardView>
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="match_parent"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/volActAll"
+            android:focusable="true"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="4dp"
+            android:elevation="4dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="50dp" >
+
+            <TextView
+                android:textColor="@color/blackish"
+                android:text="Volunteer full list"
+                android:fontFamily="@font/google_sans_bold"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
         android:id="@+id/vecLeaderList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="65dp"
+        android:layout_marginBottom="@dimen/padding_5dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="2dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
+        android:id="@+id/vecLeaderListAll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="@dimen/padding_5dp"
         android:layout_marginEnd="2dp" />
 
     <TextView
         android:id="@+id/isEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="100dp"
         android:fontFamily="@font/google_sans_bold"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
@@ -44,7 +99,8 @@
 
     <FrameLayout
         android:id="@+id/detailsModify"
+        android:layout_marginBottom="@dimen/space_10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="55dp" />
+        android:layout_marginTop="@dimen/space_10dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

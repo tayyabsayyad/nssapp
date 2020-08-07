@@ -1,12 +1,17 @@
 package com.test.nss.ui.leader;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,10 +28,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
 import com.test.nss.SwipeHelperRight;
-import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
 
@@ -50,12 +56,14 @@ public class ModifyVolunteer extends Fragment {
 
     RecyclerView recViewLeader, recViewVolUniv, recViewVolArea, recViewVolClg;
     List<AdapterDataVolunteer> dataVolListUniv, dataVolListArea, dataVolListClg;
-    Button univ, area, clg, back;
+    Button univ, area, clg;
+    FloatingActionButton back;
+
     LinearLayout detailsVol;
-    CardView cardModify;
+    CardView cardModify, leader;
 
     Context context;
-    View root, line;
+    View root;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,12 +71,13 @@ public class ModifyVolunteer extends Fragment {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_modify_details, container, false);
         recViewLeader = requireActivity().findViewById(R.id.vecLeaderList);
-        dataVolListUniv = addVolActData("First Year University");
-        dataVolListArea = ListUtils.union(addVolActData("First Year Area Based One"), addVolActData("First Year Area Based Two"));
-        dataVolListClg = addVolActData("First Year College");
-        line = requireActivity().findViewById(R.id.line_details_bot);
 
+        dataVolListUniv = ListUtils.union(addVolActData("First Year University"), addVolActData("Second Year University"));
+        dataVolListArea = ListUtils.union(ListUtils.union(addVolActData("First Year Area Based One"), addVolActData("First Year Area Based Two")),
+                          ListUtils.union(addVolActData("Second Year Area Based One"), addVolActData("Second Year Area Based Two")));
+        dataVolListClg = ListUtils.union(addVolActData("First Year College"), addVolActData("Second Year College"));
         context = requireContext();
+
         return root;
     }
 
@@ -76,14 +85,14 @@ public class ModifyVolunteer extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        back = root.findViewById(R.id.back);
         detailsVol = root.findViewById(R.id.detailsVol);
         cardModify = root.findViewById(R.id.cardModify);
+        leader = requireActivity().findViewById(R.id.volAct);
 
         univ = root.findViewById(R.id.univ);
         area = root.findViewById(R.id.area);
         clg = root.findViewById(R.id.clg);
-
-        back = root.findViewById(R.id.back);
 
         recViewVolUniv = root.findViewById(R.id.recVecDetailUniv);
         MyListAdapterVolunteer adapterVolUniv = new MyListAdapterVolunteer(dataVolListUniv, context);
@@ -96,14 +105,15 @@ public class ModifyVolunteer extends Fragment {
         recViewVolClg.setLayoutManager(new LinearLayoutManager(context));
         recViewVolClg.setAdapter(adapterVolClg);
 
+        revealFab();
         univ.setOnClickListener(view1 -> {
-            detailsVol.setVisibility(View.VISIBLE);
-            univ.setTextColor(primaryColDark);
-            area.setTextColor(Color.BLACK);
-            clg.setTextColor(Color.BLACK);
-            recViewVolUniv.setVisibility(View.VISIBLE);
-            recViewVolArea.setVisibility(View.GONE);
-            recViewVolClg.setVisibility(View.GONE);
+                detailsVol.setVisibility(View.VISIBLE);
+                univ.setTextColor(primaryColDark);
+                area.setTextColor(Color.BLACK);
+                clg.setTextColor(Color.BLACK);
+                recViewVolUniv.setVisibility(View.VISIBLE);
+                recViewVolArea.setVisibility(View.GONE);
+                recViewVolClg.setVisibility(View.GONE);
         });
 
         area.setOnClickListener(view1 -> {
@@ -127,35 +137,37 @@ public class ModifyVolunteer extends Fragment {
         });
 
         back.setOnClickListener(view12 -> {
+            hideFab();
             onDetach();
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction().remove(Objects.requireNonNull(fragmentManager.findFragmentByTag("ModifyVolunteer")));
-            cardModify.setVisibility(View.GONE);
+            new Handler().postDelayed(() -> {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().remove(Objects.requireNonNull(fragmentManager.findFragmentByTag("ModifyVolunteer")));
+                cardModify.setVisibility(View.GONE);
+            }, 250);
         });
+
+        adapterVolUniv.notifyDataSetChanged();
+        adapterVolArea.notifyDataSetChanged();
+        adapterVolClg.notifyDataSetChanged();
 
         // UNIV
         SwipeHelperRight swipeHelperRightHoursUniv = new SwipeHelperRight(context, recViewVolUniv) {
 
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                TestAdapter mdbF = new TestAdapter(context);
+                DatabaseAdapter mdbF = new DatabaseAdapter(context);
                 mdbF.createDatabase();
                 mdbF.open();
-                Cursor cF = mdbF.getVolState(Integer.parseInt(adapterVolUniv.list.get(viewHolder.getAdapterPosition()).getId()));
+                    Cursor cF = mdbF.getVolState(Integer.parseInt(adapterVolUniv.list.get(viewHolder.getAdapterPosition()).getId()));
                 cF.moveToFirst();
-                if (
-                        !cF.getString(cF.getColumnIndex("State")).equals("Approved") ||
-                                cF.getString(cF.getColumnIndex("State")).equals("LeaderDelete") ||
-                                cF.getString(cF.getColumnIndex("State")).equals("LeaderModified") ||
-                                cF.getString(cF.getColumnIndex("State")).equals("Submitted")
-                ) {
+                if (cF.getString(cF.getColumnIndex("State")).equals("Submitted") || cF.getString(cF.getColumnIndex("State")).equals("Modified")) {
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                                     context,
                                     "",
                                     R.drawable.ic_disapprove_24,
                                     transparent,
                                     pos -> {
-                                        String thisVec = getArguments().getString("thisVec");
+                                        Log.e("Clicked", "instantiateUnderlayButton: ");
                                         int p;
                                         if (viewHolder.getAdapterPosition() == -1)
                                             p = viewHolder.getAdapterPosition() + 1;
@@ -166,61 +178,85 @@ public class ModifyVolunteer extends Fragment {
                                         else
                                             p = viewHolder.getAdapterPosition();
 
-                                        Snackbar.make(view, "Deleted: " + thisVec, Snackbar.LENGTH_SHORT).show();
-                                        adapterVolUniv.list.set(p, new AdapterDataVolunteer(
-                                                        adapterVolUniv.list.get(p).getDate(),
-                                                        adapterVolUniv.list.get(p).getAct(),
-                                                        adapterVolUniv.list.get(p).getHours(),
-                                                        adapterVolUniv.list.get(p).getId(),
-                                                        "LeaderDelete"
-                                                )
-                                        );
-                                        adapterVolUniv.notifyDataSetChanged();
-                                        adapterVolUniv.notifyItemChanged(p);
+                                        AlertDialog.Builder builder3 = new AlertDialog.Builder(context, R.style.delDialog);
 
-                                        TestAdapter mdb = new TestAdapter(context);
-                                        mdb.createDatabase();
-                                        mdb.open();
-                                        mdb.setStateVolAct("LeaderDelete", Integer.parseInt(adapterVolUniv.list.get(p).getId()));
-                                        Cursor c = mdb.getActAssigActNameAdmin(adapterVolUniv.list.get(p).getAct());
-                                        c.moveToFirst();
-                                        Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
-                                                "Token " + ediary.AUTH_TOKEN,
-                                                Integer.parseInt(adapterVolUniv.list.get(p).getHours()),
-                                                thisVec,
-                                                c.getInt(c.getColumnIndex("activityType")),
-                                                c.getInt(c.getColumnIndex("id")),
-                                                5,
-                                                Integer.parseInt(adapterVolUniv.list.get(p).getId())
-                                        );
-                                        mdb.close();
-                                        putHour.enqueue(new Callback<ResponseBody>() {
+                                        builder3.setTitle("Do you want to delete?");
+                                        builder3.setCancelable(false);
+
+                                        builder3.setMessage(dataVolListUniv.get(p).getAct());
+                                        builder3.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                             @Override
-                                            @EverythingIsNonNull
-                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                if (response.errorBody() != null) {
-                                                    Log.e("error", "onResponse: " + response.errorBody().toString());
-                                                } else if (response.isSuccessful()) {
-                                                    Log.e("Done", "onResponse: " + adapterVolUniv.list.get(p).getId());
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                                adapterVolUniv.notifyItemChanged(p);
                                             }
                                         });
 
+                                        builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                String thisVec = getArguments().getString("thisVec");
+
+                                                Snackbar.make(view, "Deleted: " + thisVec, Snackbar.LENGTH_SHORT).show();
+                                                adapterVolUniv.list.set(p, new AdapterDataVolunteer(
+                                                                adapterVolUniv.list.get(p).getDate(),
+                                                                adapterVolUniv.list.get(p).getAct(),
+                                                                adapterVolUniv.list.get(p).getHours(),
+                                                                adapterVolUniv.list.get(p).getId(),
+                                                                "LeaderDelete"
+                                                        )
+                                                );
+                                                adapterVolUniv.notifyDataSetChanged();
+                                                adapterVolUniv.notifyItemChanged(p);
+
+                                                DatabaseAdapter mdb = new DatabaseAdapter(context);
+                                                mdb.createDatabase();
+                                                mdb.open();
+                                                mdb.setStateVolAct("LeaderDelete", Integer.parseInt(adapterVolUniv.list.get(p).getId()));
+                                                Cursor c = mdb.getActAssigActNameAdmin(adapterVolUniv.list.get(p).getAct());
+                                                c.moveToFirst();
+                                                Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
+                                                        "Token " + ediary.AUTH_TOKEN,
+                                                        Integer.parseInt(adapterVolUniv.list.get(p).getHours()),
+                                                        thisVec,
+                                                        c.getInt(c.getColumnIndex("activityType")),
+                                                        c.getInt(c.getColumnIndex("id")),
+                                                        5,
+                                                        Integer.parseInt(adapterVolUniv.list.get(p).getId())
+                                                );
+                                                mdb.close();
+                                                putHour.enqueue(new Callback<ResponseBody>() {
+                                                    @Override
+                                                    @EverythingIsNonNull
+                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                        if (response.errorBody() != null) {
+                                                            Log.e("error", "onResponse: " + response.errorBody().toString());
+                                                        } else if (response.isSuccessful()) {
+                                                            Log.e("Done", "onResponse: " + adapterVolUniv.list.get(p).getId());
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                    }
+                                                });
+
+                                            }
+                                        });
+                                        builder3.show();
                                     }
                             )
                     );
 
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                                     context,
-                                    "",
+                                "",
                                     R.drawable.ic_approve_24,
                                     transparent,
                                     pos -> {
+                                        Log.e("Clicked", "instantiateUnderlayButton: ");
+
                                         int p;
                                         if (viewHolder.getAdapterPosition() == -1)
                                             p = viewHolder.getAdapterPosition() + 1;
@@ -231,54 +267,74 @@ public class ModifyVolunteer extends Fragment {
                                         else
                                             p = viewHolder.getAdapterPosition();
 
-                                        String thisVec = getArguments().getString("thisVec");
-                                        Snackbar.make(view, "Approved: " + thisVec, Snackbar.LENGTH_SHORT).show();
-                                        adapterVolUniv.list.set(p, new AdapterDataVolunteer(
-                                                        adapterVolUniv.list.get(p).getDate(),
-                                                        adapterVolUniv.list.get(p).getAct(),
-                                                        adapterVolUniv.list.get(p).getHours(),
-                                                        adapterVolUniv.list.get(p).getId(),
-                                                        "Approved"
-                                                )
-                                        );
-                                        adapterVolUniv.notifyDataSetChanged();
-                                        adapterVolUniv.notifyItemChanged(p);
+                                        AlertDialog.Builder builder3 = new AlertDialog.Builder(context, R.style.delDialog);
 
-                                        TestAdapter mdb = new TestAdapter(context);
-                                        mdb.createDatabase();
-                                        mdb.open();
-                                        Cursor c = mdb.getActAssigActNameAdmin(adapterVolUniv.list.get(p).getAct());
-                                        mdb.setStateVolAct("Approved", Integer.parseInt(adapterVolUniv.list.get(p).getId()));
-                                        c.moveToFirst();
-                                        Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putApprove(
-                                                "Token " + ediary.AUTH_TOKEN,
-                                                Integer.parseInt(adapterVolUniv.list.get(p).getHours()),
-                                                thisVec,
-                                                c.getInt(c.getColumnIndex("activityType")),
-                                                c.getInt(c.getColumnIndex("id")),
-                                                2,
-                                                leaderId,
-                                                Integer.parseInt(adapterVolUniv.list.get(p).getId())
-                                        );
-                                        mdb.close();
+                                        builder3.setTitle("Do you want to approve?");
+                                        builder3.setCancelable(false);
 
-                                        putHour.enqueue(new Callback<ResponseBody>() {
+                                        builder3.setMessage(dataVolListUniv.get(p).getAct());
+                                        builder3.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                             @Override
-                                            @EverythingIsNonNull
-                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                if (response.errorBody() != null) {
-                                                    Log.e("error", "onResponse: " + response.errorBody().toString());
-                                                } else if (response.isSuccessful()) {
-                                                    Log.e("Done", "onResponse: " + adapterVolUniv.list.get(p).getId());
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                                adapterVolUniv.notifyItemChanged(p);
                                             }
                                         });
 
+                                        builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                String thisVec = getArguments().getString("thisVec");
+                                                Snackbar.make(view, "Approved: " + thisVec, Snackbar.LENGTH_SHORT).show();
+                                                adapterVolUniv.list.set(p, new AdapterDataVolunteer(
+                                                                adapterVolUniv.list.get(p).getDate(),
+                                                                adapterVolUniv.list.get(p).getAct(),
+                                                                adapterVolUniv.list.get(p).getHours(),
+                                                                adapterVolUniv.list.get(p).getId(),
+                                                                "Approved"
+                                                        )
+                                                );
+                                                adapterVolUniv.notifyDataSetChanged();
+                                                adapterVolUniv.notifyItemChanged(p);
+
+                                                DatabaseAdapter mdb = new DatabaseAdapter(context);
+                                                mdb.createDatabase();
+                                                mdb.open();
+                                                Cursor c = mdb.getActAssigActNameAdmin(adapterVolUniv.list.get(p).getAct());
+                                                mdb.setStateVolAct("Approved", Integer.parseInt(adapterVolUniv.list.get(p).getId()));
+                                                c.moveToFirst();
+                                                Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putApprove(
+                                                        "Token " + ediary.AUTH_TOKEN,
+                                                        Integer.parseInt(adapterVolUniv.list.get(p).getHours()),
+                                                        thisVec,
+                                                        c.getInt(c.getColumnIndex("activityType")),
+                                                        c.getInt(c.getColumnIndex("id")),
+                                                        2,
+                                                        leaderId,
+                                                        Integer.parseInt(adapterVolUniv.list.get(p).getId())
+                                                );
+                                                mdb.close();
+
+                                                putHour.enqueue(new Callback<ResponseBody>() {
+                                                    @Override
+                                                    @EverythingIsNonNull
+                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                        if (response.errorBody() != null) {
+                                                            Log.e("error", "onResponse: " + response.errorBody().toString());
+                                                        } else if (response.isSuccessful()) {
+                                                            Log.e("Done", "onResponse: " + adapterVolUniv.list.get(p).getId());
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                    }
+                                                });
+                                            }
+                                        });
+                                        builder3.show();
                                     }
                             )
                     );
@@ -289,88 +345,99 @@ public class ModifyVolunteer extends Fragment {
                             R.drawable.ic_vol_edit_24,
                             transparent,
                             pos -> {
-                                int p;
-                                if (viewHolder.getAdapterPosition() == -1)
-                                    p = viewHolder.getAdapterPosition() + 1;
+                               // builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                 //   @Override
+                                   // public void onClick(DialogInterface dialog3, int which3) {
+                                     //   dialog3.dismiss();
+                                        int p;
+                                        if (viewHolder.getAdapterPosition() == -1)
+                                            p = viewHolder.getAdapterPosition() + 1;
 
-                                else if (viewHolder.getAdapterPosition() == dataVolListUniv.size())
-                                    p = viewHolder.getAdapterPosition() - 1;
+                                        else if (viewHolder.getAdapterPosition() == dataVolListUniv.size())
+                                            p = viewHolder.getAdapterPosition() - 1;
 
-                                else
-                                    p = viewHolder.getAdapterPosition();
+                                        else
+                                            p = viewHolder.getAdapterPosition();
 
-                                Log.e("This", "instantiateUnderlayButton: " + p);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.inputDialog);
-                                View viewInflated = LayoutInflater.from(context).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
+                                        Log.e("This", "instantiateUnderlayButton: " + p);
+                                        View viewInflated = LayoutInflater.from(context).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
-                                EditText input = viewInflated.findViewById(R.id.input);
-                                builder.setView(viewInflated);
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.inputDialog);
+                                        builder.setCancelable(false);
 
-                                builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                                    dialog.cancel();
-                                    adapterVolUniv.notifyItemChanged(p);
-                                });
-                                String thisVec = getArguments().getString("thisVec");
-                                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                                            dialog.dismiss();
-                                            if (!input.getText().toString().trim().equals("")) {
-                                                int newHours = Integer.parseInt(input.getText().toString());
+                                        EditText input = viewInflated.findViewById(R.id.input);
+                                        builder.setView(viewInflated);
 
-                                                //if (!dataVolListUniv.isEmpty())
-                                                //  dataVolListUniv.clear();
-                                                adapterVolUniv.notifyDataSetChanged();
+                                        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                                            dialog.cancel();
+                                            adapterVolUniv.notifyItemChanged(p);
+                                        });
+                                        String thisVec = getArguments().getString("thisVec");
+                                        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                                                    dialog.dismiss();
+                                                    if (!input.getText().toString().trim().equals("")) {
+                                                        int newHours = Integer.parseInt(input.getText().toString());
 
-                                                if (newHours >= 1 && newHours <= 10) {
-                                                    adapterVolUniv.list.add(p + 1, new AdapterDataVolunteer(
-                                                            adapterVolUniv.list.get(p).getDate(),
-                                                            adapterVolUniv.list.get(p).getAct(),
-                                                            String.valueOf(newHours),
-                                                            adapterVolUniv.list.get(p).getId(),
-                                                            "LeaderModified"
-                                                    ));
+                                                        //if (!dataVolListUniv.isEmpty())
+                                                        //  dataVolListUniv.clear();
+                                                        adapterVolUniv.notifyDataSetChanged();
 
-                                                    adapterVolUniv.notifyDataSetChanged();
-                                                    dataVolListUniv.remove(p);
-                                                    adapterVolUniv.notifyItemInserted(p);
+                                                        if (newHours >= 1 && newHours <= 10) {
+                                                            adapterVolUniv.list.add(p + 1, new AdapterDataVolunteer(
+                                                                    adapterVolUniv.list.get(p).getDate(),
+                                                                    adapterVolUniv.list.get(p).getAct(),
+                                                                    String.valueOf(newHours),
+                                                                    adapterVolUniv.list.get(p).getId(),
+                                                                    "LeaderModified"
+                                                            ));
 
-                                                    TestAdapter mdb = new TestAdapter(context);
-                                                    mdb.createDatabase();
-                                                    mdb.open();
-                                                    Cursor c = mdb.getActAssigActNameAdmin(adapterVolUniv.list.get(p).getAct());
-                                                    mdb.setStateVolAct("LeaderModified", Integer.parseInt(adapterVolUniv.list.get(p).getId()));
-                                                    c.moveToFirst();
-                                                    Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
-                                                            "Token " + ediary.AUTH_TOKEN,
-                                                            Integer.parseInt(adapterVolUniv.list.get(p).getHours()),
-                                                            thisVec,
-                                                            c.getInt(c.getColumnIndex("activityType")),
-                                                            c.getInt(c.getColumnIndex("id")),
-                                                            6,
-                                                            Integer.parseInt(adapterVolUniv.list.get(p).getId())
-                                                    );
-                                                    mdb.close();
-                                                    putHour.enqueue(new Callback<ResponseBody>() {
-                                                        @Override
-                                                        @EverythingIsNonNull
-                                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                            if (response.isSuccessful()) {
-                                                                Snackbar.make(view, "Edited for: " + thisVec, Snackbar.LENGTH_SHORT).show();
-                                                            }
-                                                        }
+                                                            adapterVolUniv.notifyDataSetChanged();
+                                                            dataVolListUniv.remove(p);
+                                                            adapterVolUniv.notifyItemInserted(p);
 
-                                                        @Override
-                                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                            DatabaseAdapter mdb = new DatabaseAdapter(context);
+                                                            mdb.createDatabase();
+                                                            mdb.open();
+                                                            Cursor c = mdb.getActAssigActNameAdmin(adapterVolUniv.list.get(p).getAct());
+                                                            mdb.setStateVolAct("LeaderModified", Integer.parseInt(adapterVolUniv.list.get(p).getId()));
+                                                            c.moveToFirst();
+                                                            mdb.setVolActHours(
+                                                                    Integer.parseInt(adapterVolUniv.list.get(p).getHours()),
+                                                                    c.getInt(c.getColumnIndex("id"))
 
-                                                        }
-                                                    });
-                                                } else
-                                                    Toast.makeText(context, "Please enter in given range", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                );
-                                if (viewInflated.getParent() != null)
-                                    ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
-                                builder.show();
+                                                            );
+                                                            Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
+                                                                    "Token " + ediary.AUTH_TOKEN,
+                                                                    Integer.parseInt(adapterVolUniv.list.get(p).getHours()),
+                                                                    thisVec,
+                                                                    c.getInt(c.getColumnIndex("activityType")),
+                                                                    c.getInt(c.getColumnIndex("id")),
+                                                                    6,
+                                                                    Integer.parseInt(adapterVolUniv.list.get(p).getId())
+                                                            );
+                                                            mdb.close();
+                                                            putHour.enqueue(new Callback<ResponseBody>() {
+                                                                @Override
+                                                                @EverythingIsNonNull
+                                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                                    if (response.isSuccessful()) {
+                                                                        Snackbar.make(view, "Edited for: " + thisVec, Snackbar.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                                }
+                                                            });
+                                                        } else
+                                                            Toast.makeText(context, "Please enter in given range", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                        );
+                                        if (viewInflated.getParent() != null)
+                                            ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
+                                        builder.show();
                             }
                     ));
                     mdbF.close();
@@ -386,17 +453,12 @@ public class ModifyVolunteer extends Fragment {
 
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                TestAdapter mdbF = new TestAdapter(context);
+                DatabaseAdapter mdbF = new DatabaseAdapter(context);
                 mdbF.createDatabase();
                 mdbF.open();
                 Cursor cF = mdbF.getVolState(Integer.parseInt(adapterVolArea.list.get(viewHolder.getAdapterPosition()).getId()));
                 cF.moveToFirst();
-                if (
-                        !cF.getString(cF.getColumnIndex("State")).equals("Approved") ||
-                                cF.getString(cF.getColumnIndex("State")).equals("LeaderDelete") ||
-                                cF.getString(cF.getColumnIndex("State")).equals("LeaderModified") ||
-                                cF.getString(cF.getColumnIndex("State")).equals("Submitted")
-                ) {
+                if (cF.getString(cF.getColumnIndex("State")).equals("Submitted") || cF.getString(cF.getColumnIndex("State")).equals("Modified")) {
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                                     context,
                                     "",
@@ -414,52 +476,72 @@ public class ModifyVolunteer extends Fragment {
                                         else
                                             p = viewHolder.getAdapterPosition();
 
-                                        Snackbar.make(view, "Deleted: " + thisVec, Snackbar.LENGTH_SHORT).show();
-                                        adapterVolArea.list.set(p, new AdapterDataVolunteer(
-                                                adapterVolArea.list.get(p).getDate(),
-                                                adapterVolArea.list.get(p).getAct(),
-                                                adapterVolArea.list.get(p).getHours(),
-                                                adapterVolArea.list.get(p).getId(),
-                                                "LeaderDelete"
-                                        ));
-                                        adapterVolArea.notifyDataSetChanged();
-                                        adapterVolArea.notifyItemChanged(p);
+                                        AlertDialog.Builder builder3 = new AlertDialog.Builder(context, R.style.delDialog);
 
-                                        TestAdapter mdb = new TestAdapter(context);
-                                        mdb.createDatabase();
-                                        mdb.open();
-                                        Cursor c = mdb.getActAssigActNameAdmin(adapterVolArea.list.get(p).getAct());
-                                        mdb.setStateVolAct("LeaderDelete", Integer.parseInt(adapterVolArea.list.get(p).getId()));
-                                        c.moveToFirst();
-                                        mdb.close();
+                                        builder3.setTitle("Do you want to delete?");
+                                        builder3.setCancelable(false);
 
-                                        Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
-                                                "Token " + ediary.AUTH_TOKEN,
-                                                Integer.parseInt(adapterVolArea.list.get(p).getHours()),
-                                                thisVec,
-                                                c.getInt(c.getColumnIndex("activityType")),
-                                                c.getInt(c.getColumnIndex("id")),
-                                                5,
-                                                Integer.parseInt(adapterVolArea.list.get(p).getId())
-                                        );
-
-                                        putHour.enqueue(new Callback<ResponseBody>() {
+                                        builder3.setMessage(dataVolListArea.get(p).getAct());
+                                        builder3.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                             @Override
-                                            @EverythingIsNonNull
-                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                if (response.errorBody() != null) {
-                                                    Log.e("error", "onResponse: " + response.errorBody().toString());
-                                                } else if (response.isSuccessful()) {
-                                                    Log.e("Done", "onResponse: " + adapterVolArea.list.get(p).getId());
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                                adapterVolArea.notifyItemChanged(p);
                                             }
                                         });
 
+                                        builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                Snackbar.make(view, "Deleted: " + thisVec, Snackbar.LENGTH_SHORT).show();
+                                                adapterVolArea.list.set(p, new AdapterDataVolunteer(
+                                                        adapterVolArea.list.get(p).getDate(),
+                                                        adapterVolArea.list.get(p).getAct(),
+                                                        adapterVolArea.list.get(p).getHours(),
+                                                        adapterVolArea.list.get(p).getId(),
+                                                        "LeaderDelete"
+                                                ));
+                                                adapterVolArea.notifyDataSetChanged();
+                                                adapterVolArea.notifyItemChanged(p);
+
+                                                DatabaseAdapter mdb = new DatabaseAdapter(context);
+                                                mdb.createDatabase();
+                                                mdb.open();
+                                                Cursor c = mdb.getActAssigActNameAdmin(adapterVolArea.list.get(p).getAct());
+                                                mdb.setStateVolAct("LeaderDelete", Integer.parseInt(adapterVolArea.list.get(p).getId()));
+                                                c.moveToFirst();
+                                                mdb.close();
+
+                                                Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
+                                                        "Token " + ediary.AUTH_TOKEN,
+                                                        Integer.parseInt(adapterVolArea.list.get(p).getHours()),
+                                                        thisVec,
+                                                        c.getInt(c.getColumnIndex("activityType")),
+                                                        c.getInt(c.getColumnIndex("id")),
+                                                        5,
+                                                        Integer.parseInt(adapterVolArea.list.get(p).getId())
+                                                );
+
+                                                putHour.enqueue(new Callback<ResponseBody>() {
+                                                    @Override
+                                                    @EverythingIsNonNull
+                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                        if (response.errorBody() != null) {
+                                                            Log.e("error", "onResponse: " + response.errorBody().toString());
+                                                        } else if (response.isSuccessful()) {
+                                                            Log.e("Done", "onResponse: " + adapterVolArea.list.get(p).getId());
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                    }
+                                                });
+                                            }
+                                        });
+                                        builder3.show();
                                     }
                             )
                     );
@@ -481,55 +563,76 @@ public class ModifyVolunteer extends Fragment {
                                         else
                                             p = viewHolder.getAdapterPosition();
 
-                                        String thisVec = getArguments().getString("thisVec");
-                                        Snackbar.make(view, "Approved: " + thisVec, Snackbar.LENGTH_SHORT).show();
-                                        adapterVolArea.list.set(p, new AdapterDataVolunteer(
-                                                adapterVolArea.list.get(p).getDate(),
-                                                adapterVolArea.list.get(p).getAct(),
-                                                adapterVolArea.list.get(p).getHours(),
-                                                adapterVolArea.list.get(p).getId(),
-                                                "Approved"
-                                        ));
+                                        AlertDialog.Builder builder3 = new AlertDialog.Builder(context, R.style.delDialog);
 
-                                        TestAdapter mdb = new TestAdapter(context);
-                                        mdb.createDatabase();
-                                        mdb.open();
-                                        Cursor c = mdb.getActAssigActNameAdmin(adapterVolArea.list.get(p).getAct());
-                                        c.moveToFirst();
-                                        mdb.setStateVolAct("Approved", Integer.parseInt(adapterVolArea.list.get(p).getId()));
-                                        mdb.close();
+                                        builder3.setTitle("Do you want to approve?");
+                                        builder3.setCancelable(false);
 
-                                        adapterVolArea.notifyDataSetChanged();
-                                        adapterVolArea.notifyItemChanged(p);
-
-                                        Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putApprove(
-                                                "Token " + ediary.AUTH_TOKEN,
-                                                Integer.parseInt(adapterVolArea.list.get(p).getHours()),
-                                                thisVec,
-                                                c.getInt(c.getColumnIndex("activityType")),
-                                                c.getInt(c.getColumnIndex("id")),
-                                                2,
-                                                leaderId,
-                                                Integer.parseInt(adapterVolArea.list.get(p).getId())
-                                        );
-
-                                        putHour.enqueue(new Callback<ResponseBody>() {
+                                        builder3.setMessage(dataVolListArea.get(p).getAct());
+                                        builder3.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                             @Override
-                                            @EverythingIsNonNull
-                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                if (response.errorBody() != null) {
-                                                    Log.e("error", "onResponse: " + response.errorBody().toString());
-                                                } else if (response.isSuccessful()) {
-                                                    Log.e("Done", "onResponse: " + adapterVolArea.list.get(p).getId());
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                                adapterVolArea.notifyItemChanged(p);
                                             }
                                         });
 
+                                        builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialogInterface.dismiss();
+                                                String thisVec = getArguments().getString("thisVec");
+                                                Snackbar.make(view, "Approved: " + thisVec, Snackbar.LENGTH_SHORT).show();
+                                                adapterVolArea.list.set(p, new AdapterDataVolunteer(
+                                                        adapterVolArea.list.get(p).getDate(),
+                                                        adapterVolArea.list.get(p).getAct(),
+                                                        adapterVolArea.list.get(p).getHours(),
+                                                        adapterVolArea.list.get(p).getId(),
+                                                        "Approved"
+                                                ));
+
+                                                DatabaseAdapter mdb = new DatabaseAdapter(context);
+                                                mdb.createDatabase();
+                                                mdb.open();
+                                                Cursor c = mdb.getActAssigActNameAdmin(adapterVolArea.list.get(p).getAct());
+                                                c.moveToFirst();
+                                                mdb.setStateVolAct("Approved", Integer.parseInt(adapterVolArea.list.get(p).getId()));
+                                                mdb.close();
+
+                                                adapterVolArea.notifyDataSetChanged();
+                                                adapterVolArea.notifyItemChanged(p);
+
+                                                Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putApprove(
+                                                        "Token " + ediary.AUTH_TOKEN,
+                                                        Integer.parseInt(adapterVolArea.list.get(p).getHours()),
+                                                        thisVec,
+                                                        c.getInt(c.getColumnIndex("activityType")),
+                                                        c.getInt(c.getColumnIndex("id")),
+                                                        2,
+                                                        leaderId,
+                                                        Integer.parseInt(adapterVolArea.list.get(p).getId())
+                                                );
+
+                                                putHour.enqueue(new Callback<ResponseBody>() {
+                                                    @Override
+                                                    @EverythingIsNonNull
+                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                        if (response.errorBody() != null) {
+                                                            Log.e("error", "onResponse: " + response.errorBody().toString());
+                                                        } else if (response.isSuccessful()) {
+                                                            Log.e("Done", "onResponse: " + adapterVolArea.list.get(p).getId());
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                    }
+                                                });
+
+                                            }
+                                        });
+                                        builder3.show();
                                     }
                             )
                     );
@@ -549,7 +652,7 @@ public class ModifyVolunteer extends Fragment {
 
                                 else
                                     p = viewHolder.getAdapterPosition();
-
+                                
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.inputDialog);
                                 View viewInflated = LayoutInflater.from(context).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
@@ -565,6 +668,7 @@ public class ModifyVolunteer extends Fragment {
                                             dialog.dismiss();
                                             if (!input.getText().toString().trim().equals("")) {
                                                 int newHours = Integer.parseInt(input.getText().toString());
+                                                String thisVec = getArguments().getString("thisVec");
 
                                                 if (newHours >= 1 && newHours <= 10) {
                                                     adapterVolArea.list.add(p + 1, new AdapterDataVolunteer(
@@ -578,11 +682,41 @@ public class ModifyVolunteer extends Fragment {
                                                     dataVolListArea.remove(p);
                                                     adapterVolArea.notifyItemChanged(p);
 
-                                                    TestAdapter mdb = new TestAdapter(context);
+                                                    DatabaseAdapter mdb = new DatabaseAdapter(context);
                                                     mdb.createDatabase();
                                                     mdb.open();
+                                                    Cursor c = mdb.getActAssigActNameAdmin(adapterVolArea.list.get(p).getAct());
                                                     mdb.setStateVolAct("LeaderModified", Integer.parseInt(dataVolListArea.get(p).getId()));
+                                                    c.moveToFirst();
+                                                    mdb.setVolActHours(
+                                                            Integer.parseInt(adapterVolArea.list.get(p).getHours()),
+                                                            c.getInt(c.getColumnIndex("id"))
+
+                                                    );
+                                                    Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
+                                                            "Token " + ediary.AUTH_TOKEN,
+                                                            Integer.parseInt(adapterVolArea.list.get(p).getHours()),
+                                                            thisVec,
+                                                            c.getInt(c.getColumnIndex("activityType")),
+                                                            c.getInt(c.getColumnIndex("id")),
+                                                            6,
+                                                            Integer.parseInt(adapterVolArea.list.get(p).getId())
+                                                    );
                                                     mdb.close();
+                                                    putHour.enqueue(new Callback<ResponseBody>() {
+                                                        @Override
+                                                        @EverythingIsNonNull
+                                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                            if (response.isSuccessful()) {
+                                                                Snackbar.make(view, "Edited for: " + thisVec, Snackbar.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                        }
+                                                    });
                                                 } else
                                                     Toast.makeText(context, "Enter in given range", Toast.LENGTH_SHORT).show();
                                             }
@@ -605,17 +739,12 @@ public class ModifyVolunteer extends Fragment {
 
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                TestAdapter mdbF = new TestAdapter(context);
+                DatabaseAdapter mdbF = new DatabaseAdapter(context);
                 mdbF.createDatabase();
                 mdbF.open();
                 Cursor cF = mdbF.getVolState(Integer.parseInt(adapterVolClg.list.get(viewHolder.getAdapterPosition()).getId()));
                 cF.moveToFirst();
-                if (
-                        !cF.getString(cF.getColumnIndex("State")).equals("Approved") ||
-                                cF.getString(cF.getColumnIndex("State")).equals("LeaderDelete") ||
-                                cF.getString(cF.getColumnIndex("State")).equals("LeaderModified") ||
-                                cF.getString(cF.getColumnIndex("State")).equals("Submitted")
-                ) {
+                if (cF.getString(cF.getColumnIndex("State")).equals("Submitted") || cF.getString(cF.getColumnIndex("State")).equals("Modified")) {
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                                     context,
                                     "",
@@ -633,54 +762,73 @@ public class ModifyVolunteer extends Fragment {
                                         else
                                             p = viewHolder.getAdapterPosition();
 
-                                        Snackbar.make(view, "Deleted: " + thisVec, Snackbar.LENGTH_SHORT).show();
-                                        adapterVolClg.list.set(p, new AdapterDataVolunteer(
-                                                        adapterVolClg.list.get(p).getDate(),
-                                                        adapterVolClg.list.get(p).getAct(),
-                                                        adapterVolClg.list.get(p).getHours(),
-                                                        adapterVolClg.list.get(p).getId(),
-                                                        "LeaderDelete"
-                                                )
-                                        );
+                                        AlertDialog.Builder builder3 = new AlertDialog.Builder(context, R.style.delDialog);
 
-                                        TestAdapter mdb = new TestAdapter(context);
-                                        mdb.createDatabase();
-                                        mdb.open();
-                                        Cursor c = mdb.getActAssigActNameAdmin(adapterVolClg.list.get(p).getAct());
-                                        c.moveToFirst();
-                                        mdb.setStateVolAct("LeaderDelete", Integer.parseInt(dataVolListClg.get(p).getId()));
-                                        mdb.close();
+                                        builder3.setTitle("Do you want to delete?");
+                                        builder3.setCancelable(false);
 
-                                        adapterVolClg.notifyDataSetChanged();
-                                        adapterVolClg.notifyItemChanged(p);
-
-                                        Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
-                                                "Token " + ediary.AUTH_TOKEN,
-                                                Integer.parseInt(adapterVolClg.list.get(p).getHours()),
-                                                thisVec,
-                                                c.getInt(c.getColumnIndex("activityType")),
-                                                c.getInt(c.getColumnIndex("id")),
-                                                5,
-                                                Integer.parseInt(adapterVolClg.list.get(p).getId())
-                                        );
-
-                                        putHour.enqueue(new Callback<ResponseBody>() {
+                                        builder3.setMessage(dataVolListClg.get(p).getAct());
+                                        builder3.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                             @Override
-                                            @EverythingIsNonNull
-                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                if (response.errorBody() != null) {
-                                                    Log.e("error", "onResponse: " + response.errorBody().toString());
-                                                } else if (response.isSuccessful()) {
-                                                    Log.e("Done", "onResponse: " + adapterVolClg.list.get(p).getId());
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                                adapterVolClg.notifyItemChanged(p);
                                             }
                                         });
 
+                                        builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                Snackbar.make(view, "Deleted: " + thisVec, Snackbar.LENGTH_SHORT).show();
+                                                adapterVolClg.list.set(p, new AdapterDataVolunteer(
+                                                                adapterVolClg.list.get(p).getDate(),
+                                                                adapterVolClg.list.get(p).getAct(),
+                                                                adapterVolClg.list.get(p).getHours(),
+                                                                adapterVolClg.list.get(p).getId(),
+                                                                "LeaderDelete"
+                                                        )
+                                                );
+
+                                                DatabaseAdapter mdb = new DatabaseAdapter(context);
+                                                mdb.createDatabase();
+                                                mdb.open();
+                                                Cursor c = mdb.getActAssigActNameAdmin(adapterVolClg.list.get(p).getAct());
+                                                c.moveToFirst();
+                                                mdb.setStateVolAct("LeaderDelete", Integer.parseInt(dataVolListClg.get(p).getId()));
+                                                mdb.close();
+
+                                                adapterVolClg.notifyDataSetChanged();
+                                                adapterVolClg.notifyItemChanged(p);
+
+                                                Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
+                                                        "Token " + ediary.AUTH_TOKEN,
+                                                        Integer.parseInt(adapterVolClg.list.get(p).getHours()),
+                                                        thisVec,
+                                                        c.getInt(c.getColumnIndex("activityType")),
+                                                        c.getInt(c.getColumnIndex("id")),
+                                                        5,
+                                                        Integer.parseInt(adapterVolClg.list.get(p).getId())
+                                                );
+
+                                                putHour.enqueue(new Callback<ResponseBody>() {
+                                                    @Override
+                                                    @EverythingIsNonNull
+                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                        if (response.errorBody() != null) {
+                                                            Log.e("error", "onResponse: " + response.errorBody().toString());
+                                                        } else if (response.isSuccessful()) {
+                                                            Log.e("Done", "onResponse: " + adapterVolClg.list.get(p).getId());
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                    }
+                                                });
+                                            }
+                                        });
+                                        builder3.show();
                                     }
                             )
                     );
@@ -701,54 +849,76 @@ public class ModifyVolunteer extends Fragment {
                                         else
                                             p = viewHolder.getAdapterPosition();
 
-                                        String thisVec = getArguments().getString("thisVec");
-                                        Snackbar.make(view, "Approved: " + thisVec, Snackbar.LENGTH_SHORT).show();
-                                        adapterVolClg.list.set(p, new AdapterDataVolunteer(
-                                                adapterVolClg.list.get(p).getDate(),
-                                                adapterVolClg.list.get(p).getAct(),
-                                                adapterVolClg.list.get(p).getHours(),
-                                                adapterVolClg.list.get(p).getId(),
-                                                "Approved"
-                                        ));
+                                        AlertDialog.Builder builder3 = new AlertDialog.Builder(context, R.style.delDialog);
 
-                                        TestAdapter mdb = new TestAdapter(context);
-                                        mdb.createDatabase();
-                                        mdb.open();
-                                        mdb.setStateVolAct("Approved", Integer.parseInt(dataVolListClg.get(p).getId()));
-                                        Cursor c = mdb.getActAssigActNameAdmin(adapterVolClg.list.get(p).getAct());
-                                        c.moveToFirst();
-                                        mdb.close();
-                                        adapterVolClg.notifyDataSetChanged();
-                                        adapterVolClg.notifyItemChanged(p);
+                                        builder3.setTitle("Do you want to approve?");
+                                        builder3.setCancelable(false);
 
-                                        Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putApprove(
-                                                "Token " + ediary.AUTH_TOKEN,
-                                                Integer.parseInt(adapterVolClg.list.get(p).getHours()),
-                                                thisVec,
-                                                c.getInt(c.getColumnIndex("activityType")),
-                                                c.getInt(c.getColumnIndex("id")),
-                                                2,
-                                                leaderId,
-                                                Integer.parseInt(adapterVolClg.list.get(p).getId())
-                                        );
-
-                                        putHour.enqueue(new Callback<ResponseBody>() {
+                                        builder3.setMessage(dataVolListClg.get(p).getAct());
+                                        builder3.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                             @Override
-                                            @EverythingIsNonNull
-                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                if (response.errorBody() != null) {
-                                                    Log.e("error", "onResponse: " + response.errorBody().toString());
-                                                } else if (response.isSuccessful()) {
-                                                    Log.e("Done", "onResponse: " + adapterVolClg.list.get(p).getId());
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                                adapterVolUniv.notifyItemChanged(p);
                                             }
                                         });
 
+                                        builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                          @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialogInterface.dismiss();
+                                                String thisVec = getArguments().getString("thisVec");
+                                                Snackbar.make(view, "Approved: " + thisVec, Snackbar.LENGTH_SHORT).show();
+                                                adapterVolClg.list.set(p, new AdapterDataVolunteer(
+                                                        adapterVolClg.list.get(p).getDate(),
+                                                        adapterVolClg.list.get(p).getAct(),
+                                                        adapterVolClg.list.get(p).getHours(),
+                                                        adapterVolClg.list.get(p).getId(),
+                                                        "Approved"
+                                                ));
+
+                                                DatabaseAdapter mdb = new DatabaseAdapter(context);
+                                                mdb.createDatabase();
+                                                mdb.open();
+                                                mdb.setStateVolAct("Approved", Integer.parseInt(dataVolListClg.get(p).getId()));
+                                                Cursor c = mdb.getActAssigActNameAdmin(adapterVolClg.list.get(p).getAct());
+                                                c.moveToFirst();
+                                                mdb.close();
+                                                adapterVolClg.notifyDataSetChanged();
+                                                adapterVolClg.notifyItemChanged(p);
+
+                                                Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putApprove(
+                                                        "Token " + ediary.AUTH_TOKEN,
+                                                        Integer.parseInt(adapterVolClg.list.get(p).getHours()),
+                                                        thisVec,
+                                                        c.getInt(c.getColumnIndex("activityType")),
+                                                        c.getInt(c.getColumnIndex("id")),
+                                                        2,
+                                                        leaderId,
+                                                        Integer.parseInt(adapterVolClg.list.get(p).getId())
+                                                );
+
+                                                putHour.enqueue(new Callback<ResponseBody>() {
+                                                    @Override
+                                                    @EverythingIsNonNull
+                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                        if (response.errorBody() != null) {
+                                                            Log.e("error", "onResponse: " + response.errorBody().toString());
+                                                        } else if (response.isSuccessful()) {
+                                                            Log.e("Done", "onResponse: " + adapterVolClg.list.get(p).getId());
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                    }
+                                                });
+
+                                            }
+                                            }
+                                        );
+                                        builder3.show();
                                     }
                             )
                     );
@@ -785,6 +955,7 @@ public class ModifyVolunteer extends Fragment {
 
                                 builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
                                             dialog.dismiss();
+                                            String thisVec = getArguments().getString("thisVec");
 
                                             if (!input.getText().toString().trim().equals("")) {
                                                 int newHours = Integer.parseInt(input.getText().toString());
@@ -797,15 +968,46 @@ public class ModifyVolunteer extends Fragment {
                                                             adapterVolClg.list.get(p).getId(),
                                                             "LeaderModified"
                                                     ));
-                                                    TestAdapter mdb = new TestAdapter(context);
+                                                    DatabaseAdapter mdb = new DatabaseAdapter(context);
                                                     mdb.createDatabase();
                                                     mdb.open();
                                                     mdb.setStateVolAct("LeaderModified", Integer.parseInt(dataVolListClg.get(p).getId()));
+                                                    Cursor c = mdb.getActAssigActNameAdmin(adapterVolClg.list.get(p).getAct());
+                                                    c.moveToFirst();
+                                                    mdb.setVolActHours(
+                                                            Integer.parseInt(adapterVolClg.list.get(p).getHours()),
+                                                            c.getInt(c.getColumnIndex("id"))
+
+                                                    );
+                                                    Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
+                                                            "Token " + ediary.AUTH_TOKEN,
+                                                            Integer.parseInt(adapterVolClg.list.get(p).getHours()),
+                                                            thisVec,
+                                                            c.getInt(c.getColumnIndex("activityType")),
+                                                            c.getInt(c.getColumnIndex("id")),
+                                                            6,
+                                                            Integer.parseInt(adapterVolClg.list.get(p).getId())
+                                                    );
                                                     mdb.close();
 
                                                     adapterVolClg.notifyDataSetChanged();
                                                     dataVolListClg.remove(p);
                                                     adapterVolClg.notifyItemChanged(p);
+
+                                                    putHour.enqueue(new Callback<ResponseBody>() {
+                                                        @Override
+                                                        @EverythingIsNonNull
+                                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                            if (response.isSuccessful()) {
+                                                                Snackbar.make(view, "Edited for: " + thisVec, Snackbar.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                        }
+                                                    });
                                                 } else
                                                     Toast.makeText(context, "Please enter in given range", Toast.LENGTH_SHORT).show();
                                             }
@@ -837,7 +1039,7 @@ public class ModifyVolunteer extends Fragment {
     public List<AdapterDataVolunteer> addVolActData(String actName) {
         ArrayList<AdapterDataVolunteer> data3 = new ArrayList<>();
 
-        TestAdapter mDbHelper = new TestAdapter(requireContext());
+        DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
         assert getArguments() != null;
@@ -870,11 +1072,47 @@ public class ModifyVolunteer extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
+        leader.setVisibility(View.VISIBLE);
+        requireActivity().findViewById(R.id.volActAll).setVisibility(View.VISIBLE);
         recViewLeader.setVisibility(View.VISIBLE);
-        line.setVisibility(View.VISIBLE);
         detailsVol.setVisibility(View.GONE);
         recViewVolUniv.setVisibility(View.GONE);
         recViewVolArea.setVisibility(View.GONE);
         recViewVolClg.setVisibility(View.GONE);
+    }
+
+    private void revealFab(){
+        View v = root.findViewById(R.id.back);
+        int x = v.getWidth()/2;
+        int y = v.getHeight()/2;
+
+        float finalRad = (float) Math.hypot(x, y);
+        Animator animator = ViewAnimationUtils.createCircularReveal(v, x, y, 0, finalRad);
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                v.setVisibility(View.VISIBLE);
+            }
+        });
+        animator.start();
+    }
+
+    private void hideFab(){
+        View v = root.findViewById(R.id.back);
+        int x = v.getWidth()/2;
+        int y = v.getHeight()/2;
+
+        float inRad = (float) Math.hypot(x, y);
+        Animator animator = ViewAnimationUtils.createCircularReveal(v, x, y, inRad, 0);
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                v.setVisibility(View.GONE);
+            }
+        });
+        animator.start();
     }
 }

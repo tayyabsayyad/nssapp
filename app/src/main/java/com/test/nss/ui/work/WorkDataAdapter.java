@@ -45,18 +45,6 @@ public class WorkDataAdapter extends RecyclerView.Adapter<WorkDataAdapter.ViewHo
         return list.size();
     }
 
-    public void insert(int position, AdapterDataWork data) {
-        list.add(position, data);
-        notifyItemInserted(position);
-    }
-
-    // Remove a RecyclerView item containing a specified Data object
-    public void remove(AdapterDataWork data) {
-        int position = list.indexOf(data);
-        list.remove(position);
-        notifyItemRemoved(position);
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView natureOfWork;
         public TextView totalHours;

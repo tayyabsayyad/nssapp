@@ -62,9 +62,6 @@ public interface Api {
             @Field("CampActivityTitle") String campTitle
     );
 
-    @GET("/diary/api/selfRegistration/")
-    Call<ResponseBody> insertUsers(@Header("Authorization") String token);
-
     @GET("/diary/api/leaders/")
     Call<ResponseBody> insertLeaders(@Header("Authorization") String token);
 
@@ -74,9 +71,11 @@ public interface Api {
     @GET("/diary/api/allactivites/")
     Call<ResponseBody> getActList(@Header("Authorization") String token);
 
-    //TODO: merge with api
-    @GET("/diary/api/totalhours/")
+    @GET("/diary/api/level/")
     Call<ResponseBody> getHours(@Header("Authorization") String token);
+
+    @GET("/diary/api/totalhours/")
+    Call<ResponseBody> getTotalAreaHours(@Header("Authorization") String token);
 
     @POST("/diary/api/dailyactivity/")
     @FormUrlEncoded
@@ -93,7 +92,7 @@ public interface Api {
     @GET("/diary/api/dailyactivity/")
     Call<ResponseBody> getDailyAct(@Header("Authorization") String token);
 
-    @GET("/diary/api/selfRegistration/{vec}")
+    @GET("/diary/api/selfRegistration/{vec}/")
     Call<ResponseBody> getUserDetail(@Path("vec") String vec);
 
     @PATCH("/diary/dailyactivity/{id2}/")
@@ -151,6 +150,14 @@ public interface Api {
     @GET("/diary/api/IsLeader/")
     Call<ResponseBody> isLeader(@Header("Authorization") String token);
 
-    @GET("/diary/api/allVolDailyAct/")
+    @GET("/diary/api/listVolNotApproved/")
     Call<ResponseBody> volAct(@Header("Authorization") String token);
+
+    @GET("/diary/api/allVolList/")
+    Call<ResponseBody> volActAll(@Header("Authorization") String token);
+
+    @GET("/diary/getVolDailyAct/{vec}")
+    Call<ResponseBody> volActVec(@Header("Authorization") String token,
+                                 @Path("vec") String vec);
+
 }

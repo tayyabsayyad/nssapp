@@ -3,7 +3,6 @@ package com.test.nss;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
@@ -29,8 +28,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.test.nss.ediary.AUTH_TOKEN;
+import static com.test.nss.ediary.VEC;
 
 public class CheckConn extends BroadcastReceiver {
 
@@ -49,6 +48,7 @@ public class CheckConn extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.e("CheckConn", "onReceive: ");
         context1 = context;
         NetworkInfo.State wifiState;
         NetworkInfo.State mobileState;
@@ -71,7 +71,7 @@ public class CheckConn extends BroadcastReceiver {
                             JSONArray j = new JSONArray(response.body().string());
 
                             if (j.length() >= 0) {
-                                TestAdapter mDbHelper = new TestAdapter(context);
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
                                 mDbHelper.createDatabase();
                                 mDbHelper.open();
                                 deleteData("Help");
@@ -110,7 +110,7 @@ public class CheckConn extends BroadcastReceiver {
                             JSONArray j = new JSONArray(response.body().string());
 
                             if (j.length() >= 0) {
-                                TestAdapter mDbHelper = new TestAdapter(context);
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
                                 mDbHelper.createDatabase();
                                 mDbHelper.open();
                                 deleteData("CampActivityList");
@@ -145,14 +145,15 @@ public class CheckConn extends BroadcastReceiver {
                             //JSONObject j = new JSONObject(response.body().string());
                             JSONArray j = new JSONArray(response.body().string());
                             if (j.length() >= 0) {
-                                TestAdapter mDbHelper = new TestAdapter(context);
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
                                 mDbHelper.createDatabase();
                                 mDbHelper.open();
                                 deleteData("CollegeNames");
                                 for (int i = 0; i < j.length(); i++) {
                                     mDbHelper.insertClgList(
                                             j.getJSONObject(i).getString("CollegeCode"),
-                                            j.getJSONObject(i).getString("CollegeName")
+                                            j.getJSONObject(i).getString("CollegeName"),
+                                            j.getJSONObject(i).getString("State")
                                     );
                                 }
                                 //mDbHelper.getCampDetails();
@@ -184,7 +185,7 @@ public class CheckConn extends BroadcastReceiver {
                             //Log.e("insert", j.getJSONObject(0).getString("CollegeName"));
 
                             if (j.length() >= 0) {
-                                TestAdapter mDbHelper = new TestAdapter(context);
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
                                 mDbHelper.createDatabase();
                                 mDbHelper.open();
                                 deleteData("CampDetails");// Scan for sync state
@@ -215,21 +216,21 @@ public class CheckConn extends BroadcastReceiver {
                 }
             });
 
-            TestAdapter mDbHelper = new TestAdapter(context);
+            DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
             mDbHelper.createDatabase();
             mDbHelper.open();
 
             //Cursor c2 = mDbHelper.getActId("");
             //c.moveToFirst();
             Map<Integer, String> actIdHash = new HashMap<>();
-            actIdHash.put(11, "First Year University");
+            actIdHash.put(11, "First Year College");
             actIdHash.put(121, "First Year Area Based One");
             actIdHash.put(122, "First Year Area Based Two");
-            actIdHash.put(13, "First Year College");
-            actIdHash.put(21, "Second Year University");
+            actIdHash.put(13, "First Year University");
+            actIdHash.put(21, "Second Year College");
             actIdHash.put(221, "Second Year Area Based One");
             actIdHash.put(222, "Second Year Area Based Two");
-            actIdHash.put(23, "Second Year College");
+            actIdHash.put(23, "Second Year University");
 
             Cursor c = mDbHelper.getActListOff();
             //Log.e("AAAA", ""+c.getCount());
@@ -301,7 +302,7 @@ public class CheckConn extends BroadcastReceiver {
                             JSONArray j = new JSONArray(response.body().string());
 
                             if (j.length() >= 0) {
-                                TestAdapter mDbHelper = new TestAdapter(context);
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
                                 mDbHelper.createDatabase();
                                 mDbHelper.open();
                                 deleteData("DailyActivity");
@@ -314,6 +315,7 @@ public class CheckConn extends BroadcastReceiver {
                                             j.getJSONObject(i).getString("AssignedActivityName"),
                                             j.getJSONObject(i).getString("Hours"),
                                             j.getJSONObject(i).getString("State"),
+                                            j.getJSONObject(i).getString("ApprovedBy"),
                                             1
                                     );
                                 }
@@ -352,7 +354,7 @@ public class CheckConn extends BroadcastReceiver {
                             "DBIT",
                             c2.getString(c2.getColumnIndex("CampActivityDescription")),
                             c2.getInt(c2.getColumnIndex("CampDay")),
-                            ediary.VEC,
+                            VEC,
                             "1",
                             c3.getString(c3.getColumnIndex("CampId"))
                     );
@@ -399,7 +401,7 @@ public class CheckConn extends BroadcastReceiver {
                             JSONArray j = new JSONArray(response.body().string());
 
                             if (j.length() >= 0) {
-                                TestAdapter mDbHelper = new TestAdapter(context);
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
                                 mDbHelper.createDatabase();
                                 mDbHelper.open();
                                 deleteData("CampActivities");
@@ -411,7 +413,7 @@ public class CheckConn extends BroadcastReceiver {
                                             j.getJSONObject(i).getString("CampActivityTitle"),
                                             j.getJSONObject(i).getString("CampActivityDescription"),
                                             j.getJSONObject(i).getString("Day"),
-                                            ediary.VEC,
+                                            VEC,
                                             1
                                     );
                                 }
@@ -430,6 +432,76 @@ public class CheckConn extends BroadcastReceiver {
                     Log.e("onFailure:campListAll", t.toString());
                 }
             });
+            deleteData("HoursList");
+            Call<ResponseBody> getAreaHours = RetrofitClient.getInstance().getApi().getTotalAreaHours("Token " + AUTH_TOKEN);
+            getAreaHours.enqueue(new Callback<ResponseBody>() {
+                @Override
+                @EverythingIsNonNull
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        try {
+                            JSONArray j = new JSONArray(response.body().string());
+
+                            if (j.length() > 0) {
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
+                                mDbHelper.createDatabase();
+                                mDbHelper.open();
+
+                                for (int i = 0; i < j.length(); i++) {
+                                    mDbHelper.insertHours(
+                                            j.getJSONObject(i).getString("Level"),
+                                            j.getJSONObject(i).getInt("TotalHours")
+                                    );
+                                }
+                                mDbHelper.close();
+                            }
+                        } catch (JSONException | IOException e) {
+                            Log.e("Failed", e.toString());
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
+
+            Call<ResponseBody> getHours = RetrofitClient.getInstance().getApi().getHours("Token " + AUTH_TOKEN);
+            getHours.enqueue(new Callback<ResponseBody>() {
+                @Override
+                @EverythingIsNonNull
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        try {
+                            JSONArray j = new JSONArray(response.body().string());
+
+                            if (j.length() > 0) {
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
+                                mDbHelper.createDatabase();
+                                mDbHelper.open();
+                                //deleteData("HoursList");
+                                for (int i = 0; i <= 1; i++) {
+                                    mDbHelper.insertHours(
+                                            j.getJSONObject(i).getString("Level"),
+                                            j.getJSONObject(i).getInt("TotalHours")
+                                    );
+                                }
+                                mDbHelper.close();
+                            }
+                        } catch (JSONException | IOException e) {
+                            Log.e("Failed", e.toString());
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
 
             Call<ResponseBody> actList = RetrofitClient.getInstance().getApi().getActList("Token " + AUTH_TOKEN);
             actList.enqueue(new Callback<ResponseBody>() {
@@ -441,7 +513,7 @@ public class CheckConn extends BroadcastReceiver {
                             JSONArray j = new JSONArray(response.body().string());
 
                             if (j.length() >= 0) {
-                                TestAdapter mDbHelper = new TestAdapter(context);
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
                                 mDbHelper.createDatabase();
                                 mDbHelper.open();
                                 deleteData("ActivityListByAdmin");
@@ -471,47 +543,6 @@ public class CheckConn extends BroadcastReceiver {
                 }
             });
 
-            Call<ResponseBody> insertUsers = RetrofitClient.getInstance().getApi().insertUsers("Token " + AUTH_TOKEN);
-            insertUsers.enqueue(new Callback<ResponseBody>() {
-                @Override
-                @EverythingIsNonNull
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        try {
-                            JSONArray j = new JSONArray(response.body().string());
-
-                            if (j.length() >= 0) {
-                                TestAdapter mDbHelper = new TestAdapter(context);
-                                mDbHelper.createDatabase();
-                                mDbHelper.open();
-                                deleteData("Registration");
-                                for (int i = 0; i < j.length(); i++) {
-                                    mDbHelper.insertUsers(
-                                            j.getJSONObject(i).getString("CollegeName"),
-                                            j.getJSONObject(i).getString("VEC"),
-                                            j.getJSONObject(i).getString("FirstName"),
-                                            j.getJSONObject(i).getString("LastName"),
-                                            j.getJSONObject(i).getString("Email"),
-                                            j.getJSONObject(i).getString("Contact")
-                                    );
-                                }
-                                mDbHelper.resetUsers(ediary.VEC);
-                                mDbHelper.close();
-                            }
-                        } catch (JSONException | IOException e) {
-                            Log.e("Failed", e.toString());
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                @Override
-                @EverythingIsNonNull
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                }
-            });
-
             Call<ResponseBody> insertLeaders = RetrofitClient.getInstance().getApi().insertLeaders("Token " + AUTH_TOKEN);
             insertLeaders.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -521,59 +552,25 @@ public class CheckConn extends BroadcastReceiver {
                         try {
                             //Log.e("Entered", "leaders");
                             JSONArray j = new JSONArray(response.body().string());
-
                             if (j.length() >= 0) {
-                                TestAdapter mDbHelper = new TestAdapter(context);
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
                                 mDbHelper.createDatabase();
                                 mDbHelper.open();
                                 deleteData("Leaders");
                                 for (int i = 0; i < j.length(); i++) {
                                     mDbHelper.insertLeaders(
+                                            j.getJSONObject(i).getString("Number"),
+                                            j.getJSONObject(i).getString("Name "),
+                                            j.getJSONObject(i).getString("Email"),
                                             j.getJSONObject(i).getString("VEC"),
-                                            j.getJSONObject(i).getString("CollegeName")
+                                            j.getJSONObject(i).getString("CollegeName"),
+                                            j.getJSONObject(i).getString("id")
                                     );
                                 }
                                 mDbHelper.close();
                             }
                         } catch (JSONException | IOException e) {
                             Log.e("Failed", e.toString());
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                @Override
-                @EverythingIsNonNull
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                }
-            });
-
-            Call<ResponseBody> call2 = RetrofitClient.getInstance().getApi().isLeader("Token " + AUTH_TOKEN);
-            call2.enqueue(new Callback<ResponseBody>() {
-                @Override
-                @EverythingIsNonNull
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    SharedPreferences shareit = context.getSharedPreferences("KEY", MODE_PRIVATE);
-                    SharedPreferences.Editor eddy = shareit.edit();
-                    if (response.isSuccessful() && response.body() != null) {
-                        try {
-                            JSONArray j2 = new JSONArray(response.body().string());
-                            if (j2.length() > 0) {
-                                //Log.e("hahaha", "onResponse: "+j2.getJSONObject(0).getString("id"));
-                                eddy.putInt("isLeader", 1);
-                                eddy.putInt("leaderId", j2.getJSONObject(0).getInt("id"));
-                            } else
-                                eddy.putInt("isLeader", 0);
-                            eddy.apply();
-                        } catch (JSONException | IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    } else if (response.errorBody() != null) {
-                        try {
-                            Log.e("Error", "onResponse: " + response.errorBody().string());
-                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -597,14 +594,15 @@ public class CheckConn extends BroadcastReceiver {
 
                             if (j.length() >= 0) {
                                 //Log.e("AAAA", "onResponse: " + j.length());
-                                TestAdapter mDbHelper = new TestAdapter(context);
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
                                 mDbHelper.createDatabase();
                                 mDbHelper.open();
                                 deleteData("VolAct");
-                                //Log.e("Oye", ""+j.getJSONObject(0).getInt("id"));
+
                                 for (int i = 0; i < j.length(); i++) {
                                     mDbHelper.insertVolAct(
                                             j.getJSONObject(i).getInt("id"),
+                                            j.getJSONObject(i).getString("Name"),
                                             j.getJSONObject(i).getString("Date"),
                                             j.getJSONObject(i).getInt("Hours"),
                                             j.getJSONObject(i).getString("VEC"),
@@ -631,20 +629,62 @@ public class CheckConn extends BroadcastReceiver {
 
                 }
             });
+
+            Call<ResponseBody> volActAll = RetrofitClient.getInstance().getApi().volActAll("Token " + AUTH_TOKEN);
+            volActAll.enqueue(new Callback<ResponseBody>() {
+                @Override
+                @EverythingIsNonNull
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        try {
+                            JSONArray j = new JSONArray(response.body().string());
+
+                            if (j.length() >= 0) {
+                                //Log.e("AAAA", "onResponse: " + j.length());
+                                DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
+                                mDbHelper.createDatabase();
+                                mDbHelper.open();
+                                deleteData("VolActAll");
+
+                                for (int i = 0; i < j.length(); i++) {
+                                    mDbHelper.insertVolAllAct(
+                                            i+1,
+                                            j.getJSONObject(i).getString("FirstName") +" "+j.getJSONObject(i).getString("LastName"),
+                                            j.getJSONObject(i).getString("DateOfRegistration"),
+                                            j.getJSONObject(i).getString("VEC")
+                                    );
+                                }
+                                mDbHelper.close();
+                            }
+                        } catch (JSONException | IOException e) {
+                            Log.e("Failed", e.toString());
+                            e.printStackTrace();
+                        }
+                    }
+                    if (response.errorBody() != null) {
+                        Log.e("error", "onResponse: " + response.errorBody().toString());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
         } else if (wifiState != null && mobileState != null) {
             Log.e("CheckConn", "No net");
         }
     }
 
     public void deleteData(String table) {
-        TestAdapter mDbHelper2 = new TestAdapter(context1);
+        DatabaseAdapter mDbHelper2 = new DatabaseAdapter(context1);
         mDbHelper2.createDatabase();
         mDbHelper2.open();
         DataBaseHelper mDb2 = new DataBaseHelper(context1);
         SQLiteDatabase m = mDb2.getWritableDatabase();
-        //Log.e("Delted From:", ""+table);
         m.execSQL("DELETE FROM " + table);
         mDbHelper2.close();
+        m.close();
         mDb2.close();
     }
 }

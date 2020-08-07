@@ -20,8 +20,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
-import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
 
@@ -77,7 +77,7 @@ public class CampInputDetailsFrag extends Fragment {
 
         String day = which_day.getText().toString();
 
-        TestAdapter mDbHelper = new TestAdapter(requireContext());
+        DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
 

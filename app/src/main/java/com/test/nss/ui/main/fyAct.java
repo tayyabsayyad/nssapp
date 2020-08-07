@@ -13,6 +13,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,14 +27,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
 import com.test.nss.SwipeHelperRight;
-import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
 
 import org.apache.commons.collections4.ListUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
+import static com.test.nss.ediary.isFirst;
+import static com.test.nss.ediary.isLeader;
 import static com.test.nss.ediary.primaryColDark;
 import static com.test.nss.ediary.transparent;
 
@@ -77,16 +81,14 @@ public class fyAct extends Fragment {
     int act;
     int newHours = 0;
 
-    MyListAdapter adapterClg;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         root = inflater.inflate(R.layout.fragment_fy_act, container, false);
         mContext = requireContext();
 
-        // add data dynamically
         cardViewMain = root.findViewById(R.id.details_main_card);
         actHeaderInput = requireActivity().findViewById(R.id.actHeaderInput);
         actHeaderInput.setVisibility(View.GONE);
@@ -111,10 +113,10 @@ public class fyAct extends Fragment {
         fragFy = root.findViewById(R.id.frag_fy);
 
         univ.setOnClickListener(v -> {
+
             Animation animation = new TranslateAnimation(0, 0, -100, 0);
 
-            animation.setDuration(3500);
-            add.startAnimation(animation);
+            animation.setDuration(4000);
             Snackbar.make(view, "Swipe left on activity to modify", Snackbar.LENGTH_SHORT).show();
 
             whichAct = 13;
@@ -123,7 +125,12 @@ public class fyAct extends Fragment {
             univRecFy.setVisibility(View.VISIBLE);
             areaRecFy.setVisibility(View.GONE);
             clgRecFy.setVisibility(View.GONE);
-            add.setVisibility(View.VISIBLE);
+            if (isFirst) {
+                add.setVisibility(View.VISIBLE);
+                add.startAnimation(animation);
+            }
+            else
+                add.setVisibility(View.GONE);
 
             univ.setTextColor(primaryColDark);
             area.setTextColor(Color.BLACK);
@@ -134,7 +141,10 @@ public class fyAct extends Fragment {
             whichAct = 12;
             act = 1;
             mainFy.setVisibility(View.VISIBLE);
-            add.setVisibility(View.VISIBLE);
+            if (isFirst)
+                add.setVisibility(View.VISIBLE);
+            else
+                add.setVisibility(View.GONE);
 
             univRecFy.setVisibility(View.GONE);
             areaRecFy.setVisibility(View.VISIBLE);
@@ -151,7 +161,8 @@ public class fyAct extends Fragment {
 
             whichAct = 11;
             act = 2;
-            add.setVisibility(View.VISIBLE);
+
+
             univRecFy.setVisibility(View.GONE);
             areaRecFy.setVisibility(View.GONE);
             clgRecFy.setVisibility(View.VISIBLE);
@@ -159,6 +170,11 @@ public class fyAct extends Fragment {
             clg.setTextColor(primaryColDark);
             univ.setTextColor(Color.BLACK);
             area.setTextColor(Color.BLACK);
+
+            if (isFirst)
+                add.setVisibility(View.VISIBLE);
+            else
+                add.setVisibility(View.GONE);
         });
 
         clgListDataFy = addAct("First Year College");
@@ -174,11 +190,11 @@ public class fyAct extends Fragment {
         SwipeHelperRight swipeHelperRightUniv = new SwipeHelperRight(mContext, recyclerViewUniv) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                if (!adapterUniv.list.get(viewHolder.getAdapterPosition()).getState().equals("Approved") ||
-                        adapterUniv.list.get(viewHolder.getAdapterPosition()).isApproved() != 1) {
+                if (isFirst && adapterUniv.list.get(viewHolder.getAdapterPosition()).getState().equals("Modified") ||
+                        isFirst && adapterUniv.list.get(viewHolder.getAdapterPosition()).getState().equals("Submitted")) {
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                             mContext,
-                            "Edit",
+                            "",
                             R.drawable.ic_edit_24,
                             transparent,
                             pos -> {
@@ -213,7 +229,7 @@ public class fyAct extends Fragment {
                                         if (newHours >= 1 && newHours <= 10) {
                                             String actName = adapterUniv.list.get(p).getAct();
 
-                                            TestAdapter mdb = new TestAdapter(mContext);
+                                            DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                                             mdb.createDatabase();
                                             mdb.open();
                                             mdb.setDetails(newHours, "Modified", actID);
@@ -231,6 +247,7 @@ public class fyAct extends Fragment {
                                                     )
                                             );
 
+                                            adapterUniv.notifyDataSetChanged();
                                             univListDataFy.remove(p + 1);
                                             adapterUniv.notifyItemInserted(p);
 
@@ -253,7 +270,15 @@ public class fyAct extends Fragment {
                                                 @Override
                                                 @EverythingIsNonNull
                                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                                                    if (response.isSuccessful())
+                                                        Snackbar.make(view, "Edited to " + newHours + "hours", Snackbar.LENGTH_SHORT);
+                                                    else if (response.errorBody() != null) {
+                                                        try {
+                                                            Toast.makeText(requireContext(), "onResponse: " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
                                                 }
 
                                                 @Override
@@ -290,7 +315,7 @@ public class fyAct extends Fragment {
                                 int actID = Integer.parseInt(univListDataFy.get(p).getId());
                                 String actName = adapterUniv.list.get(p).getAct();
 
-                                TestAdapter mdb = new TestAdapter(mContext);
+                                DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                                 mdb.createDatabase();
                                 mdb.open();
 
@@ -327,6 +352,47 @@ public class fyAct extends Fragment {
                                 mdb.close();
                             }
                     ));
+                } else if (univListDataFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved")) {
+                    underlayButtons.add(new UnderlayButton(
+                            mContext,
+                            "",
+                            R.drawable.ic_eye_24,
+                            transparent,
+                            new UnderlayButtonClickListener() {
+                                @Override
+                                public void onClick(int pos) {
+                                    int p;
+                                    if (viewHolder.getAdapterPosition() == -1)
+                                        p = viewHolder.getAdapterPosition() + 1;
+
+                                    else if (viewHolder.getAdapterPosition() == univListDataFy.size())
+                                        p = viewHolder.getAdapterPosition() - 1;
+                                    else
+                                        p = viewHolder.getAdapterPosition();
+
+                                    if (isLeader!=1){
+                                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                        mdb.createDatabase();
+                                        mdb.open();
+                                        Cursor c = mdb.getActLeaderId(Integer.parseInt(univListDataFy.get(p).getId()));
+                                        c.moveToFirst();
+                                        int leadId = c.getInt(c.getColumnIndex("Approved_by"));
+
+                                        Snackbar sb = Snackbar.make(view, "Approved By: "+mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                                                .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                                        mdb.close();
+                                        sb.show();
+                                    } else {
+                                        Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
+                                                .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                                        sb.show();
+                                    }
+                                    adapterUniv.notifyItemChanged(p);
+                                }
+                            }
+                    ));
                 }
             }
         };
@@ -341,11 +407,11 @@ public class fyAct extends Fragment {
         SwipeHelperRight swipeHelperRightArea = new SwipeHelperRight(mContext, recyclerViewArea) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                if (!adapterArea.list.get(viewHolder.getAdapterPosition()).getState().equals("Approved") ||
-                        adapterArea.list.get(viewHolder.getAdapterPosition()).isApproved() != 1) {
+                if (isFirst && adapterArea.list.get(viewHolder.getAdapterPosition()).getState().equals("Modified") ||
+                        isFirst && adapterArea.list.get(viewHolder.getAdapterPosition()).getState().equals("Submitted")) {
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                             mContext,
-                            "Edit",
+                            "",
                             R.drawable.ic_edit_24,
                             transparent,
                             pos -> {
@@ -378,7 +444,7 @@ public class fyAct extends Fragment {
                                         if (newHours >= 1 && newHours <= 10) {
                                             String actName = adapterArea.list.get(p).getAct();
 
-                                            TestAdapter mdb = new TestAdapter(mContext);
+                                            DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                                             mdb.createDatabase();
                                             mdb.open();
                                             mdb.setDetails(newHours, "Modified", actID);
@@ -396,6 +462,7 @@ public class fyAct extends Fragment {
                                                     )
                                             );
 
+                                            adapterArea.notifyDataSetChanged();
                                             areaDataMainFy.remove(p + 1);
                                             adapterArea.notifyItemInserted(p);
 
@@ -418,7 +485,15 @@ public class fyAct extends Fragment {
                                                 @Override
                                                 @EverythingIsNonNull
                                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                                                    if (response.isSuccessful())
+                                                        Snackbar.make(view, "Edited to " + newHours + "hours", Snackbar.LENGTH_SHORT);
+                                                    else if (response.errorBody() != null) {
+                                                        try {
+                                                            Toast.makeText(requireContext(), "onResponse: " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
                                                 }
 
                                                 @Override
@@ -458,7 +533,7 @@ public class fyAct extends Fragment {
                                 int actID = Integer.parseInt(areaDataMainFy.get(p).getId());
                                 String actName = adapterArea.list.get(p).getAct();
 
-                                TestAdapter mdb = new TestAdapter(mContext);
+                                DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                                 mdb.createDatabase();
 
                                 mdb.open();
@@ -496,6 +571,47 @@ public class fyAct extends Fragment {
                                 mdb.close();
                             }
                     ));
+                } else if (areaDataMainFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved")) {
+                    underlayButtons.add(new UnderlayButton(
+                            mContext,
+                            "",
+                            R.drawable.ic_eye_24,
+                            transparent,
+                            new UnderlayButtonClickListener() {
+                                @Override
+                                public void onClick(int pos) {
+                                    int p;
+                                    if (viewHolder.getAdapterPosition() == -1)
+                                        p = viewHolder.getAdapterPosition() + 1;
+
+                                    else if (viewHolder.getAdapterPosition() == areaDataMainFy.size())
+                                        p = viewHolder.getAdapterPosition() - 1;
+                                    else
+                                        p = viewHolder.getAdapterPosition();
+
+                                    if (isLeader!=1){
+                                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                        mdb.createDatabase();
+                                        mdb.open();
+                                        Cursor c = mdb.getActLeaderId(Integer.parseInt(areaDataMainFy.get(p).getId()));
+                                        c.moveToFirst();
+                                        int leadId = c.getInt(c.getColumnIndex("Approved_by"));
+
+                                        Snackbar sb = Snackbar.make(view, "Approved By: "+mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                                                .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                                        mdb.close();
+                                        sb.show();
+                                    } else {
+                                        Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
+                                                .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                                        sb.show();
+                                    }
+                                    adapterArea.notifyItemChanged(p);
+                                }
+                            }
+                    ));
                 }
             }
         };
@@ -505,12 +621,13 @@ public class fyAct extends Fragment {
 
         // Recycler View College
         RecyclerView recyclerViewHours = root.findViewById(R.id.hoursRecFy);
-        adapterClg = new MyListAdapter(clgListDataFy, mContext);
+        MyListAdapter adapterClg = new MyListAdapter(clgListDataFy, mContext);
 
         SwipeHelperRight swipeHelperRightHours = new SwipeHelperRight(mContext, recyclerViewHours) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                if (!adapterClg.list.get(viewHolder.getAdapterPosition()).getState().equals("Approved") || adapterClg.list.get(viewHolder.getAdapterPosition()).isApproved() != 1) {
+                if (isFirst && adapterClg.list.get(viewHolder.getAdapterPosition()).getState().equals("Submitted") ||
+                        isFirst && adapterClg.list.get(viewHolder.getAdapterPosition()).getState().equals("Modified")) {
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                             mContext,
                             "",
@@ -544,7 +661,7 @@ public class fyAct extends Fragment {
                                         if (newHours >= 1 && newHours <= 10) {
                                             String actName = adapterClg.list.get(p).getAct();
 
-                                            TestAdapter mdb = new TestAdapter(mContext);
+                                            DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                                             mdb.createDatabase();
                                             mdb.open();
                                             mdb.setDetails(newHours, "Modified", actID);
@@ -561,6 +678,7 @@ public class fyAct extends Fragment {
                                                     "Modified"
                                             ));
 
+                                            adapterClg.notifyDataSetChanged();
                                             clgListDataFy.remove(p + 1);
                                             adapterClg.notifyItemInserted(p);
 
@@ -584,7 +702,15 @@ public class fyAct extends Fragment {
                                                 @Override
                                                 @EverythingIsNonNull
                                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                    Log.e(TAG, "onResponse: " + "added");
+                                                    if (response.isSuccessful())
+                                                        Snackbar.make(view, "Edited to " + newHours + "hours", Snackbar.LENGTH_SHORT);
+                                                    else if (response.errorBody() != null) {
+                                                        try {
+                                                            Toast.makeText(requireContext(), "onResponse: " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
                                                 }
 
                                                 @Override
@@ -622,7 +748,7 @@ public class fyAct extends Fragment {
                                 int actID = Integer.parseInt(clgListDataFy.get(p).getId());
                                 String actName = adapterClg.list.get(p).getAct();
 
-                                TestAdapter mdb = new TestAdapter(mContext);
+                                DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                                 mdb.createDatabase();
 
                                 mdb.open();
@@ -659,6 +785,48 @@ public class fyAct extends Fragment {
                                 });
                                 mdb.close();
                             }));
+                } else if (clgListDataFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved")) {
+                    underlayButtons.add(new UnderlayButton(
+                            mContext,
+                            "",
+                            R.drawable.ic_eye_24,
+                            transparent,
+                            new UnderlayButtonClickListener() {
+                                @Override
+                                public void onClick(int pos) {
+                                    int p;
+                                    if (viewHolder.getAdapterPosition() == -1)
+                                        p = viewHolder.getAdapterPosition() + 1;
+
+                                    else if (viewHolder.getAdapterPosition() == clgListDataFy.size())
+                                        p = viewHolder.getAdapterPosition() - 1;
+                                    else
+                                        p = viewHolder.getAdapterPosition();
+
+                                    if (isLeader!=1){
+                                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                        mdb.createDatabase();
+                                        mdb.open();
+                                        Cursor c = mdb.getActLeaderId(Integer.parseInt(clgListDataFy.get(p).getId()));
+                                        c.moveToFirst();
+                                        int leadId = c.getInt(c.getColumnIndex("Approved_by"));
+
+                                        Snackbar sb = Snackbar.make(view, "Approved By: "+mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                                                .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                                        mdb.close();
+                                        sb.show();
+                                    } else {
+                                        Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
+                                                .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                                        sb.show();
+                                    }
+
+                                    adapterClg.notifyItemChanged(p);
+                                }
+                            }
+                    ));
                 }
             }
         };
@@ -684,9 +852,6 @@ public class fyAct extends Fragment {
             areaRecFy.setVisibility(View.GONE);
             clgRecFy.setVisibility(View.GONE);
             cardViewMain.setVisibility(View.GONE);
-            univ.setBackgroundColor(Color.TRANSPARENT);
-            clg.setBackgroundColor(Color.TRANSPARENT);
-            area.setBackgroundColor(Color.TRANSPARENT);
 
             AddDetailsActivity detailsActivity = new AddDetailsActivity();
             Bundle args = new Bundle();
@@ -697,9 +862,9 @@ public class fyAct extends Fragment {
 
             FragmentManager fm = requireActivity().getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").addToBackStack("fyAct").commit();
-            //adapterArea.notifyDataSetChanged();
-            //adapterClg.notifyDataSetChanged();
-            //adapterUniv.notifyDataSetChanged();
+            adapterArea.notifyDataSetChanged();
+            adapterClg.notifyDataSetChanged();
+            adapterUniv.notifyDataSetChanged();
         });
     }
 
@@ -725,7 +890,7 @@ public class fyAct extends Fragment {
 
         ArrayList<AdapterDataMain> data = new ArrayList<>();
 
-        TestAdapter mDbHelper = new TestAdapter(mContext);
+        DatabaseAdapter mDbHelper = new DatabaseAdapter(mContext);
         mDbHelper.createDatabase();
         mDbHelper.open();
 

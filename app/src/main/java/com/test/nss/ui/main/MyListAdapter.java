@@ -42,30 +42,34 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         holder.act.setText(list.get(position).getAct());
         holder.hours.setText(list.get(position).getHours());
         holder.actId.setText(list.get(position).getId());
-        if (list.get(position).isApproved() == 1) {
-            holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
-            holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
-            holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
+        switch (list.get(position).getState()) {
+            case "Approved":
+                holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
+                holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
+                holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
 
-            holder.date.setTextColor(Color.parseColor("#008f00"));
-            holder.act.setTextColor(Color.parseColor("#008f00"));
-            holder.hours.setTextColor(Color.parseColor("#008f00"));
-        } else if (list.get(position).getState().equals("LeaderDelete")) {
-            holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
-            holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
-            holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
+                holder.date.setTextColor(mCon.getColor(R.color.greenNic));
+                holder.act.setTextColor(mCon.getColor(R.color.greenNic));
+                holder.hours.setTextColor(mCon.getColor(R.color.greenNic));
+                break;
+            case "LeaderDelete":
+                holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
+                holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
+                holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
 
-            holder.date.setTextColor(mCon.getColor(R.color.red));
-            holder.act.setTextColor(mCon.getColor(R.color.red));
-            holder.hours.setTextColor(mCon.getColor(R.color.red));
-        } else if (list.get(position).getState().equals("LeaderModified")) {
-            holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
-            holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
-            holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
+                holder.date.setTextColor(mCon.getColor(R.color.red));
+                holder.act.setTextColor(mCon.getColor(R.color.red));
+                holder.hours.setTextColor(mCon.getColor(R.color.red));
+                break;
+            case "LeaderModified":
+                holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
+                holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
+                holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
 
-            holder.date.setTextColor(mCon.getColor(R.color.kesar));
-            holder.act.setTextColor(mCon.getColor(R.color.kesar));
-            holder.hours.setTextColor(mCon.getColor(R.color.kesar));
+                holder.date.setTextColor(mCon.getColor(R.color.kesar));
+                holder.act.setTextColor(mCon.getColor(R.color.kesar));
+                holder.hours.setTextColor(mCon.getColor(R.color.kesar));
+                break;
         }
     }
 

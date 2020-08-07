@@ -1,6 +1,7 @@
 package com.test.nss.ui.camp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.os.Bundle;
@@ -24,8 +25,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
-import com.test.nss.TestAdapter;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
 
@@ -81,16 +82,20 @@ public class CampActListDetails extends Fragment {
 
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(mContext, R.style.delDialog);
                         builder2.setMessage("Are you sure?");
-                        builder2.setNegativeButton("No", (dialog, which) -> {
-                                    dialog.cancel();
-                                    campDataAdapter.notifyItemChanged(l);
+                        builder2.setCancelable(false);
+                        builder2.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                        campDataAdapter.notifyItemChanged(l);
+                                    }
                                 }
                         );
 
                         builder2.setPositiveButton("Yes", (dialog, which) -> {
                             dialog.dismiss();
 
-                            TestAdapter mdb = new TestAdapter(mContext);
+                            DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                             mdb.createDatabase();
                             mdb.open();
 
@@ -136,13 +141,14 @@ public class CampActListDetails extends Fragment {
                         builder2.show();
                         break;
                     case ItemTouchHelper.LEFT:
-                        TestAdapter mdb2 = new TestAdapter(mContext);
+                        DatabaseAdapter mdb2 = new DatabaseAdapter(mContext);
                         mdb2.createDatabase();
                         mdb2.open();
                         int p = viewHolder.getAdapterPosition();
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
                         View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.camp_new_input_layout, (ViewGroup) view, false);
+                        builder.setCancelable(false);
 
                         EditText inputDesc = viewInflated.findViewById(R.id.inputDesc);
                         EditText inputDay = viewInflated.findViewById(R.id.inputDay);
@@ -270,7 +276,7 @@ public class CampActListDetails extends Fragment {
     public List<AdapterCampActList> addCampData() {
         ArrayList<AdapterCampActList> data2 = new ArrayList<>();
 
-        TestAdapter mDbHelper = new TestAdapter(mContext);
+        DatabaseAdapter mDbHelper = new DatabaseAdapter(mContext);
         mDbHelper.createDatabase();
         mDbHelper.open();
         Cursor c2 = mDbHelper.getCampActListAll();

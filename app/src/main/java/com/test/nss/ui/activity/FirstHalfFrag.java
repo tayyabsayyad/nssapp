@@ -1,13 +1,16 @@
 package com.test.nss.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,10 +22,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
-import com.test.nss.TestAdapter;
-
-import org.apache.commons.collections4.ListUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,19 +33,22 @@ public class FirstHalfFrag extends Fragment {
 
     View root;
     Context mContext;
-    List<AdapterDataAct> areaListDataAct;
+    List<AdapterDataAct> areaOneListDataAct;
+    List<AdapterDataAct> areaTwoListDataAct;
     List<AdapterDataAct> univListDataAct;
     List<AdapterDataAct> clgListDataAct;
 
-    RecyclerView recyclerViewAreaAct;
+    RecyclerView recyclerViewAreaOneAct;
+    RecyclerView recyclerViewAreaTwoAct;
     RecyclerView recyclerViewUnivAct;
     RecyclerView recyclerViewClgAct;
 
-    TextView areaAct;
+    TextView areaActOne;
+    TextView areaActTwo;
     TextView clgAct;
     TextView univAct;
 
-    Button backAct;
+    FloatingActionButton backAct;
 
     LinearLayout actDetails;
 
@@ -56,7 +61,8 @@ public class FirstHalfFrag extends Fragment {
         backAct = root.findViewById(R.id.backActBtn);
 
         clgListDataAct = addActData(11);
-        areaListDataAct = ListUtils.union(addActData(121), addActData(122));
+        areaOneListDataAct = addActData(121);
+        areaTwoListDataAct = addActData(122);
         univListDataAct = addActData(13);
         return root;
     }
@@ -66,61 +72,87 @@ public class FirstHalfFrag extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Toast.makeText(requireContext(), "These are the assigned activities by PO", Toast.LENGTH_SHORT).show();
 
-        backAct.setVisibility(View.GONE);
-        recyclerViewAreaAct = root.findViewById(R.id.areafyList);
+        hideFab();
+
+        recyclerViewAreaOneAct = root.findViewById(R.id.areafyListOne);
+        recyclerViewAreaTwoAct = root.findViewById(R.id.areafyListTwo);
         recyclerViewClgAct = root.findViewById(R.id.clgfyList);
         recyclerViewUnivAct = root.findViewById(R.id.univfyList);
 
         actDetails = root.findViewById(R.id.act_details);
 
-        areaAct = root.findViewById(R.id.area_act);
+        areaActOne = root.findViewById(R.id.area_act1);
+        areaActTwo = root.findViewById(R.id.area_act2);
         clgAct = root.findViewById(R.id.clg_act);
         univAct = root.findViewById(R.id.univ_act);
 
-        areaAct.setOnClickListener(view14 -> {
-            backAct.setVisibility(View.VISIBLE);
-            actDetails.setVisibility(View.GONE);
-            recyclerViewAreaAct.setVisibility(View.VISIBLE);
-            recyclerViewClgAct.setVisibility(View.GONE);
-            recyclerViewUnivAct.setVisibility(View.GONE);
+        areaActOne.setOnClickListener(view14 -> {
+            new Handler().postDelayed(() -> {
+                revealFab();
+                actDetails.setVisibility(View.GONE);
+                recyclerViewAreaOneAct.setVisibility(View.VISIBLE);
+                recyclerViewAreaTwoAct.setVisibility(View.GONE);
+                recyclerViewClgAct.setVisibility(View.GONE);
+                recyclerViewUnivAct.setVisibility(View.GONE);
+            }, 350);
         });
 
+        areaActTwo.setOnClickListener(view1 -> {
+            new Handler().postDelayed(() -> {
+                revealFab();
+                actDetails.setVisibility(View.GONE);
+                recyclerViewAreaOneAct.setVisibility(View.GONE);
+                recyclerViewAreaTwoAct.setVisibility(View.VISIBLE);
+                recyclerViewClgAct.setVisibility(View.GONE);
+                recyclerViewUnivAct.setVisibility(View.GONE);
+            }, 350);
+        });
         clgAct.setOnClickListener(view13 -> {
-            backAct.setVisibility(View.VISIBLE);
-            actDetails.setVisibility(View.GONE);
-            recyclerViewClgAct.setVisibility(View.VISIBLE);
-            recyclerViewAreaAct.setVisibility(View.GONE);
-            recyclerViewUnivAct.setVisibility(View.GONE);
+            new Handler().postDelayed(() -> {
+                revealFab();
+                //backAct.setVisibility(View.VISIBLE);
+                actDetails.setVisibility(View.GONE);
+                recyclerViewClgAct.setVisibility(View.VISIBLE);
+                recyclerViewAreaOneAct.setVisibility(View.GONE);
+                recyclerViewAreaTwoAct.setVisibility(View.GONE);
+                recyclerViewUnivAct.setVisibility(View.GONE);
+            }, 350);
         });
 
         univAct.setOnClickListener(view12 -> {
-            backAct.setVisibility(View.VISIBLE);
-            actDetails.setVisibility(View.GONE);
-            recyclerViewUnivAct.setVisibility(View.VISIBLE);
-            recyclerViewClgAct.setVisibility(View.GONE);
-            recyclerViewAreaAct.setVisibility(View.GONE);
+            new Handler().postDelayed(() -> {
+                revealFab();
+                //backAct.setVisibility(View.VISIBLE);
+                actDetails.setVisibility(View.GONE);
+                recyclerViewUnivAct.setVisibility(View.VISIBLE);
+                recyclerViewClgAct.setVisibility(View.GONE);
+                recyclerViewAreaOneAct.setVisibility(View.GONE);
+                recyclerViewAreaTwoAct.setVisibility(View.GONE);
+            }, 350);
         });
 
-        MyListAdapterAct adapterAreaAct = new MyListAdapterAct(areaListDataAct, mContext);
-        recyclerViewAreaAct.setHasFixedSize(true);
-        recyclerViewAreaAct.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerViewAreaAct.setAdapter(adapterAreaAct);
+        MyListAdapterAct adapterAreaActOne = new MyListAdapterAct(areaOneListDataAct, mContext);
+        recyclerViewAreaOneAct.setLayoutManager(new LinearLayoutManager(mContext));
+        recyclerViewAreaOneAct.setAdapter(adapterAreaActOne);
+
+        MyListAdapterAct adapterAreaActTwo = new MyListAdapterAct(areaTwoListDataAct, mContext);
+        recyclerViewAreaTwoAct.setLayoutManager(new LinearLayoutManager(mContext));
+        recyclerViewAreaTwoAct.setAdapter(adapterAreaActTwo);
 
         MyListAdapterAct adapterUnivAct = new MyListAdapterAct(univListDataAct, mContext);
-        recyclerViewUnivAct.setHasFixedSize(true);
         recyclerViewUnivAct.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewUnivAct.setAdapter(adapterUnivAct);
 
         MyListAdapterAct adapterClgAct = new MyListAdapterAct(clgListDataAct, mContext);
-        recyclerViewClgAct.setHasFixedSize(true);
         recyclerViewClgAct.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewClgAct.setAdapter(adapterClgAct);
 
         backAct.setOnClickListener(view1 -> {
-            backAct.setVisibility(View.GONE);
+            hideFab();
             actDetails.setVisibility(View.VISIBLE);
             recyclerViewUnivAct.setVisibility(View.GONE);
-            recyclerViewAreaAct.setVisibility(View.GONE);
+            recyclerViewAreaOneAct.setVisibility(View.GONE);
+            recyclerViewAreaTwoAct.setVisibility(View.GONE);
             recyclerViewClgAct.setVisibility(View.GONE);
         });
     }
@@ -129,7 +161,7 @@ public class FirstHalfFrag extends Fragment {
         Log.e("opening db", "now for yr:" + yr);
         ArrayList<AdapterDataAct> data3 = new ArrayList<>();
 
-        TestAdapter mDbHelper = new TestAdapter(requireContext());
+        DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
 
@@ -147,6 +179,34 @@ public class FirstHalfFrag extends Fragment {
         return data3;
     }
 
+    private void revealFab() {
+        View v = root.findViewById(R.id.backActBtn);
+        int x = v.getWidth() / 2;
+        int y = v.getHeight() / 2;
+
+        float finalRad = (float) Math.hypot(x, y);
+        Animator animator = ViewAnimationUtils.createCircularReveal(v, x, y, 0, finalRad);
+        v.setVisibility(View.VISIBLE);
+        animator.start();
+    }
+
+    private void hideFab() {
+        View v = root.findViewById(R.id.backActBtn);
+        int x = v.getWidth() / 2;
+        int y = v.getHeight() / 2;
+
+        float inRad = (float) Math.hypot(x, y);
+        Animator animator = ViewAnimationUtils.createCircularReveal(v, x, y, inRad, 0);
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                v.setVisibility(View.GONE);
+            }
+        });
+        animator.start();
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -155,10 +215,10 @@ public class FirstHalfFrag extends Fragment {
             Log.e("FirstHalfFrag", "onDetach: " + fm.getBackStackEntryCount());
             fm.popBackStack("FirstHalfFrag", 0);
         }
-        backAct.setVisibility(View.GONE);
         actDetails.setVisibility(View.VISIBLE);
         recyclerViewUnivAct.setVisibility(View.GONE);
-        recyclerViewAreaAct.setVisibility(View.GONE);
+        recyclerViewAreaOneAct.setVisibility(View.GONE);
+        recyclerViewAreaTwoAct.setVisibility(View.GONE);
         recyclerViewClgAct.setVisibility(View.GONE);
     }
 }

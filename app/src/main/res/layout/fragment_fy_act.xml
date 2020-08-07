@@ -89,6 +89,7 @@
             android:visibility="invisible">
 
             <TextView
+                android:paddingStart="-5dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -176,7 +177,7 @@
                 android:foreground="@drawable/ic_plus_24"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

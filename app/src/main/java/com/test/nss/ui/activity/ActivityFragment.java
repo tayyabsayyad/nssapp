@@ -13,17 +13,19 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.R;
 
 import static com.test.nss.ediary.blackish;
+import static com.test.nss.ediary.isFirst;
 import static com.test.nss.ediary.primaryColDark;
 
 public class ActivityFragment extends Fragment {
 
     View root;
     Toolbar toolbar;
-    Button firstButton;
-    Button secButton;
+    TextView firstButton;
+    TextView secButton;
 
     FragmentManager fm;
     TextView toolbarTitle;
@@ -51,25 +53,38 @@ public class ActivityFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         toolbar.setVisibility(View.VISIBLE);
 
-        firstButton.setOnClickListener(v -> {
-            firstButton.setTextColor(primaryColDark);
-            secButton.setTextColor(blackish);
+        if (isFirst) {
+            secButton.setTextColor(requireContext().getColor(R.color.grey));
+            firstButton.setOnClickListener(v -> {
+                firstButton.setTextColor(primaryColDark);
 
-            fm.beginTransaction().replace(R.id.act_list, new FirstHalfFrag()).addToBackStack("ActivityFrag").commit();
-        });
+                fm.beginTransaction().replace(R.id.act_list, new FirstHalfFrag()).addToBackStack("ActivityFrag").commit();
+            });
+            secButton.setOnClickListener(v -> {
+                if (isFirst)
+                    Snackbar.make(v, "Please complete First Year", Snackbar.LENGTH_SHORT).show();
+            });
+        } else {
+            secButton.setOnClickListener(v -> {
+                secButton.setTextColor(primaryColDark);
+                firstButton.setTextColor(blackish);
 
-        secButton.setOnClickListener(v -> {
-            secButton.setTextColor(blackish);
-            firstButton.setTextColor(primaryColDark);
+                fm.beginTransaction().replace(R.id.act_list, new SecHalfFrag()).addToBackStack("ActivityFrag").commit();
+            });
 
-            fm.beginTransaction().replace(R.id.act_list, new SecHalfFrag()).addToBackStack("ActivityFrag").commit();
-        });
+            firstButton.setOnClickListener(view1 -> {
+                firstButton.setTextColor(primaryColDark);
+                secButton.setTextColor(blackish);
+
+                fm.beginTransaction().replace(R.id.act_list, new FirstHalfFrag()).addToBackStack("ActivityFrag").commit();
+            });
+        }
     }
 
     public void onDetach() {
         super.onDetach();
         if (fm.getBackStackEntryCount() > 0) {
-            //Log.e("ActivityFragment", "onDetach: " + fm.getBackStackEntryCount());
+            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fm.popBackStack("ActivityFrag", 0);
         }
     }

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/leaderHelpDataCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    app:cardElevation="0dp"
+    android:orientation="vertical"
+    app:cardPreventCornerOverlap="true">
+
+    <LinearLayout
+        android:paddingStart="@dimen/space_10dp"
+        android:paddingEnd="@dimen/space_10dp"
+        android:minHeight="60dp"
+        android:layout_marginTop="@dimen/padding_5dp"
+        android:layout_marginBottom="@dimen/padding_5dp"
+        android:id="@+id/cardLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/leader"
+            android:text="Leader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/google_sans_bold"
+            android:gravity="start"
+            android:textColor="@color/blackGrey"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/clgNameLead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/google_sans_bold"
+            android:gravity="end"
+            android:textColor="@color/blackGrey"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="2dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:textSize="15sp"
+                android:id="@+id/lead_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans"
+                android:textColor="@color/blackGrey" />
+
+            <TextView
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:textSize="15sp"
+                android:id="@+id/lead_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans"
+                android:textColor="@color/blackGrey" />
+
+            <TextView
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:textSize="15sp"
+                android:id="@+id/lead_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans"
+                android:textColor="@color/blackGrey" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

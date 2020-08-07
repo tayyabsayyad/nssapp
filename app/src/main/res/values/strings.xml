@@ -14,15 +14,17 @@
     <string name="menu_help">Help</string>
 
     <string name="univ">Univeristy\nDistrict</string>
+    <string name="area1">Area Based Project 1</string>
+    <string name="area2">Area Based Project 2</string>
+
     <string name="area">Area Based Project 1-2</string>
-    <string name="clg">College Work</string>
+    <string name="clg">College\nWork</string>
 
     <string name="camp_details">Enter your everyday camp details below</string>
 
-    <string name="area2">Area Based Project 1-2</string>
     <string name="nss_first_year">NSS FIRST YEAR</string>
     <string name="work_hours">WORK HOURS</string>
-    <string name="help_details">For E-Diary/Activities related queries\ncontact the below authorities</string>
+    <string name="help_details">Contact Us</string>
     <string name="nss">National Service Scheme</string>
     <string name="mu">MUMBAI UNIVERSITY</string>
     <string name="completed_hours">Hours\nWorked</string>
@@ -67,6 +69,8 @@
 
     <string name="home">Home</string>
     <string name="menu_leader">Leader</string>
-    <string name="yes">yes</string>
-    <string name="no">no</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="total_hours">Total\nHours</string>
+    <string name="college_work">College Work</string>
 </resources>
