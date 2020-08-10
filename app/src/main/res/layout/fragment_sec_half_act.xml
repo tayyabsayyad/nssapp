@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/off_white"
     android:layout_height="match_parent"
     tools:context=".ui.activity.FirstHalfFrag">
 
@@ -24,6 +25,7 @@
             android:visibility="visible">
 
             <TextView
+                android:background="@drawable/ripple_light"
                 android:id="@+id/area_act1"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -42,6 +44,7 @@
                 android:visibility="visible" />
 
             <TextView
+                android:background="@drawable/ripple_light"
                 android:id="@+id/area_act2"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -62,6 +65,7 @@
             <TextView
                 android:id="@+id/univ_act2"
                 android:paddingEnd="@dimen/space_10dp"
+                android:background="@drawable/ripple_light"
                 android:drawableEnd="@drawable/ic_arrow_down"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -82,6 +86,7 @@
                 android:id="@+id/clg_act2"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@drawable/ripple_light"
                 android:paddingEnd="@dimen/space_10dp"
                 android:drawableEnd="@drawable/ic_arrow_down"
                 android:fontFamily="@font/google_sans"

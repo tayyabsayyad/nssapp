@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
-
-import org.apache.commons.collections4.ListUtils;
+import com.test.nss.ui.onClickInterface2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,33 +88,39 @@ public class SecHalfFrag extends Fragment {
         univAct = root.findViewById(R.id.univ_act2);
 
         areaActOne.setOnClickListener(view14 -> {
-            revealFab();
-            recyclerViewAreaOneAct.setVisibility(View.VISIBLE);
-            backAct.setVisibility(View.VISIBLE);
-            actDetails.setVisibility(View.GONE);
-            recyclerViewAreaTwoAct.setVisibility(View.GONE);
-            recyclerViewClgAct.setVisibility(View.GONE);
-            recyclerViewUnivAct.setVisibility(View.GONE);
+            new Handler().postDelayed(() -> {
+                revealFab();
+                recyclerViewAreaOneAct.setVisibility(View.VISIBLE);
+                backAct.setVisibility(View.VISIBLE);
+                actDetails.setVisibility(View.GONE);
+                recyclerViewAreaTwoAct.setVisibility(View.GONE);
+                recyclerViewClgAct.setVisibility(View.GONE);
+                recyclerViewUnivAct.setVisibility(View.GONE);
+            }, 350);
         });
 
         areaActTwo.setOnClickListener(view14 -> {
-            revealFab();
-            recyclerViewAreaTwoAct.setVisibility(View.VISIBLE);
-            backAct.setVisibility(View.VISIBLE);
-            actDetails.setVisibility(View.GONE);
-            recyclerViewAreaOneAct.setVisibility(View.GONE);
-            recyclerViewClgAct.setVisibility(View.GONE);
-            recyclerViewUnivAct.setVisibility(View.GONE);
+            new Handler().postDelayed(() -> {
+                revealFab();
+                recyclerViewAreaTwoAct.setVisibility(View.VISIBLE);
+                backAct.setVisibility(View.VISIBLE);
+                actDetails.setVisibility(View.GONE);
+                recyclerViewAreaOneAct.setVisibility(View.GONE);
+                recyclerViewClgAct.setVisibility(View.GONE);
+                recyclerViewUnivAct.setVisibility(View.GONE);
+            }, 350);
         });
 
         clgAct.setOnClickListener(view13 -> {
-            revealFab();
-            backAct.setVisibility(View.VISIBLE);
-            actDetails.setVisibility(View.GONE);
-            recyclerViewClgAct.setVisibility(View.VISIBLE);
-            recyclerViewAreaOneAct.setVisibility(View.GONE);
-            recyclerViewAreaTwoAct.setVisibility(View.GONE);
-            recyclerViewUnivAct.setVisibility(View.GONE);
+            new Handler().postDelayed(() -> {
+                revealFab();
+                backAct.setVisibility(View.VISIBLE);
+                actDetails.setVisibility(View.GONE);
+                recyclerViewClgAct.setVisibility(View.VISIBLE);
+                recyclerViewAreaOneAct.setVisibility(View.GONE);
+                recyclerViewAreaTwoAct.setVisibility(View.GONE);
+                recyclerViewUnivAct.setVisibility(View.GONE);
+            }, 350);
         });
 
         univAct.setOnClickListener(view12 -> {
@@ -126,20 +132,24 @@ public class SecHalfFrag extends Fragment {
             recyclerViewAreaOneAct.setVisibility(View.GONE);
             recyclerViewAreaTwoAct.setVisibility(View.GONE);
         });
+        onClickInterface2 onClickInterface2;
+        onClickInterface2 = abc -> {
 
-        MyListAdapterAct adapterAreaActOne = new MyListAdapterAct(areaOneListDataAct, mContext);
+        };
+
+        MyListAdapterAct adapterAreaActOne = new MyListAdapterAct(areaOneListDataAct, mContext, onClickInterface2);
         recyclerViewAreaOneAct.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewAreaOneAct.setAdapter(adapterAreaActOne);
 
-        MyListAdapterAct adapterAreaActTwo = new MyListAdapterAct(areaTwoListDataAct, mContext);
+        MyListAdapterAct adapterAreaActTwo = new MyListAdapterAct(areaTwoListDataAct, mContext, onClickInterface2);
         recyclerViewAreaTwoAct.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewAreaTwoAct.setAdapter(adapterAreaActTwo);
 
-        MyListAdapterAct adapterUnivAct = new MyListAdapterAct(univListDataAct, mContext);
+        MyListAdapterAct adapterUnivAct = new MyListAdapterAct(univListDataAct, mContext, onClickInterface2);
         recyclerViewUnivAct.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewUnivAct.setAdapter(adapterUnivAct);
 
-        MyListAdapterAct adapterClgAct = new MyListAdapterAct(clgListDataAct, mContext);
+        MyListAdapterAct adapterClgAct = new MyListAdapterAct(clgListDataAct, mContext, onClickInterface2);
         recyclerViewClgAct.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewClgAct.setAdapter(adapterClgAct);
 

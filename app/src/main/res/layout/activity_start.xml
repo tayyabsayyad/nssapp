@@ -32,15 +32,15 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:layout_marginEnd="@dimen/space_10dp"            android:layout_width="230dp"
+            android:layout_width="230dp"
+            android:layout_marginEnd="@dimen/space_10dp"
             android:drawableStart="@drawable/ic_user_16"
-            android:drawablePadding="10dp"
+            android:drawablePadding="11dp"
             android:fontFamily="@font/google_sans"
             android:id="@+id/username"
             android:layout_height="45dp"
             android:background="@android:color/transparent"
-            android:gravity="center"
-            android:hint="@string/edittextUsername"
+            android:gravity="start|center"
             android:inputType="text"
             android:maxLength="40"
             android:textColorHint="#B4B4B4"
@@ -49,45 +49,45 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="240dp"
+        android:layout_height="45dp"
         android:layout_marginTop="25dp"
-        android:background="@drawable/account_roundbg"
-        android:orientation="vertical"
+        android:background="@drawable/signup_roundbg"
+        android:paddingStart="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@id/linearLayout"
+        app:passwordToggleEnabled="true">
 
-        <EditText
-            android:layout_width="230dp"
-            android:layout_marginEnd="@dimen/space_10dp"
-            android:drawableStart="@drawable/ic_key_16"
-            android:drawablePadding="10dp"
-            android:fontFamily="@font/google_sans"
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password"
-            android:layout_height="45dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/space_10dp"
             android:background="@android:color/transparent"
-            android:gravity="center"
-            android:hint="@string/edittextPassword"
+            android:drawableStart="@drawable/ic_key_16"
+            android:drawablePadding="@dimen/space_10dp"
+            android:fontFamily="@font/google_sans"
+            android:gravity="start|center"
             android:inputType="textPassword"
             android:maxLength="30"
-            android:padding="8dp"
-            android:textColorHint="#B4B4B4"
             android:textColor="@color/blackGrey"
+            android:textColorHint="#B4B4B4"
             android:textSize="@dimen/text_14sp" />
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
-        android:layout_marginStart="@dimen/space_10dp"
         android:layout_marginTop="10dp"
         android:id="@+id/linearLayout4"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
+        android:layout_marginEnd="@dimen/padding_5dp"
+        android:gravity="center"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/space_10dp"
         android:orientation="horizontal"
         android:padding="@dimen/space_10dp"
+        android:minWidth="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
@@ -96,8 +96,7 @@
             android:id="@+id/startCheck"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp" />
+            android:layout_gravity="center" />
 
         <TextView
             android:fontFamily="@font/google_sans"
@@ -105,7 +104,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="5dp"
             android:text="Remember Me" />
     </LinearLayout>
 

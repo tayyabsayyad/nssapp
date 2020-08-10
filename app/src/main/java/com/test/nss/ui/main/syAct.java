@@ -34,7 +34,6 @@ import com.test.nss.ediary;
 
 import org.apache.commons.collections4.ListUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class syAct extends Fragment {
     Button area;
     Button clg;
 
-    LinearLayout mainSy;
+    //LinearLayout mainSy;
     Context mContext;
 
     RecyclerView univRecSy;
@@ -93,7 +92,7 @@ public class syAct extends Fragment {
         area = root.findViewById(R.id.main_area_sy);
         clg = root.findViewById(R.id.main_clg_sy);
 
-        mainSy = root.findViewById(R.id.main_sy);
+        //mainSy = root.findViewById(R.id.main_sy);
         add = root.findViewById(R.id.add2);
 
         univRecSy = root.findViewById(R.id.univRecSy);
@@ -116,7 +115,7 @@ public class syAct extends Fragment {
             Snackbar.make(view, "Swipe left on activity to modify", Snackbar.LENGTH_SHORT).show();
 
             whichAct = 23;
-            mainSy.setVisibility(View.VISIBLE);
+            //mainSy.setVisibility(View.VISIBLE);
             univRecSy.setVisibility(View.VISIBLE);
             areaRecSy.setVisibility(View.GONE);
             clgRecSy.setVisibility(View.GONE);
@@ -129,7 +128,7 @@ public class syAct extends Fragment {
 
         area.setOnClickListener(v -> {
             whichAct = 22;
-            mainSy.setVisibility(View.VISIBLE);
+            //mainSy.setVisibility(View.VISIBLE);
             add.setVisibility(View.VISIBLE);
 
             univRecSy.setVisibility(View.GONE);
@@ -142,7 +141,7 @@ public class syAct extends Fragment {
         });
 
         clg.setOnClickListener(v -> {
-            mainSy.setVisibility(View.VISIBLE);
+//            mainSy.setVisibility(View.VISIBLE);
 
             whichAct = 21;
             add.setVisibility(View.VISIBLE);
@@ -354,10 +353,25 @@ public class syAct extends Fragment {
                                     mdb.close();
                                     sb.show();
                                 } else {
-                                    Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
-                                            .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
-                                    sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
-                                    sb.show();
+                                    DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                    mdb.createDatabase();
+                                    mdb.open();
+                                    Cursor c = mdb.getActLeaderId(Integer.parseInt(univListDataSy.get(p).getId()));
+                                    c.moveToFirst();
+
+                                    if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
+                                        Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
+                                                .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                                        sb.show();
+                                    } else {
+                                        int leadId = c.getInt(c.getColumnIndex("Approved_by"));
+                                        Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                                                .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                                        sb.show();
+                                    }
+                                    mdb.close();
                                 }
                                 adapterUniv.notifyItemChanged(p);
                             }
@@ -566,10 +580,25 @@ public class syAct extends Fragment {
                                         mdb.close();
                                         sb.show();
                                     } else {
-                                        Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
-                                                .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
-                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
-                                        sb.show();
+                                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                        mdb.createDatabase();
+                                        mdb.open();
+                                        Cursor c = mdb.getActLeaderId(Integer.parseInt(areaDataMainSy.get(p).getId()));
+                                        c.moveToFirst();
+
+                                        if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
+                                            Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
+                                                    .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+                                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                                            sb.show();
+                                        } else {
+                                            int leadId = c.getInt(c.getColumnIndex("Approved_by"));
+                                            Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                                                    .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+                                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                                            sb.show();
+                                        }
+                                        mdb.close();
                                     }
                                     adapterArea.notifyItemChanged(p);
                                 }
@@ -775,11 +804,27 @@ public class syAct extends Fragment {
                                         mdb.close();
                                         sb.show();
                                     } else {
-                                        Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
-                                                .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
-                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
-                                        sb.show();
+                                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                        mdb.createDatabase();
+                                        mdb.open();
+                                        Cursor c = mdb.getActLeaderId(Integer.parseInt(clgListDataSy.get(p).getId()));
+                                        c.moveToFirst();
+
+                                        if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
+                                            Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
+                                                    .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+                                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                                            sb.show();
+                                        } else {
+                                            int leadId = c.getInt(c.getColumnIndex("Approved_by"));
+                                            Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                                                    .setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+                                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                                            sb.show();
+                                        }
+                                        mdb.close();
                                     }
+
                                     adapterClg.notifyItemChanged(p);
                                 }
                             }
@@ -801,9 +846,8 @@ public class syAct extends Fragment {
         itemTouchHelper3.attachToRecyclerView(recyclerViewUniv);
 
         add.setOnClickListener(view1 -> {
-            onDetach();
             Log.e("AAAAAA", "" + whichAct);
-            mainSy.setVisibility(View.GONE);
+            //mainSy.setVisibility(View.GONE);
             fragSy.setVisibility(View.GONE);
             univRecSy.setVisibility(View.GONE);
             areaRecSy.setVisibility(View.GONE);

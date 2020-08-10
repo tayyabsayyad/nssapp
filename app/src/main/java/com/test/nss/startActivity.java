@@ -1,23 +1,26 @@
 package com.test.nss;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,14 +56,19 @@ public class startActivity extends AppCompatActivity {
     EditText username;
     EditText password;
 
+    LinearLayout linearLayout, linearLayout2;
     Context mContext;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
         mContext = startActivity.this;
+
+        linearLayout = findViewById(R.id.linearLayout);
+        linearLayout2 = findViewById(R.id.linearLayout2);
 
         startReg = findViewById(R.id.register);
         startSummary = findViewById(R.id.loginSummary);
@@ -76,6 +84,7 @@ public class startActivity extends AppCompatActivity {
                 0, 7,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         startReg.setText(spannable);
+        username.requestFocus();
 
         startRemember.setOnClickListener(view ->
                 startCheck.setChecked(!startCheck.isChecked()));
@@ -115,6 +124,25 @@ public class startActivity extends AppCompatActivity {
         Animation animation = AnimationUtils.loadAnimation(startActivity.this, R.anim.bounce);
         animation.setInterpolator(new MyBounceInterpolator(1, 20));
 
+        username.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Animation animation3 = AnimationUtils.loadAnimation(startActivity.this, R.anim.bounce);
+                animation3.setInterpolator(new MyBounceInterpolator(0.1, 10));
+                linearLayout.startAnimation(animation3);
+                return false;
+            }
+        });
+
+        password.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Animation animation3 = AnimationUtils.loadAnimation(startActivity.this, R.anim.bounce);
+                animation3.setInterpolator(new MyBounceInterpolator(0.1, 10));
+                linearLayout2.startAnimation(animation3);
+                return false;
+            }
+        });
         //path.addCircle(x,y ,15, Path.Direction.CW);
         loginButton.setOnClickListener(view -> {
             loginButton.startAnimation(animation);
@@ -140,9 +168,7 @@ public class startActivity extends AppCompatActivity {
                                         SharedPreferences.Editor eddy = shareit.edit();
 
                                         Log.e("onResponse", "Logged In");
-                                        if (startCheck.isChecked()) {
-                                            eddy.putInt("logged", 1);
-                                        }
+
                                         JSONObject j = new JSONObject(response.body().string());
                                         AUTH_TOKEN = j.getString("auth_token");
                                         //Log.e("AUTH_TOKEN", AUTH_TOKEN);
@@ -151,57 +177,16 @@ public class startActivity extends AppCompatActivity {
                                         eddy.putString("VEC", VEC);
                                         eddy.apply();
 
-                                        Call<ResponseBody> call2 = RetrofitClient.getInstance().getApi().isLeader("Token " + AUTH_TOKEN);
-                                        call2.enqueue(new Callback<ResponseBody>() {
-                                            @Override
-                                            @EverythingIsNonNull
-                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
-                                                SharedPreferences.Editor eddy = shareit.edit();
-                                                if (response.isSuccessful() && response.body() != null) {
-                                                    try {
-                                                        JSONArray j2 = new JSONArray(response.body().string());
-                                                        if (j2.length() > 0) {
-                                                            /*isLeader = 1;
-                                                            leaderId = j2.getJSONObject(0).getInt("id");*/
-                                                            eddy.putInt("isLeader", 1);
-                                                            eddy.putInt("leaderId", j2.getJSONObject(0).getInt("id"));
-
-                                                            //Log.e("in", "onResponse: " + isLeader + leaderId);
-                                                        } else {
-                                                            eddy.putInt("isLeader", 0);
-                                                        }
-                                                        eddy.apply();
-
-                                                    } catch (JSONException | IOException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                } else if (response.errorBody() != null) {
-                                                    try {
-                                                        Log.e("Error", "onResponse: " + response.errorBody().string());
-                                                    } catch (IOException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            }
-
-                                            @Override
-                                            @EverythingIsNonNull
-                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                                            }
-                                        });
-
-                                        Call<ResponseBody> insertUsers = RetrofitClient.getInstance().getApi().getUserDetail(VEC);
+                                        Log.e("AA", "AAA" + AUTH_TOKEN);
+                                        Call<ResponseBody> insertUsers =
+                                                RetrofitClient.getInstance().getApi().getUserDetail("Token " + AUTH_TOKEN);
                                         insertUsers.enqueue(new Callback<ResponseBody>() {
                                             @Override
                                             @EverythingIsNonNull
                                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                                 if (response.isSuccessful() && response.body() != null) {
                                                     try {
-                                                        JSONObject j2 = new JSONObject(response.body().string());
-                                                        JSONArray j = new JSONArray();
-                                                        j.put(j2);
+                                                        JSONArray j = new JSONArray(response.body().string());
 
                                                         if (j.length() >= 0) {
                                                             DatabaseAdapter mDbHelper = new DatabaseAdapter(startActivity.this);
@@ -217,16 +202,33 @@ public class startActivity extends AppCompatActivity {
                                                                         j.getJSONObject(i).getString("LastName"),
                                                                         j.getJSONObject(i).getString("Email"),
                                                                         j.getJSONObject(i).getString("Contact"),
-                                                                        j.getJSONObject(i).getString("State")
+                                                                        j.getJSONObject(i).getString("State"),
+                                                                        j.getJSONObject(i).getString("IsLeader")
                                                                 );
                                                             }
                                                             mDbHelper.close();
                                                         }
+                                                        if (startCheck.isChecked()) {
+                                                            eddy.putInt("logged", 1);
+                                                            eddy.apply();
+                                                        }
+                                                        if (j.getJSONObject(0).getString("IsLeader").equals("Appointed"))
+                                                            eddy.putInt("isLeader", 1);
+                                                        else
+                                                            eddy.putInt("isLeader", 0);
+
+                                                        eddy.apply();
                                                         Intent i = new Intent(mContext, ediary.class);
                                                         startActivity(i);
                                                         finish();
                                                     } catch (JSONException | IOException e) {
                                                         Log.e("Failed", e.toString());
+                                                        e.printStackTrace();
+                                                    }
+                                                } else if (response.errorBody() != null) {
+                                                    try {
+                                                        Log.e("Error", "" + response.errorBody().string());
+                                                    } catch (IOException e) {
                                                         e.printStackTrace();
                                                     }
                                                 }

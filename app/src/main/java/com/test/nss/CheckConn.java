@@ -96,6 +96,7 @@ public class CheckConn extends BroadcastReceiver {
                 @Override
                 public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                     Log.e("onFailure", t.toString());
+                    Toast.makeText(context, "Working offline", Toast.LENGTH_SHORT).show();
                 }
             });
             //NetworkInfo.State.CONNECTED != wifiState
@@ -475,6 +476,7 @@ public class CheckConn extends BroadcastReceiver {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         try {
+                            //Log.e("AAAAA", "AA");
                             JSONArray j = new JSONArray(response.body().string());
 
                             if (j.length() > 0) {
@@ -483,6 +485,7 @@ public class CheckConn extends BroadcastReceiver {
                                 mDbHelper.open();
                                 //deleteData("HoursList");
                                 for (int i = 0; i <= 1; i++) {
+                                    //Log.e("AA", "AAA");
                                     mDbHelper.insertHours(
                                             j.getJSONObject(i).getString("Level"),
                                             j.getJSONObject(i).getInt("TotalHours")
@@ -492,6 +495,12 @@ public class CheckConn extends BroadcastReceiver {
                             }
                         } catch (JSONException | IOException e) {
                             Log.e("Failed", e.toString());
+                            e.printStackTrace();
+                        }
+                    } else if (response.errorBody() != null) {
+                        try {
+                            Log.e("Error", response.errorBody().string());
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }

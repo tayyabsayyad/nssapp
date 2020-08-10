@@ -22,7 +22,7 @@
             android:layout_marginBottom="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enter new hours"
+            android:text="Enter hours worked"
             android:textColor="@color/blackish"
             android:textSize="18sp" />
 

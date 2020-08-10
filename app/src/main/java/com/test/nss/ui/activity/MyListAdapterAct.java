@@ -11,6 +11,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.R;
+import com.test.nss.ui.onClickInterface2;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,11 +19,13 @@ import java.util.List;
 public class MyListAdapterAct extends RecyclerView.Adapter<MyListAdapterAct.ViewHolder> {
     //private AdapterDataAct[] listdata;
     List<AdapterDataAct> list = Collections.emptyList();
+    onClickInterface2 onClickInterface2;
     Context mCon;
 
-    public MyListAdapterAct(List<AdapterDataAct> list, Context mCon) {
+    public MyListAdapterAct(List<AdapterDataAct> list, Context mCon, onClickInterface2 onClickInterface2) {
         this.list = list;
         this.mCon = mCon;
+        this.onClickInterface2 = onClickInterface2;
     }
 
     @NonNull
@@ -37,6 +40,10 @@ public class MyListAdapterAct extends RecyclerView.Adapter<MyListAdapterAct.View
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.act.setText(list.get(position).getAct());
         holder.date.setText(list.get(position).getHours());
+        holder.actDataCard.setOnLongClickListener(view -> {
+            onClickInterface2.setClick(position);
+            return true;
+        });
     }
 
     @Override

@@ -228,6 +228,24 @@ public class DatabaseAdapter {
         }
     }
 
+    public void insertWork(String vec, String act, int a, int b, int c, int yr) {
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("VEC", vec);
+            contentValues.put("NatureOfWork", act);
+            contentValues.put("TotalHours", a);
+            contentValues.put("HoursWorked", b);
+            contentValues.put("RemainingHours", c);
+
+            if (yr == 1)
+                mDb.insert("WorkHoursFy", null, contentValues);
+            else
+                mDb.insert("WorkHoursSy", null, contentValues);
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
 
     public void insertUsers(String clgId,
                             String vec,
@@ -235,7 +253,8 @@ public class DatabaseAdapter {
                             String lname,
                             String email,
                             String contact,
-                            String state) {
+                            String state,
+                            String isLeader) {
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -246,6 +265,7 @@ public class DatabaseAdapter {
             contentValues.put("Email", email);
             contentValues.put("Contact", contact);
             contentValues.put("State", state);
+            contentValues.put("isLeader", isLeader);
 
             mDb.insert("Registration", null, contentValues);
         } catch (SQLException e) {
@@ -422,19 +442,39 @@ public class DatabaseAdapter {
         }
     }
 
-    public int getHours(String lvl) {
-        String sql = String.format("SELECT * FROM HoursList WHERE Level=\"%s\"", lvl);
+
+    public Cursor getHoursDet(String lvl, int yr) {
+        String sql;
+        if (yr == 1)
+            sql = String.format("SELECT * FROM WorkHoursFy WHERE NatureOfWork=\"%s\"", lvl);
+        else
+            sql = String.format("SELECT * FROM WorkHoursSy WHERE NatureOfWork=\"%s\"", lvl);
+
         Cursor mCur = mDb.rawQuery(sql, null);
         try {
             if (mCur.getCount() == 0) {
+            }
+            return mCur;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        } finally {
+            //mCur.close();
+        }
+    }
+
+    public int getHours(String lvl) {
+        try {
+            String sql = String.format("SELECT * FROM HoursList WHERE Level=\"%s\"", lvl);
+            Cursor mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() == 0) {
+                return 0;
             }
             mCur.moveToFirst();
             return mCur.getInt(mCur.getColumnIndex("TotalHours"));
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;
-        } finally {
-            mCur.close();
         }
     }
 

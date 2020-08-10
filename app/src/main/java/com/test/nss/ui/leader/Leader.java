@@ -1,6 +1,5 @@
 package com.test.nss.ui.leader;
 
-import android.animation.ObjectAnimator;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -9,8 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,7 +32,6 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -156,6 +152,7 @@ public class Leader extends Fragment {
                         Bundle args = new Bundle();
                         args.putString("thisVec2", abc1);
                         viewVolunteer.setArguments(args);
+                        recViewLeaderAll.setVisibility(View.GONE);
                         fragmentManager.beginTransaction().replace(R.id.detailsModify, viewVolunteer, "ViewVolunteer").addToBackStack("Leader").commit();
                     }
                     else if (response.errorBody() != null) {
@@ -246,7 +243,7 @@ public class Leader extends Fragment {
         if (fm.getBackStackEntryCount() > 0) {
             //fm.beginTransaction().remove(Objects.requireNonNull(fm.findFragmentByTag("Leader"))).commit();
             //fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.popBackStack("Leader", 0);
+            //fm.popBackStack("Leader", 0);
         }
     }
 }

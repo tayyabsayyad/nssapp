@@ -119,8 +119,8 @@ public class MainFragment extends Fragment {
         super.onDetach();
         FragmentManager fm = requireActivity().getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.popBackStack("MainFrag", 0);
+            //fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            //fm.popBackStack("MainFrag", 0);
         }
     }
 }

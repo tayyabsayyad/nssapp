@@ -115,7 +115,7 @@
                 android:layout_weight="1"
                 android:drawableEnd="@drawable/ic_arrow_down"
                 android:background="@drawable/signup_roundbg"
-                android:hint="tap to get list" />
+                android:hint="Enter college name" />
         </LinearLayout>
 
 

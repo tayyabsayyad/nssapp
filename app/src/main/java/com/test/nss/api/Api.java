@@ -26,7 +26,7 @@ public interface Api {
     @GET("/diary/api/PoDetials/")
     Call<ResponseBody> getPoData(@Header("Authorization") String token);
 
-    @POST("/diary/api/selfRegistration/")
+    @POST("/diary/selfreg")
     @FormUrlEncoded
     Call<ResponseBody> signup(
             @Field("State") String state,
@@ -92,8 +92,8 @@ public interface Api {
     @GET("/diary/api/dailyactivity/")
     Call<ResponseBody> getDailyAct(@Header("Authorization") String token);
 
-    @GET("/diary/api/selfRegistration/{vec}/")
-    Call<ResponseBody> getUserDetail(@Path("vec") String vec);
+    @GET("/diary/api/GetSelfRegView/")
+    Call<ResponseBody> getUserDetail(@Header("Authorization") String token);
 
     @PATCH("/diary/dailyactivity/{id2}/")
     @FormUrlEncoded
@@ -107,7 +107,7 @@ public interface Api {
                                @Path("id2") int id2
     );
 
-    @PUT("/diary/dailyactivity/{id2}/")
+    @PUT("/diary/dailyactivityLeaders/{id2}/")
     @FormUrlEncoded
     Call<ResponseBody> putApprove(@Header("Authorization") String token,
                                   @Field("Hours") int hours,

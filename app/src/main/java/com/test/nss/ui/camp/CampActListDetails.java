@@ -81,7 +81,7 @@ public class CampActListDetails extends Fragment {
                         int l = viewHolder.getAdapterPosition();
 
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(mContext, R.style.delDialog);
-                        builder2.setMessage("Are you sure?");
+                        builder2.setMessage("Are you sure you want to delete?");
                         builder2.setCancelable(false);
                         builder2.setNegativeButton("No", new DialogInterface.OnClickListener() {
                                     @Override
@@ -100,6 +100,7 @@ public class CampActListDetails extends Fragment {
                             mdb.open();
 
                             Log.e("asas", "onSwiped: " + campData.get(l).getCampId());
+                            Log.e("asas", "onSwiped: " + campData.get(l).getCampTitle());
                             Cursor c = mdb.getCampActListAllById(Integer.parseInt(campData.get(l).getCampId()));
                             Cursor c2 = mdb.getCampActListId(campData.get(l).getCampTitle());
                             c.moveToFirst();

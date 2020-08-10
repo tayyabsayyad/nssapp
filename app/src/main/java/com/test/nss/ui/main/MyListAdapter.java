@@ -2,7 +2,7 @@ package com.test.nss.ui.main;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +10,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.R;
 
 import java.util.Collections;
 import java.util.List;
+
+import static com.test.nss.ediary.green;
+import static com.test.nss.ediary.kesar;
+import static com.test.nss.ediary.red;
 
 public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
     //private AdapterDataMain[] listdata;
@@ -38,37 +43,24 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
         holder.date.setText(list.get(position).getDate());
         holder.act.setText(list.get(position).getAct());
         holder.hours.setText(list.get(position).getHours());
         holder.actId.setText(list.get(position).getId());
+        if (list.get(position).isApproved() == 1 && list.get(position).getState().equals("Approved")) {
+            setColor(holder, green);
+            holder.linearLayout.setBackground(mCon.getDrawable(R.drawable.ic_circle_app));
+            return;
+        }
         switch (list.get(position).getState()) {
-            case "Approved":
-                holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
-                holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
-                holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
-
-                holder.date.setTextColor(mCon.getColor(R.color.greenNic));
-                holder.act.setTextColor(mCon.getColor(R.color.greenNic));
-                holder.hours.setTextColor(mCon.getColor(R.color.greenNic));
-                break;
             case "LeaderDelete":
-                holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
-                holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
-                holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
-
-                holder.date.setTextColor(mCon.getColor(R.color.red));
-                holder.act.setTextColor(mCon.getColor(R.color.red));
-                holder.hours.setTextColor(mCon.getColor(R.color.red));
+                setColor(holder, red);
+                holder.linearLayout.setBackground(mCon.getDrawable(R.drawable.ic_circle_del));
                 break;
             case "LeaderModified":
-                holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
-                holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
-                holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
-
-                holder.date.setTextColor(mCon.getColor(R.color.kesar));
-                holder.act.setTextColor(mCon.getColor(R.color.kesar));
-                holder.hours.setTextColor(mCon.getColor(R.color.kesar));
+                setColor(holder, kesar);
+                holder.linearLayout.setBackground(mCon.getDrawable(R.drawable.ic_circle_mod));
                 break;
         }
     }
@@ -83,6 +75,19 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         notifyItemInserted(position);
     }
 
+    private void setColor(ViewHolder holder, int color) {
+        //holder.date.setTypeface(holder.date.getTypeface(), Typeface.BOLD);
+        //holder.act.setTypeface(holder.act.getTypeface(), Typeface.BOLD);
+        //holder.hours.setTypeface(holder.hours.getTypeface(), Typeface.BOLD);
+
+        holder.date.setTextColor(color);
+        holder.hours.setTextColor(Color.WHITE);
+
+        //bg.setTint(R.color.black);
+        //holder.act.setTextColor(color);
+        //holder.hours.setTextColor(color);
+    }
+
     // Remove a RecyclerView item containing a specified Data object
     public void remove(AdapterDataMain data) {
         int position = list.indexOf(data);
@@ -95,7 +100,9 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         public TextView act;
         public TextView hours;
         public TextView actId;
+        public Drawable dr;
 
+        public CardView cardView;
         public LinearLayout linearLayout;
 
         public ViewHolder(View itemView) {
@@ -105,7 +112,9 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
             this.hours = itemView.findViewById(R.id.hours);
             this.actId = itemView.findViewById(R.id.actID);
 
-            linearLayout = itemView.findViewById(R.id.dataLinear);
+            cardView = itemView.findViewById(R.id.dataCard);
+            linearLayout = itemView.findViewById(R.id.imageLinear);
+
         }
     }
 }

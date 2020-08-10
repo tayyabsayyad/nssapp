@@ -1,6 +1,7 @@
 package com.test.nss.ui.camp;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,18 +60,24 @@ public class CampFragment extends Fragment {
         //camp_main_details.setVisibility(View.VISIBLE);
 
         camp_act.setOnClickListener(v -> {
-            camp_main_details.setVisibility(View.GONE);
-            fm.beginTransaction().replace(R.id.camp_frag, new CampDetailsFrag(), "CampDetailsFrag").addToBackStack("CampFrag").commit();
+            new Handler().postDelayed(() -> {
+                camp_main_details.setVisibility(View.GONE);
+                fm.beginTransaction().replace(R.id.camp_frag, new CampDetailsFrag(), "CampDetailsFrag").addToBackStack("CampFrag").commit();
+            }, 350);
         });
 
         camp_days.setOnClickListener(view2 -> {
-            camp_main_details.setVisibility(View.GONE);
-            fm.beginTransaction().replace(R.id.camp_frag, new CampActListDetails(), "CampList").addToBackStack("CampFrag").commit();
+            new Handler().postDelayed(() -> {
+                camp_main_details.setVisibility(View.GONE);
+                fm.beginTransaction().replace(R.id.camp_frag, new CampActListDetails(), "CampList").addToBackStack("CampFrag").commit();
+            }, 350);
         });
 
         camp_details.setOnClickListener(view1 -> {
-            camp_main_details.setVisibility(View.GONE);
-            fm.beginTransaction().replace(R.id.camp_frag, new CampDetails(), "CampDetails").addToBackStack("CampFrag").commit();
+            new Handler().postDelayed(() -> {
+                camp_main_details.setVisibility(View.GONE);
+                fm.beginTransaction().replace(R.id.camp_frag, new CampDetails(), "CampDetails").addToBackStack("CampFrag").commit();
+            }, 350);
         });
 
     }
@@ -81,7 +88,7 @@ public class CampFragment extends Fragment {
         super.onDetach();
         if (fm.getBackStackEntryCount() > 0) {
             Log.e("CampFrag", "onDetach: " + fm.getBackStackEntryCount());
-            fm.popBackStack("CampFrag", 0);
+//            fm.popBackStack("CampFrag", 0);
         }
     }
 }

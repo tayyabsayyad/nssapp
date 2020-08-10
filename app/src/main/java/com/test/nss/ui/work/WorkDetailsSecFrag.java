@@ -12,11 +12,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.test.nss.R;
 import com.test.nss.DatabaseAdapter;
+import com.test.nss.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.test.nss.ediary.VEC;
 
 
 public class WorkDetailsSecFrag extends Fragment {
@@ -51,7 +53,7 @@ public class WorkDetailsSecFrag extends Fragment {
     public void onDetach() {
         super.onDetach();
         fm = requireActivity().getSupportFragmentManager();
-        fm.popBackStack("WorkFrag", 0);
+        //fm.popBackStack("WorkFrag", 0);
     }
 
     public List<AdapterDataWork> secHalfWorkData() {
@@ -104,6 +106,43 @@ public class WorkDetailsSecFrag extends Fragment {
             univRemHours = univLvl;
         else
             univRemHours = Integer.parseInt("00");
+
+        m = new DatabaseAdapter(requireContext());
+        m.createDatabase();
+        m.open();
+        m.insertWork(
+                VEC,
+                "Area Based 1",
+                areaLvlOne,
+                areaCompOne,
+                areaRemOneHours,
+                1
+        );
+        m.insertWork(
+                VEC,
+                "Area Based 2",
+                areaLvlTwo,
+                areaCompTwo,
+                areaRemTwoHours,
+                1
+        );
+        m.insertWork(
+                VEC,
+                "University",
+                univLvl,
+                univComp,
+                univRemHours,
+                1
+        );
+        m.insertWork(
+                VEC,
+                "College",
+                clgLvl,
+                clgComp,
+                clgRemHours,
+                1
+        );
+        m.close();
 
         data.add(new AdapterDataWork("Area Based 1", String.valueOf(areaLvlOne), String.valueOf(areaCompOne), String.valueOf(areaRemOneHours)));
         data.add(new AdapterDataWork("Area Based 2", String.valueOf(areaLvlTwo), String.valueOf(areaCompTwo), String.valueOf(areaRemTwoHours)));

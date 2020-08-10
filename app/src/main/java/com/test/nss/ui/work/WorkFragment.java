@@ -1,6 +1,8 @@
 package com.test.nss.ui.work;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.R;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.test.nss.ediary.blackish;
 import static com.test.nss.ediary.isFirst;
 import static com.test.nss.ediary.primaryColDark;
@@ -66,11 +69,23 @@ public class WorkFragment extends Fragment {
                     Snackbar.make(v, "Please complete First Year", Snackbar.LENGTH_SHORT).show();
             });
         } else {
+            firstButton.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Log.e("AA", "AAA");
+                    SharedPreferences shareit = requireContext().getSharedPreferences("KEY", MODE_PRIVATE);
+                    SharedPreferences.Editor eddy = shareit.edit();
+                    eddy.putBoolean("isCont", false);
+                    eddy.apply();
+                    return true;
+                }
+            });
             secButton.setOnClickListener(v -> {
                 secButton.setTextColor(primaryColDark);
                 firstButton.setTextColor(blackish);
 
                 hoursInfo.setVisibility(View.GONE);
+
                 fm.beginTransaction().replace(R.id.work_details, new WorkDetailsSecFrag()).addToBackStack("WorkFrag").commit();
             });
 
@@ -88,8 +103,8 @@ public class WorkFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.popBackStack("WorkFrag", 0);
+            //fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            //    fm.popBackStack("WorkFrag", 0);
         }
     }
 }
