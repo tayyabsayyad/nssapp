@@ -11,12 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,10 +27,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
+import com.test.nss.api.RetrofitClient;
+import com.test.nss.ediary;
 import com.test.nss.ui.onClickInterface2;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 
 public class SecHalfFrag extends Fragment {
 
@@ -49,9 +61,11 @@ public class SecHalfFrag extends Fragment {
     TextView clgAct;
     TextView univAct;
 
+    onClickInterface2 onClickInterface2;
     FloatingActionButton backAct;
 
     LinearLayout actDetails;
+    int act = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +102,7 @@ public class SecHalfFrag extends Fragment {
         univAct = root.findViewById(R.id.univ_act2);
 
         areaActOne.setOnClickListener(view14 -> {
+            act = 5;
             new Handler().postDelayed(() -> {
                 revealFab();
                 recyclerViewAreaOneAct.setVisibility(View.VISIBLE);
@@ -100,6 +115,7 @@ public class SecHalfFrag extends Fragment {
         });
 
         areaActTwo.setOnClickListener(view14 -> {
+            act = 6;
             new Handler().postDelayed(() -> {
                 revealFab();
                 recyclerViewAreaTwoAct.setVisibility(View.VISIBLE);
@@ -112,6 +128,7 @@ public class SecHalfFrag extends Fragment {
         });
 
         clgAct.setOnClickListener(view13 -> {
+            act = 7;
             new Handler().postDelayed(() -> {
                 revealFab();
                 backAct.setVisibility(View.VISIBLE);
@@ -124,17 +141,123 @@ public class SecHalfFrag extends Fragment {
         });
 
         univAct.setOnClickListener(view12 -> {
-            revealFab();
-            backAct.setVisibility(View.VISIBLE);
-            actDetails.setVisibility(View.GONE);
-            recyclerViewUnivAct.setVisibility(View.VISIBLE);
-            recyclerViewClgAct.setVisibility(View.GONE);
-            recyclerViewAreaOneAct.setVisibility(View.GONE);
-            recyclerViewAreaTwoAct.setVisibility(View.GONE);
+            act = 4;
+            new Handler().postDelayed(() -> {
+                revealFab();
+                backAct.setVisibility(View.VISIBLE);
+                actDetails.setVisibility(View.GONE);
+                recyclerViewUnivAct.setVisibility(View.VISIBLE);
+                recyclerViewClgAct.setVisibility(View.GONE);
+                recyclerViewAreaOneAct.setVisibility(View.GONE);
+                recyclerViewAreaTwoAct.setVisibility(View.GONE);
+            }, 350);
         });
-        onClickInterface2 onClickInterface2;
-        onClickInterface2 = abc -> {
 
+        onClickInterface2 = abc -> {
+            Toast.makeText(mContext, "Entering today's date", Toast.LENGTH_SHORT).show();
+
+            String hours = "";
+            String actName = "";
+
+            switch (act) {
+                case 4:
+                    if (!univListDataAct.isEmpty()) {
+                        actName = univListDataAct.get(abc).getAct();
+                        hours = univListDataAct.get(abc).getHours();
+                    }
+                case 5:
+                    if (!areaOneListDataAct.isEmpty()) {
+                        actName = areaOneListDataAct.get(abc).getAct();
+                        hours = areaOneListDataAct.get(abc).getHours();
+                    }
+                    break;
+                case 6:
+                    if (!areaTwoListDataAct.isEmpty()) {
+                        actName = areaTwoListDataAct.get(abc).getAct();
+                        hours = areaTwoListDataAct.get(abc).getHours();
+                    }
+                    break;
+                case 7:
+                    if (!clgListDataAct.isEmpty()) {
+                        actName = clgListDataAct.get(abc).getAct();
+                        hours = clgListDataAct.get(abc).getHours();
+                    }
+                    break;
+            }
+
+            if (!actName.equals("") && !hours.equals("") && act != -1) {
+                String actCode = getResources().getStringArray(R.array.valOfActNames)[act];
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
+                View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
+
+                EditText input = viewInflated.findViewById(R.id.input);
+                builder.setView(viewInflated);
+
+                builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                    dialog.cancel();
+                });
+
+                String finalHours = hours;
+                String finalActName = actName;
+                builder.setPositiveButton(android.R.string.ok, (dialog, i) -> {
+                    int h = Integer.parseInt(finalHours);
+                    int j = Integer.parseInt(input.getText().toString());
+                    if (j > 0 && j <= h) {
+                        dialog.dismiss();
+                        Calendar cal = Calendar.getInstance();
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                        mdb.createDatabase();
+                        mdb.open();
+                        mdb.insertActOff(
+                                ediary.VEC,
+                                actCode,
+                                formatter.format(cal.getTime()),
+                                finalActName,
+                                //actId.getText().toString(),
+                                String.valueOf(j),
+                                0
+                        );
+
+                        Cursor m = mdb.getActAssigActNameAdmin(finalActName);
+                        m.moveToFirst();
+                        Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
+                                "Token " + ediary.AUTH_TOKEN,
+                                ediary.VEC,
+                                m.getInt(m.getColumnIndex("id")),// AAA
+                                j,
+                                formatter.format(cal.getTime()),
+                                m.getInt(m.getColumnIndex("activityType")),
+                                1
+                        );
+                        mdb.close();
+                        pushActList.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            @EverythingIsNonNull
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                if (response.isSuccessful()) {
+                                    Toast.makeText(mContext, "Entered", Toast.LENGTH_SHORT).show();
+                                    DatabaseAdapter m = new DatabaseAdapter(mContext);
+                                    m.createDatabase();
+                                    m.open();
+                                    m.setSync("DailyActivity", 1);
+                                    m.close();
+                                } else
+                                    Toast.makeText(mContext, "Entered locally", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
+                    } else
+                        Toast.makeText(mContext, "Enter correct worked hours", Toast.LENGTH_SHORT).show();
+                });
+
+                builder.show();
+            }
         };
 
         MyListAdapterAct adapterAreaActOne = new MyListAdapterAct(areaOneListDataAct, mContext, onClickInterface2);

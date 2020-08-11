@@ -38,8 +38,8 @@ public class ActivityFragment extends Fragment {
         toolbar = requireActivity().findViewById(R.id.toolbar);
         fm = requireActivity().getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStackImmediate("ActivityFrag", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.popBackStack(this.toString(), 0);
+            //fm.popBackStackImmediate("ActivityFrag", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            //fm.popBackStack(this.toString(), 0);
         }
 
         firstButton = root.findViewById(R.id.firstButton);

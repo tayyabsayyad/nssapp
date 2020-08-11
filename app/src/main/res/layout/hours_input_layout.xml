@@ -27,12 +27,10 @@
             android:textSize="18sp" />
 
         <EditText
-            android:background="@color/transparent"
             android:textColor="@color/colorPrimary"
             android:id="@+id/input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="1-10"
             android:maxLength="2"
             android:inputType="number"/>
     </LinearLayout>

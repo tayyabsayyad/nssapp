@@ -2,7 +2,6 @@ package com.test.nss.ui.main;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
 
         holder.date.setText(list.get(position).getDate());
         holder.act.setText(list.get(position).getAct());
-        holder.hours.setText(list.get(position).getHours());
+        holder.hours.setText(String.format("%sh", list.get(position).getHours()));
         holder.actId.setText(list.get(position).getId());
         if (list.get(position).isApproved() == 1 && list.get(position).getState().equals("Approved")) {
             setColor(holder, green);
@@ -100,7 +99,6 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         public TextView act;
         public TextView hours;
         public TextView actId;
-        public Drawable dr;
 
         public CardView cardView;
         public LinearLayout linearLayout;

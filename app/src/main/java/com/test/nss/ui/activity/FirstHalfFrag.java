@@ -173,22 +173,30 @@ public class FirstHalfFrag extends Fragment {
             String hours = "";
             String actName = "";
 
-            Log.e("AAA", "" + abc);
-            if (!areaOneListDataAct.isEmpty()) {
-                actName = areaOneListDataAct.get(abc).getAct();
-                hours = areaOneListDataAct.get(abc).getHours();
-            }
-            if (!areaTwoListDataAct.isEmpty()) {
-                actName = areaTwoListDataAct.get(abc).getAct();
-                hours = areaTwoListDataAct.get(abc).getHours();
-            }
-            if (!clgListDataAct.isEmpty()) {
-                actName = clgListDataAct.get(abc).getAct();
-                hours = clgListDataAct.get(abc).getHours();
-            }
-            if (!univListDataAct.isEmpty()) {
-                actName = univListDataAct.get(abc).getAct();
-                hours = univListDataAct.get(abc).getHours();
+            switch (act) {
+                case 0:
+                    if (!univListDataAct.isEmpty()) {
+                        actName = univListDataAct.get(abc).getAct();
+                        hours = univListDataAct.get(abc).getHours();
+                    }
+                case 1:
+                    if (!areaOneListDataAct.isEmpty()) {
+                        actName = areaOneListDataAct.get(abc).getAct();
+                        hours = areaOneListDataAct.get(abc).getHours();
+                    }
+                    break;
+                case 2:
+                    if (!areaTwoListDataAct.isEmpty()) {
+                        actName = areaTwoListDataAct.get(abc).getAct();
+                        hours = areaTwoListDataAct.get(abc).getHours();
+                    }
+                    break;
+                case 3:
+                    if (!clgListDataAct.isEmpty()) {
+                        actName = clgListDataAct.get(abc).getAct();
+                        hours = clgListDataAct.get(abc).getHours();
+                    }
+                    break;
             }
 
             if (!actName.equals("") && !hours.equals("") && act != -1) {
@@ -208,7 +216,7 @@ public class FirstHalfFrag extends Fragment {
                 builder.setPositiveButton(android.R.string.ok, (dialog, i) -> {
                     int h = Integer.parseInt(finalHours);
                     int j = Integer.parseInt(input.getText().toString());
-                    if (j >= 0 && j <= h) {
+                    if (j > 0 && j <= h) {
                         dialog.dismiss();
                         Calendar cal = Calendar.getInstance();
                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

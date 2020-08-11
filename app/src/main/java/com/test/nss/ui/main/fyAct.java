@@ -1,7 +1,9 @@
 package com.test.nss.ui.main;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -30,7 +32,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
-import com.test.nss.SwipeHelperRight;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
 
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +52,6 @@ import static com.test.nss.R.color.colorPrimaryDark;
 import static com.test.nss.ediary.isFirst;
 import static com.test.nss.ediary.isLeader;
 import static com.test.nss.ediary.primaryColDark;
-import static com.test.nss.ediary.transparent;
 
 public class fyAct extends Fragment {
 
@@ -188,131 +189,44 @@ public class fyAct extends Fragment {
         MyListAdapter adapterUniv = new MyListAdapter(univListDataFy, mContext);
         adapterUniv.notifyDataSetChanged();
 
-        SwipeHelperRight swipeHelperRightUniv = new SwipeHelperRight(mContext, recyclerViewUniv) {
+        ItemTouchHelper.SimpleCallback simpleCallbackUniv = new ItemTouchHelper.SimpleCallback
+                (100, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
-            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                if (isFirst && adapterUniv.list.get(viewHolder.getAdapterPosition()).getState().equals("Modified") ||
-                        isFirst && adapterUniv.list.get(viewHolder.getAdapterPosition()).getState().equals("Submitted")) {
-                    underlayButtons.add(new SwipeHelperRight.UnderlayButton(
-                            mContext,
-                            "",
-                            R.drawable.ic_edit_24,
-                            transparent,
-                            pos -> {
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
 
-                                int p;
-                                if (viewHolder.getAdapterPosition() == -1)
-                                    p = viewHolder.getAdapterPosition() + 1;
 
-                                else if (viewHolder.getAdapterPosition() == univListDataFy.size())
-                                    p = viewHolder.getAdapterPosition() - 1;
-                                else
-                                    p = viewHolder.getAdapterPosition();
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int p;
+                if (viewHolder.getAdapterPosition() == -1)
+                    p = viewHolder.getAdapterPosition() + 1;
 
-                                int actID = Integer.parseInt(univListDataFy.get(p).getId());
-                                AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
-                                View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
+                else if (viewHolder.getAdapterPosition() == univListDataFy.size())
+                    p = viewHolder.getAdapterPosition() - 1;
+                else
+                    p = viewHolder.getAdapterPosition();
 
-                                EditText input = viewInflated.findViewById(R.id.input);
-                                builder.setView(viewInflated);
-
-                                builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                                    dialog.cancel();
-                                    adapterUniv.notifyItemChanged(p);
-                                });
-
-                                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                                    dialog.dismiss();
-
-                                    if (!input.getText().toString().trim().equals("")) {
-                                        newHours = Integer.parseInt(input.getText().toString());
-
-                                        if (newHours >= 1 && newHours <= 10) {
-                                            String actName = adapterUniv.list.get(p).getAct();
-
-                                            DatabaseAdapter mdb = new DatabaseAdapter(mContext);
-                                            mdb.createDatabase();
-                                            mdb.open();
-                                            mdb.setDetails(newHours, "Modified", actID);
-
-                                            Cursor c = mdb.getActAssigActNameAdmin(actName);
-                                            c.moveToFirst();
-
-                                            univListDataFy.add(p, new AdapterDataMain(
-                                                            adapterUniv.list.get(p).getDate(),
-                                                            adapterUniv.list.get(p).getAct(),
-                                                            String.valueOf(newHours),
-                                                            adapterUniv.list.get(p).getId(),
-                                                            adapterUniv.list.get(p).isApproved(),
-                                                            "Modified"
-                                                    )
-                                            );
-
-                                            adapterUniv.notifyDataSetChanged();
-                                            univListDataFy.remove(p + 1);
-                                            adapterUniv.notifyItemInserted(p);
-
-                                            //TODO: Offline mode needs to be checked
-                                            //mdb.setSyncActDetails(0, actID);
-
-                                            Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                                    "Token " + ediary.AUTH_TOKEN,
-                                                    newHours,
-                                                    ediary.VEC,
-                                                    Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
-                                                    Integer.parseInt(c.getString(c.getColumnIndex("id"))),
-                                                    3,
-
-                                                    actID
-                                            );
-                                            c.close();
-                                            mdb.close();
-                                            putHours.enqueue(new Callback<ResponseBody>() {
-                                                @Override
-                                                @EverythingIsNonNull
-                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                    if (response.isSuccessful())
-                                                        Snackbar.make(view, "Edited to " + newHours + "hours", Snackbar.LENGTH_SHORT);
-                                                    else if (response.errorBody() != null) {
-                                                        try {
-                                                            Toast.makeText(requireContext(), "onResponse: " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                    }
-                                                }
-
-                                                @Override
-                                                @EverythingIsNonNull
-                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                    Log.e("Error:onFailure", t.toString());
-                                                }
-                                            });
-                                        } else
-                                            Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
+                if (isFirst && adapterUniv.list.get(p).getState().equals("Modified") ||
+                        isFirst && adapterUniv.list.get(p).getState().equals("Submitted")) {
+                    if (direction == ItemTouchHelper.RIGHT) {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(mContext, R.style.delDialog);
+                        builder2.setMessage("Are you sure you want to delete?");
+                        builder2.setCancelable(false);
+                        builder2.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                        adapterUniv.notifyItemChanged(p);
                                     }
-                                });
+                                }
+                        );
 
-                                if (viewInflated.getParent() != null)
-                                    ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
-                                builder.show();
-                            }
-                    ));
-                    underlayButtons.add(new SwipeHelperRight.UnderlayButton(
-                            mContext,
-                            "",
-                            R.drawable.ic_del_24,
-                            transparent,
-                            pos -> {
-                                int p;
-                                if (viewHolder.getAdapterPosition() == -1)
-                                    p = viewHolder.getAdapterPosition() + 1;
-
-                                else if (viewHolder.getAdapterPosition() == univListDataFy.size())
-                                    p = viewHolder.getAdapterPosition() - 1;
-                                else
-                                    p = viewHolder.getAdapterPosition();
-
+                        builder2.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
                                 int actID = Integer.parseInt(univListDataFy.get(p).getId());
                                 String actName = adapterUniv.list.get(p).getAct();
 
@@ -352,66 +266,174 @@ public class fyAct extends Fragment {
                                 });
                                 mdb.close();
                             }
-                    ));
-                } else if (univListDataFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved")) {
-                    underlayButtons.add(new UnderlayButton(
-                            mContext,
-                            "",
-                            R.drawable.ic_eye_24,
-                            transparent,
-                            new UnderlayButtonClickListener() {
-                                @Override
-                                public void onClick(int pos) {
-                                    int p;
-                                    if (viewHolder.getAdapterPosition() == -1)
-                                        p = viewHolder.getAdapterPosition() + 1;
+                        });
+                        builder2.show();
+                    } else if (direction == ItemTouchHelper.LEFT) {
+                        int actID = Integer.parseInt(univListDataFy.get(p).getId());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
+                        View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
-                                    else if (viewHolder.getAdapterPosition() == univListDataFy.size())
-                                        p = viewHolder.getAdapterPosition() - 1;
-                                    else
-                                        p = viewHolder.getAdapterPosition();
+                        EditText input = viewInflated.findViewById(R.id.input);
+                        builder.setView(viewInflated);
 
-                                    if (isLeader != 1) {
-                                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
-                                        mdb.createDatabase();
-                                        mdb.open();
-                                        Cursor c = mdb.getActLeaderId(Integer.parseInt(univListDataFy.get(p).getId()));
-                                        c.moveToFirst();
-                                        int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-
-                                        Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                                .setTextColor(mContext.getColor(colorPrimaryDark));
-                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
-                                        mdb.close();
-                                        sb.show();
-                                    } else {
-                                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
-                                        mdb.createDatabase();
-                                        mdb.open();
-                                        Cursor c = mdb.getActLeaderId(Integer.parseInt(univListDataFy.get(p).getId()));
-                                        c.moveToFirst();
-
-                                        if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
-                                            Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
-                                                    .setTextColor(mContext.getColor(colorPrimaryDark));
-                                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
-                                            sb.show();
-                                        } else {
-                                            int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-                                            Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                                    .setTextColor(mContext.getColor(colorPrimaryDark));
-                                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
-                                            sb.show();
-                                        }
-                                        mdb.close();
-                                    }
+                        builder.setCancelable(false);
+                        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                                    dialog.cancel();
                                     adapterUniv.notifyItemChanged(p);
                                 }
-                            }
-                    ));
+                        );
+
+                        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            dialog.dismiss();
+
+                            //Log.e("Yes this", adapterArea.list.get(p).getAct());
+                            if (!input.getText().toString().trim().equals("")) {
+                                newHours = Integer.parseInt(input.getText().toString());
+
+                                if (newHours >= 1 && newHours <= 10) {
+                                    String actName = adapterUniv.list.get(p).getAct();
+
+                                    DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                    mdb.createDatabase();
+                                    mdb.open();
+                                    mdb.setDetails(newHours, "Modified", actID);
+
+                                    Cursor c = mdb.getActAssigActNameAdmin(actName);
+                                    c.moveToFirst();
+
+                                    univListDataFy.add(p, new AdapterDataMain(
+                                                    adapterUniv.list.get(p).getDate(),
+                                                    adapterUniv.list.get(p).getAct(),
+                                                    String.valueOf(newHours),
+                                                    adapterUniv.list.get(p).getId(),
+                                                    adapterUniv.list.get(p).isApproved(),
+                                                    "Modified"
+                                            )
+                                    );
+
+                                    adapterUniv.notifyDataSetChanged();
+                                    univListDataFy.remove(p + 1);
+                                    adapterUniv.notifyItemInserted(p);
+
+                                    //TODO: Offline mode needs to be checked
+                                    //mdb.setSyncActDetails(0, actID);
+
+                                    Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
+                                            "Token " + ediary.AUTH_TOKEN,
+                                            newHours,
+                                            ediary.VEC,
+                                            Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
+                                            Integer.parseInt(c.getString(c.getColumnIndex("id"))),
+                                            3,
+
+                                            actID
+                                    );
+                                    c.close();
+                                    mdb.close();
+                                    putHours.enqueue(new Callback<ResponseBody>() {
+                                        @Override
+                                        @EverythingIsNonNull
+                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                            if (response.isSuccessful())
+                                                Snackbar.make(view, "Edited to " + newHours + "hours", Snackbar.LENGTH_SHORT);
+                                            else if (response.errorBody() != null) {
+                                                try {
+                                                    Toast.makeText(requireContext(), "onResponse: " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        @EverythingIsNonNull
+                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                            Log.e("Error:onFailure", t.toString());
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
+                                    adapterUniv.notifyItemChanged(p);
+                                }
+                            } else
+                                adapterUniv.notifyItemChanged(p);
+                        });
+
+                        if (viewInflated.getParent() != null)
+                            ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
+                        builder.show();
+
+                    }
+                } else if (univListDataFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved")) {
+
+                    if (isLeader != 1) {
+                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                        mdb.createDatabase();
+                        mdb.open();
+                        Cursor c = mdb.getActLeaderId(Integer.parseInt(univListDataFy.get(p).getId()));
+                        c.moveToFirst();
+                        int leadId = c.getInt(c.getColumnIndex("Approved_by"));
+
+                        Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                                .setTextColor(mContext.getColor(colorPrimaryDark));
+                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                        mdb.close();
+                        sb.show();
+                    } else {
+                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                        mdb.createDatabase();
+                        mdb.open();
+                        Cursor c = mdb.getActLeaderId(Integer.parseInt(univListDataFy.get(p).getId()));
+                        c.moveToFirst();
+
+                        if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
+                            Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
+                                    .setTextColor(mContext.getColor(colorPrimaryDark));
+                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                            sb.show();
+                        } else {
+                            int leadId = c.getInt(c.getColumnIndex("Approved_by"));
+                            Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                                    .setTextColor(mContext.getColor(colorPrimaryDark));
+                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                            sb.show();
+                        }
+                        mdb.close();
+                    }
+                    adapterUniv.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                int p;
+                if (viewHolder.getAdapterPosition() == -1)
+                    p = viewHolder.getAdapterPosition() + 1;
+                else if (viewHolder.getAdapterPosition() == univListDataFy.size())
+                    p = viewHolder.getAdapterPosition() - 1;
+                else
+                    p = viewHolder.getAdapterPosition();
+                if (isFirst && adapterUniv.list.get(p).getState().equals("Modified") ||
+                        isFirst && adapterUniv.list.get(p).getState().equals("Submitted")) {
+                    new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                            .addSwipeRightActionIcon(R.drawable.ic_del_24)
+                            .addSwipeLeftActionIcon(R.drawable.ic_edit_24)
+                            .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                            .create()
+                            .decorate();
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                } else if (univListDataFy.get(p).getState().equals("Approved")) {
+                    new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                            .addSwipeRightActionIcon(R.drawable.ic_eye_24)
+                            .addSwipeLeftActionIcon(R.drawable.ic_eye_24)
+                            .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                            .create()
+                            .decorate();
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                 }
             }
         };
+        adapterUniv.notifyDataSetChanged();
 
         recyclerViewUniv.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewUniv.setAdapter(adapterUniv);
@@ -421,138 +443,48 @@ public class fyAct extends Fragment {
         MyListAdapter adapterArea = new MyListAdapter(areaDataMainFy, mContext);
         adapterArea.notifyDataSetChanged();
 
-        SwipeHelperRight swipeHelperRightArea = new SwipeHelperRight(mContext, recyclerViewArea) {
+        ItemTouchHelper.SimpleCallback simpleCallbackArea = new ItemTouchHelper.SimpleCallback
+                (100, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
-            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int p;
+                if (viewHolder.getAdapterPosition() == -1)
+                    p = viewHolder.getAdapterPosition() + 1;
+
+                else if (viewHolder.getAdapterPosition() == areaDataMainFy.size())
+                    p = viewHolder.getAdapterPosition() - 1;
+                else
+                    p = viewHolder.getAdapterPosition();
+
                 if (isFirst && adapterArea.list.get(viewHolder.getAdapterPosition()).getState().equals("Modified") ||
                         isFirst && adapterArea.list.get(viewHolder.getAdapterPosition()).getState().equals("Submitted")) {
-                    underlayButtons.add(new SwipeHelperRight.UnderlayButton(
-                            mContext,
-                            "",
-                            R.drawable.ic_edit_24,
-                            transparent,
-                            pos -> {
-
-                                int p;
-                                if (viewHolder.getAdapterPosition() == -1)
-                                    p = viewHolder.getAdapterPosition() + 1;
-
-                                else if (viewHolder.getAdapterPosition() == areaDataMainFy.size())
-                                    p = viewHolder.getAdapterPosition() - 1;
-                                else
-                                    p = viewHolder.getAdapterPosition();
-
-                                int actID = Integer.parseInt(areaDataMainFy.get(p).getId());
-                                AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
-                                View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
-
-                                EditText input = viewInflated.findViewById(R.id.input);
-                                builder.setView(viewInflated);
-
-                                builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
-
-                                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                                    dialog.dismiss();
-
-                                    //Log.e("Yes this", adapterArea.list.get(p).getAct());
-                                    if (!input.getText().toString().trim().equals("")) {
-                                        newHours = Integer.parseInt(input.getText().toString());
-
-                                        if (newHours >= 1 && newHours <= 10) {
-                                            String actName = adapterArea.list.get(p).getAct();
-
-                                            DatabaseAdapter mdb = new DatabaseAdapter(mContext);
-                                            mdb.createDatabase();
-                                            mdb.open();
-                                            mdb.setDetails(newHours, "Modified", actID);
-
-                                            Cursor c = mdb.getActAssigActNameAdmin(actName);
-                                            c.moveToFirst();
-
-                                            areaDataMainFy.add(p, new AdapterDataMain(
-                                                            adapterArea.list.get(p).getDate(),
-                                                            adapterArea.list.get(p).getAct(),
-                                                            String.valueOf(newHours),
-                                                            adapterArea.list.get(p).getId(),
-                                                            adapterArea.list.get(p).isApproved(),
-                                                            "Modified"
-                                                    )
-                                            );
-
-                                            adapterArea.notifyDataSetChanged();
-                                            areaDataMainFy.remove(p + 1);
-                                            adapterArea.notifyItemInserted(p);
-
-                                            //TODO: Offline mode needs to be checked
-                                            //mdb.setSyncActDetails(0, actID);
-
-                                            Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                                    "Token " + ediary.AUTH_TOKEN,
-                                                    newHours,
-                                                    ediary.VEC,
-                                                    Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
-                                                    Integer.parseInt(c.getString(c.getColumnIndex("id"))),
-                                                    3,
-
-                                                    actID
-                                            );
-                                            c.close();
-                                            mdb.close();
-                                            putHours.enqueue(new Callback<ResponseBody>() {
-                                                @Override
-                                                @EverythingIsNonNull
-                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                    if (response.isSuccessful())
-                                                        Snackbar.make(view, "Edited to " + newHours + "hours", Snackbar.LENGTH_SHORT);
-                                                    else if (response.errorBody() != null) {
-                                                        try {
-                                                            Toast.makeText(requireContext(), "onResponse: " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                    }
-                                                }
-
-                                                @Override
-                                                @EverythingIsNonNull
-                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                    Log.e("Error:onFailure", t.toString());
-                                                }
-                                            });
-                                        } else
-                                            Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
+                    if (direction == ItemTouchHelper.RIGHT) {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(mContext, R.style.delDialog);
+                        builder2.setMessage("Are you sure you want to delete?");
+                        builder2.setCancelable(false);
+                        builder2.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                        adapterArea.notifyItemChanged(p);
                                     }
-                                });
-
-                                if (viewInflated.getParent() != null)
-                                    ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
-                                builder.show();
-                            }
-                    ));
-
-                    underlayButtons.add(new SwipeHelperRight.UnderlayButton(
-                            mContext,
-                            "",
-                            R.drawable.ic_del_24,
-                            transparent,
-                            pos -> {
-                                int p;
-                                if (viewHolder.getAdapterPosition() == -1)
-                                    p = viewHolder.getAdapterPosition() + 1;
-
-                                else if (viewHolder.getAdapterPosition() == areaDataMainFy.size())
-                                    p = viewHolder.getAdapterPosition() - 1;
-                                else
-                                    p = viewHolder.getAdapterPosition();
-
-                                //Log.e("Damn here it is:", "onClick: " + p + viewHolder.getAdapterPosition());
-
+                                }
+                        );
+                        builder2.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
                                 int actID = Integer.parseInt(areaDataMainFy.get(p).getId());
                                 String actName = adapterArea.list.get(p).getAct();
 
                                 DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                                 mdb.createDatabase();
-
                                 mdb.open();
 
                                 Cursor c2 = mdb.getActAssigActNameAdmin(actName);
@@ -587,203 +519,225 @@ public class fyAct extends Fragment {
                                 });
                                 mdb.close();
                             }
-                    ));
-                } else if (areaDataMainFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved")) {
-                    underlayButtons.add(new UnderlayButton(
-                            mContext,
-                            "",
-                            R.drawable.ic_eye_24,
-                            transparent,
-                            new UnderlayButtonClickListener() {
-                                @Override
-                                public void onClick(int pos) {
-                                    int p;
-                                    if (viewHolder.getAdapterPosition() == -1)
-                                        p = viewHolder.getAdapterPosition() + 1;
+                        });
+                        builder2.show();
+                    } else if (direction == ItemTouchHelper.LEFT) {
+                        int actID = Integer.parseInt(areaDataMainFy.get(p).getId());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
+                        View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
-                                    else if (viewHolder.getAdapterPosition() == areaDataMainFy.size())
-                                        p = viewHolder.getAdapterPosition() - 1;
-                                    else
-                                        p = viewHolder.getAdapterPosition();
+                        EditText input = viewInflated.findViewById(R.id.input);
+                        builder.setView(viewInflated);
+                        builder.setCancelable(false);
 
-                                    if (isLeader != 1) {
-                                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
-                                        mdb.createDatabase();
-                                        mdb.open();
-                                        Cursor c = mdb.getActLeaderId(Integer.parseInt(areaDataMainFy.get(p).getId()));
-                                        c.moveToFirst();
-                                        int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-
-                                        Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                                .setTextColor(mContext.getColor(colorPrimaryDark));
-                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
-                                        mdb.close();
-                                        sb.show();
-                                    } else {
-                                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
-                                        mdb.createDatabase();
-                                        mdb.open();
-                                        Cursor c = mdb.getActLeaderId(Integer.parseInt(areaDataMainFy.get(p).getId()));
-                                        c.moveToFirst();
-
-                                        if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
-                                            Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
-                                                    .setTextColor(mContext.getColor(colorPrimaryDark));
-                                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
-                                            sb.show();
-                                        } else {
-                                            int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-                                            Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                                    .setTextColor(mContext.getColor(colorPrimaryDark));
-                                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
-                                            sb.show();
-                                        }
-                                        mdb.close();
-                                    }
+                        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                                    dialog.cancel();
                                     adapterArea.notifyItemChanged(p);
                                 }
-                            }
-                    ));
+                        );
+
+                        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            dialog.dismiss();
+
+                            //Log.e("Yes this", adapterArea.list.get(p).getAct());
+                            if (!input.getText().toString().trim().equals("")) {
+                                newHours = Integer.parseInt(input.getText().toString());
+
+                                if (newHours >= 1 && newHours <= 10) {
+                                    String actName = adapterArea.list.get(p).getAct();
+
+                                    DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                    mdb.createDatabase();
+                                    mdb.open();
+                                    mdb.setDetails(newHours, "Modified", actID);
+
+                                    Cursor c = mdb.getActAssigActNameAdmin(actName);
+                                    c.moveToFirst();
+
+                                    areaDataMainFy.add(p, new AdapterDataMain(
+                                                    adapterArea.list.get(p).getDate(),
+                                                    adapterArea.list.get(p).getAct(),
+                                                    String.valueOf(newHours),
+                                                    adapterArea.list.get(p).getId(),
+                                                    adapterArea.list.get(p).isApproved(),
+                                                    "Modified"
+                                            )
+                                    );
+
+                                    adapterArea.notifyDataSetChanged();
+                                    areaDataMainFy.remove(p + 1);
+                                    adapterArea.notifyItemInserted(p);
+
+                                    //TODO: Offline mode needs to be checked
+                                    //mdb.setSyncActDetails(0, actID);
+
+                                    Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
+                                            "Token " + ediary.AUTH_TOKEN,
+                                            newHours,
+                                            ediary.VEC,
+                                            Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
+                                            Integer.parseInt(c.getString(c.getColumnIndex("id"))),
+                                            3,
+
+                                            actID
+                                    );
+                                    c.close();
+                                    mdb.close();
+                                    putHours.enqueue(new Callback<ResponseBody>() {
+                                        @Override
+                                        @EverythingIsNonNull
+                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                            if (response.isSuccessful())
+                                                Snackbar.make(view, "Edited to " + newHours + "hours", Snackbar.LENGTH_SHORT);
+                                            else if (response.errorBody() != null) {
+                                                try {
+                                                    Toast.makeText(requireContext(), "onResponse: " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        @EverythingIsNonNull
+                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                            Log.e("Error:onFailure", t.toString());
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
+                                    adapterArea.notifyItemChanged(p);
+                                }
+                            } else
+                                adapterArea.notifyItemChanged(p);
+                        });
+
+                        if (viewInflated.getParent() != null)
+                            ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
+                        builder.show();
+                    }
+                } else if (areaDataMainFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved")) {
+
+                    if (isLeader != 1) {
+                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                        mdb.createDatabase();
+                        mdb.open();
+                        Cursor c = mdb.getActLeaderId(Integer.parseInt(areaDataMainFy.get(p).getId()));
+                        c.moveToFirst();
+                        int leadId = c.getInt(c.getColumnIndex("Approved_by"));
+
+                        Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                                .setTextColor(mContext.getColor(colorPrimaryDark));
+                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                        mdb.close();
+                        sb.show();
+                    } else {
+                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                        mdb.createDatabase();
+                        mdb.open();
+                        Cursor c = mdb.getActLeaderId(Integer.parseInt(areaDataMainFy.get(p).getId()));
+                        c.moveToFirst();
+
+                        if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
+                            Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
+                                    .setTextColor(mContext.getColor(colorPrimaryDark));
+                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                            sb.show();
+                        } else {
+                            int leadId = c.getInt(c.getColumnIndex("Approved_by"));
+                            Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                                    .setTextColor(mContext.getColor(colorPrimaryDark));
+                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                            sb.show();
+                        }
+                        mdb.close();
+                    }
+                    adapterArea.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                int p;
+                if (viewHolder.getAdapterPosition() == -1)
+                    p = viewHolder.getAdapterPosition() + 1;
+                else if (viewHolder.getAdapterPosition() == areaDataMainFy.size())
+                    p = viewHolder.getAdapterPosition() - 1;
+                else
+                    p = viewHolder.getAdapterPosition();
+                if (isFirst && adapterArea.list.get(p).getState().equals("Modified") ||
+                        isFirst && adapterArea.list.get(p).getState().equals("Submitted")) {
+                    new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                            .addSwipeRightActionIcon(R.drawable.ic_del_24)
+                            .addSwipeLeftActionIcon(R.drawable.ic_edit_24)
+                            .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                            .create()
+                            .decorate();
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                } else if (areaDataMainFy.get(p).getState().equals("Approved")) {
+                    new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                            .addSwipeRightActionIcon(R.drawable.ic_eye_24)
+                            .addSwipeLeftActionIcon(R.drawable.ic_eye_24)
+                            .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                            .create()
+                            .decorate();
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                 }
             }
         };
 
         recyclerViewArea.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewArea.setAdapter(adapterArea);
+        adapterArea.notifyDataSetChanged();
 
         // Recycler View College
         RecyclerView recyclerViewHours = root.findViewById(R.id.hoursRecFy);
         MyListAdapter adapterClg = new MyListAdapter(clgListDataFy, mContext);
         adapterClg.notifyDataSetChanged();
 
-        SwipeHelperRight swipeHelperRightHours = new SwipeHelperRight(mContext, recyclerViewHours) {
+        ItemTouchHelper.SimpleCallback simpleCallbackHours = new ItemTouchHelper.SimpleCallback
+                (100, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
-            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                if (isFirst && adapterClg.list.get(viewHolder.getAdapterPosition()).getState().equals("Submitted") ||
-                        isFirst && adapterClg.list.get(viewHolder.getAdapterPosition()).getState().equals("Modified")) {
-                    underlayButtons.add(new SwipeHelperRight.UnderlayButton(
-                            mContext,
-                            "",
-                            R.drawable.ic_edit_24,
-                            transparent,
-                            pos -> {
-                                int p;
-                                if (viewHolder.getAdapterPosition() == -1)
-                                    p = viewHolder.getAdapterPosition() + 1;
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
 
-                                else if (viewHolder.getAdapterPosition() == univListDataFy.size())
-                                    p = viewHolder.getAdapterPosition() - 1;
-                                else
-                                    p = viewHolder.getAdapterPosition();
 
-                                int actID = Integer.parseInt(clgListDataFy.get(p).getId());
-                                AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
-                                View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int p;
+                if (viewHolder.getAdapterPosition() == -1)
+                    p = viewHolder.getAdapterPosition() + 1;
 
-                                EditText input = viewInflated.findViewById(R.id.input);
-                                builder.setView(viewInflated);
+                else if (viewHolder.getAdapterPosition() == clgListDataFy.size())
+                    p = viewHolder.getAdapterPosition() - 1;
+                else
+                    p = viewHolder.getAdapterPosition();
 
-                                builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
-
-                                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                                    dialog.dismiss();
-
-                                    if (!input.getText().toString().trim().equals("")) {
-                                        newHours = Integer.parseInt(input.getText().toString());
-
-                                        if (newHours >= 1 && newHours <= 10) {
-                                            String actName = adapterClg.list.get(p).getAct();
-
-                                            DatabaseAdapter mdb = new DatabaseAdapter(mContext);
-                                            mdb.createDatabase();
-                                            mdb.open();
-                                            mdb.setDetails(newHours, "Modified", actID);
-
-                                            Cursor c = mdb.getActAssigActNameAdmin(actName);
-                                            c.moveToFirst();
-
-                                            clgListDataFy.add(p, new AdapterDataMain(
-                                                    adapterClg.list.get(p).getDate(),
-                                                    adapterClg.list.get(p).getAct(),
-                                                    String.valueOf(newHours),
-                                                    adapterClg.list.get(p).getId(),
-                                                    adapterClg.list.get(p).isApproved(),
-                                                    "Modified"
-                                            ));
-
-                                            adapterClg.notifyDataSetChanged();
-                                            clgListDataFy.remove(p + 1);
-                                            adapterClg.notifyItemInserted(p);
-
-                                            //TODO: Offline mode needs to be checked
-                                            //mdb.setSyncActDetails(0, actID);
-
-                                            Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                                    "Token " + ediary.AUTH_TOKEN,
-                                                    newHours,
-                                                    ediary.VEC,
-                                                    Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
-                                                    Integer.parseInt(c.getString(c.getColumnIndex("id"))),
-                                                    3,
-
-                                                    actID
-                                            );
-
-                                            c.close();
-                                            mdb.close();
-                                            putHours.enqueue(new Callback<ResponseBody>() {
-                                                @Override
-                                                @EverythingIsNonNull
-                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                    if (response.isSuccessful())
-                                                        Snackbar.make(view, "Edited to " + newHours + "hours", Snackbar.LENGTH_SHORT);
-                                                    else if (response.errorBody() != null) {
-                                                        try {
-                                                            Toast.makeText(requireContext(), "onResponse: " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                    }
-                                                }
-
-                                                @Override
-                                                @EverythingIsNonNull
-                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                    Log.e("Error:onFailure", t.toString());
-                                                }
-                                            });
-                                        } else
-                                            Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
+                if (isFirst && adapterClg.list.get(viewHolder.getAdapterPosition()).getState().equals("Modified") ||
+                        isFirst && adapterClg.list.get(viewHolder.getAdapterPosition()).getState().equals("Submitted")) {
+                    if (direction == ItemTouchHelper.RIGHT) {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(mContext, R.style.delDialog);
+                        builder2.setMessage("Are you sure you want to delete?");
+                        builder2.setCancelable(false);
+                        builder2.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                        adapterClg.notifyItemChanged(p);
                                     }
-                                });
+                                }
+                        );
 
-                                if (viewInflated.getParent() != null)
-                                    ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
-                                builder.show();
-                            }
-                    ));
-
-                    underlayButtons.add(new SwipeHelperRight.UnderlayButton(
-                            mContext,
-                            "",
-                            R.drawable.ic_del_24,
-                            transparent,
-                            pos -> {
-                                int p;
-                                if (viewHolder.getAdapterPosition() == -1)
-                                    p = viewHolder.getAdapterPosition() + 1;
-
-                                else if (viewHolder.getAdapterPosition() == clgListDataFy.size())
-                                    p = viewHolder.getAdapterPosition() - 1;
-                                else
-                                    p = viewHolder.getAdapterPosition();
-
+                        builder2.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
                                 int actID = Integer.parseInt(clgListDataFy.get(p).getId());
                                 String actName = adapterClg.list.get(p).getAct();
 
                                 DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                                 mdb.createDatabase();
-
                                 mdb.open();
 
                                 Cursor c2 = mdb.getActAssigActNameAdmin(actName);
@@ -817,78 +771,185 @@ public class fyAct extends Fragment {
                                     }
                                 });
                                 mdb.close();
-                            }));
-                } else if (clgListDataFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved")) {
-                    underlayButtons.add(new UnderlayButton(
-                            mContext,
-                            "",
-                            R.drawable.ic_eye_24,
-                            transparent,
-                            new UnderlayButtonClickListener() {
-                                @Override
-                                public void onClick(int pos) {
-                                    int p;
-                                    if (viewHolder.getAdapterPosition() == -1)
-                                        p = viewHolder.getAdapterPosition() + 1;
+                            }
+                        });
+                        builder2.show();
+                    } else if (direction == ItemTouchHelper.LEFT) {
+                        int actID = Integer.parseInt(clgListDataFy.get(p).getId());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
+                        View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
-                                    else if (viewHolder.getAdapterPosition() == clgListDataFy.size())
-                                        p = viewHolder.getAdapterPosition() - 1;
-                                    else
-                                        p = viewHolder.getAdapterPosition();
+                        EditText input = viewInflated.findViewById(R.id.input);
+                        builder.setView(viewInflated);
+                        builder.setCancelable(false);
 
-                                    if (isLeader != 1) {
-                                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
-                                        mdb.createDatabase();
-                                        mdb.open();
-                                        Cursor c = mdb.getActLeaderId(Integer.parseInt(clgListDataFy.get(p).getId()));
-                                        c.moveToFirst();
-                                        int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-
-                                        Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                                .setTextColor(mContext.getColor(colorPrimaryDark));
-                                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
-                                        mdb.close();
-                                        sb.show();
-                                    } else {
-                                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
-                                        mdb.createDatabase();
-                                        mdb.open();
-                                        Cursor c = mdb.getActLeaderId(Integer.parseInt(clgListDataFy.get(p).getId()));
-                                        c.moveToFirst();
-
-                                        if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
-                                            Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
-                                                    .setTextColor(mContext.getColor(colorPrimaryDark));
-                                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
-                                            sb.show();
-                                        } else {
-                                            int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-                                            Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                                    .setTextColor(mContext.getColor(colorPrimaryDark));
-                                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
-                                            sb.show();
-                                        }
-                                        mdb.close();
-                                    }
-
+                        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                                    dialog.cancel();
                                     adapterClg.notifyItemChanged(p);
                                 }
-                            }
-                    ));
+                        );
+
+                        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            dialog.dismiss();
+
+                            //Log.e("Yes this", adapterClg.list.get(p).getAct());
+                            if (!input.getText().toString().trim().equals("")) {
+                                newHours = Integer.parseInt(input.getText().toString());
+
+                                if (newHours >= 1 && newHours <= 10) {
+                                    String actName = adapterClg.list.get(p).getAct();
+
+                                    DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                    mdb.createDatabase();
+                                    mdb.open();
+                                    mdb.setDetails(newHours, "Modified", actID);
+
+                                    Cursor c = mdb.getActAssigActNameAdmin(actName);
+                                    c.moveToFirst();
+
+                                    clgListDataFy.add(p, new AdapterDataMain(
+                                                    adapterClg.list.get(p).getDate(),
+                                                    adapterClg.list.get(p).getAct(),
+                                                    String.valueOf(newHours),
+                                                    adapterClg.list.get(p).getId(),
+                                                    adapterClg.list.get(p).isApproved(),
+                                                    "Modified"
+                                            )
+                                    );
+
+                                    adapterClg.notifyDataSetChanged();
+                                    clgListDataFy.remove(p + 1);
+                                    adapterClg.notifyItemInserted(p);
+
+                                    //TODO: Offline mode needs to be checked
+                                    //mdb.setSyncActDetails(0, actID);
+
+                                    Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
+                                            "Token " + ediary.AUTH_TOKEN,
+                                            newHours,
+                                            ediary.VEC,
+                                            Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
+                                            Integer.parseInt(c.getString(c.getColumnIndex("id"))),
+                                            3,
+
+                                            actID
+                                    );
+                                    c.close();
+                                    mdb.close();
+                                    putHours.enqueue(new Callback<ResponseBody>() {
+                                        @Override
+                                        @EverythingIsNonNull
+                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                            if (response.isSuccessful())
+                                                Snackbar.make(view, "Edited to " + newHours + "hours", Snackbar.LENGTH_SHORT);
+                                            else if (response.errorBody() != null) {
+                                                try {
+                                                    Toast.makeText(requireContext(), "onResponse: " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        @EverythingIsNonNull
+                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                            Log.e("Error:onFailure", t.toString());
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
+                                    adapterClg.notifyItemChanged(p);
+                                }
+                            } else
+                                adapterClg.notifyItemChanged(p);
+                        });
+
+                        if (viewInflated.getParent() != null)
+                            ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
+                        builder.show();
+                    }
+                } else if (clgListDataFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved")) {
+
+                    if (isLeader != 1) {
+                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                        mdb.createDatabase();
+                        mdb.open();
+                        Cursor c = mdb.getActLeaderId(Integer.parseInt(clgListDataFy.get(p).getId()));
+                        c.moveToFirst();
+                        int leadId = c.getInt(c.getColumnIndex("Approved_by"));
+
+                        Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                                .setTextColor(mContext.getColor(colorPrimaryDark));
+                        sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                        mdb.close();
+                        sb.show();
+                    } else {
+                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                        mdb.createDatabase();
+                        mdb.open();
+                        Cursor c = mdb.getActLeaderId(Integer.parseInt(clgListDataFy.get(p).getId()));
+                        c.moveToFirst();
+
+                        if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
+                            Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
+                                    .setTextColor(mContext.getColor(colorPrimaryDark));
+                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                            sb.show();
+                        } else {
+                            int leadId = c.getInt(c.getColumnIndex("Approved_by"));
+                            Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                                    .setTextColor(mContext.getColor(colorPrimaryDark));
+                            sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
+                            sb.show();
+                        }
+                        mdb.close();
+                    }
+                    adapterClg.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                int p;
+                if (viewHolder.getAdapterPosition() == -1)
+                    p = viewHolder.getAdapterPosition() + 1;
+                else if (viewHolder.getAdapterPosition() == clgListDataFy.size())
+                    p = viewHolder.getAdapterPosition() - 1;
+                else
+                    p = viewHolder.getAdapterPosition();
+                if (isFirst && adapterClg.list.get(p).getState().equals("Modified") ||
+                        isFirst && adapterClg.list.get(p).getState().equals("Submitted")) {
+                    new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                            .addSwipeRightActionIcon(R.drawable.ic_del_24)
+                            .addSwipeLeftActionIcon(R.drawable.ic_edit_24)
+                            .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                            .create()
+                            .decorate();
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                } else if (clgListDataFy.get(p).getState().equals("Approved")) {
+                    new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                            .addSwipeRightActionIcon(R.drawable.ic_eye_24)
+                            .addSwipeLeftActionIcon(R.drawable.ic_eye_24)
+                            .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                            .create()
+                            .decorate();
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                 }
             }
         };
+        adapterClg.notifyDataSetChanged();
 
         recyclerViewHours.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewHours.setAdapter(adapterClg);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeHelperRightHours);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallbackHours);
         itemTouchHelper.attachToRecyclerView(recyclerViewHours);
 
-        ItemTouchHelper itemTouchHelper2 = new ItemTouchHelper(swipeHelperRightArea);
+        ItemTouchHelper itemTouchHelper2 = new ItemTouchHelper(simpleCallbackArea);
         itemTouchHelper2.attachToRecyclerView(recyclerViewArea);
 
-        ItemTouchHelper itemTouchHelper3 = new ItemTouchHelper(swipeHelperRightUniv);
+        ItemTouchHelper itemTouchHelper3 = new ItemTouchHelper(simpleCallbackUniv);
         itemTouchHelper3.attachToRecyclerView(recyclerViewUniv);
 
         add.setOnClickListener(view1 -> {
@@ -951,7 +1012,7 @@ public class fyAct extends Fragment {
             data.add(new AdapterDataMain(
                             c.getString(c.getColumnIndex("Date")),
                             c.getString(c.getColumnIndex("ActivityName")),
-                            c.getString(c.getColumnIndex("HoursWorked")) + "h",
+                            c.getString(c.getColumnIndex("HoursWorked")),
                             c.getString(c.getColumnIndex("actID")),
                             c.getInt(c.getColumnIndex("If_Approved")),
                             c.getString(c.getColumnIndex("State"))

@@ -25,7 +25,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
@@ -35,6 +34,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -191,7 +191,7 @@ public class AddDetailsActivity extends Fragment {
 
         onDateSetListener = (datePicker, i, i1, i2) -> {
             i1 = i1 + 1;
-            String date = i + "-" + i1 + "-" + i2;
+            String date = i + "-" + i1 + "-" + String.format(Locale.ENGLISH, "%02d", i2);
 
             if (i2 > currDay-8 && i2 <= currDay  && i1 >= currMont && i >= currYear)
                 actDate.setText(date);
