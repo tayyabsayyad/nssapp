@@ -122,7 +122,7 @@ public class ediary extends AppCompatActivity {
 
             }
         });
-        Log.e("AA", "" + isLeader);
+        Log.e("AA", "" + isLeader + name);
         //TODO:
         //if (isNetworkAvailable()) {
         //} else {

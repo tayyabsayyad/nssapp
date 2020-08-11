@@ -364,9 +364,15 @@ public class fyAct extends Fragment {
                         builder.show();
 
                     }
-                } else if (univListDataFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved")) {
+                } else if (univListDataFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved") || univListDataFy.get(p).getState().equals("LeaderModified")) {
 
                     if (isLeader != 1) {
+                        String x = "";
+                        if (univListDataFy.get(p).getState().equals("Approved"))
+                            x = "Approved By: ";
+                        else
+                            x = "Modified By: ";
+
                         DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                         mdb.createDatabase();
                         mdb.open();
@@ -374,12 +380,13 @@ public class fyAct extends Fragment {
                         c.moveToFirst();
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
 
-                        Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                        Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
                                 .setTextColor(mContext.getColor(colorPrimaryDark));
                         sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                         mdb.close();
                         sb.show();
                     } else {
+                        String x;
                         DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                         mdb.createDatabase();
                         mdb.open();
@@ -392,8 +399,12 @@ public class fyAct extends Fragment {
                             sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                             sb.show();
                         } else {
+                            if (univListDataFy.get(p).getState().equals("LeaderModified"))
+                                x = "Modified By: ";
+                            else
+                                x = "Approved By: ";
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-                            Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                            Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
                                     .setTextColor(mContext.getColor(colorPrimaryDark));
                             sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                             sb.show();
@@ -422,7 +433,7 @@ public class fyAct extends Fragment {
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                } else if (univListDataFy.get(p).getState().equals("Approved")) {
+                } else if (univListDataFy.get(p).getState().equals("Approved") || univListDataFy.get(p).getState().equals("LeaderModified")) {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_eye_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_eye_24)
@@ -616,9 +627,16 @@ public class fyAct extends Fragment {
                             ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
                         builder.show();
                     }
-                } else if (areaDataMainFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved")) {
+                } else if (areaDataMainFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved") ||
+                        areaDataMainFy.get(viewHolder.getAdapterPosition()).getState().equals("LeaderModified")) {
 
                     if (isLeader != 1) {
+                        String x = "";
+                        if (areaDataMainFy.get(p).getState().equals("Approved"))
+                            x = "Approved By: ";
+                        else
+                            x = "Modified By: ";
+
                         DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                         mdb.createDatabase();
                         mdb.open();
@@ -626,12 +644,13 @@ public class fyAct extends Fragment {
                         c.moveToFirst();
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
 
-                        Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                        Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
                                 .setTextColor(mContext.getColor(colorPrimaryDark));
                         sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                         mdb.close();
                         sb.show();
                     } else {
+                        String x;
                         DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                         mdb.createDatabase();
                         mdb.open();
@@ -644,8 +663,12 @@ public class fyAct extends Fragment {
                             sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                             sb.show();
                         } else {
+                            if (areaDataMainFy.get(p).getState().equals("LeaderModified"))
+                                x = "Modified By: ";
+                            else
+                                x = "Approved By: ";
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-                            Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                            Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
                                     .setTextColor(mContext.getColor(colorPrimaryDark));
                             sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                             sb.show();
@@ -674,7 +697,7 @@ public class fyAct extends Fragment {
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                } else if (areaDataMainFy.get(p).getState().equals("Approved")) {
+                } else if (areaDataMainFy.get(p).getState().equals("Approved") || areaDataMainFy.get(viewHolder.getAdapterPosition()).getState().equals("LeaderModified")) {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_eye_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_eye_24)
@@ -869,9 +892,15 @@ public class fyAct extends Fragment {
                             ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
                         builder.show();
                     }
-                } else if (clgListDataFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved")) {
+                } else if (clgListDataFy.get(p).getState().equals("Approved") || clgListDataFy.get(p).getState().equals("LeaderModified")) {
 
                     if (isLeader != 1) {
+                        String x = "";
+                        if (clgListDataFy.get(p).getState().equals("Approved"))
+                            x = "Approved By: ";
+                        else
+                            x = "Modified By: ";
+
                         DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                         mdb.createDatabase();
                         mdb.open();
@@ -879,12 +908,13 @@ public class fyAct extends Fragment {
                         c.moveToFirst();
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
 
-                        Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                        Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
                                 .setTextColor(mContext.getColor(colorPrimaryDark));
                         sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                         mdb.close();
                         sb.show();
                     } else {
+                        String x;
                         DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                         mdb.createDatabase();
                         mdb.open();
@@ -897,8 +927,13 @@ public class fyAct extends Fragment {
                             sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                             sb.show();
                         } else {
+                            if (clgListDataFy.get(p).getState().equals("LeaderModified"))
+                                x = "Modified By: ";
+                            else
+                                x = "Approved By: ";
+
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-                            Snackbar sb = Snackbar.make(view, "Approved By: " + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                            Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
                                     .setTextColor(mContext.getColor(colorPrimaryDark));
                             sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                             sb.show();
@@ -927,7 +962,7 @@ public class fyAct extends Fragment {
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                } else if (clgListDataFy.get(p).getState().equals("Approved")) {
+                } else if (clgListDataFy.get(p).getState().equals("Approved") || clgListDataFy.get(p).getState().equals("LeaderModified")) {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_eye_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_eye_24)

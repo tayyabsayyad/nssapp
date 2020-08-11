@@ -215,7 +215,7 @@ public class ModifyVolunteer extends Fragment {
                                                 mdb.setStateVolAct("LeaderDelete", Integer.parseInt(adapterVolUniv.list.get(p).getId()));
                                                 Cursor c = mdb.getActAssigActNameAdmin(adapterVolUniv.list.get(p).getAct());
                                                 c.moveToFirst();
-                                                Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
+                                                Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putDetailsLeader(
                                                         "Token " + ediary.AUTH_TOKEN,
                                                         Integer.parseInt(adapterVolUniv.list.get(p).getHours()),
                                                         thisVec,
@@ -225,7 +225,7 @@ public class ModifyVolunteer extends Fragment {
                                                         Integer.parseInt(adapterVolUniv.list.get(p).getId())
                                                 );
                                                 mdb.close();
-                                                putHour.enqueue(new Callback<ResponseBody>() {
+                                                putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                     @Override
                                                     @EverythingIsNonNull
                                                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -304,7 +304,7 @@ public class ModifyVolunteer extends Fragment {
                                                 Cursor c = mdb.getActAssigActNameAdmin(adapterVolUniv.list.get(p).getAct());
                                                 mdb.setStateVolAct("Approved", Integer.parseInt(adapterVolUniv.list.get(p).getId()));
                                                 c.moveToFirst();
-                                                Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putApprove(
+                                                Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putApprove(
                                                         "Token " + ediary.AUTH_TOKEN,
                                                         Integer.parseInt(adapterVolUniv.list.get(p).getHours()),
                                                         thisVec,
@@ -316,7 +316,7 @@ public class ModifyVolunteer extends Fragment {
                                                 );
                                                 mdb.close();
 
-                                                putHour.enqueue(new Callback<ResponseBody>() {
+                                                putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                     @Override
                                                     @EverythingIsNonNull
                                                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -406,7 +406,7 @@ public class ModifyVolunteer extends Fragment {
                                                                     c.getInt(c.getColumnIndex("id"))
 
                                                             );
-                                                            Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
+                                                            Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putDetailsLeader(
                                                                     "Token " + ediary.AUTH_TOKEN,
                                                                     Integer.parseInt(adapterVolUniv.list.get(p).getHours()),
                                                                     thisVec,
@@ -416,7 +416,7 @@ public class ModifyVolunteer extends Fragment {
                                                                     Integer.parseInt(adapterVolUniv.list.get(p).getId())
                                                             );
                                                             mdb.close();
-                                                            putHour.enqueue(new Callback<ResponseBody>() {
+                                                            putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                                 @Override
                                                                 @EverythingIsNonNull
                                                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -437,7 +437,8 @@ public class ModifyVolunteer extends Fragment {
                                         );
                                         if (viewInflated.getParent() != null)
                                             ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
-                                        builder.show();
+                                builder.show();
+                                adapterVolUniv.notifyDataSetChanged();
                             }
                     ));
                     mdbF.close();
@@ -513,7 +514,7 @@ public class ModifyVolunteer extends Fragment {
                                                 c.moveToFirst();
                                                 mdb.close();
 
-                                                Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
+                                                Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putDetailsLeader(
                                                         "Token " + ediary.AUTH_TOKEN,
                                                         Integer.parseInt(adapterVolArea.list.get(p).getHours()),
                                                         thisVec,
@@ -523,7 +524,7 @@ public class ModifyVolunteer extends Fragment {
                                                         Integer.parseInt(adapterVolArea.list.get(p).getId())
                                                 );
 
-                                                putHour.enqueue(new Callback<ResponseBody>() {
+                                                putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                     @Override
                                                     @EverythingIsNonNull
                                                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -602,7 +603,7 @@ public class ModifyVolunteer extends Fragment {
                                                 adapterVolArea.notifyDataSetChanged();
                                                 adapterVolArea.notifyItemChanged(p);
 
-                                                Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putApprove(
+                                                Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putApprove(
                                                         "Token " + ediary.AUTH_TOKEN,
                                                         Integer.parseInt(adapterVolArea.list.get(p).getHours()),
                                                         thisVec,
@@ -613,7 +614,7 @@ public class ModifyVolunteer extends Fragment {
                                                         Integer.parseInt(adapterVolArea.list.get(p).getId())
                                                 );
 
-                                                putHour.enqueue(new Callback<ResponseBody>() {
+                                                putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                     @Override
                                                     @EverythingIsNonNull
                                                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -693,7 +694,7 @@ public class ModifyVolunteer extends Fragment {
                                                             c.getInt(c.getColumnIndex("id"))
 
                                                     );
-                                                    Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
+                                                    Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putDetailsLeader(
                                                             "Token " + ediary.AUTH_TOKEN,
                                                             Integer.parseInt(adapterVolArea.list.get(p).getHours()),
                                                             thisVec,
@@ -703,7 +704,7 @@ public class ModifyVolunteer extends Fragment {
                                                             Integer.parseInt(adapterVolArea.list.get(p).getId())
                                                     );
                                                     mdb.close();
-                                                    putHour.enqueue(new Callback<ResponseBody>() {
+                                                    putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                         @Override
                                                         @EverythingIsNonNull
                                                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -800,7 +801,7 @@ public class ModifyVolunteer extends Fragment {
                                                 adapterVolClg.notifyDataSetChanged();
                                                 adapterVolClg.notifyItemChanged(p);
 
-                                                Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
+                                                Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putDetailsLeader(
                                                         "Token " + ediary.AUTH_TOKEN,
                                                         Integer.parseInt(adapterVolClg.list.get(p).getHours()),
                                                         thisVec,
@@ -810,7 +811,7 @@ public class ModifyVolunteer extends Fragment {
                                                         Integer.parseInt(adapterVolClg.list.get(p).getId())
                                                 );
 
-                                                putHour.enqueue(new Callback<ResponseBody>() {
+                                                putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                     @Override
                                                     @EverythingIsNonNull
                                                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -887,27 +888,27 @@ public class ModifyVolunteer extends Fragment {
                                                 adapterVolClg.notifyDataSetChanged();
                                                 adapterVolClg.notifyItemChanged(p);
 
-                                                Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putApprove(
-                                                        "Token " + ediary.AUTH_TOKEN,
-                                                        Integer.parseInt(adapterVolClg.list.get(p).getHours()),
-                                                        thisVec,
-                                                        c.getInt(c.getColumnIndex("activityType")),
-                                                        c.getInt(c.getColumnIndex("id")),
-                                                        2,
-                                                        leaderId,
-                                                        Integer.parseInt(adapterVolClg.list.get(p).getId())
-                                                );
+                                              Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putApprove(
+                                                      "Token " + ediary.AUTH_TOKEN,
+                                                      Integer.parseInt(adapterVolClg.list.get(p).getHours()),
+                                                      thisVec,
+                                                      c.getInt(c.getColumnIndex("activityType")),
+                                                      c.getInt(c.getColumnIndex("id")),
+                                                      2,
+                                                      leaderId,
+                                                      Integer.parseInt(adapterVolClg.list.get(p).getId())
+                                              );
 
-                                                putHour.enqueue(new Callback<ResponseBody>() {
-                                                    @Override
-                                                    @EverythingIsNonNull
-                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                        if (response.errorBody() != null) {
-                                                            Log.e("error", "onResponse: " + response.errorBody().toString());
-                                                        } else if (response.isSuccessful()) {
-                                                            Log.e("Done", "onResponse: " + adapterVolClg.list.get(p).getId());
-                                                        }
-                                                    }
+                                              putDetailsLeader.enqueue(new Callback<ResponseBody>() {
+                                                  @Override
+                                                  @EverythingIsNonNull
+                                                  public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                      if (response.errorBody() != null) {
+                                                          Log.e("error", "onResponse: " + response.errorBody().toString());
+                                                      } else if (response.isSuccessful()) {
+                                                          Log.e("Done", "onResponse: " + adapterVolClg.list.get(p).getId());
+                                                      }
+                                                  }
 
                                                     @Override
                                                     public void onFailure(Call<ResponseBody> call, Throwable t) {
@@ -979,7 +980,7 @@ public class ModifyVolunteer extends Fragment {
                                                             c.getInt(c.getColumnIndex("id"))
 
                                                     );
-                                                    Call<ResponseBody> putHour = RetrofitClient.getInstance().getApi().putHour(
+                                                    Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putDetailsLeader(
                                                             "Token " + ediary.AUTH_TOKEN,
                                                             Integer.parseInt(adapterVolClg.list.get(p).getHours()),
                                                             thisVec,
@@ -989,12 +990,7 @@ public class ModifyVolunteer extends Fragment {
                                                             Integer.parseInt(adapterVolClg.list.get(p).getId())
                                                     );
                                                     mdb.close();
-
-                                                    adapterVolClg.notifyDataSetChanged();
-                                                    dataVolListClg.remove(p);
-                                                    adapterVolClg.notifyItemChanged(p);
-
-                                                    putHour.enqueue(new Callback<ResponseBody>() {
+                                                    putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                         @Override
                                                         @EverythingIsNonNull
                                                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -1016,6 +1012,7 @@ public class ModifyVolunteer extends Fragment {
                                 if (viewInflated.getParent() != null)
                                     ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
                                 builder.show();
+                                adapterVolClg.notifyDataSetChanged();
                             }
                     ));
                     mdbF.close();

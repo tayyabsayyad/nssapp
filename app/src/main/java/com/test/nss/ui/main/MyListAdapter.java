@@ -45,6 +45,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
 
         holder.date.setText(list.get(position).getDate());
         holder.act.setText(list.get(position).getAct());
+        holder.state.setText(String.format("• %s", list.get(position).getState()));
         holder.hours.setText(String.format("%sh", list.get(position).getHours()));
         holder.actId.setText(list.get(position).getId());
         if (list.get(position).isApproved() == 1 && list.get(position).getState().equals("Approved")) {
@@ -58,6 +59,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
                 holder.linearLayout.setBackground(mCon.getDrawable(R.drawable.ic_circle_del));
                 break;
             case "LeaderModified":
+            case "PoModified":
                 setColor(holder, kesar);
                 holder.linearLayout.setBackground(mCon.getDrawable(R.drawable.ic_circle_mod));
                 break;
@@ -99,6 +101,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         public TextView act;
         public TextView hours;
         public TextView actId;
+        public TextView state;
 
         public CardView cardView;
         public LinearLayout linearLayout;
@@ -109,6 +112,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
             this.act = itemView.findViewById(R.id.act);
             this.hours = itemView.findViewById(R.id.hours);
             this.actId = itemView.findViewById(R.id.actID);
+            this.state = itemView.findViewById(R.id.state);
 
             cardView = itemView.findViewById(R.id.dataCard);
             linearLayout = itemView.findViewById(R.id.imageLinear);

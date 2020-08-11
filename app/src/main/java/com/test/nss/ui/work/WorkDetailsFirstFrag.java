@@ -26,11 +26,20 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.test.nss.DataBaseHelper;
 import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
+import com.test.nss.api.RetrofitClient;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
+
 import static android.content.Context.MODE_PRIVATE;
+import static com.test.nss.ediary.AUTH_TOKEN;
 import static com.test.nss.ediary.VEC;
 
 
@@ -133,9 +142,34 @@ public class WorkDetailsFirstFrag extends Fragment {
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         dialogInterface.dismiss();
                                         //dialogInterface2.dismiss();
-                                        isCont = true;
-                                        eddy.putBoolean("isCont", true);
-                                        eddy.apply();
+                                        Call<ResponseBody> selfRegContinue = RetrofitClient.getInstance().getApi().putContinue("Token " + AUTH_TOKEN);
+                                        selfRegContinue.enqueue(new Callback<ResponseBody>() {
+                                            @Override
+                                            @EverythingIsNonNull
+                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                if (response.isSuccessful() && response.body() != null) {
+                                                    try {
+                                                        isCont = true;
+                                                        eddy.putBoolean("isCont", true);
+                                                        eddy.apply();
+                                                        Log.e("Done", response.body().string());
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                } else if (response.errorBody() != null) {
+                                                    try {
+                                                        Log.e("Done", response.errorBody().string());
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                            }
+                                        });
                                         hideFab();
                                     }
                                 });

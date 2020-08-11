@@ -789,7 +789,7 @@ public class DatabaseAdapter {
     }
 
     public int getSumHours(String actCode) {
-        String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode=\"%s\" AND (not State=\"Deleted\") AND State=\"Approved\"", actCode);
+        String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode=\"%s\" AND State=\"Approved\" OR State=\"LeaderModified\" OR State=\"PoModified\"", actCode);
         try (Cursor mCur2 = mDb.rawQuery(sql, null)) {
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in DailyActivity", )();

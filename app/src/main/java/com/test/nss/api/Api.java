@@ -95,6 +95,9 @@ public interface Api {
     @GET("/diary/api/GetSelfRegView/")
     Call<ResponseBody> getUserDetail(@Header("Authorization") String token);
 
+    @PUT("diary/SelfRegContinue")
+    Call<ResponseBody> putContinue(@Header("Authorization") String token);
+
     @PATCH("/diary/dailyactivity/{id2}/")
     @FormUrlEncoded
     Call<ResponseBody> putHour(@Header("Authorization") String token,
@@ -105,6 +108,18 @@ public interface Api {
                                @Field("State") int s,
 
                                @Path("id2") int id2
+    );
+
+    @PATCH("/diary/dailyactivityLeaders/{id2}/")
+    @FormUrlEncoded
+    Call<ResponseBody> putDetailsLeader(@Header("Authorization") String token,
+                                        @Field("Hours") int hours,
+                                        @Field("VEC") String vec,
+                                        @Field("ActivityName") int actName,
+                                        @Field("AssignedActivityName") int actId,
+                                        @Field("State") int s,
+
+                                        @Path("id2") int id2
     );
 
     @PUT("/diary/dailyactivityLeaders/{id2}/")

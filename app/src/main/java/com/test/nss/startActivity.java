@@ -173,6 +173,7 @@ public class startActivity extends AppCompatActivity {
                                         AUTH_TOKEN = j.getString("auth_token");
                                         //Log.e("AUTH_TOKEN", AUTH_TOKEN);
                                         VEC = username.getText().toString();
+                                        Log.e("AA", VEC);
                                         eddy.putString("AUTH_TOKEN", AUTH_TOKEN);
                                         eddy.putString("VEC", VEC);
                                         eddy.apply();
