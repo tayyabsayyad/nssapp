@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/off_white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.camp.CampFragment">
+    app:layoutDescription="@xml/main_scene">
 
     <include
         android:id="@+id/division"
@@ -31,17 +30,26 @@
         android:layout_marginTop="20dp"
         android:fontFamily="@font/google_sans_bold"
         android:gravity="center"
-        android:text="Get your hours worked here!"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/text_18sp"
+        android:textSize="@dimen/text_16sp"
         app:layout_constraintTop_toBottomOf="@id/division" />
 
-    <FrameLayout
-        android:layout_height="match_parent"
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pieChart"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.test.nss.TouchFrameLayout
         android:id="@+id/work_details"
         android:layout_width="match_parent"
-        android:layout_marginTop="80dp"
+        android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/division" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

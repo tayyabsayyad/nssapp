@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,11 +60,11 @@ public class ediary extends AppCompatActivity {
     public static int kesar;
     public static String AUTH_TOKEN;
     public static String VEC;
-
     public static int isLeader;
     public static int leaderId;
     public static String name;
     public static boolean isFirst;
+    static int whichAvatar = 0;
     List<AdapterDataWork> dataWorkList;
     AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
@@ -71,11 +72,15 @@ public class ediary extends AppCompatActivity {
     FragmentManager fm;
     CheckConn checkConn;
     IntentFilter z;
+    Button info;
+    ImageView imageView;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ediary);
+        context = ediary.this;
 
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
 
@@ -132,7 +137,7 @@ public class ediary extends AppCompatActivity {
 
         fm = getSupportFragmentManager();
 
-        DatabaseAdapter mdb = new DatabaseAdapter(ediary.this);
+        DatabaseAdapter mdb = new DatabaseAdapter(context);
         mdb.createDatabase();
         mdb.open();
         Cursor c = mdb.getRegDetails(VEC);
@@ -147,18 +152,18 @@ public class ediary extends AppCompatActivity {
             s = Snackbar.make(v, "Welcome Leader: " + name, Snackbar.LENGTH_SHORT);
             TextView tv = s.getView().findViewById(com.google.android.material.R.id.snackbar_text);
             tv.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_leader_24, 0, 0, 0);
-            Typeface t = ResourcesCompat.getFont(ediary.this, R.font.nunito_semibold);
+            Typeface t = ResourcesCompat.getFont(context, R.font.nunito_semibold);
             tv.setTypeface(t);
             tv.setCompoundDrawablePadding(getResources().getDimensionPixelOffset(R.dimen.snackbar_icon_padding));
 
         } else {
             s = Snackbar.make(v, "Welcome: " + name, Snackbar.LENGTH_SHORT);
             TextView tv = s.getView().findViewById(com.google.android.material.R.id.snackbar_text);
-            Typeface t = ResourcesCompat.getFont(ediary.this, R.font.nunito_semibold);
+            Typeface t = ResourcesCompat.getFont(context, R.font.nunito_semibold);
             tv.setTypeface(t);
         }
 
-        s.setTextColor(ediary.this.getColor(R.color.colorPrimaryLight));
+        s.setTextColor(context.getColor(R.color.colorPrimaryLight));
         s.getView().setBackgroundColor(Color.parseColor("#0c2854"));
         s.show();
         blackish = this.getColor(R.color.blackish);
@@ -174,6 +179,7 @@ public class ediary extends AppCompatActivity {
         drawer = findViewById(R.id.drawer_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         logout = findViewById(R.id.logoutbutton);
+        info = findViewById(R.id.infoButton);
 
         setSupportActionBar(toolbar);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -186,8 +192,31 @@ public class ediary extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        navigationView.setItemIconTintList(null);
 
         View headerView = navigationView.getHeaderView(0);
+        imageView = headerView.findViewById(R.id.imageView);
+
+        whichAvatar = sharedPreferences.getInt("avatar", 0);
+        switch (whichAvatar) {
+            case 1:
+                imageView.setImageResource(R.drawable.ic_women_1);
+                break;
+            case 2:
+                imageView.setImageResource(R.drawable.ic_women_2);
+                break;
+            case 3:
+                imageView.setImageResource(R.drawable.ic_man_1);
+                break;
+            case 4:
+                imageView.setImageResource(R.drawable.ic_man_2);
+                break;
+
+            default:
+            case 0:
+                imageView.setImageResource(R.drawable.ic_man_0);
+                break;
+        }
         Menu m = navigationView.getMenu();
         if (isLeader == 1)
             m.getItem(4).setVisible(true);
@@ -200,8 +229,19 @@ public class ediary extends AppCompatActivity {
         navVec.setText(VEC);
         navUsername.setText(name);
 
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("Choose Avatar");
+                builder.setView(R.layout.avatar_input);
+
+                builder.show();
+            }
+        });
+
         logout.setOnClickListener(view -> {
-            AlertDialog.Builder builder2 = new AlertDialog.Builder(ediary.this, R.style.delDialog);
+            AlertDialog.Builder builder2 = new AlertDialog.Builder(context, R.style.delDialog);
             builder2.setMessage("Do you want to logout?");
 
             builder2.setNegativeButton("No", (dialog, which) -> {
@@ -218,7 +258,7 @@ public class ediary extends AppCompatActivity {
                 eddy.putInt("leaderId", 0);
                 eddy.apply();
 
-                Toast.makeText(ediary.this, "Logged Out", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Logged Out", Toast.LENGTH_SHORT).show();
                 fm.popBackStackImmediate();
 
                 Call<Void> helpData = RetrofitClient.getInstance().getApi().delToken("Token " + ediary.AUTH_TOKEN);
@@ -236,10 +276,10 @@ public class ediary extends AppCompatActivity {
                         Log.e("Ediary:logout", t.toString());
                     }
                 });
-                Intent i = new Intent(ediary.this, startActivity.class);
+                Intent i = new Intent(context, startActivity.class);
                 startActivity(i);
                 finish();
-                Toast.makeText(ediary.this, "Logged Out!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Logged Out!", Toast.LENGTH_SHORT).show();
                 AUTH_TOKEN = "";
             });
 
@@ -257,7 +297,7 @@ public class ediary extends AppCompatActivity {
     }
 
     private void add() {
-        WorkDetailsFirstFrag wf = new WorkDetailsFirstFrag(ediary.this);
+        WorkDetailsFirstFrag wf = new WorkDetailsFirstFrag(context);
         dataWorkList = wf.firstHalfWorkData();
         if (!dataWorkList.isEmpty()) {
 
@@ -362,6 +402,46 @@ public class ediary extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void setWom1(View view) {
+        imageView.setImageResource(R.drawable.ic_women_1);
+        whichAvatar = 1;
+        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
+
+        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
+        eddy2.putInt("avatar", whichAvatar);
+        eddy2.apply();
+    }
+
+    public void setWom2(View view) {
+        imageView.setImageResource(R.drawable.ic_women_2);
+        whichAvatar = 2;
+        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
+
+        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
+        eddy2.putInt("avatar", whichAvatar);
+        eddy2.apply();
+    }
+
+    public void setMan1(View view) {
+        imageView.setImageResource(R.drawable.ic_man_1);
+        whichAvatar = 3;
+        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
+
+        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
+        eddy2.putInt("avatar", whichAvatar);
+        eddy2.apply();
+    }
+
+    public void setMan2(View view) {
+        imageView.setImageResource(R.drawable.ic_man_2);
+        whichAvatar = 4;
+        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
+
+        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
+        eddy2.putInt("avatar", whichAvatar);
+        eddy2.apply();
     }
 
     @Override

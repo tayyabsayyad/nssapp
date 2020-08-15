@@ -97,6 +97,20 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <TextView
+        android:id="@+id/noActDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="120dp"
+        android:fontFamily="@font/google_sans_bold"
+        android:gravity="center"
+        android:text="No activities added by PO"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_18sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/areasyListOne"
         android:layout_width="match_parent"

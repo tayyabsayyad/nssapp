@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -119,8 +118,6 @@ public class fyAct extends Fragment {
             animation.setDuration(4000);
             Snackbar.make(view, "Swipe left on activity to modify", Snackbar.LENGTH_SHORT).show();
 
-            Drawable bg = ContextCompat.getDrawable(mContext, R.drawable.ic_circle);
-            //bg.setTint(mContext.getColor(blackGrey));
             whichAct = 13;
             act = 0;
             //mainFy.setVisibility(View.VISIBLE);
@@ -364,7 +361,7 @@ public class fyAct extends Fragment {
                         builder.show();
 
                     }
-                } else if (univListDataFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved") || univListDataFy.get(p).getState().equals("LeaderModified")) {
+                } else if (univListDataFy.get(p).getState().equals("Approved") || univListDataFy.get(p).getState().equals("LeaderModified")) {
 
                     if (isLeader != 1) {
                         String x = "";
@@ -473,18 +470,18 @@ public class fyAct extends Fragment {
                 else
                     p = viewHolder.getAdapterPosition();
 
-                if (isFirst && adapterArea.list.get(viewHolder.getAdapterPosition()).getState().equals("Modified") ||
-                        isFirst && adapterArea.list.get(viewHolder.getAdapterPosition()).getState().equals("Submitted")) {
+                if (isFirst && adapterArea.list.get(p).getState().equals("Modified") ||
+                        isFirst && adapterArea.list.get(p).getState().equals("Submitted")) {
                     if (direction == ItemTouchHelper.RIGHT) {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(mContext, R.style.delDialog);
                         builder2.setMessage("Are you sure you want to delete?");
                         builder2.setCancelable(false);
                         builder2.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                        adapterArea.notifyItemChanged(p);
-                                    }
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                adapterArea.notifyItemChanged(p);
+                            }
                                 }
                         );
                         builder2.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -627,8 +624,8 @@ public class fyAct extends Fragment {
                             ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
                         builder.show();
                     }
-                } else if (areaDataMainFy.get(viewHolder.getAdapterPosition()).getState().equals("Approved") ||
-                        areaDataMainFy.get(viewHolder.getAdapterPosition()).getState().equals("LeaderModified")) {
+                } else if (areaDataMainFy.get(p).getState().equals("Approved") ||
+                        areaDataMainFy.get(p).getState().equals("LeaderModified")) {
 
                     if (isLeader != 1) {
                         String x = "";
@@ -697,7 +694,7 @@ public class fyAct extends Fragment {
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                } else if (areaDataMainFy.get(p).getState().equals("Approved") || areaDataMainFy.get(viewHolder.getAdapterPosition()).getState().equals("LeaderModified")) {
+                } else if (areaDataMainFy.get(p).getState().equals("Approved") || areaDataMainFy.get(p).getState().equals("LeaderModified")) {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_eye_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_eye_24)
@@ -737,18 +734,18 @@ public class fyAct extends Fragment {
                 else
                     p = viewHolder.getAdapterPosition();
 
-                if (isFirst && adapterClg.list.get(viewHolder.getAdapterPosition()).getState().equals("Modified") ||
-                        isFirst && adapterClg.list.get(viewHolder.getAdapterPosition()).getState().equals("Submitted")) {
+                if (isFirst && adapterClg.list.get(p).getState().equals("Modified") ||
+                        isFirst && adapterClg.list.get(p).getState().equals("Submitted")) {
                     if (direction == ItemTouchHelper.RIGHT) {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(mContext, R.style.delDialog);
                         builder2.setMessage("Are you sure you want to delete?");
                         builder2.setCancelable(false);
                         builder2.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                        adapterClg.notifyItemChanged(p);
-                                    }
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                adapterClg.notifyItemChanged(p);
+                            }
                                 }
                         );
 
@@ -988,28 +985,37 @@ public class fyAct extends Fragment {
         itemTouchHelper3.attachToRecyclerView(recyclerViewUniv);
 
         add.setOnClickListener(view1 -> {
-            onDetach();
+            DatabaseAdapter mdb = new DatabaseAdapter(requireContext());
+            mdb.createDatabase();
+            mdb.open();
+            int c = mdb.getSumHoursSubmitted("First Year%");
+            mdb.close();
 
-            //mainFy.setVisibility(View.GONE);
-            fragFy.setVisibility(View.GONE);
-            univRecFy.setVisibility(View.GONE);
-            areaRecFy.setVisibility(View.GONE);
-            clgRecFy.setVisibility(View.GONE);
-            cardViewMain.setVisibility(View.GONE);
+            if (c <= 10) {
+                onDetach();
 
-            AddDetailsActivity detailsActivity = new AddDetailsActivity();
-            Bundle args = new Bundle();
-            Log.e(TAG, "onViewCreated: " + whichAct);
-            args.putInt("whichAct", whichAct);
-            args.putInt("act", act);
-            detailsActivity.setArguments(args);
+                //mainFy.setVisibility(View.GONE);
+                fragFy.setVisibility(View.GONE);
+                univRecFy.setVisibility(View.GONE);
+                areaRecFy.setVisibility(View.GONE);
+                clgRecFy.setVisibility(View.GONE);
+                cardViewMain.setVisibility(View.GONE);
 
-            FragmentManager fm = requireActivity().getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").addToBackStack("fyAct").commit();
+                AddDetailsActivity detailsActivity = new AddDetailsActivity();
+                Bundle args = new Bundle();
+                Log.e(TAG, "onViewCreated: " + whichAct);
+                args.putInt("whichAct", whichAct);
+                args.putInt("act", act);
+                detailsActivity.setArguments(args);
 
-            adapterArea.notifyDataSetChanged();
-            adapterClg.notifyDataSetChanged();
-            adapterUniv.notifyDataSetChanged();
+                FragmentManager fm = requireActivity().getSupportFragmentManager();
+                fm.beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").addToBackStack("fyAct").commit();
+
+                adapterArea.notifyDataSetChanged();
+                adapterClg.notifyDataSetChanged();
+                adapterUniv.notifyDataSetChanged();
+            } else
+                Toast.makeText(mContext, "Cannot add more than 10 hours for a single day, today added total of: " + c + "hour", Toast.LENGTH_SHORT).show();
         });
     }
 

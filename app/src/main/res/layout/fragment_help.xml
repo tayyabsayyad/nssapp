@@ -5,7 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/sun"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/google_sans_bold"
+            android:gravity="center"
+            android:text="Someone likes to play"
+            android:textColor="@color/one"
+            android:textSize="@dimen/text_18sp" />
+    </RelativeLayout>
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/mainCard"
         app:cardBackgroundColor="@color/white"
         android:layout_marginStart="@dimen/space_10dp"
         android:layout_marginEnd="@dimen/space_10dp"
@@ -77,6 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/leaderRecDet"

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.test.nss.DataBaseHelper;
 import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
@@ -40,11 +38,14 @@ import retrofit2.internal.EverythingIsNonNull;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.test.nss.ediary.AUTH_TOKEN;
-import static com.test.nss.ediary.VEC;
 
 
 public class WorkDetailsFirstFrag extends Fragment {
     static boolean isCont = false;
+    static String c = "College";
+    static String u = "University";
+    static String a1 = "Area Based 1";
+    static String a2 = "Area Based 2";
     public Context context;
     View root;
     FloatingActionButton notif;
@@ -88,20 +89,20 @@ public class WorkDetailsFirstFrag extends Fragment {
         m.createDatabase();
         m.open();
 
-        c2 = m.getHoursDet("College", 1);
+        c2 = m.getHoursDet(c, 1);
         c2.moveToFirst();
         clgComp = c2.getInt(c2.getColumnIndex("HoursWorked"));
 
-        c2 = m.getHoursDet("University", 1);
+        c2 = m.getHoursDet(u, 1);
         c2.moveToFirst();
         univComp = c2.getInt(c2.getColumnIndex("HoursWorked"));
 
-        c2 = m.getHoursDet("Area Based 1", 1);
+        c2 = m.getHoursDet(a1, 1);
         c2.moveToFirst();
         areaCompOne = c2.getInt(c2.getColumnIndex("HoursWorked"));
         areaLvlOne = c2.getInt(c2.getColumnIndex("HoursWorked"));
 
-        c2 = m.getHoursDet("Area Based 1", 1);
+        c2 = m.getHoursDet(a2, 1);
         c2.moveToFirst();
         areaCompTwo = c2.getInt(c2.getColumnIndex("HoursWorked"));
         areaLvlTwo = c2.getInt(c2.getColumnIndex("HoursWorked"));
@@ -205,97 +206,41 @@ public class WorkDetailsFirstFrag extends Fragment {
     public List<AdapterDataWork> firstHalfWorkData() {
         ArrayList<AdapterDataWork> data = new ArrayList<>();
 
+
+        Cursor col, univ, area1, area2;
         DatabaseAdapter m = new DatabaseAdapter(context);
+
         m.createDatabase();
         m.open();
-        int areaCompOne = m.getSumHours("First Year Area Based One");
-        int areaCompTwo = m.getSumHours("First Year Area Based Two");
-        int clgComp = m.getSumHours("First Year College");
-        int univComp = m.getSumHours("First Year University");
 
-        int areaLvlOne = m.getHours("Area Based Level One");
-        int areaLvlTwo = m.getHours("Area Based Level Two");
-        int clgLvl = m.getHours("College Level");
-        int univLvl = m.getHours("University Level");
+        col = m.getHoursDet(c, 1);
+        col.moveToFirst();
+
+        univ = m.getHoursDet(u, 1);
+        univ.moveToFirst();
+
+        area1 = m.getHoursDet(a1, 1);
+        area1.moveToFirst();
+
+        area2 = m.getHoursDet(a2, 1);
+        area2.moveToFirst();
+
+        data.add(new AdapterDataWork(a1, area1.getString(area1.getColumnIndex("TotalHours")),
+                area1.getString(area1.getColumnIndex("HoursWorked")), area1.getString(area1.getColumnIndex("RemainingHours"))));
+
+
+        data.add(new AdapterDataWork(a2, area2.getString(area2.getColumnIndex("TotalHours")),
+                area2.getString(area2.getColumnIndex("HoursWorked")), area2.getString(area2.getColumnIndex("RemainingHours"))));
+
+
+        data.add(new AdapterDataWork(u, univ.getString(univ.getColumnIndex("TotalHours")),
+                univ.getString(univ.getColumnIndex("HoursWorked")), univ.getString(univ.getColumnIndex("RemainingHours"))));
+
+
+        data.add(new AdapterDataWork(c, col.getString(col.getColumnIndex("TotalHours")),
+                col.getString(col.getColumnIndex("HoursWorked")), col.getString(col.getColumnIndex("RemainingHours"))));
 
         m.close();
-        //Log.i("TAG", "firstHalfWorkData: " + areaCompTwo);
-        int areaRemOneHours;
-        int areaRemTwoHours;
-        int univRemHours;
-        int clgRemHours;
-
-        if (areaCompOne >= 1 && areaLvlOne - areaCompOne > 0)
-            areaRemOneHours = areaLvlOne - areaCompOne;
-        else if (areaCompOne == 0)
-            areaRemOneHours = areaLvlOne;
-        else
-            areaRemOneHours = Integer.parseInt("00");
-
-        if (areaCompTwo >= 1 && areaLvlTwo - areaCompTwo > 0)
-            areaRemTwoHours = areaLvlTwo - areaCompTwo;
-        else if (areaCompTwo == 0)
-            areaRemTwoHours = areaLvlTwo;
-        else
-            areaRemTwoHours = Integer.parseInt("00");
-
-        if (clgComp >= 1 && clgLvl - clgComp > 0)
-            clgRemHours = clgLvl - clgComp;
-        else if (clgComp == 0)
-            clgRemHours = clgLvl;
-        else
-            clgRemHours = Integer.parseInt("00");
-
-        if (univComp >= 1 && univLvl - univComp > 0)
-            univRemHours = univLvl - univComp;
-        else if (univComp == 0)
-            univRemHours = univLvl;
-        else
-            univRemHours = Integer.parseInt("00");
-
-        deleteData("WorkHoursFy");
-        m = new DatabaseAdapter(context);
-        m.createDatabase();
-        m.open();
-        m.insertWork(
-                VEC,
-                "Area Based 1",
-                areaLvlOne,
-                areaCompOne,
-                areaRemOneHours,
-                1
-        );
-        m.insertWork(
-                VEC,
-                "Area Based 2",
-                areaLvlTwo,
-                areaCompTwo,
-                areaRemTwoHours,
-                1
-        );
-        m.insertWork(
-                VEC,
-                "University",
-                univLvl,
-                univComp,
-                univRemHours,
-                1
-        );
-        m.insertWork(
-                VEC,
-                "College",
-                clgLvl,
-                clgComp,
-                clgRemHours,
-                1
-        );
-        m.close();
-
-        data.add(new AdapterDataWork("Area Based 1", String.valueOf(areaLvlOne), String.valueOf(areaCompOne), String.valueOf(areaRemOneHours)));
-        data.add(new AdapterDataWork("Area Based 2", String.valueOf(areaLvlTwo), String.valueOf(areaCompTwo), String.valueOf(areaRemTwoHours)));
-        data.add(new AdapterDataWork("University", String.valueOf(univLvl), String.valueOf(univComp), String.valueOf(univRemHours)));
-        data.add(new AdapterDataWork("College", String.valueOf(clgLvl), String.valueOf(clgComp), String.valueOf(clgRemHours)));
-
         return data;
     }
 
@@ -331,17 +276,5 @@ public class WorkDetailsFirstFrag extends Fragment {
             }
         });
         animator.start();
-    }
-
-    public void deleteData(String table) {
-        DatabaseAdapter mDbHelper2 = new DatabaseAdapter(context);
-        mDbHelper2.createDatabase();
-        mDbHelper2.open();
-        DataBaseHelper mDb2 = new DataBaseHelper(context);
-        SQLiteDatabase m = mDb2.getWritableDatabase();
-        m.execSQL("DELETE FROM " + table);
-        mDbHelper2.close();
-        m.close();
-        mDb2.close();
     }
 }

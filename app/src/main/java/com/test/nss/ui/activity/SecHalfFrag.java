@@ -60,6 +60,7 @@ public class SecHalfFrag extends Fragment {
     TextView areaActTwo;
     TextView clgAct;
     TextView univAct;
+    TextView noActDesc;
 
     onClickInterface2 onClickInterface2;
     FloatingActionButton backAct;
@@ -100,8 +101,11 @@ public class SecHalfFrag extends Fragment {
         areaActTwo = root.findViewById(R.id.area_act2);
         clgAct = root.findViewById(R.id.clg_act2);
         univAct = root.findViewById(R.id.univ_act2);
+        noActDesc = root.findViewById(R.id.noActDesc);
 
         areaActOne.setOnClickListener(view14 -> {
+            if (areaOneListDataAct.isEmpty())
+                noActDesc.setVisibility(View.VISIBLE);
             act = 5;
             new Handler().postDelayed(() -> {
                 revealFab();
@@ -115,6 +119,8 @@ public class SecHalfFrag extends Fragment {
         });
 
         areaActTwo.setOnClickListener(view14 -> {
+            if (areaTwoListDataAct.isEmpty())
+                noActDesc.setVisibility(View.VISIBLE);
             act = 6;
             new Handler().postDelayed(() -> {
                 revealFab();
@@ -128,6 +134,8 @@ public class SecHalfFrag extends Fragment {
         });
 
         clgAct.setOnClickListener(view13 -> {
+            if (clgListDataAct.isEmpty())
+                noActDesc.setVisibility(View.VISIBLE);
             act = 7;
             new Handler().postDelayed(() -> {
                 revealFab();
@@ -141,6 +149,8 @@ public class SecHalfFrag extends Fragment {
         });
 
         univAct.setOnClickListener(view12 -> {
+            if (univListDataAct.isEmpty())
+                noActDesc.setVisibility(View.VISIBLE);
             act = 4;
             new Handler().postDelayed(() -> {
                 revealFab();
@@ -153,110 +163,118 @@ public class SecHalfFrag extends Fragment {
             }, 350);
         });
 
+        DatabaseAdapter mdb2 = new DatabaseAdapter(requireContext());
+        mdb2.createDatabase();
+        mdb2.open();
+        int c = mdb2.getSumHoursSubmitted("First Year%");
+        mdb2.close();
+
         onClickInterface2 = abc -> {
-            Toast.makeText(mContext, "Entering today's date", Toast.LENGTH_SHORT).show();
+            if (c <= 10) {
+                Toast.makeText(mContext, "Entering today's date", Toast.LENGTH_SHORT).show();
 
-            String hours = "";
-            String actName = "";
+                String hours = "";
+                String actName = "";
 
-            switch (act) {
-                case 4:
-                    if (!univListDataAct.isEmpty()) {
-                        actName = univListDataAct.get(abc).getAct();
-                        hours = univListDataAct.get(abc).getHours();
-                    }
-                case 5:
-                    if (!areaOneListDataAct.isEmpty()) {
-                        actName = areaOneListDataAct.get(abc).getAct();
-                        hours = areaOneListDataAct.get(abc).getHours();
-                    }
-                    break;
-                case 6:
-                    if (!areaTwoListDataAct.isEmpty()) {
-                        actName = areaTwoListDataAct.get(abc).getAct();
-                        hours = areaTwoListDataAct.get(abc).getHours();
-                    }
-                    break;
-                case 7:
-                    if (!clgListDataAct.isEmpty()) {
-                        actName = clgListDataAct.get(abc).getAct();
-                        hours = clgListDataAct.get(abc).getHours();
-                    }
-                    break;
-            }
+                switch (act) {
+                    case 4:
+                        if (!univListDataAct.isEmpty()) {
+                            actName = univListDataAct.get(abc).getAct();
+                            hours = univListDataAct.get(abc).getHours();
+                        }
+                    case 5:
+                        if (!areaOneListDataAct.isEmpty()) {
+                            actName = areaOneListDataAct.get(abc).getAct();
+                            hours = areaOneListDataAct.get(abc).getHours();
+                        }
+                        break;
+                    case 6:
+                        if (!areaTwoListDataAct.isEmpty()) {
+                            actName = areaTwoListDataAct.get(abc).getAct();
+                            hours = areaTwoListDataAct.get(abc).getHours();
+                        }
+                        break;
+                    case 7:
+                        if (!clgListDataAct.isEmpty()) {
+                            actName = clgListDataAct.get(abc).getAct();
+                            hours = clgListDataAct.get(abc).getHours();
+                        }
+                        break;
+                }
 
-            if (!actName.equals("") && !hours.equals("") && act != -1) {
-                String actCode = getResources().getStringArray(R.array.valOfActNames)[act];
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
-                View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
+                if (!actName.equals("") && !hours.equals("") && act != -1) {
+                    String actCode = getResources().getStringArray(R.array.valOfActNames)[act];
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
+                    View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
 
-                EditText input = viewInflated.findViewById(R.id.input);
-                builder.setView(viewInflated);
+                    EditText input = viewInflated.findViewById(R.id.input);
+                    builder.setView(viewInflated);
 
-                builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                    dialog.cancel();
-                });
+                    builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        dialog.cancel();
+                    });
 
-                String finalHours = hours;
-                String finalActName = actName;
-                builder.setPositiveButton(android.R.string.ok, (dialog, i) -> {
-                    int h = Integer.parseInt(finalHours);
-                    int j = Integer.parseInt(input.getText().toString());
-                    if (j > 0 && j <= h) {
-                        dialog.dismiss();
-                        Calendar cal = Calendar.getInstance();
-                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    String finalHours = hours;
+                    String finalActName = actName;
+                    builder.setPositiveButton(android.R.string.ok, (dialog, i) -> {
+                        int h = Integer.parseInt(finalHours);
+                        int j = Integer.parseInt(input.getText().toString());
+                        if (j > 0 && j <= h) {
+                            dialog.dismiss();
+                            Calendar cal = Calendar.getInstance();
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-                        DatabaseAdapter mdb = new DatabaseAdapter(mContext);
-                        mdb.createDatabase();
-                        mdb.open();
-                        mdb.insertActOff(
-                                ediary.VEC,
-                                actCode,
-                                formatter.format(cal.getTime()),
-                                finalActName,
-                                //actId.getText().toString(),
-                                String.valueOf(j),
-                                0
-                        );
+                            DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                            mdb.createDatabase();
+                            mdb.open();
+                            mdb.insertActOff(
+                                    ediary.VEC,
+                                    actCode,
+                                    formatter.format(cal.getTime()),
+                                    finalActName,
+                                    //actId.getText().toString(),
+                                    String.valueOf(j),
+                                    0
+                            );
 
-                        Cursor m = mdb.getActAssigActNameAdmin(finalActName);
-                        m.moveToFirst();
-                        Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
-                                "Token " + ediary.AUTH_TOKEN,
-                                ediary.VEC,
-                                m.getInt(m.getColumnIndex("id")),// AAA
-                                j,
-                                formatter.format(cal.getTime()),
-                                m.getInt(m.getColumnIndex("activityType")),
-                                1
-                        );
-                        mdb.close();
-                        pushActList.enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            @EverythingIsNonNull
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful()) {
-                                    Toast.makeText(mContext, "Entered", Toast.LENGTH_SHORT).show();
-                                    DatabaseAdapter m = new DatabaseAdapter(mContext);
-                                    m.createDatabase();
-                                    m.open();
-                                    m.setSync("DailyActivity", 1);
-                                    m.close();
-                                } else
-                                    Toast.makeText(mContext, "Entered locally", Toast.LENGTH_SHORT).show();
-                            }
+                            Cursor m = mdb.getActAssigActNameAdmin(finalActName);
+                            m.moveToFirst();
+                            Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
+                                    "Token " + ediary.AUTH_TOKEN,
+                                    ediary.VEC,
+                                    m.getInt(m.getColumnIndex("id")),// AAA
+                                    j,
+                                    formatter.format(cal.getTime()),
+                                    m.getInt(m.getColumnIndex("activityType")),
+                                    1
+                            );
+                            mdb.close();
+                            pushActList.enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                @EverythingIsNonNull
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    if (response.isSuccessful()) {
+                                        Toast.makeText(mContext, "Entered", Toast.LENGTH_SHORT).show();
+                                        DatabaseAdapter m = new DatabaseAdapter(mContext);
+                                        m.createDatabase();
+                                        m.open();
+                                        m.setSync("DailyActivity", 1);
+                                        m.close();
+                                    } else
+                                        Toast.makeText(mContext, "Entered locally", Toast.LENGTH_SHORT).show();
+                                }
 
-                            @Override
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                            }
-                        });
-                    } else
-                        Toast.makeText(mContext, "Enter correct worked hours", Toast.LENGTH_SHORT).show();
-                });
+                                }
+                            });
+                        } else
+                            Toast.makeText(mContext, "Enter correct worked hours", Toast.LENGTH_SHORT).show();
+                    });
 
-                builder.show();
+                    builder.show();
+                }
             }
         };
 
@@ -278,6 +296,7 @@ public class SecHalfFrag extends Fragment {
 
         backAct.setOnClickListener(view1 -> {
             hideFab();
+            noActDesc.setVisibility(View.GONE);
             actDetails.setVisibility(View.VISIBLE);
             recyclerViewUnivAct.setVisibility(View.GONE);
             recyclerViewAreaOneAct.setVisibility(View.GONE);
@@ -344,6 +363,7 @@ public class SecHalfFrag extends Fragment {
             Log.e("SecHalfFrag", "onDetach: " + fm.getBackStackEntryCount());
             fm.popBackStack("SecHalfFrag", 0);
         }
+        noActDesc.setVisibility(View.GONE);
         actDetails.setVisibility(View.VISIBLE);
         recyclerViewUnivAct.setVisibility(View.GONE);
 

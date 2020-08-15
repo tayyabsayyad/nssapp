@@ -51,7 +51,7 @@ public class MyListAdapterVolunteer extends RecyclerView.Adapter<MyListAdapterVo
             holder.approvedVol.setText(mCon.getString(R.string.no));
             setColor(holder, ediary.red);
         } else if (list.get(position).getState().equals("LeaderModified")) {
-            holder.approvedVol.setText(mCon.getString(R.string.no));
+            holder.approvedVol.setText(mCon.getString(R.string.yes));
             setColor(holder, ediary.kesar);
         } else {
             holder.approvedVol.setText(mCon.getString(R.string.no));

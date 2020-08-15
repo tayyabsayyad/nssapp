@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ public class CampDetails extends Fragment {
     RecyclerView recCamp;
     LinearLayout camp_main_details;
     Button go_back;
+    ConstraintLayout camp_details;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class CampDetails extends Fragment {
         recCamp = root.findViewById(R.id.camp_details_rec);
         camp_main_details = requireActivity().findViewById(R.id.camp_main_details);
         go_back = root.findViewById(R.id.go_back);
+        camp_details = root.findViewById(R.id.camp_details);
 
         CampDataAdapter campDataAdapter = new CampDataAdapter(campData, requireContext());
         recCamp.setHasFixedSize(true);
@@ -51,7 +54,8 @@ public class CampDetails extends Fragment {
         recCamp.setAdapter(campDataAdapter);
 
         go_back.setOnClickListener(view1 -> {
-            camp_main_details.setVisibility(View.VISIBLE);
+            //camp_main_details.setVisibility(View.VISIBLE);
+            camp_details.setVisibility(View.GONE);
             onDetach();
         });
     }
@@ -61,11 +65,12 @@ public class CampDetails extends Fragment {
         super.onDetach();
         FragmentManager fm = requireActivity().getSupportFragmentManager();
         camp_main_details.setVisibility(View.VISIBLE);
+        camp_details.setVisibility(View.GONE);
         if (fm.getBackStackEntryCount() > 0) {
-            Log.e("CampFrag", "onDetach: " + fm.getBackStackEntryCount());
-            fm.popBackStackImmediate(null, 0);
-            fm.popBackStack("CampDetails", 0);
+            Log.e("CampDetails", "onDetach: " + fm.getBackStackEntryCount());
+            //fm.beginTransaction().remove(this).commit();
         }
+        fm.popBackStack();
     }
 
     public List<AdapterCampDetails> addCampData() {

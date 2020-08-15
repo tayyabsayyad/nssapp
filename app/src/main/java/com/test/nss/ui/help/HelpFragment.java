@@ -1,6 +1,9 @@
 package com.test.nss.ui.help;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +21,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.rahul.bounce.library.BounceTouchListener;
 import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
+import com.test.nss.ui.onClickInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class HelpFragment extends Fragment {
 
@@ -33,10 +39,12 @@ public class HelpFragment extends Fragment {
     TextView emailPo;
     TextView contactPo;
     TextView clgPo;
+    BounceTouchListener bounceTouchListener;
 
     TextView toolbarTitle;
     ImageView nssLogo;
-    CardView contactUs;
+    CardView contactUs, mainCard;
+    TextView sun;
 
     List<AdapterDataHelp> dataLeaderHelpList;
     RecyclerView recyclerView;
@@ -54,17 +62,25 @@ public class HelpFragment extends Fragment {
         nssLogo = requireActivity().findViewById(R.id.nss_logo);
 
         nssLogo.setVisibility(View.GONE);
+        sun = root.findViewById(R.id.sun);
         toolbarTitle = requireActivity().findViewById(R.id.titleTool);
         toolbarTitle.setText(getString(R.string.menu_help));
 
+        onClickInterface onClickInterface;
+        onClickInterface = abc -> {
+            Intent callIntent = new Intent(Intent.ACTION_DIAL);
+            callIntent.setData(Uri.parse("tel:" + abc));
+            startActivity(callIntent);
+        };
         recyclerView = root.findViewById(R.id.leaderRecDet);
-        MyListAdapterHelp campActDataAdapter = new MyListAdapterHelp(dataLeaderHelpList, requireContext());
+        MyListAdapterHelp campActDataAdapter = new MyListAdapterHelp(dataLeaderHelpList, requireContext(), onClickInterface);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(campActDataAdapter);
         return root;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -77,6 +93,7 @@ public class HelpFragment extends Fragment {
         contactPo = root.findViewById(R.id.poNo);
         namePo = root.findViewById(R.id.poName);
         clgPo = root.findViewById(R.id.poClg);
+        mainCard = root.findViewById(R.id.mainCard);
 
         DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
         mDbHelper.createDatabase();
@@ -98,6 +115,35 @@ public class HelpFragment extends Fragment {
             contactPo.setText(getString(R.string.contact_no));
         }
         mDbHelper.close();
+        int maxSunTranslation = -(int) (580 * .25f);
+        bounceTouchListener = new BounceTouchListener(recyclerView);
+        bounceTouchListener.setOnTranslateListener(new BounceTouchListener.OnTranslateListener() {
+            @Override
+            public void onTranslate(float translation) {
+                sun.setVisibility(View.VISIBLE);
+                if (translation <= 0) {
+                    //contactUs.setTranslationY(translation);
+                    mainCard.setTranslationY(Math.max(maxSunTranslation, translation));
+                    bounceTouchListener.setMaxAbsTranslation(-99);
+                }
+                if (translation >= 0.0 && translation <= 1) {
+                    int color = ((int) (Math.random() * 16777215)) | (0xFF << 24);
+                    sun.setTextColor(color);
+                }
+            }
+        });
+
+        recyclerView.setOnTouchListener(bounceTouchListener);
+
+        contactPo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String co = contactPo.getText().toString();
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:" + co.substring(co.lastIndexOf(" "))));
+                startActivity(callIntent);
+            }
+        });
     }
 
     public List<AdapterDataHelp> addHelpData() {
@@ -111,8 +157,8 @@ public class HelpFragment extends Fragment {
         while (c3.moveToNext()) {
             data3.add(new AdapterDataHelp(
                     c3.getString(c3.getColumnIndex("Name")),
-                    "Email: "+c3.getString(c3.getColumnIndex("Email")),
-                    "Contact No: "+c3.getString(c3.getColumnIndex("Contact")),
+                    c3.getString(c3.getColumnIndex("Email")),
+                    c3.getString(c3.getColumnIndex("Contact")),
                     c3.getString(c3.getColumnIndex("CollegeName"))
             ));
         }

@@ -113,7 +113,7 @@ public class startActivity extends AppCompatActivity {
         });
 
         ActivityCompat.requestPermissions(startActivity.this,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CALL_PHONE},
                 1);
 
         //AnimatorSet animation = (AnimatorSet) AnimatorInflater.loadAnimator( startActivity.this, R.animator.test);
@@ -306,7 +306,7 @@ public class startActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             } else {
                 finish();
-                Toast.makeText(mContext, "Permission denied to read External storage", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Permission denied, please give permissions from settings", Toast.LENGTH_SHORT).show();
             }
         }
     }

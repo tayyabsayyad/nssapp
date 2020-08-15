@@ -17,10 +17,11 @@
     <color name="transparent">@android:color/transparent</color>
     <color name="one">#fe2c83</color>
     <color name="two">#2bff89</color>
-    <color name="thr">#ffeb2b</color>
+    <color name="thr">#D1BD00</color>
     <color name="four">#FF8400</color>
     <color name="five">#fa8072</color>
-    <color name="six">#0fffff</color>
+    <color name="six">#00BCBC</color>
     <color name="sev">#ff69b4</color>
+    <color name="eig">#0097A7</color>
     <color name="off_white">#f7f8f3</color>
 </resources>

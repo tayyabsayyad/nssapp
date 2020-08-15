@@ -274,8 +274,8 @@ public class DatabaseAdapter {
     }
 
     public void insertLeaders(String cont, String name,
-                              String email,  String vec,
-                              String clgName, String leaderId) {
+                              String email, String vec,
+                              String clgName, String leaderId, String state) {
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -285,6 +285,7 @@ public class DatabaseAdapter {
             contentValues.put("VEC", vec);
             contentValues.put("CollegeName", clgName);
             contentValues.put("id", leaderId);
+            contentValues.put("State", state);
             mDb.insert("Leaders", null, contentValues);
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
@@ -318,9 +319,9 @@ public class DatabaseAdapter {
     }
 
     public void insertVolAllAct(int id,
-                             String name,
-                             String date,
-                             String vec) {
+                                String name,
+                                String date,
+                                String vec) {
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -356,14 +357,14 @@ public class DatabaseAdapter {
             contentValues.put("State", state);
 
             long r = mDb.insert("VolVecActAll", null, contentValues);
-            if (r!=-1)
-                Log.e(TAG, "insertVolVecAllAct: "+"added");
+            if (r != -1)
+                Log.e(TAG, "insertVolVecAllAct: " + "added");
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
         }
     }
 
-    public void insertHours(String lvl, int hours){
+    public void insertHours(String lvl, int hours) {
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -442,7 +443,6 @@ public class DatabaseAdapter {
         }
     }
 
-
     public Cursor getHoursDet(String lvl, int yr) {
         String sql;
         if (yr == 1)
@@ -454,12 +454,11 @@ public class DatabaseAdapter {
         try {
             if (mCur.getCount() == 0) {
             }
+            mCur.moveToFirst();
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;
-        } finally {
-            //mCur.close();
         }
     }
 
@@ -481,7 +480,7 @@ public class DatabaseAdapter {
     public Cursor getLeaders() {
         try {
             //String a = String.format("aaa %d", act);
-            String sql = "SELECT * FROM Leaders";
+            String sql = "SELECT * FROM Leaders WHERE State=\"Appointed\"";
             Cursor mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() == 0) {
             }
@@ -621,6 +620,7 @@ public class DatabaseAdapter {
             throw mSQLException;
         }
     }
+
     public Cursor getRegDetails(String vec) {
         try {
             //String a = String.format("aaa %d", act);
@@ -653,7 +653,7 @@ public class DatabaseAdapter {
 
     public Cursor getActList(String act) {
         try {
-            String sql = String.format(Locale.ENGLISH, "SELECT * FROM DailyActivity WHERE ActivityCode=\"%s\" AND (not State=\"Deleted\")", act);
+            String sql = String.format(Locale.ENGLISH, "SELECT * FROM DailyActivity WHERE ActivityCode=\"%s\" AND (not State=\"Deleted\") ORDER BY Date DESC", act);
             Cursor mCur2 = mDb.rawQuery(sql, null);
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in DailyActivity", )();
@@ -715,8 +715,9 @@ public class DatabaseAdapter {
             return mCur2;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
-            throw mSQLException;
+            //throw mSQLException;
         }
+        return null;
     }
 
     public Cursor getActAllAdmin(int actName) {
@@ -776,7 +777,7 @@ public class DatabaseAdapter {
 
     public Cursor getCampActListAll() {
         try {
-            String sql = "SELECT * FROM CampActivities";
+            String sql = "SELECT * FROM CampActivities ORDER BY id DESC";
             Cursor mCur2 = mDb.rawQuery(sql, null);
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in CampActivityList", )();
@@ -789,7 +790,22 @@ public class DatabaseAdapter {
     }
 
     public int getSumHours(String actCode) {
-        String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode=\"%s\" AND State=\"Approved\" OR State=\"LeaderModified\" OR State=\"PoModified\"", actCode);
+        String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode=\"%s\" AND State=\"Approved\" OR State=\"Modified\" OR State=\"PoModified\" OR State=\"LeaderModified\"", actCode);
+        try (Cursor mCur2 = mDb.rawQuery(sql, null)) {
+            if (mCur2.getCount() == 0) {
+                //Log.e(mContext, "Too bad no data in DailyActivity", )();
+                return -1;
+            }
+            mCur2.moveToFirst();
+            return mCur2.getInt(0);
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public int getSumHoursSubmitted(String actCode) {
+        String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode LIKE \"%s\" AND State=\"Submitted\" OR State=\"Approved\" OR State=\"Modified\" OR State=\"PoModified\" OR State=\"LeaderModified\"AND Date=CURRENT_DATE", actCode);
         try (Cursor mCur2 = mDb.rawQuery(sql, null)) {
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in DailyActivity", )();

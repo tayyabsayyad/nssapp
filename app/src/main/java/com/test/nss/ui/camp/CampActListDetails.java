@@ -56,7 +56,6 @@ public class CampActListDetails extends Fragment {
         campData = addCampData();
         go_back = root.findViewById(R.id.go_back);
         camp_main_details = requireActivity().findViewById(R.id.camp_main_details);
-
         return root;
     }
 
@@ -253,6 +252,8 @@ public class CampActListDetails extends Fragment {
 
         go_back.setOnClickListener(view1 -> {
             camp_main_details.setVisibility(View.VISIBLE);
+            campActAll.setVisibility(View.GONE);
+
             onDetach();
         });
 
@@ -263,15 +264,15 @@ public class CampActListDetails extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        camp_main_details.setVisibility(View.VISIBLE);
+        //camp_main_details.setVisibility(View.VISIBLE);
         FragmentManager fm = requireActivity().getSupportFragmentManager();
 
         campActAll.setVisibility(View.GONE);
         if (fm.getBackStackEntryCount() > 0) {
             Log.e("CampFrag", "onDetach: " + fm.getBackStackEntryCount());
-            fm.popBackStackImmediate(null, 0);
-            fm.popBackStack("CampList", 0);
+            fm.beginTransaction().remove(this).commit();
         }
+        fm.popBackStack();
     }
 
     public List<AdapterCampActList> addCampData() {

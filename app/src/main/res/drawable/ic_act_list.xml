@@ -3,6 +3,7 @@
     android:name="vector"
     android:width="54dp"
     android:height="54dp"
+    android:tint="@color/kesar"
     android:viewportWidth="54"
     android:viewportHeight="54">
     <path

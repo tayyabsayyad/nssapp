@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,7 +32,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
@@ -58,6 +58,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private Button signupPost;
     private EditText contactNo;
+    private EditText password;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -77,6 +78,7 @@ public class SignupActivity extends AppCompatActivity {
         dropdownClg = findViewById(R.id.dropdown_clg);
         contactNo = findViewById(R.id.contact_no);
         vecClgPref = findViewById(R.id.vec_clg_pref);
+        password = findViewById(R.id.password);
 
         clgList = new ArrayList<>();
 
@@ -178,6 +180,13 @@ public class SignupActivity extends AppCompatActivity {
                 }
             });*/
 
+            dropdownClg.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    dropdownClg.showDropDown();
+                    return false;
+                }
+            });
 
             dropdownClg.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -210,11 +219,12 @@ public class SignupActivity extends AppCompatActivity {
 
             signupPost.setOnClickListener(v -> {
                 String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+                String passPattern = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})";
 
                 final EditText vec = findViewById(R.id.vec_in);
 
                 if (!isEmpty(fName) && !isEmpty(fathName) &&
-                        !isEmpty(mName) && !isEmpty(lName) && !isEmpty(vec) &&
+                        !isEmpty(mName) && !isEmpty(lName) && !isEmpty(vec) && !isEmpty(password) &&
                         !isEmpty(email) && !isEmpty(contactNo) && !vecClgPref.getText().toString().equals("")
                         && !isEmpty(dropdownClg) && vec.getText().toString().trim().length() > 0) {
 
@@ -222,7 +232,10 @@ public class SignupActivity extends AppCompatActivity {
                         Toast.makeText(mContext, "Please enter proper email", Toast.LENGTH_SHORT).show();
                     if (vec.getText().toString().trim().length() < 5 && vec.getText().toString().trim().length() != 5)
                         vec.setError("Enter only 5 digits");
-                    else {
+                    if (!password.getText().toString().trim().matches(passPattern)) {
+                        password.setError("Error");
+                        Snackbar.make(v, "Password should contain at least a number, capital letter and a special character", Snackbar.LENGTH_SHORT).show();
+                    } else {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(mContext, R.style.delDialog);
                         builder2.setTitle("Confirm");
                         builder2.setMessage("Your vec is: " + "MH09" + vecClgPref.getText().toString() + vec.getText().toString());
@@ -242,7 +255,8 @@ public class SignupActivity extends AppCompatActivity {
                                     "MH09" + vecClgPref.getText().toString() + vec.getText().toString(),
                                     email.getText().toString(),
                                     clgItem,
-                                    "+91" + contactNo.getText().toString()
+                                    "+91" + contactNo.getText().toString(),
+                                    ""
                             );
 
                             signup.enqueue(new Callback<ResponseBody>() {

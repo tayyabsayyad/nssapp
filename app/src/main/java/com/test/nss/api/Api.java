@@ -38,7 +38,8 @@ public interface Api {
             @Field("VEC") String vec,
             @Field("Email") String email,
             @Field("CollegeName") String college_name,
-            @Field("Contact") String contact
+            @Field("Contact") String contact,
+            @Field("Password") String pass
     );
 
     @GET("/diary/api/collegenames/")
@@ -77,7 +78,7 @@ public interface Api {
     @GET("/diary/api/totalhours/")
     Call<ResponseBody> getTotalAreaHours(@Header("Authorization") String token);
 
-    @POST("/diary/api/dailyactivity/")
+    @POST("/diary/dailyactivity")
     @FormUrlEncoded
     Call<ResponseBody> sendActList(
             @Header("Authorization") String token,

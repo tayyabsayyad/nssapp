@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.R;
@@ -50,18 +51,19 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         holder.actId.setText(list.get(position).getId());
         if (list.get(position).isApproved() == 1 && list.get(position).getState().equals("Approved")) {
             setColor(holder, green);
-            holder.linearLayout.setBackground(mCon.getDrawable(R.drawable.ic_circle_app));
+            holder.linearLayout.setBackground(ContextCompat.getDrawable(mCon, R.drawable.ic_circle_app));
             return;
         }
         switch (list.get(position).getState()) {
             case "LeaderDelete":
+            case "PoDelete":
                 setColor(holder, red);
-                holder.linearLayout.setBackground(mCon.getDrawable(R.drawable.ic_circle_del));
+                holder.linearLayout.setBackground(ContextCompat.getDrawable(mCon, R.drawable.ic_circle_del));
                 break;
             case "LeaderModified":
             case "PoModified":
                 setColor(holder, kesar);
-                holder.linearLayout.setBackground(mCon.getDrawable(R.drawable.ic_circle_mod));
+                holder.linearLayout.setBackground(ContextCompat.getDrawable(mCon, R.drawable.ic_circle_mod));
                 break;
         }
     }

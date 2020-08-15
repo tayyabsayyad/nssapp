@@ -1,15 +1,19 @@
 package com.test.nss.ui.camp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -20,7 +24,9 @@ public class CampDetailsDays extends Fragment {
 
     View root;
     ListView listView;
-    String actName;
+    LinearLayout camp_main_details;
+    ConstraintLayout campList;
+    FrameLayout camp_details_days_frame;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,8 +34,10 @@ public class CampDetailsDays extends Fragment {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_camp_details_days, container, false);
         assert getArguments() != null;
-        actName = getArguments().getString("actName");
-
+        //actName = getArguments().getString("actName");
+        camp_main_details = requireActivity().findViewById(R.id.camp_main_details);
+        campList = root.findViewById(R.id.camp_details_days);
+        camp_details_days_frame = root.findViewById(R.id.camp_details_days_frame);
         return root;
     }
 
@@ -40,19 +48,28 @@ public class CampDetailsDays extends Fragment {
         ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(requireContext(), R.array.days, android.R.layout.simple_list_item_1);
         listView.setAdapter(list);
 
-        //Boolean ch1_checked = Boolean.valueOf(getArguments().getString("is_ch1"));
         listView.setOnItemClickListener((parent, view1, position, id) -> {
             String day = parent.getItemAtPosition(position).toString();
-            CampInputDetailsFrag campInputDetailsFrag = new CampInputDetailsFrag();
+            CampDetailsFrag campDetailsFrag = new CampDetailsFrag();
 
             Bundle args = new Bundle();
             args.putString("whichDay", day);
-            args.putString("actName", actName);
 
-            campInputDetailsFrag.setArguments(args);
+            campDetailsFrag.setArguments(args);
             Toast.makeText(getContext(), day, Toast.LENGTH_SHORT).show();
-            FragmentManager fragmentManager = getParentFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.camp_frag, campInputDetailsFrag, "CampInput").addToBackStack("CampFrag").commit();
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsFrag, "CampDetailsFrag").addToBackStack(null).commit();
         });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        camp_main_details.setVisibility(View.VISIBLE);
+        campList.setVisibility(View.GONE);
+        camp_details_days_frame.setVisibility(View.GONE);
+        Log.e("AAA", "Called");
+        FragmentManager fm = requireActivity().getSupportFragmentManager();
+        fm.beginTransaction().remove(this).commit();
     }
 }

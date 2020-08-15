@@ -40,8 +40,8 @@ public class CampFragment extends Fragment {
         fm = requireActivity().getSupportFragmentManager();
 
         if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.popBackStack("CampFrag", 0);
+            //fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            //fm.popBackStack("CampFrag", 0);
         }
         return root;
     }
@@ -62,14 +62,15 @@ public class CampFragment extends Fragment {
         camp_act.setOnClickListener(v -> {
             new Handler().postDelayed(() -> {
                 camp_main_details.setVisibility(View.GONE);
-                fm.beginTransaction().replace(R.id.camp_frag, new CampDetailsFrag(), "CampDetailsFrag").addToBackStack("CampFrag").commit();
+                fm.popBackStack();
+                fm.beginTransaction().replace(R.id.camp_frag, new CampDetailsDays(), "CampDetailsDays").addToBackStack("CampFrag").commit();
             }, 350);
         });
 
         camp_days.setOnClickListener(view2 -> {
             new Handler().postDelayed(() -> {
                 camp_main_details.setVisibility(View.GONE);
-                fm.beginTransaction().replace(R.id.camp_frag, new CampActListDetails(), "CampList").addToBackStack("CampFrag").commit();
+                fm.beginTransaction().replace(R.id.camp_frag, new CampActListDetails(), "CampList2").addToBackStack("CampFrag").commit();
             }, 350);
         });
 

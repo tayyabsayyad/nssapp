@@ -10,24 +10,29 @@
             android:title="@string/home" />
 
         <item
-            android:icon="@drawable/ic_act_list"
             android:id="@+id/nav_acti"
+            android:icon="@drawable/ic_act_list"
             android:title="@string/menu_activity" />
         <item
-            android:icon="@drawable/ic_hours"
             android:id="@+id/nav_work"
+            android:icon="@drawable/ic_hours"
             android:title="@string/menu_work_hours" />
         <item
-            android:icon="@drawable/ic_camp"
             android:id="@+id/nav_camp"
+            android:icon="@drawable/ic_camp"
             android:title="@string/menu_camp" />
         <item
             android:id="@+id/nav_leader"
             android:icon="@drawable/ic_vol_approve_24"
             android:title="@string/menu_leader" />
-        <item
-            android:icon="@drawable/ic_help"
-            android:id="@+id/nav_help"
-            android:title="@string/menu_help" />
+
+        <item android:title="Others">
+            <menu>
+                <item
+                    android:id="@+id/nav_help"
+                    android:icon="@drawable/ic_help"
+                    android:title="@string/menu_help" />
+            </menu>
+        </item>
     </group>
 </menu>

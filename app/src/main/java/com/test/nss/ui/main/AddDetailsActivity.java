@@ -169,7 +169,7 @@ public class AddDetailsActivity extends Fragment {
         int currMont = cal.get(Calendar.MONTH) + 1;
         int currYear = cal.get(Calendar.YEAR);
 
-        String todayDate = "" + currYear + "-" + currMont + "-" + currDay;
+        String todayDate = "" + currYear + "-" + String.format(Locale.ENGLISH, "%02d", currMont) + "-" + currDay;
         todayBtn.setOnClickListener(view12 -> {
             actDate.setText(todayDate);
         });
@@ -191,9 +191,10 @@ public class AddDetailsActivity extends Fragment {
 
         onDateSetListener = (datePicker, i, i1, i2) -> {
             i1 = i1 + 1;
-            String date = i + "-" + i1 + "-" + String.format(Locale.ENGLISH, "%02d", i2);
+            String date = i + "-" + String.format(Locale.ENGLISH, "%02d", i1) + "-" + i2;
+            Log.e("AAAAAA", date);
 
-            if (i2 > currDay-8 && i2 <= currDay  && i1 >= currMont && i >= currYear)
+            if (i2 > currDay - 8 && i2 <= currDay && i1 >= currMont && i >= currYear)
                 actDate.setText(date);
             else
                 Toast.makeText(requireContext(), "Enter today's date or 8 days before", Toast.LENGTH_SHORT).show();

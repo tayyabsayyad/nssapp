@@ -160,6 +160,7 @@ public class ModifyVolunteer extends Fragment {
                 mdbF.open();
                     Cursor cF = mdbF.getVolState(Integer.parseInt(adapterVolUniv.list.get(viewHolder.getAdapterPosition()).getId()));
                 cF.moveToFirst();
+                adapterVolUniv.notifyDataSetChanged();
                 if (cF.getString(cF.getColumnIndex("State")).equals("Submitted") || cF.getString(cF.getColumnIndex("State")).equals("Modified")) {
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                                     context,
@@ -195,6 +196,7 @@ public class ModifyVolunteer extends Fragment {
                                         builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
+                                                //adapterVolUniv.notifyDataSetChanged();
                                                 String thisVec = getArguments().getString("thisVec");
 
                                                 Snackbar.make(view, "Deleted: " + thisVec, Snackbar.LENGTH_SHORT).show();
@@ -245,6 +247,7 @@ public class ModifyVolunteer extends Fragment {
                                             }
                                         });
                                         builder3.show();
+                                        //adapterVolUniv.notifyDataSetChanged();
                                     }
                             )
                     );
@@ -284,6 +287,7 @@ public class ModifyVolunteer extends Fragment {
                                         builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
+                                                //adapterVolUniv.notifyDataSetChanged();
                                                 dialog.dismiss();
                                                 String thisVec = getArguments().getString("thisVec");
                                                 Snackbar.make(view, "Approved: " + thisVec, Snackbar.LENGTH_SHORT).show();
@@ -335,6 +339,7 @@ public class ModifyVolunteer extends Fragment {
                                             }
                                         });
                                         builder3.show();
+                                        //adapterVolUniv.notifyDataSetChanged();
                                     }
                             )
                     );
@@ -345,6 +350,7 @@ public class ModifyVolunteer extends Fragment {
                             R.drawable.ic_vol_edit_24,
                             transparent,
                             pos -> {
+                                adapterVolUniv.notifyDataSetChanged();
                                // builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                  //   @Override
                                    // public void onClick(DialogInterface dialog3, int which3) {
@@ -374,13 +380,13 @@ public class ModifyVolunteer extends Fragment {
                                         });
                                         String thisVec = getArguments().getString("thisVec");
                                         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                                            //adapterVolUniv.notifyDataSetChanged();
                                                     dialog.dismiss();
                                                     if (!input.getText().toString().trim().equals("")) {
                                                         int newHours = Integer.parseInt(input.getText().toString());
 
                                                         //if (!dataVolListUniv.isEmpty())
                                                         //  dataVolListUniv.clear();
-                                                        adapterVolUniv.notifyDataSetChanged();
 
                                                         if (newHours >= 1 && newHours <= 10) {
                                                             adapterVolUniv.list.add(p + 1, new AdapterDataVolunteer(
@@ -408,13 +414,14 @@ public class ModifyVolunteer extends Fragment {
                                                             );
                                                             Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putDetailsLeader(
                                                                     "Token " + ediary.AUTH_TOKEN,
-                                                                    Integer.parseInt(adapterVolUniv.list.get(p).getHours()),
+                                                                    newHours,
                                                                     thisVec,
                                                                     c.getInt(c.getColumnIndex("activityType")),
                                                                     c.getInt(c.getColumnIndex("id")),
                                                                     6,
                                                                     Integer.parseInt(adapterVolUniv.list.get(p).getId())
                                                             );
+                                                            adapterVolUniv.notifyDataSetChanged();
                                                             mdb.close();
                                                             putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                                 @Override
@@ -438,7 +445,6 @@ public class ModifyVolunteer extends Fragment {
                                         if (viewInflated.getParent() != null)
                                             ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
                                 builder.show();
-                                adapterVolUniv.notifyDataSetChanged();
                             }
                     ));
                     mdbF.close();
@@ -451,7 +457,6 @@ public class ModifyVolunteer extends Fragment {
 
         // AREA
         SwipeHelperRight swipeHelperRightHoursArea = new SwipeHelperRight(context, recViewVolArea) {
-
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
                 DatabaseAdapter mdbF = new DatabaseAdapter(context);
@@ -459,6 +464,7 @@ public class ModifyVolunteer extends Fragment {
                 mdbF.open();
                 Cursor cF = mdbF.getVolState(Integer.parseInt(adapterVolArea.list.get(viewHolder.getAdapterPosition()).getId()));
                 cF.moveToFirst();
+                adapterVolArea.notifyDataSetChanged();
                 if (cF.getString(cF.getColumnIndex("State")).equals("Submitted") || cF.getString(cF.getColumnIndex("State")).equals("Modified")) {
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                                     context,
@@ -466,7 +472,8 @@ public class ModifyVolunteer extends Fragment {
                                     R.drawable.ic_disapprove_24,
                                     transparent,
                                     pos -> {
-                                        String thisVec = getArguments().getString("thisVec");
+
+                                        Log.e("Clicked", "instantiateUnderlayButton: ");
                                         int p;
                                         if (viewHolder.getAdapterPosition() == -1)
                                             p = viewHolder.getAdapterPosition() + 1;
@@ -493,27 +500,28 @@ public class ModifyVolunteer extends Fragment {
 
                                         builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                             @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                //adapterVolArea.notifyDataSetChanged();
+                                                String thisVec = getArguments().getString("thisVec");
+
                                                 Snackbar.make(view, "Deleted: " + thisVec, Snackbar.LENGTH_SHORT).show();
                                                 adapterVolArea.list.set(p, new AdapterDataVolunteer(
-                                                        adapterVolArea.list.get(p).getDate(),
-                                                        adapterVolArea.list.get(p).getAct(),
-                                                        adapterVolArea.list.get(p).getHours(),
-                                                        adapterVolArea.list.get(p).getId(),
-                                                        "LeaderDelete"
-                                                ));
+                                                                adapterVolArea.list.get(p).getDate(),
+                                                                adapterVolArea.list.get(p).getAct(),
+                                                                adapterVolArea.list.get(p).getHours(),
+                                                                adapterVolArea.list.get(p).getId(),
+                                                                "LeaderDelete"
+                                                        )
+                                                );
                                                 adapterVolArea.notifyDataSetChanged();
                                                 adapterVolArea.notifyItemChanged(p);
 
                                                 DatabaseAdapter mdb = new DatabaseAdapter(context);
                                                 mdb.createDatabase();
                                                 mdb.open();
-                                                Cursor c = mdb.getActAssigActNameAdmin(adapterVolArea.list.get(p).getAct());
                                                 mdb.setStateVolAct("LeaderDelete", Integer.parseInt(adapterVolArea.list.get(p).getId()));
+                                                Cursor c = mdb.getActAssigActNameAdmin(adapterVolArea.list.get(p).getAct());
                                                 c.moveToFirst();
-                                                mdb.close();
-
                                                 Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putDetailsLeader(
                                                         "Token " + ediary.AUTH_TOKEN,
                                                         Integer.parseInt(adapterVolArea.list.get(p).getHours()),
@@ -523,7 +531,7 @@ public class ModifyVolunteer extends Fragment {
                                                         5,
                                                         Integer.parseInt(adapterVolArea.list.get(p).getId())
                                                 );
-
+                                                mdb.close();
                                                 putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                     @Override
                                                     @EverythingIsNonNull
@@ -540,9 +548,11 @@ public class ModifyVolunteer extends Fragment {
 
                                                     }
                                                 });
+
                                             }
                                         });
                                         builder3.show();
+                                        //adapterVolArea.notifyDataSetChanged();
                                     }
                             )
                     );
@@ -553,8 +563,9 @@ public class ModifyVolunteer extends Fragment {
                                     R.drawable.ic_approve_24,
                                     transparent,
                                     pos -> {
-                                        int p;
+                                        Log.e("Clicked", "instantiateUnderlayButton: ");
 
+                                        int p;
                                         if (viewHolder.getAdapterPosition() == -1)
                                             p = viewHolder.getAdapterPosition() + 1;
 
@@ -580,29 +591,28 @@ public class ModifyVolunteer extends Fragment {
 
                                         builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                             @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                dialogInterface.dismiss();
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //adapterVolArea.notifyDataSetChanged();
+                                                dialog.dismiss();
                                                 String thisVec = getArguments().getString("thisVec");
                                                 Snackbar.make(view, "Approved: " + thisVec, Snackbar.LENGTH_SHORT).show();
                                                 adapterVolArea.list.set(p, new AdapterDataVolunteer(
-                                                        adapterVolArea.list.get(p).getDate(),
-                                                        adapterVolArea.list.get(p).getAct(),
-                                                        adapterVolArea.list.get(p).getHours(),
-                                                        adapterVolArea.list.get(p).getId(),
-                                                        "Approved"
-                                                ));
+                                                                adapterVolArea.list.get(p).getDate(),
+                                                                adapterVolArea.list.get(p).getAct(),
+                                                                adapterVolArea.list.get(p).getHours(),
+                                                                adapterVolArea.list.get(p).getId(),
+                                                                "Approved"
+                                                        )
+                                                );
+                                                adapterVolArea.notifyDataSetChanged();
+                                                adapterVolArea.notifyItemChanged(p);
 
                                                 DatabaseAdapter mdb = new DatabaseAdapter(context);
                                                 mdb.createDatabase();
                                                 mdb.open();
                                                 Cursor c = mdb.getActAssigActNameAdmin(adapterVolArea.list.get(p).getAct());
-                                                c.moveToFirst();
                                                 mdb.setStateVolAct("Approved", Integer.parseInt(adapterVolArea.list.get(p).getId()));
-                                                mdb.close();
-
-                                                adapterVolArea.notifyDataSetChanged();
-                                                adapterVolArea.notifyItemChanged(p);
-
+                                                c.moveToFirst();
                                                 Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putApprove(
                                                         "Token " + ediary.AUTH_TOKEN,
                                                         Integer.parseInt(adapterVolArea.list.get(p).getHours()),
@@ -613,6 +623,7 @@ public class ModifyVolunteer extends Fragment {
                                                         leaderId,
                                                         Integer.parseInt(adapterVolArea.list.get(p).getId())
                                                 );
+                                                mdb.close();
 
                                                 putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                     @Override
@@ -630,10 +641,10 @@ public class ModifyVolunteer extends Fragment {
 
                                                     }
                                                 });
-
                                             }
                                         });
                                         builder3.show();
+                                        //adapterVolArea.notifyDataSetChanged();
                                     }
                             )
                     );
@@ -644,6 +655,11 @@ public class ModifyVolunteer extends Fragment {
                             R.drawable.ic_vol_edit_24,
                             transparent,
                             pos -> {
+                                adapterVolArea.notifyDataSetChanged();
+                                // builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                //   @Override
+                                // public void onClick(DialogInterface dialog3, int which3) {
+                                //   dialog3.dismiss();
                                 int p;
                                 if (viewHolder.getAdapterPosition() == -1)
                                     p = viewHolder.getAdapterPosition() + 1;
@@ -653,9 +669,12 @@ public class ModifyVolunteer extends Fragment {
 
                                 else
                                     p = viewHolder.getAdapterPosition();
-                                
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.inputDialog);
+
+                                Log.e("This", "instantiateUnderlayButton: " + p);
                                 View viewInflated = LayoutInflater.from(context).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.inputDialog);
+                                builder.setCancelable(false);
 
                                 EditText input = viewInflated.findViewById(R.id.input);
                                 builder.setView(viewInflated);
@@ -664,12 +683,15 @@ public class ModifyVolunteer extends Fragment {
                                     dialog.cancel();
                                     adapterVolArea.notifyItemChanged(p);
                                 });
-
+                                String thisVec = getArguments().getString("thisVec");
                                 builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                                    //adapterVolArea.notifyDataSetChanged();
                                             dialog.dismiss();
                                             if (!input.getText().toString().trim().equals("")) {
                                                 int newHours = Integer.parseInt(input.getText().toString());
-                                                String thisVec = getArguments().getString("thisVec");
+
+                                                //if (!dataVolListArea.isEmpty())
+                                                //  dataVolListArea.clear();
 
                                                 if (newHours >= 1 && newHours <= 10) {
                                                     adapterVolArea.list.add(p + 1, new AdapterDataVolunteer(
@@ -679,15 +701,16 @@ public class ModifyVolunteer extends Fragment {
                                                             adapterVolArea.list.get(p).getId(),
                                                             "LeaderModified"
                                                     ));
+
                                                     adapterVolArea.notifyDataSetChanged();
                                                     dataVolListArea.remove(p);
-                                                    adapterVolArea.notifyItemChanged(p);
+                                                    adapterVolArea.notifyItemInserted(p);
 
                                                     DatabaseAdapter mdb = new DatabaseAdapter(context);
                                                     mdb.createDatabase();
                                                     mdb.open();
                                                     Cursor c = mdb.getActAssigActNameAdmin(adapterVolArea.list.get(p).getAct());
-                                                    mdb.setStateVolAct("LeaderModified", Integer.parseInt(dataVolListArea.get(p).getId()));
+                                                    mdb.setStateVolAct("LeaderModified", Integer.parseInt(adapterVolArea.list.get(p).getId()));
                                                     c.moveToFirst();
                                                     mdb.setVolActHours(
                                                             Integer.parseInt(adapterVolArea.list.get(p).getHours()),
@@ -696,13 +719,14 @@ public class ModifyVolunteer extends Fragment {
                                                     );
                                                     Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putDetailsLeader(
                                                             "Token " + ediary.AUTH_TOKEN,
-                                                            Integer.parseInt(adapterVolArea.list.get(p).getHours()),
+                                                            newHours,
                                                             thisVec,
                                                             c.getInt(c.getColumnIndex("activityType")),
                                                             c.getInt(c.getColumnIndex("id")),
                                                             6,
                                                             Integer.parseInt(adapterVolArea.list.get(p).getId())
                                                     );
+                                                    adapterVolArea.notifyDataSetChanged();
                                                     mdb.close();
                                                     putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                         @Override
@@ -719,7 +743,7 @@ public class ModifyVolunteer extends Fragment {
                                                         }
                                                     });
                                                 } else
-                                                    Toast.makeText(context, "Enter in given range", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(context, "Please enter in given range", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                 );
@@ -745,6 +769,7 @@ public class ModifyVolunteer extends Fragment {
                 mdbF.open();
                 Cursor cF = mdbF.getVolState(Integer.parseInt(adapterVolClg.list.get(viewHolder.getAdapterPosition()).getId()));
                 cF.moveToFirst();
+                adapterVolClg.notifyDataSetChanged();
                 if (cF.getString(cF.getColumnIndex("State")).equals("Submitted") || cF.getString(cF.getColumnIndex("State")).equals("Modified")) {
                     underlayButtons.add(new SwipeHelperRight.UnderlayButton(
                                     context,
@@ -752,7 +777,8 @@ public class ModifyVolunteer extends Fragment {
                                     R.drawable.ic_disapprove_24,
                                     transparent,
                                     pos -> {
-                                        String thisVec = getArguments().getString("thisVec");
+
+                                        Log.e("Clicked", "instantiateUnderlayButton: ");
                                         int p;
                                         if (viewHolder.getAdapterPosition() == -1)
                                             p = viewHolder.getAdapterPosition() + 1;
@@ -780,6 +806,9 @@ public class ModifyVolunteer extends Fragment {
                                         builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
+                                                //adapterVolClg.notifyDataSetChanged();
+                                                String thisVec = getArguments().getString("thisVec");
+
                                                 Snackbar.make(view, "Deleted: " + thisVec, Snackbar.LENGTH_SHORT).show();
                                                 adapterVolClg.list.set(p, new AdapterDataVolunteer(
                                                                 adapterVolClg.list.get(p).getDate(),
@@ -789,18 +818,15 @@ public class ModifyVolunteer extends Fragment {
                                                                 "LeaderDelete"
                                                         )
                                                 );
+                                                adapterVolClg.notifyDataSetChanged();
+                                                adapterVolClg.notifyItemChanged(p);
 
                                                 DatabaseAdapter mdb = new DatabaseAdapter(context);
                                                 mdb.createDatabase();
                                                 mdb.open();
+                                                mdb.setStateVolAct("LeaderDelete", Integer.parseInt(adapterVolClg.list.get(p).getId()));
                                                 Cursor c = mdb.getActAssigActNameAdmin(adapterVolClg.list.get(p).getAct());
                                                 c.moveToFirst();
-                                                mdb.setStateVolAct("LeaderDelete", Integer.parseInt(dataVolListClg.get(p).getId()));
-                                                mdb.close();
-
-                                                adapterVolClg.notifyDataSetChanged();
-                                                adapterVolClg.notifyItemChanged(p);
-
                                                 Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putDetailsLeader(
                                                         "Token " + ediary.AUTH_TOKEN,
                                                         Integer.parseInt(adapterVolClg.list.get(p).getHours()),
@@ -810,7 +836,7 @@ public class ModifyVolunteer extends Fragment {
                                                         5,
                                                         Integer.parseInt(adapterVolClg.list.get(p).getId())
                                                 );
-
+                                                mdb.close();
                                                 putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                     @Override
                                                     @EverythingIsNonNull
@@ -827,9 +853,11 @@ public class ModifyVolunteer extends Fragment {
 
                                                     }
                                                 });
+
                                             }
                                         });
                                         builder3.show();
+                                        //adapterVolClg.notifyDataSetChanged();
                                     }
                             )
                     );
@@ -840,6 +868,8 @@ public class ModifyVolunteer extends Fragment {
                                     R.drawable.ic_approve_24,
                                     transparent,
                                     pos -> {
+                                        Log.e("Clicked", "instantiateUnderlayButton: ");
+
                                         int p;
                                         if (viewHolder.getAdapterPosition() == -1)
                                             p = viewHolder.getAdapterPosition() + 1;
@@ -860,66 +890,66 @@ public class ModifyVolunteer extends Fragment {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.cancel();
-                                                adapterVolUniv.notifyItemChanged(p);
+                                                adapterVolClg.notifyItemChanged(p);
                                             }
                                         });
 
                                         builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                          @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                dialogInterface.dismiss();
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //adapterVolClg.notifyDataSetChanged();
+                                                dialog.dismiss();
                                                 String thisVec = getArguments().getString("thisVec");
                                                 Snackbar.make(view, "Approved: " + thisVec, Snackbar.LENGTH_SHORT).show();
                                                 adapterVolClg.list.set(p, new AdapterDataVolunteer(
-                                                        adapterVolClg.list.get(p).getDate(),
-                                                        adapterVolClg.list.get(p).getAct(),
-                                                        adapterVolClg.list.get(p).getHours(),
-                                                        adapterVolClg.list.get(p).getId(),
-                                                        "Approved"
-                                                ));
+                                                                adapterVolClg.list.get(p).getDate(),
+                                                                adapterVolClg.list.get(p).getAct(),
+                                                                adapterVolClg.list.get(p).getHours(),
+                                                                adapterVolClg.list.get(p).getId(),
+                                                                "Approved"
+                                                        )
+                                                );
+                                                adapterVolClg.notifyDataSetChanged();
+                                                adapterVolClg.notifyItemChanged(p);
 
                                                 DatabaseAdapter mdb = new DatabaseAdapter(context);
                                                 mdb.createDatabase();
                                                 mdb.open();
-                                                mdb.setStateVolAct("Approved", Integer.parseInt(dataVolListClg.get(p).getId()));
                                                 Cursor c = mdb.getActAssigActNameAdmin(adapterVolClg.list.get(p).getAct());
+                                                mdb.setStateVolAct("Approved", Integer.parseInt(adapterVolClg.list.get(p).getId()));
                                                 c.moveToFirst();
+                                                Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putApprove(
+                                                        "Token " + ediary.AUTH_TOKEN,
+                                                        Integer.parseInt(adapterVolClg.list.get(p).getHours()),
+                                                        thisVec,
+                                                        c.getInt(c.getColumnIndex("activityType")),
+                                                        c.getInt(c.getColumnIndex("id")),
+                                                        2,
+                                                        leaderId,
+                                                        Integer.parseInt(adapterVolClg.list.get(p).getId())
+                                                );
                                                 mdb.close();
-                                                adapterVolClg.notifyDataSetChanged();
-                                                adapterVolClg.notifyItemChanged(p);
 
-                                              Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putApprove(
-                                                      "Token " + ediary.AUTH_TOKEN,
-                                                      Integer.parseInt(adapterVolClg.list.get(p).getHours()),
-                                                      thisVec,
-                                                      c.getInt(c.getColumnIndex("activityType")),
-                                                      c.getInt(c.getColumnIndex("id")),
-                                                      2,
-                                                      leaderId,
-                                                      Integer.parseInt(adapterVolClg.list.get(p).getId())
-                                              );
-
-                                              putDetailsLeader.enqueue(new Callback<ResponseBody>() {
-                                                  @Override
-                                                  @EverythingIsNonNull
-                                                  public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                      if (response.errorBody() != null) {
-                                                          Log.e("error", "onResponse: " + response.errorBody().toString());
-                                                      } else if (response.isSuccessful()) {
-                                                          Log.e("Done", "onResponse: " + adapterVolClg.list.get(p).getId());
-                                                      }
-                                                  }
+                                                putDetailsLeader.enqueue(new Callback<ResponseBody>() {
+                                                    @Override
+                                                    @EverythingIsNonNull
+                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                        if (response.errorBody() != null) {
+                                                            Log.e("error", "onResponse: " + response.errorBody().toString());
+                                                        } else if (response.isSuccessful()) {
+                                                            Log.e("Done", "onResponse: " + adapterVolClg.list.get(p).getId());
+                                                        }
+                                                    }
 
                                                     @Override
                                                     public void onFailure(Call<ResponseBody> call, Throwable t) {
 
                                                     }
                                                 });
-
                                             }
-                                            }
-                                        );
+                                        });
                                         builder3.show();
+                                        //adapterVolClg.notifyDataSetChanged();
                                     }
                             )
                     );
@@ -930,8 +960,12 @@ public class ModifyVolunteer extends Fragment {
                             R.drawable.ic_vol_edit_24,
                             transparent,
                             pos -> {
+                                adapterVolClg.notifyDataSetChanged();
+                                // builder3.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                //   @Override
+                                // public void onClick(DialogInterface dialog3, int which3) {
+                                //   dialog3.dismiss();
                                 int p;
-                                Log.e("og", "instantiateUnderlayButton: " + viewHolder.getAdapterPosition());
                                 if (viewHolder.getAdapterPosition() == -1)
                                     p = viewHolder.getAdapterPosition() + 1;
 
@@ -941,10 +975,11 @@ public class ModifyVolunteer extends Fragment {
                                 else
                                     p = viewHolder.getAdapterPosition();
 
-                                Log.e("This", "instantiateUnderlayButton: " + adapterVolClg.list.get(p).getState());
-                                Log.e("Here again", "instantiateUnderlayButton: " + p);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.inputDialog);
+                                Log.e("This", "instantiateUnderlayButton: " + p);
                                 View viewInflated = LayoutInflater.from(context).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.inputDialog);
+                                builder.setCancelable(false);
 
                                 EditText input = viewInflated.findViewById(R.id.input);
                                 builder.setView(viewInflated);
@@ -953,14 +988,16 @@ public class ModifyVolunteer extends Fragment {
                                     dialog.cancel();
                                     adapterVolClg.notifyItemChanged(p);
                                 });
-
+                                String thisVec = getArguments().getString("thisVec");
                                 builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                                    //adapterVolClg.notifyDataSetChanged();
                                             dialog.dismiss();
-                                            String thisVec = getArguments().getString("thisVec");
-
                                             if (!input.getText().toString().trim().equals("")) {
                                                 int newHours = Integer.parseInt(input.getText().toString());
-                                                Log.e("Here", "instantiateUnderlayButton: " + p);
+
+                                                //if (!dataVolListClg.isEmpty())
+                                                //  dataVolListClg.clear();
+
                                                 if (newHours >= 1 && newHours <= 10) {
                                                     adapterVolClg.list.add(p + 1, new AdapterDataVolunteer(
                                                             adapterVolClg.list.get(p).getDate(),
@@ -969,11 +1006,16 @@ public class ModifyVolunteer extends Fragment {
                                                             adapterVolClg.list.get(p).getId(),
                                                             "LeaderModified"
                                                     ));
+
+                                                    adapterVolClg.notifyDataSetChanged();
+                                                    dataVolListClg.remove(p);
+                                                    adapterVolClg.notifyItemInserted(p);
+
                                                     DatabaseAdapter mdb = new DatabaseAdapter(context);
                                                     mdb.createDatabase();
                                                     mdb.open();
-                                                    mdb.setStateVolAct("LeaderModified", Integer.parseInt(dataVolListClg.get(p).getId()));
                                                     Cursor c = mdb.getActAssigActNameAdmin(adapterVolClg.list.get(p).getAct());
+                                                    mdb.setStateVolAct("LeaderModified", Integer.parseInt(adapterVolClg.list.get(p).getId()));
                                                     c.moveToFirst();
                                                     mdb.setVolActHours(
                                                             Integer.parseInt(adapterVolClg.list.get(p).getHours()),
@@ -982,13 +1024,14 @@ public class ModifyVolunteer extends Fragment {
                                                     );
                                                     Call<ResponseBody> putDetailsLeader = RetrofitClient.getInstance().getApi().putDetailsLeader(
                                                             "Token " + ediary.AUTH_TOKEN,
-                                                            Integer.parseInt(adapterVolClg.list.get(p).getHours()),
+                                                            newHours,
                                                             thisVec,
                                                             c.getInt(c.getColumnIndex("activityType")),
                                                             c.getInt(c.getColumnIndex("id")),
                                                             6,
                                                             Integer.parseInt(adapterVolClg.list.get(p).getId())
                                                     );
+                                                    adapterVolClg.notifyDataSetChanged();
                                                     mdb.close();
                                                     putDetailsLeader.enqueue(new Callback<ResponseBody>() {
                                                         @Override
@@ -1012,7 +1055,6 @@ public class ModifyVolunteer extends Fragment {
                                 if (viewInflated.getParent() != null)
                                     ((ViewGroup) viewInflated.getParent()).removeView(viewInflated);
                                 builder.show();
-                                adapterVolClg.notifyDataSetChanged();
                             }
                     ));
                     mdbF.close();

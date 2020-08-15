@@ -41,26 +41,28 @@ public class CampDetailsFrag extends Fragment {
         go_back = root.findViewById(R.id.go_back);
 
         camp_main_details = requireActivity().findViewById(R.id.camp_main_details);
-
         return root;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         go_back.setOnClickListener(v -> {
-            camp_main_details.setVisibility(View.VISIBLE);
+            fragmentManager.popBackStack();
+            //fragmentManager.popBackStackImmediate("CampDetailsFrag", 0);
+            //camp_main_details.setVisibility(View.VISIBLE);
             onDetach();
         });
-        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
 
         onClickInterface = abc -> {
             Bundle args = new Bundle();
             args.putString("actName", abc);
-            CampDetailsDays campDetailsDays = new CampDetailsDays();
+            args.putString("whichDay", getArguments().getString("whichDay"));
+            CampInputDetailsFrag campDetailsDays = new CampInputDetailsFrag();
             campDetailsDays.setArguments(args);
 
-            fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsDays).addToBackStack("CampFrag").commit();
+            fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsDays, "CampList").addToBackStack("CampDetailsFrag").commit();
         };
 
         CampActDataAdapter campActDataAdapter = new CampActDataAdapter(dataCampAct, requireContext(), onClickInterface);
@@ -74,12 +76,13 @@ public class CampDetailsFrag extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        camp_main_details.setVisibility(View.VISIBLE);
+        //camp_main_details.setVisibility(View.VISIBLE);
         FragmentManager fm = requireActivity().getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            Log.e("CampFrag", "onDetach: " + fm.getBackStackEntryCount());
-            fm.popBackStackImmediate(null, 0);
-            fm.popBackStack("CampDetailsFrag", 0);
+            Log.e("CampFrag", "onDetache: " + fm.getBackStackEntryCount());
+            //fm.popBackStackImmediate("CampDetailsDays", 0);
+//            fm.popBackStack("CampDetailsFrag", 0);
+            //fm.popBackStackImmediate();
         }
     }
 

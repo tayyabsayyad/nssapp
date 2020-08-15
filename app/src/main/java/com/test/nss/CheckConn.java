@@ -433,13 +433,13 @@ public class CheckConn extends BroadcastReceiver {
                     Log.e("onFailure:campListAll", t.toString());
                 }
             });
-            deleteData("HoursList");
             Call<ResponseBody> getAreaHours = RetrofitClient.getInstance().getApi().getTotalAreaHours("Token " + AUTH_TOKEN);
             getAreaHours.enqueue(new Callback<ResponseBody>() {
                 @Override
                 @EverythingIsNonNull
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful() && response.body() != null) {
+                        deleteData("HoursList");
                         try {
                             JSONArray j = new JSONArray(response.body().string());
 
@@ -573,7 +573,8 @@ public class CheckConn extends BroadcastReceiver {
                                             j.getJSONObject(i).getString("Email"),
                                             j.getJSONObject(i).getString("VEC"),
                                             j.getJSONObject(i).getString("CollegeName"),
-                                            j.getJSONObject(i).getString("id")
+                                            j.getJSONObject(i).getString("id"),
+                                            j.getJSONObject(i).getString("State")
                                     );
                                 }
                                 mDbHelper.close();

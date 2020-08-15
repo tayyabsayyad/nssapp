@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="120dp"
         android:layout_marginEnd="20dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -96,7 +96,6 @@
                 android:id="@+id/vec_clg_pref"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="18dp"
                 android:layout_weight="1"
                 android:background="@drawable/signup_roundbg"
                 android:foreground="@color/transparent"
@@ -116,25 +115,31 @@
                 android:drawableEnd="@drawable/ic_arrow_down"
                 android:background="@drawable/signup_roundbg"
                 android:hint="Enter college name" />
+
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="330dp"
+        <EditText
+            android:id="@+id/vec_in"
+            style="@style/signUp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:background="@drawable/signup_roundbg"
+            android:hint="Enter last 5 digit for VEC"
+            android:inputType="number|textNoSuggestions"
+            android:maxLength="5" />
 
-            <EditText
-                android:id="@+id/vec_in"
-                android:maxLength="5"
-                android:layout_height="match_parent"
-                style="@style/signUp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:inputType="number|textNoSuggestions"
-                android:background="@drawable/signup_roundbg"
-                android:hint="Enter last 5 digit for VEC" />
-        </LinearLayout>
+        <EditText
+            android:id="@+id/password"
+            style="@style/signUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/signup_roundbg"
+            android:hint="Enter password"
+            android:inputType="textPassword|textNoSuggestions"
+            android:maxLength="30" />
 
         <EditText
             android:layout_marginTop="20dp"
@@ -146,33 +151,25 @@
             android:hint="Email ID"
             android:inputType="textEmailAddress|textNoSuggestions" />
 
-        <LinearLayout
-            android:layout_width="330dp"
+        <EditText
+            android:layout_marginBottom="20dp"
+            android:id="@+id/contact_no"
+            style="@style/signUp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/contact_no"
-                style="@style/signUp"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/signup_roundbg"
-                android:hint="Phone No"
-                android:inputType="number"
-                android:maxLength="10" />
-
-        </LinearLayout>
-
+            android:layout_weight="1"
+            android:background="@drawable/signup_roundbg"
+            android:hint="Phone No"
+            android:inputType="number"
+            android:maxLength="10" />
     </LinearLayout>
 
     <Button
         android:id="@+id/signup_post"
         android:layout_width="110dp"
         android:layout_height="40dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/ripple_signup"
         android:text="Sign Up!"
         android:textAllCaps="false"

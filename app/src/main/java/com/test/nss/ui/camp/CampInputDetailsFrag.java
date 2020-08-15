@@ -18,8 +18,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
@@ -87,8 +87,10 @@ public class CampInputDetailsFrag extends Fragment {
         mDbHelper.close();
         submit.setOnClickListener(view1 -> {
 
+            FragmentManager fm = requireActivity().getSupportFragmentManager();
             if (!isEmpty(campDesc)
                     && (!isEmptyStr(which_day.getText().toString()))) {
+
                 mDbHelper.createDatabase();
                 mDbHelper.open();
                 mDbHelper.insertCampActListAllOff(
@@ -114,9 +116,7 @@ public class CampInputDetailsFrag extends Fragment {
                         @EverythingIsNonNull
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if (response.isSuccessful()) {
-                                Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
-                                //inputDetCamp.setVisibility(View.GONE);
-                                Snackbar.make(requireView(), "Go back and enter more", Snackbar.LENGTH_SHORT).show();
+
                             } else if (response.errorBody() != null) {
                                 try {
                                     Log.e("CampInput", response.errorBody().string());
@@ -132,6 +132,9 @@ public class CampInputDetailsFrag extends Fragment {
                             Log.e("onFailCampDetails", t.toString());
                         }
                     });
+                    fm.popBackStack();
+                    fm.popBackStack();
+                    fm.popBackStack();
                     Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
                 } else if (!isNetworkAvailable()) {
                     Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();

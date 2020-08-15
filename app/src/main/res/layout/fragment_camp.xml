@@ -46,7 +46,7 @@
                     android:fontFamily="@font/google_sans"
                     android:gravity="center"
                     android:paddingEnd="@dimen/space_10dp"
-                    android:text="Camp Activities List"
+                    android:text="Enter Camp Activity"
                     android:textColor="@color/blackGrey"
                     android:textSize="@dimen/text_18sp" />
 
@@ -67,7 +67,7 @@
                     android:fontFamily="@font/google_sans"
                     android:gravity="center"
                     android:paddingEnd="@dimen/space_10dp"
-                    android:text="Camp Days"
+                    android:text="Camp Diary"
                     android:textColor="@color/blackGrey"
                     android:textSize="@dimen/text_18sp" />
 

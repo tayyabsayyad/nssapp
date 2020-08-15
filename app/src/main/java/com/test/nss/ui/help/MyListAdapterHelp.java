@@ -22,9 +22,10 @@ public class MyListAdapterHelp extends RecyclerView.Adapter<MyListAdapterHelp.Vi
     Context mCon;
     onClickInterface onClickInterface;
 
-    public MyListAdapterHelp(List<AdapterDataHelp> list, Context mCon) {
+    public MyListAdapterHelp(List<AdapterDataHelp> list, Context mCon, onClickInterface onClickInterface) {
         this.list = list;
         this.mCon = mCon;
+        this.onClickInterface = onClickInterface;
     }
 
     @NonNull
@@ -38,9 +39,10 @@ public class MyListAdapterHelp extends RecyclerView.Adapter<MyListAdapterHelp.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.leadName.setText(list.get(position).getLeadName());
-        holder.leadEmail.setText(list.get(position).getLeadEmail());
-        holder.leadCont.setText(list.get(position).getLeadCont());
+        holder.leadEmail.setText(String.format("Email: %s", list.get(position).getLeadEmail()));
+        holder.leadCont.setText(String.format("Contact No: %s", list.get(position).getLeadCont()));
         holder.clgNameLead.setText(list.get(position).getLeadClg());
+        holder.leadCont.setOnClickListener(view -> onClickInterface.setClick(list.get(position).getLeadCont()));
     }
 
     @Override

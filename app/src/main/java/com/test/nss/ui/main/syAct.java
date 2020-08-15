@@ -961,25 +961,35 @@ public class syAct extends Fragment {
         ItemTouchHelper itemTouchHelper3 = new ItemTouchHelper(simpleCallbackUniv);
         itemTouchHelper3.attachToRecyclerView(recyclerViewUniv);
 
-        add.setOnClickListener(view1 -> {
-            Log.e("AAAAAA", "" + whichAct);
-            //mainSy.setVisibility(View.GONE);
-            fragSy.setVisibility(View.GONE);
-            univRecSy.setVisibility(View.GONE);
-            areaRecSy.setVisibility(View.GONE);
-            clgRecSy.setVisibility(View.GONE);
-            cardViewMain.setVisibility(View.GONE);
-            AddDetailsActivity detailsActivity = new AddDetailsActivity();
-            Bundle args = new Bundle();
-            args.putInt("whichAct", whichAct);
-            args.putInt("act", act);
-            detailsActivity.setArguments(args);
 
-            FragmentManager fm = requireActivity().getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").addToBackStack("fyAct").commit();
-            adapterArea.notifyDataSetChanged();
-            adapterClg.notifyDataSetChanged();
-            adapterUniv.notifyDataSetChanged();
+        add.setOnClickListener(view1 -> {
+            DatabaseAdapter mdb = new DatabaseAdapter(requireContext());
+            mdb.createDatabase();
+            mdb.open();
+            int c = mdb.getSumHoursSubmitted("Second Year%");
+            mdb.close();
+
+            if (c <= 10) {
+                Log.e("AAAAAA", "" + whichAct);
+                //mainSy.setVisibility(View.GONE);
+                fragSy.setVisibility(View.GONE);
+                univRecSy.setVisibility(View.GONE);
+                areaRecSy.setVisibility(View.GONE);
+                clgRecSy.setVisibility(View.GONE);
+                cardViewMain.setVisibility(View.GONE);
+                AddDetailsActivity detailsActivity = new AddDetailsActivity();
+                Bundle args = new Bundle();
+                args.putInt("whichAct", whichAct);
+                args.putInt("act", act);
+                detailsActivity.setArguments(args);
+
+                FragmentManager fm = requireActivity().getSupportFragmentManager();
+                fm.beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").addToBackStack("fyAct").commit();
+                adapterArea.notifyDataSetChanged();
+                adapterClg.notifyDataSetChanged();
+                adapterUniv.notifyDataSetChanged();
+            } else
+                Toast.makeText(mContext, "Cannot add more than 10 hours for a single day, today added total of: " + c + "hour", Toast.LENGTH_SHORT).show();
         });
     }
 
