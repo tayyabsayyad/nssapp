@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.test.nss">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,7 +17,7 @@
         android:theme="@style/AppTheme"
         android:fullBackupContent="false"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.InfoSharedActivity"></activity>
+        <activity android:name=".ui.info.InfoSharedActivity"></activity>
         <activity android:name=".SignupActivity" />
 
         <receiver android:name=".CheckConn" />
@@ -25,7 +26,9 @@
             android:name=".ediary"
             android:label="@string/title_activity_ediary"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".startActivity" />
+        <activity
+            android:name=".startActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

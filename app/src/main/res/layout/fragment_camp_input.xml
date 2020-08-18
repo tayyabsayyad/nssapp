@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/off_white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/campDetailsCon"
     android:layout_width="match_parent"
@@ -30,6 +31,7 @@
             android:padding="@dimen/space_10dp">
 
             <TextView
+                android:textColor="@color/blackGrey"
                 android:id="@+id/which_day"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -65,12 +67,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_15dp"
-                    android:background="#1A000000"
+                    android:background="@color/lightGrey"
                     android:minHeight="80dp"
                     android:paddingStart="@dimen/space_10dp"
                     android:paddingEnd="@dimen/space_10dp">
 
                     <EditText
+                        android:textColor="@color/blackGrey"
                         android:id="@+id/campDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

@@ -3,6 +3,7 @@
     android:id="@android:id/text1"
     android:textSize="@dimen/text_14sp"
     style="?android:attr/spinnerDropDownItemStyle"
+    android:background="@color/white"
     android:gravity="center"
     android:textColor="@color/grey"
     android:layout_width="match_parent"

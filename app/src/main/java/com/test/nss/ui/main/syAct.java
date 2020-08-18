@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -82,12 +81,14 @@ public class syAct extends Fragment {
 
     LinearLayout fragSy;
 
+    int col;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_sy_act, container, false);
         mContext = requireContext();
+        col = mContext.getColor(R.color.blackish);
 
         cardViewMain = root.findViewById(R.id.details_main_card2);
         actHeaderInput = requireActivity().findViewById(R.id.actHeaderInput);
@@ -127,8 +128,8 @@ public class syAct extends Fragment {
             add.setVisibility(View.VISIBLE);
 
             univ.setTextColor(primaryColDark);
-            area.setTextColor(Color.BLACK);
-            clg.setTextColor(Color.BLACK);
+            area.setTextColor(col);
+            clg.setTextColor(col);
         });
 
         area.setOnClickListener(v -> {
@@ -141,8 +142,8 @@ public class syAct extends Fragment {
             clgRecSy.setVisibility(View.GONE);
 
             area.setTextColor(primaryColDark);
-            univ.setTextColor(Color.BLACK);
-            clg.setTextColor(Color.BLACK);
+            univ.setTextColor(col);
+            clg.setTextColor(col);
         });
 
         clg.setOnClickListener(v -> {
@@ -155,8 +156,8 @@ public class syAct extends Fragment {
             clgRecSy.setVisibility(View.VISIBLE);
 
             clg.setTextColor(primaryColDark);
-            univ.setTextColor(Color.BLACK);
-            area.setTextColor(Color.BLACK);
+            univ.setTextColor(col);
+            area.setTextColor(col);
         });
 
         clgListDataSy = addAct("Second Year College");

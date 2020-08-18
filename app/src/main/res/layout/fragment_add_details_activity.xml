@@ -18,7 +18,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
-            android:background="@drawable/act_bg_lines_card"
             android:layout_marginStart="@dimen/padding_5dp"
             android:layout_marginEnd="@dimen/padding_5dp"
             android:layout_width="match_parent"
@@ -64,7 +63,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:background="@drawable/act_bg_lines_card"
+            app:cardBackgroundColor="@color/white"
             android:layout_marginStart="@dimen/padding_5dp"
             android:layout_marginTop="@dimen/space_10dp"
             android:layout_marginEnd="@dimen/padding_5dp"
@@ -114,7 +113,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/padding_5dp"
-            android:background="@drawable/act_bg_lines_card"
             android:layout_marginBottom="@dimen/padding_5dp"
             app:cardCornerRadius="@dimen/padding_4dp"
             android:orientation="vertical">
@@ -152,7 +150,7 @@
                         android:layout_marginEnd="15dp"
                         android:fontFamily="@font/google_sans_bold"
                         android:text="Today"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/pastel_blue"
                         android:textSize="15sp" />
                 </LinearLayout>
 

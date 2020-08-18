@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/white"
     android:id="@+id/campActListAllCard"
     android:layout_width="match_parent"
     android:layout_marginStart="@dimen/space_3dp"
@@ -44,12 +45,12 @@
                 android:visibility="gone" />
 
             <TextView
+                android:textColor="@color/grey"
                 android:fontFamily="@font/google_sans"
                 android:id="@+id/camp_act_list_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:text="aaaa"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -69,12 +70,12 @@
                 android:textSize="18sp" />
 
             <TextView
+                android:textColor="@color/grey"
                 android:fontFamily="@font/google_sans"
                 android:id="@+id/camp_act_list_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_15dp"
-                android:text="aaaa"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -93,12 +94,12 @@
                 android:textSize="18sp" />
 
             <TextView
+                android:textColor="@color/grey"
                 android:fontFamily="@font/google_sans"
                 android:id="@+id/camp_act_list_day"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
-                android:text="aaaa"
                 android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>

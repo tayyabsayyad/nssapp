@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/campDetailsCard"
+    app:cardBackgroundColor="@color/white"
     android:layout_marginStart="@dimen/space_3dp"
     android:layout_marginEnd="@dimen/space_3dp"
     android:layout_marginBottom="@dimen/space_10dp"
@@ -23,23 +24,23 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp"
+            android:padding="@dimen/padding_5dp"
             android:paddingStart="@dimen/space_10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="@dimen/padding_5dp"
                 android:text="College Name:"
                 android:textColor="@color/blackish"
                 android:textSize="16sp" />
 
             <TextView
+                android:textColor="@color/grey"
                 android:id="@+id/clgName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_5dp"
-                android:text="aaaa"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -48,23 +49,23 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp"
+            android:padding="@dimen/padding_5dp"
             android:paddingStart="@dimen/space_10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="@dimen/padding_5dp"
                 android:text="Camp From:"
                 android:textColor="@color/blackish"
                 android:textSize="16sp" />
 
             <TextView
+                android:textColor="@color/grey"
                 android:id="@+id/campFrom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_5dp"
-                android:text="aaaa"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -73,13 +74,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp"
+            android:padding="@dimen/padding_5dp"
             android:paddingStart="@dimen/space_10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="@dimen/padding_5dp"
                 android:text="Camp To:"
                 android:textColor="@color/blackish"
                 android:textSize="16sp" />
@@ -89,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_5dp"
-                android:text="aaaa"
+                android:textColor="@color/grey"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -98,13 +99,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp"
+            android:padding="@dimen/padding_5dp"
             android:paddingStart="@dimen/space_10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="@dimen/padding_5dp"
                 android:text="Camp Venue:"
                 android:textColor="@color/blackish"
                 android:textSize="16sp" />
@@ -114,7 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_5dp"
-                android:text="aaaa"
+                android:textColor="@color/grey"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -123,13 +124,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp"
+            android:padding="@dimen/padding_5dp"
             android:paddingStart="@dimen/space_10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="@dimen/padding_5dp"
                 android:text="Camp Post:"
                 android:textColor="@color/blackish"
                 android:textSize="16sp" />
@@ -139,7 +140,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_5dp"
-                android:text="aaaa"
+                android:textColor="@color/grey"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -148,13 +149,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp"
+            android:padding="@dimen/padding_5dp"
             android:paddingStart="@dimen/space_10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="@dimen/padding_5dp"
                 android:text="Camp Taluka:"
                 android:textColor="@color/blackish"
                 android:textSize="16sp" />
@@ -164,7 +165,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_5dp"
-                android:text="aaaa"
+                android:textColor="@color/grey"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -173,13 +174,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp"
+            android:padding="@dimen/padding_5dp"
             android:paddingStart="@dimen/space_10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="@dimen/padding_5dp"
                 android:text="Camp District:"
                 android:textColor="@color/blackish"
                 android:textSize="16sp" />
@@ -189,7 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_5dp"
-                android:text="aaaa"
+                android:textColor="@color/grey"
                 android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>

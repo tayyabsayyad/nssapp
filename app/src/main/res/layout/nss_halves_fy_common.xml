@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/transparent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -18,6 +19,7 @@
         app:layout_constraintTop_toBottomOf="@+id/mainFY_main">
 
         <androidx.cardview.widget.CardView
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="4dp"
             android:elevation="4dp"
             android:layout_weight="1"
@@ -51,6 +53,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.cardview.widget.CardView
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="4dp"
             android:elevation="4dp"
             android:layout_weight="1"

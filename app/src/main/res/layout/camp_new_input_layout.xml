@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardElevation="16dp">
@@ -26,6 +27,7 @@
             android:textSize="18sp" />
 
         <EditText
+            android:textColor="@color/blackGrey"
             android:id="@+id/inputDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -73,4 +73,6 @@
     <string name="no">No</string>
     <string name="total_hours">Total\nHours</string>
     <string name="college_work">College Work</string>
+    <string name="info">Info</string>
+    <string name="not_pend_desc">Yay!\nNo Activities\nPending to approve</string>
 </resources>

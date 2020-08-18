@@ -70,6 +70,6 @@ public class CampDetailsDays extends Fragment {
         camp_details_days_frame.setVisibility(View.GONE);
         Log.e("AAA", "Called");
         FragmentManager fm = requireActivity().getSupportFragmentManager();
-        fm.beginTransaction().remove(this).commit();
+        //fm.beginTransaction().remove(this).commit();
     }
 }

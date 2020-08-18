@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/white"
     android:layout_marginTop="@dimen/space_10dp"
     android:layout_marginBottom="@dimen/space_10dp"
     android:layout_margin="2dp"
@@ -9,7 +10,6 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:background="@drawable/act_bg_lines_card"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

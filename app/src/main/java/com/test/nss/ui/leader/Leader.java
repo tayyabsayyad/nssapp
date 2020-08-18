@@ -2,8 +2,12 @@ package com.test.nss.ui.leader;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +42,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
+
+import static com.test.nss.ediary.isNight;
+import static com.test.nss.ediary.primaryCol;
 
 public class Leader extends Fragment {
 
@@ -74,18 +81,33 @@ public class Leader extends Fragment {
         recViewLeader = root.findViewById(R.id.vecLeaderList);
         recViewLeaderAll = root.findViewById(R.id.vecLeaderListAll);
 
-        if (dataLeaderList.isEmpty())
-            isEmpty.setText("Yay!\nNo Activities\nPending to approve");
+        if (dataLeaderList.isEmpty()) {
+            isEmpty.setText(R.string.not_pend_desc);
+        }
 
         leader.setOnClickListener(view1 -> {
             if (dataLeaderList.isEmpty()) {
                 isEmpty.setVisibility(View.VISIBLE);
-                isEmpty.setText("Yay!\nNo Activities\nPending to approve");
+                isEmpty.setText(R.string.not_pend_desc);
             } else
                 isEmpty.setVisibility(View.GONE);
             recViewLeaderAll.setVisibility(View.GONE);
             recViewLeader.setVisibility(View.VISIBLE);
         });
+
+        Log.e("AAA", "" + isNight);
+        if (isNight == 32) {
+            TextPaint paint = isEmpty.getPaint();
+            float width = paint.measureText(getString(R.string.not_pend_desc));
+            Shader textShader = new LinearGradient(0, 0, width, isEmpty.getTextSize(),
+                    new int[]{
+                            Color.parseColor("#00FFEA"),
+                            Color.parseColor("#3882FF"),
+                            Color.parseColor("#4B9EF6"),
+                    }, null, Shader.TileMode.CLAMP);
+            isEmpty.getPaint().setShader(textShader);
+        } else
+            isEmpty.setTextColor(primaryCol);
 
         leaderAll.setOnClickListener(view1 -> {
             isEmpty.setVisibility(View.GONE);

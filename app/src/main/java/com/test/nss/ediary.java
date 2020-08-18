@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,14 +13,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
@@ -32,6 +36,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.api.RetrofitClient;
+import com.test.nss.ui.info.InfoSharedActivity;
 import com.test.nss.ui.work.AdapterDataWork;
 import com.test.nss.ui.work.WorkDetailsFirstFrag;
 
@@ -64,7 +69,9 @@ public class ediary extends AppCompatActivity {
     public static int leaderId;
     public static String name;
     public static boolean isFirst;
+    public static int isNight = 0;
     static int whichAvatar = 0;
+
     List<AdapterDataWork> dataWorkList;
     AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
@@ -72,7 +79,6 @@ public class ediary extends AppCompatActivity {
     FragmentManager fm;
     CheckConn checkConn;
     IntentFilter z;
-    Button info;
     ImageView imageView;
     Context context;
 
@@ -81,6 +87,16 @@ public class ediary extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ediary);
         context = ediary.this;
+        imageView = findViewById(R.id.switchdark);
+
+        isNight = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        Log.e("is night", "" + isNight);
+
+        if (isNight == Configuration.UI_MODE_NIGHT_NO) {
+            imageView.setImageResource(R.drawable.ic_light);
+        } else {
+            imageView.setImageResource(R.drawable.ic_dark);
+        }
 
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
 
@@ -163,8 +179,8 @@ public class ediary extends AppCompatActivity {
             tv.setTypeface(t);
         }
 
-        s.setTextColor(context.getColor(R.color.colorPrimaryLight));
-        s.getView().setBackgroundColor(Color.parseColor("#0c2854"));
+        s.setTextColor(context.getColor(R.color.white));
+        s.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
         s.show();
         blackish = this.getColor(R.color.blackish);
         transparent = this.getColor(R.color.transparent);
@@ -179,7 +195,6 @@ public class ediary extends AppCompatActivity {
         drawer = findViewById(R.id.drawer_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         logout = findViewById(R.id.logoutbutton);
-        info = findViewById(R.id.infoButton);
 
         setSupportActionBar(toolbar);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -187,7 +202,7 @@ public class ediary extends AppCompatActivity {
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_main,
                 R.id.nav_acti, R.id.nav_work, R.id.nav_camp, R.id.nav_leader, R.id.nav_help)
-                .setDrawerLayout(drawer)
+                .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
@@ -217,27 +232,42 @@ public class ediary extends AppCompatActivity {
                 imageView.setImageResource(R.drawable.ic_man_0);
                 break;
         }
-        Menu m = navigationView.getMenu();
+
+        Menu m = navigationView.getMenu().getItem(0).getSubMenu();
         if (isLeader == 1)
             m.getItem(4).setVisible(true);
 
         else if (isLeader == 0)
             m.getItem(4).setVisible(false);
 
+        m = navigationView.getMenu();
+        m.getItem(1).getSubMenu().getItem(1).setOnMenuItemClickListener(menuItem -> {
+            if (menuItem.getTitle().toString().equals(getString(R.string.info))) {
+                Intent o = new Intent(context, InfoSharedActivity.class);
+
+                /*View v1 = findViewById(R.id.imageView);
+                Pair[] pair = new Pair[1];
+                pair[0] = new Pair<>(v1, "trans");
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ediary.this, pair);*/
+
+
+                //startActivity(o, options.toBundle());
+                startActivity(o);
+            }
+            return true;
+        });
+
         TextView navUsername = headerView.findViewById(R.id.nameHeader);
         TextView navVec = headerView.findViewById(R.id.vecNoHeader);
         navVec.setText(VEC);
         navUsername.setText(name);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("Choose Avatar");
-                builder.setView(R.layout.avatar_input);
+        imageView.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Choose Avatar");
+            builder.setView(R.layout.avatar_input);
 
-                builder.show();
-            }
+            builder.show();
         });
 
         logout.setOnClickListener(view -> {
@@ -299,6 +329,7 @@ public class ediary extends AppCompatActivity {
     private void add() {
         WorkDetailsFirstFrag wf = new WorkDetailsFirstFrag(context);
         dataWorkList = wf.firstHalfWorkData();
+
         if (!dataWorkList.isEmpty()) {
 
             Call<ResponseBody> insertHourZero = RetrofitClient.getInstance().getApi().insertHour(
@@ -308,6 +339,7 @@ public class ediary extends AppCompatActivity {
                     ediary.VEC,
                     121,
                     "Area Based Level One",
+                    Password.PASS,
                     30
             );
             insertHourZero.enqueue(new Callback<ResponseBody>() {
@@ -339,6 +371,7 @@ public class ediary extends AppCompatActivity {
                     ediary.VEC,
                     122,
                     "Area Based Level Two",
+                    Password.PASS,
                     31
             );
             insertHourOne.enqueue(new Callback<ResponseBody>() {
@@ -362,6 +395,7 @@ public class ediary extends AppCompatActivity {
                     ediary.VEC,
                     11,
                     "College Level",
+                    Password.PASS,
                     32
             );
             insertHourTwo.enqueue(new Callback<ResponseBody>() {
@@ -385,6 +419,7 @@ public class ediary extends AppCompatActivity {
                     ediary.VEC,
                     13,
                     "University Level",
+                    Password.PASS,
                     29
             );
 
@@ -442,6 +477,41 @@ public class ediary extends AppCompatActivity {
         SharedPreferences.Editor eddy2 = sharedPreferences.edit();
         eddy2.putInt("avatar", whichAvatar);
         eddy2.apply();
+    }
+
+    public void setMode(View view) {
+        ImageView imageView = findViewById(R.id.switchdark);
+
+        RotateAnimation animation = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        animation.setInterpolator(new AccelerateInterpolator());
+        animation.setInterpolator(new MyBounceInterpolator(2, 8));
+        animation.setDuration(1500);
+        imageView.startAnimation(animation);
+
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (isNight == Configuration.UI_MODE_NIGHT_NO) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                }
+                /*(finish();
+                overridePendingTransition(0, 0);
+                startActivity(getIntent());
+                overridePendingTransition(0, 0);*/
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     @Override

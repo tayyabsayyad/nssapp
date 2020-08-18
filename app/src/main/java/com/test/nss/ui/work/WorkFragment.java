@@ -2,6 +2,7 @@ package com.test.nss.ui.work;
 
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,15 +17,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.DataBaseHelper;
 import com.test.nss.DatabaseAdapter;
@@ -34,12 +36,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
 import static com.test.nss.ediary.VEC;
 import static com.test.nss.ediary.blackish;
 import static com.test.nss.ediary.isFirst;
 import static com.test.nss.ediary.primaryColDark;
 
 public class WorkFragment extends Fragment {
+
+    public static final int[] CUSTOM = {rgb("#5e99ff"), rgb("#18FFFF"), rgb("#00BCBC"), rgb("#CC2BFF89")};
 
     View root;
     Toolbar toolbar;
@@ -63,14 +68,16 @@ public class WorkFragment extends Fragment {
 
         firstButton = root.findViewById(R.id.firstButton);
         secButton = root.findViewById(R.id.secButton);
-        adapterDataWorks = firstHalfWorkData();
+        adapterDataWorks = WorkData();
         pieChart = root.findViewById(R.id.pieChart);
 
         for (int i = 0; i < adapterDataWorks.size(); i++) {
             if (!adapterDataWorks.get(i).getCompHours().equals("0")) {
                 pieChart.setVisibility(View.VISIBLE);
+                break;
             }
         }
+
         return root;
     }
 
@@ -83,31 +90,39 @@ public class WorkFragment extends Fragment {
 
         ArrayList<PieEntry> data = new ArrayList<>();
 
-        for (int i = 0; i < adapterDataWorks.size(); i++) {
-            if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0) {
-                data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
+        if (isFirst) {
+            for (int i = 0; i < adapterDataWorks.size() - 4; i++) {
+                if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0) {
+                    data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
+                }
+            }
+        } else {
+            for (int i = 4; i < adapterDataWorks.size(); i++) {
+                if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0) {
+                    data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
+                }
             }
         }
 
         PieDataSet pieData = new PieDataSet(data, "");
         pieData.setSliceSpace(3);
         pieData.setSelectionShift(7);
-        //pieData.setValueFormatter(new PercentFormatter());
 
         int[] colors = new int[10];
         int counter = 0;
 
-        for (int color : ColorTemplate.MATERIAL_COLORS
+        /*for (int color : ColorTemplate.MATERIAL_COLORS
         ) {
             colors[counter] = color;
             counter++;
-        }
+        }*/
 
-        for (int color : ColorTemplate.COLORFUL_COLORS
+        for (int color : CUSTOM
         ) {
             colors[counter] = color;
             counter++;
         }
+        Log.e("AAA", "" + colors.length);
         pieData.setColors(colors);
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
@@ -124,13 +139,16 @@ public class WorkFragment extends Fragment {
             }
         });
 
+        pieData.setValueFormatter(new PercentFormatter(pieChart));
         pieChart.setUsePercentValues(true);
         pieChart.setDrawEntryLabels(false);
         pieData.setValueTextSize(15f);
 
         PieData pieData1 = new PieData(pieData);
+        Typeface t = Typeface.createFromAsset(requireActivity().getAssets(), "google_sans_bold.ttf");
 
         pieData1.setDataSet(pieData);
+        pieData.setValueTypeface(t);
 
         Legend l = pieChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
@@ -138,11 +156,16 @@ public class WorkFragment extends Fragment {
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setWordWrapEnabled(true);
         l.setDrawInside(false);
+        l.setTypeface(t);
+        l.setTextColor(requireContext().getColor(R.color.blackish));
+
+        pieChart.setCenterTextColor(primaryColDark);
 
         pieChart.setData(pieData1);
         pieChart.getDescription().setEnabled(false);
         pieChart.setCenterText("Total hours worked");
         pieChart.animate();
+        pieChart.animateXY(1500, 1000, Easing.EaseInOutExpo); //SINE QUART
         pieChart.invalidate();
 
         fm = requireActivity().getSupportFragmentManager();
@@ -199,7 +222,7 @@ public class WorkFragment extends Fragment {
         }
     }
 
-    public List<AdapterDataWork> firstHalfWorkData() {
+    public List<AdapterDataWork> WorkData() {
         ArrayList<AdapterDataWork> data = new ArrayList<>();
 
         DatabaseAdapter m = new DatabaseAdapter(requireContext());
@@ -365,7 +388,7 @@ public class WorkFragment extends Fragment {
         );
         m.close();
 
-        data.add(new AdapterDataWork("SY First Year Area Based 1", String.valueOf(areaLvlOne), String.valueOf(areaCompOne2), String.valueOf(areaRemOneHours)));
+        data.add(new AdapterDataWork("SY Area Based 1", String.valueOf(areaLvlOne), String.valueOf(areaCompOne2), String.valueOf(areaRemOneHours)));
         data.add(new AdapterDataWork("SY Area Based 2", String.valueOf(areaLvlTwo), String.valueOf(areaCompTwo2), String.valueOf(areaRemTwoHours)));
         data.add(new AdapterDataWork("SY University", String.valueOf(univLvl), String.valueOf(univComp2), String.valueOf(univRemHours)));
         data.add(new AdapterDataWork("SY College", String.valueOf(clgLvl), String.valueOf(clgComp2), String.valueOf(clgRemHours)));

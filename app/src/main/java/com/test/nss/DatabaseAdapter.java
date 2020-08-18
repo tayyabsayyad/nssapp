@@ -805,7 +805,7 @@ public class DatabaseAdapter {
     }
 
     public int getSumHoursSubmitted(String actCode) {
-        String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode LIKE \"%s\" AND State=\"Submitted\" OR State=\"Approved\" OR State=\"Modified\" OR State=\"PoModified\" OR State=\"LeaderModified\"AND Date=CURRENT_DATE", actCode);
+        String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode LIKE \"%s\" AND Date=CURRENT_DATE AND (State=\"Submitted\" OR State=\"Approved\" OR State=\"Modified\" OR State=\"PoModified\" OR State=\"LeaderModified\");", actCode);
         try (Cursor mCur2 = mDb.rawQuery(sql, null)) {
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in DailyActivity", )();

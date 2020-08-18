@@ -8,6 +8,7 @@
     tools:context=".ui.activity.FirstHalfFrag">
 
     <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="@color/white"
         android:id="@+id/mainCardFirst"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

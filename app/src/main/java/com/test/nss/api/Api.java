@@ -158,6 +158,7 @@ public interface Api {
                                   @Field("VEC") String vec,
                                   @Field("ActivityName") int actName,
                                   @Field("Level") String level,
+                                  @Field("AppAuth") String s,
 
                                   @Path("id") int id
 

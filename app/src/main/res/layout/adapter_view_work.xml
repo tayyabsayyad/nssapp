@@ -7,6 +7,7 @@
     android:orientation="horizontal">
 
     <TextView
+        android:textColor="@color/blackGrey"
         android:fontFamily="@font/google_sans"
         android:id="@+id/nature_of_work"
         android:layout_width="0dp"
@@ -21,6 +22,7 @@
         android:background="@color/blackish" />
 
     <TextView
+        android:textColor="@color/blackGrey"
         android:fontFamily="@font/google_sans"
         android:id="@+id/total_hours_work"
         android:layout_width="0dp"
@@ -38,6 +40,7 @@
         android:background="@color/blackish" />
 
     <TextView
+        android:textColor="@color/blackGrey"
         android:fontFamily="@font/google_sans"
         android:id="@+id/comp_hours_work"
         android:layout_width="0dp"
@@ -52,6 +55,7 @@
         android:background="@color/blackish" />
 
     <TextView
+        android:textColor="@color/blackGrey"
         android:fontFamily="@font/google_sans"
         android:id="@+id/rem_hours_work"
         android:layout_width="0dp"

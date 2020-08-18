@@ -9,6 +9,7 @@
     tools:context=".ui.main.fyAct">
 
     <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="@color/white"
         android:id="@+id/details_main_card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,11 +31,12 @@
             android:orientation="horizontal">
 
             <Button
+                android:background="@drawable/ripple_light"
                 android:id="@+id/main_univ_fy"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
+                android:textColor="@color/blackGrey"
                 android:enabled="true"
                 android:fontFamily="@font/google_sans_bold"
                 android:text="@string/univ" />
@@ -47,11 +49,12 @@
                 android:visibility="visible" />
 
             <Button
+                android:background="@drawable/ripple_light"
                 android:id="@+id/main_area_fy"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
+                android:textColor="@color/blackGrey"
                 android:fontFamily="@font/google_sans_bold"
                 android:text="@string/area" />
 
@@ -63,11 +66,12 @@
                 android:visibility="visible" />
 
             <Button
+                android:background="@drawable/ripple_light"
                 android:id="@+id/main_clg_fy"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
+                android:textColor="@color/blackGrey"
                 android:fontFamily="@font/google_sans_bold"
                 android:text="@string/clg" />
 
@@ -116,11 +120,12 @@
             android:layout_height="100dp"
             android:layout_gravity="bottom"
             android:layout_marginBottom="@dimen/space_10dp"
-            android:gravity="center"
+            android:gravity="end"
             android:paddingStart="@dimen/padding_5dp"
             android:paddingEnd="@dimen/padding_5dp">
 
             <Button
+                android:layout_marginEnd="@dimen/space_10dp"
                 android:layout_gravity="bottom"
                 android:id="@+id/add"
                 android:layout_width="45dp"
@@ -128,7 +133,6 @@
                 android:background="@drawable/ripple_add"
                 android:foreground="@drawable/ic_plus_24"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
                 android:visibility="gone" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
