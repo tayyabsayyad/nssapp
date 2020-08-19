@@ -254,6 +254,7 @@ public class CheckConn extends BroadcastReceiver {
                             c.getInt(c.getColumnIndex("HoursWorked")),
                             c.getString(c.getColumnIndex("Date")),
                             getKey(actIdHash, c.getString(c.getColumnIndex("ActivityCode"))),
+                            Password.PASS,
                             1
                     );
 
@@ -357,6 +358,7 @@ public class CheckConn extends BroadcastReceiver {
                             c2.getInt(c2.getColumnIndex("CampDay")),
                             VEC,
                             "1",
+                            Password.PASS,
                             c3.getString(c3.getColumnIndex("CampId"))
                     );
                     sendCampDetails.enqueue(new Callback<ResponseBody>() {

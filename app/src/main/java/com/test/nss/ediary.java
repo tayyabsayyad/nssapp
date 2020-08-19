@@ -182,16 +182,16 @@ public class ediary extends AppCompatActivity {
         s.setTextColor(context.getColor(R.color.white));
         s.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
         s.show();
-        blackish = this.getColor(R.color.blackish);
-        transparent = this.getColor(R.color.transparent);
-        primaryCol = this.getColor(R.color.colorPrimary);
-        primaryColLight = this.getColor(R.color.colorPrimaryLight);
-        primaryColDark = this.getColor(R.color.colorPrimaryDark);
-        red = this.getColor(R.color.red);
-        green = this.getColor(R.color.greenNic);
-        kesar = this.getColor(R.color.kesar);
+        blackish = context.getColor(R.color.blackish);
+        transparent = context.getColor(R.color.transparent);
+        primaryCol = context.getColor(R.color.colorPrimary);
+        primaryColLight = context.getColor(R.color.colorPrimaryLight);
+        primaryColDark = context.getColor(R.color.colorPrimaryDark);
+        red = context.getColor(R.color.red);
+        green = context.getColor(R.color.greenNic);
+        kesar = context.getColor(R.color.kesar);
 
-        //Toast.makeText(this, AUTH_TOKEN, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, AUTH_TOKEN, Toast.LENGTH_SHORT).show();
         drawer = findViewById(R.id.drawer_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         logout = findViewById(R.id.logoutbutton);
@@ -248,7 +248,7 @@ public class ediary extends AppCompatActivity {
                 /*View v1 = findViewById(R.id.imageView);
                 Pair[] pair = new Pair[1];
                 pair[0] = new Pair<>(v1, "trans");
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ediary.this, pair);*/
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ediary.context, pair);*/
 
 
                 //startActivity(o, options.toBundle());
@@ -263,10 +263,13 @@ public class ediary extends AppCompatActivity {
         navUsername.setText(name);
 
         imageView.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("Choose Avatar");
+            AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.delDialog);
+            builder.setMessage("Choose Avatar");
             builder.setView(R.layout.avatar_input);
 
+            builder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
+                dialogInterface.dismiss();
+            });
             builder.show();
         });
 
@@ -501,10 +504,10 @@ public class ediary extends AppCompatActivity {
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
-                /*(finish();
+                finish();
                 overridePendingTransition(0, 0);
                 startActivity(getIntent());
-                overridePendingTransition(0, 0);*/
+                overridePendingTransition(0, 0);
             }
 
             @Override

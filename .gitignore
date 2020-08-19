@@ -32,6 +32,8 @@ app/.idea/codeStyles/*
 app/gradle/*
 app/gradlew
 app/gradlew.bat
+app/src/main/java/com/test/nss/Password.java
+
 ### Android ###
 # Built application files
 *.apk

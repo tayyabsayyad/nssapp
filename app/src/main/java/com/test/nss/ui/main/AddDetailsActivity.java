@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.test.nss.DatabaseAdapter;
+import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
@@ -273,6 +274,7 @@ public class AddDetailsActivity extends Fragment {
                             actDate.getText().toString(),
                             //drpdownactAssignName.getSelectedItem().toString(),
                             m.getInt(m.getColumnIndex("activityType")),
+                            Password.PASS,
                             1
                     );
                     m.close();

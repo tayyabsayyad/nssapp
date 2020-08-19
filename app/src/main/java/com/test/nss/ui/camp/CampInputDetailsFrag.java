@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.test.nss.DatabaseAdapter;
+import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
@@ -110,6 +111,7 @@ public class CampInputDetailsFrag extends Fragment {
                             Integer.parseInt(day.substring(day.indexOf(" ") + 1)),
                             ediary.VEC,
                             "1",
+                            Password.PASS,
                             campId);
                     sendCampDetails.enqueue(new Callback<ResponseBody>() {
                         @Override

@@ -1,5 +1,6 @@
 package com.test.nss.ui.leader;
 
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -96,7 +97,7 @@ public class Leader extends Fragment {
         });
 
         Log.e("AAA", "" + isNight);
-        if (isNight == 32) {
+        if (isNight == Configuration.UI_MODE_NIGHT_YES) {
             TextPaint paint = isEmpty.getPaint();
             float width = paint.measureText(getString(R.string.not_pend_desc));
             Shader textShader = new LinearGradient(0, 0, width, isEmpty.getTextSize(),

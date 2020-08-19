@@ -24,10 +24,7 @@
             android:elevation="4dp"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackgroundBorderless">
+            android:layout_height="55dp">
 
             <TextView
                 android:clickable="true"

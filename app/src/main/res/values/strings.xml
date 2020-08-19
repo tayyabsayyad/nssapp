@@ -3,9 +3,6 @@
     <string name="edittextUsername"><font size="14">Username</font></string>
     <string name="edittextPassword"><font size="14">Password</font></string>
     <string name="title_activity_ediary">ediary</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_desc">Navigation header</string>
 
     <string name="menu_main_frag">Home</string>
     <string name="menu_activity">Activity List</string>
@@ -22,11 +19,7 @@
 
     <string name="camp_details">Enter your everyday camp details below</string>
 
-    <string name="nss_first_year">NSS FIRST YEAR</string>
-    <string name="work_hours">WORK HOURS</string>
     <string name="help_details">Contact Us</string>
-    <string name="nss">National Service Scheme</string>
-    <string name="mu">MUMBAI UNIVERSITY</string>
     <string name="completed_hours">Hours\nWorked</string>
     <string name="nature_of_work">Nature\nOf Work</string>
     <string name="remaining_hours">Remaining\nHours</string>
@@ -75,4 +68,5 @@
     <string name="college_work">College Work</string>
     <string name="info">Info</string>
     <string name="not_pend_desc">Yay!\nNo Activities\nPending to approve</string>
+    <string name="mu">MUMBAI UNIVERSITY</string>
 </resources>

@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -31,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.DatabaseAdapter;
+import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.SwipeHelperRight;
 import com.test.nss.api.RetrofitClient;
@@ -107,20 +107,20 @@ public class ModifyVolunteer extends Fragment {
 
         revealFab();
         univ.setOnClickListener(view1 -> {
-                detailsVol.setVisibility(View.VISIBLE);
-                univ.setTextColor(primaryColDark);
-                area.setTextColor(Color.BLACK);
-                clg.setTextColor(Color.BLACK);
-                recViewVolUniv.setVisibility(View.VISIBLE);
-                recViewVolArea.setVisibility(View.GONE);
-                recViewVolClg.setVisibility(View.GONE);
+            detailsVol.setVisibility(View.VISIBLE);
+            univ.setTextColor(primaryColDark);
+            area.setTextColor(context.getColor(R.color.black));
+            clg.setTextColor(context.getColor(R.color.black));
+            recViewVolUniv.setVisibility(View.VISIBLE);
+            recViewVolArea.setVisibility(View.GONE);
+            recViewVolClg.setVisibility(View.GONE);
         });
 
         area.setOnClickListener(view1 -> {
             detailsVol.setVisibility(View.VISIBLE);
             area.setTextColor(primaryColDark);
-            univ.setTextColor(Color.BLACK);
-            clg.setTextColor(Color.BLACK);
+            univ.setTextColor(context.getColor(R.color.black));
+            clg.setTextColor(context.getColor(R.color.black));
             recViewVolArea.setVisibility(View.VISIBLE);
             recViewVolUniv.setVisibility(View.GONE);
             recViewVolClg.setVisibility(View.GONE);
@@ -129,8 +129,8 @@ public class ModifyVolunteer extends Fragment {
         clg.setOnClickListener(view1 -> {
             detailsVol.setVisibility(View.VISIBLE);
             clg.setTextColor(primaryColDark);
-            univ.setTextColor(Color.BLACK);
-            area.setTextColor(Color.BLACK);
+            univ.setTextColor(context.getColor(R.color.black));
+            area.setTextColor(context.getColor(R.color.black));
             recViewVolClg.setVisibility(View.VISIBLE);
             recViewVolUniv.setVisibility(View.GONE);
             recViewVolArea.setVisibility(View.GONE);
@@ -224,6 +224,7 @@ public class ModifyVolunteer extends Fragment {
                                                         c.getInt(c.getColumnIndex("activityType")),
                                                         c.getInt(c.getColumnIndex("id")),
                                                         5,
+                                                        Password.PASS,
                                                         Integer.parseInt(adapterVolUniv.list.get(p).getId())
                                                 );
                                                 mdb.close();
@@ -316,6 +317,7 @@ public class ModifyVolunteer extends Fragment {
                                                         c.getInt(c.getColumnIndex("id")),
                                                         2,
                                                         leaderId,
+                                                        Password.PASS,
                                                         Integer.parseInt(adapterVolUniv.list.get(p).getId())
                                                 );
                                                 mdb.close();
@@ -419,6 +421,7 @@ public class ModifyVolunteer extends Fragment {
                                                                     c.getInt(c.getColumnIndex("activityType")),
                                                                     c.getInt(c.getColumnIndex("id")),
                                                                     6,
+                                                                    Password.PASS,
                                                                     Integer.parseInt(adapterVolUniv.list.get(p).getId())
                                                             );
                                                             adapterVolUniv.notifyDataSetChanged();
@@ -529,6 +532,7 @@ public class ModifyVolunteer extends Fragment {
                                                         c.getInt(c.getColumnIndex("activityType")),
                                                         c.getInt(c.getColumnIndex("id")),
                                                         5,
+                                                        Password.PASS,
                                                         Integer.parseInt(adapterVolArea.list.get(p).getId())
                                                 );
                                                 mdb.close();
@@ -621,6 +625,7 @@ public class ModifyVolunteer extends Fragment {
                                                         c.getInt(c.getColumnIndex("id")),
                                                         2,
                                                         leaderId,
+                                                        Password.PASS,
                                                         Integer.parseInt(adapterVolArea.list.get(p).getId())
                                                 );
                                                 mdb.close();
@@ -724,6 +729,7 @@ public class ModifyVolunteer extends Fragment {
                                                             c.getInt(c.getColumnIndex("activityType")),
                                                             c.getInt(c.getColumnIndex("id")),
                                                             6,
+                                                            Password.PASS,
                                                             Integer.parseInt(adapterVolArea.list.get(p).getId())
                                                     );
                                                     adapterVolArea.notifyDataSetChanged();
@@ -834,6 +840,7 @@ public class ModifyVolunteer extends Fragment {
                                                         c.getInt(c.getColumnIndex("activityType")),
                                                         c.getInt(c.getColumnIndex("id")),
                                                         5,
+                                                        Password.PASS,
                                                         Integer.parseInt(adapterVolClg.list.get(p).getId())
                                                 );
                                                 mdb.close();
@@ -926,6 +933,7 @@ public class ModifyVolunteer extends Fragment {
                                                         c.getInt(c.getColumnIndex("id")),
                                                         2,
                                                         leaderId,
+                                                        Password.PASS,
                                                         Integer.parseInt(adapterVolClg.list.get(p).getId())
                                                 );
                                                 mdb.close();
@@ -1029,6 +1037,7 @@ public class ModifyVolunteer extends Fragment {
                                                             c.getInt(c.getColumnIndex("activityType")),
                                                             c.getInt(c.getColumnIndex("id")),
                                                             6,
+                                                            Password.PASS,
                                                             Integer.parseInt(adapterVolClg.list.get(p).getId())
                                                     );
                                                     adapterVolClg.notifyDataSetChanged();

@@ -39,7 +39,9 @@ public interface Api {
             @Field("Email") String email,
             @Field("CollegeName") String college_name,
             @Field("Contact") String contact,
-            @Field("Password") String pass
+            @Field("Password") String pass,
+
+            @Field("AppAuth") String p
     );
 
     @GET("/diary/api/collegenames/")
@@ -60,6 +62,8 @@ public interface Api {
             @Field("Day") int day,
             @Field("VEC") String vec,
             @Field("State") String state,
+            @Field("AppAuth") String p,
+
             @Field("CampActivityTitle") String campTitle
     );
 
@@ -87,6 +91,8 @@ public interface Api {
             @Field("Hours") int actHour,
             @Field("Date") String actDate,
             @Field("ActivityName") int actName,
+            @Field("AppAuth") String p,
+
             @Field("State") int s
     );
 
@@ -107,6 +113,7 @@ public interface Api {
                                @Field("ActivityName") int actName,
                                @Field("AssignedActivityName") int actId,
                                @Field("State") int s,
+                               @Field("AppAuth") String p,
 
                                @Path("id2") int id2
     );
@@ -119,6 +126,7 @@ public interface Api {
                                         @Field("ActivityName") int actName,
                                         @Field("AssignedActivityName") int actId,
                                         @Field("State") int s,
+                                        @Field("AppAuth") String p,
 
                                         @Path("id2") int id2
     );
@@ -132,6 +140,7 @@ public interface Api {
                                   @Field("AssignedActivityName") int actId,
                                   @Field("State") int s,
                                   @Field("ApprovedBy") int by,
+                                  @Field("AppAuth") String p,
 
                                   @Path("id2") int id2
     );
@@ -147,6 +156,7 @@ public interface Api {
                                @Field("CollegeName") String clgName,
                                @Field("State") int s,
 
+                               @Field("AppAuth") String p,
                                @Path("id2") int id2
     );
 
@@ -158,7 +168,8 @@ public interface Api {
                                   @Field("VEC") String vec,
                                   @Field("ActivityName") int actName,
                                   @Field("Level") String level,
-                                  @Field("AppAuth") String s,
+
+                                  @Field("AppAuth") String p,
 
                                   @Path("id") int id
 

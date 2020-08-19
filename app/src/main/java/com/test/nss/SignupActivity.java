@@ -8,9 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -180,41 +177,35 @@ public class SignupActivity extends AppCompatActivity {
                 }
             });*/
 
-            dropdownClg.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    dropdownClg.showDropDown();
-                    return false;
-                }
+            dropdownClg.setOnTouchListener((view, motionEvent) -> {
+                dropdownClg.showDropDown();
+                return false;
             });
 
-            dropdownClg.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    String clgCode = adapterView.getItemAtPosition(i).toString();
+            dropdownClg.setOnItemClickListener((adapterView, view, i, l) -> {
+                String clgCode = adapterView.getItemAtPosition(i).toString();
 
-                    vecClgPref.setText("");
-                    clgCode = clgCode.substring(clgCode.indexOf("-") + 1);
-                    //vecClgPref.append(clgCode);
+                vecClgPref.setText("");
+                clgCode = clgCode.substring(clgCode.indexOf("-") + 1);
+                //vecClgPref.append(clgCode);
 
-                    String s = adapterView.getItemAtPosition(i).toString();
-                    //spannable.toString().indexOf("-"), spannable.toString().length();
-                    s = s.substring(0, s.indexOf("-"));
-                    DatabaseAdapter mdb = new DatabaseAdapter(mContext);
-                    mdb.createDatabase();
-                    mdb.open();
-                    Cursor c = mdb.getClgState(s);
-                    c.moveToFirst();
-                    if (!c.getString(c.getColumnIndex("State")).equals("Closed")) {
-                        dropdownClg.setText(s);
-                        vecClgPref.append(clgCode);
-                    } else {
-                        dropdownClg.setError("The college is not accepting");
-                        dropdownClg.setText("");
-                        vecClgPref.append("");
-                    }
-                    mdb.close();
+                String s = adapterView.getItemAtPosition(i).toString();
+                //spannable.toString().indexOf("-"), spannable.toString().length();
+                s = s.substring(0, s.indexOf("-"));
+                DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                mdb.createDatabase();
+                mdb.open();
+                Cursor c = mdb.getClgState(s);
+                c.moveToFirst();
+                if (!c.getString(c.getColumnIndex("State")).equals("Closed")) {
+                    dropdownClg.setText(s);
+                    vecClgPref.append(clgCode);
+                } else {
+                    dropdownClg.setError("The college is not accepting");
+                    dropdownClg.setText("");
+                    vecClgPref.append("");
                 }
+                mdb.close();
             });
 
             signupPost.setOnClickListener(v -> {
@@ -256,7 +247,8 @@ public class SignupActivity extends AppCompatActivity {
                                     email.getText().toString(),
                                     clgItem,
                                     "+91" + contactNo.getText().toString(),
-                                    ""
+                                    password.getText().toString(),
+                                    Password.PASS
                             );
 
                             signup.enqueue(new Callback<ResponseBody>() {

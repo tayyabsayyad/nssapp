@@ -61,6 +61,10 @@ public class WorkFragment extends Fragment {
 
         root = inflater.inflate(R.layout.fragment_work, container, false);
 
+        deleteData("WorkHoursFy");
+        deleteData("WorkHoursSy");
+        adapterDataWorks = WorkData();
+
         toolbarTitle = requireActivity().findViewById(R.id.titleTool);
         toolbarTitle.setText(getString(R.string.menu_work_hours));
 
@@ -68,7 +72,6 @@ public class WorkFragment extends Fragment {
 
         firstButton = root.findViewById(R.id.firstButton);
         secButton = root.findViewById(R.id.secButton);
-        adapterDataWorks = WorkData();
         pieChart = root.findViewById(R.id.pieChart);
 
         for (int i = 0; i < adapterDataWorks.size(); i++) {
@@ -92,17 +95,19 @@ public class WorkFragment extends Fragment {
 
         if (isFirst) {
             for (int i = 0; i < adapterDataWorks.size() - 4; i++) {
-                if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0) {
+                Log.e("Values", adapterDataWorks.get(i).getCompHours());
+                if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0 && !adapterDataWorks.get(i).getCompHours().equals("0")) {
                     data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
                 }
             }
         } else {
             for (int i = 4; i < adapterDataWorks.size(); i++) {
-                if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0) {
+                if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0 && !adapterDataWorks.get(i).getCompHours().equals("0")) {
                     data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
                 }
             }
         }
+
 
         PieDataSet pieData = new PieDataSet(data, "");
         pieData.setSliceSpace(3);
@@ -279,7 +284,6 @@ public class WorkFragment extends Fragment {
         else
             univRemHours = Integer.parseInt("00");
 
-        deleteData("WorkHoursFy");
         m = new DatabaseAdapter(requireContext());
         m.createDatabase();
         m.open();
@@ -350,7 +354,6 @@ public class WorkFragment extends Fragment {
         else
             univRemHours = Integer.parseInt("00");
 
-        deleteData("WorkHoursSy");
         m = new DatabaseAdapter(requireContext());
         m.createDatabase();
         m.open();

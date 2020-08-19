@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -80,7 +79,7 @@ public class startActivity extends AppCompatActivity {
 
         Spannable spannable = new SpannableStringBuilder("Need an account?");
         spannable.setSpan(
-                new ForegroundColorSpan(Color.BLACK),
+                new ForegroundColorSpan(mContext.getColor(R.color.blackish)),
                 0, 7,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         startReg.setText(spannable);

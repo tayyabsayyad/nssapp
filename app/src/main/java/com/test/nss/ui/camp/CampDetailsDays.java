@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -56,7 +55,7 @@ public class CampDetailsDays extends Fragment {
             args.putString("whichDay", day);
 
             campDetailsFrag.setArguments(args);
-            Toast.makeText(getContext(), day, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(requireContext(), day, Toast.LENGTH_SHORT).show();
             FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsFrag, "CampDetailsFrag").addToBackStack(null).commit();
         });

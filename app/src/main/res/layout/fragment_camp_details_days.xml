@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="@dimen/space_10dp"
-            android:text="@string/camp_details"
+            android:text="Choose the day worked"
             android:textColor="@color/blackish"
             android:textSize="@dimen/text_18sp" />
 

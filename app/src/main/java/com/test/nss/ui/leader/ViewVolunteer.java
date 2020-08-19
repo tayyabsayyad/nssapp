@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -93,8 +92,8 @@ public class ViewVolunteer extends Fragment {
         univ.setOnClickListener(view1 -> {
             detailsVol.setVisibility(View.VISIBLE);
             univ.setTextColor(primaryColDark);
-            area.setTextColor(Color.BLACK);
-            clg.setTextColor(Color.BLACK);
+            area.setTextColor(context.getColor(R.color.black));
+            clg.setTextColor(context.getColor(R.color.black));
             recViewVolUniv.setVisibility(View.VISIBLE);
             recViewVolArea.setVisibility(View.GONE);
             recViewVolClg.setVisibility(View.GONE);
@@ -103,8 +102,8 @@ public class ViewVolunteer extends Fragment {
         area.setOnClickListener(view1 -> {
             detailsVol.setVisibility(View.VISIBLE);
             area.setTextColor(primaryColDark);
-            univ.setTextColor(Color.BLACK);
-            clg.setTextColor(Color.BLACK);
+            univ.setTextColor(context.getColor(R.color.black));
+            clg.setTextColor(context.getColor(R.color.black));
             recViewVolArea.setVisibility(View.VISIBLE);
             recViewVolUniv.setVisibility(View.GONE);
             recViewVolClg.setVisibility(View.GONE);
@@ -113,8 +112,8 @@ public class ViewVolunteer extends Fragment {
         clg.setOnClickListener(view1 -> {
             detailsVol.setVisibility(View.VISIBLE);
             clg.setTextColor(primaryColDark);
-            univ.setTextColor(Color.BLACK);
-            area.setTextColor(Color.BLACK);
+            univ.setTextColor(context.getColor(R.color.black));
+            area.setTextColor(context.getColor(R.color.black));
             recViewVolClg.setVisibility(View.VISIBLE);
             recViewVolUniv.setVisibility(View.GONE);
             recViewVolArea.setVisibility(View.GONE);

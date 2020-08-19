@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.DatabaseAdapter;
+import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
@@ -261,6 +262,7 @@ public class FirstHalfFrag extends Fragment {
                                     j,
                                     formatter.format(cal.getTime()),
                                     m.getInt(m.getColumnIndex("activityType")),
+                                    Password.PASS,
                                     1
                             );
                             mdb.close();

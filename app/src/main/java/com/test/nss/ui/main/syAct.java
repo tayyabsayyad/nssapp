@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.DatabaseAdapter;
+import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
@@ -46,7 +47,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-import static com.test.nss.R.color.colorPrimaryDark;
+import static com.test.nss.R.color.sbColorText;
 import static com.test.nss.ediary.isFirst;
 import static com.test.nss.ediary.isLeader;
 import static com.test.nss.ediary.primaryColDark;
@@ -82,6 +83,7 @@ public class syAct extends Fragment {
     LinearLayout fragSy;
 
     int col;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -224,6 +226,7 @@ public class syAct extends Fragment {
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
                                         4,
+                                        Password.PASS,
                                         actID
                                 );
 
@@ -305,7 +308,7 @@ public class syAct extends Fragment {
                                             Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
                                             Integer.parseInt(c.getString(c.getColumnIndex("id"))),
                                             3,
-
+                                            Password.PASS,
                                             actID
                                     );
                                     c.close();
@@ -361,7 +364,7 @@ public class syAct extends Fragment {
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
 
                         Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                .setTextColor(mContext.getColor(colorPrimaryDark));
+                                .setTextColor(mContext.getColor(sbColorText));
                         sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                         mdb.close();
                         sb.show();
@@ -375,7 +378,7 @@ public class syAct extends Fragment {
 
                         if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
                             Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
-                                    .setTextColor(mContext.getColor(colorPrimaryDark));
+                                    .setTextColor(mContext.getColor(sbColorText));
                             sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                             sb.show();
                         } else {
@@ -385,7 +388,7 @@ public class syAct extends Fragment {
                                 x = "Modified By: ";
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
                             Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                    .setTextColor(mContext.getColor(colorPrimaryDark));
+                                    .setTextColor(mContext.getColor(sbColorText));
                             sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                             sb.show();
                         }
@@ -487,6 +490,7 @@ public class syAct extends Fragment {
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
                                         4,
+                                        Password.PASS,
                                         actID
                                 );
 
@@ -568,7 +572,7 @@ public class syAct extends Fragment {
                                             Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
                                             Integer.parseInt(c.getString(c.getColumnIndex("id"))),
                                             3,
-
+                                            Password.PASS,
                                             actID
                                     );
                                     c.close();
@@ -623,7 +627,7 @@ public class syAct extends Fragment {
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
 
                         Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                .setTextColor(mContext.getColor(colorPrimaryDark));
+                                .setTextColor(mContext.getColor(sbColorText));
                         sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                         mdb.close();
                         sb.show();
@@ -636,7 +640,7 @@ public class syAct extends Fragment {
 
                         if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
                             Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
-                                    .setTextColor(mContext.getColor(colorPrimaryDark));
+                                    .setTextColor(mContext.getColor(sbColorText));
                             sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                             sb.show();
                         } else {
@@ -647,7 +651,7 @@ public class syAct extends Fragment {
                                 x = "Modified By: ";
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
                             Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                    .setTextColor(mContext.getColor(colorPrimaryDark));
+                                    .setTextColor(mContext.getColor(sbColorText));
                             sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                             sb.show();
                         }
@@ -750,6 +754,7 @@ public class syAct extends Fragment {
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
                                         4,
+                                        Password.PASS,
                                         actID
                                 );
 
@@ -831,7 +836,7 @@ public class syAct extends Fragment {
                                             Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
                                             Integer.parseInt(c.getString(c.getColumnIndex("id"))),
                                             3,
-
+                                            Password.PASS,
                                             actID
                                     );
                                     c.close();
@@ -885,7 +890,7 @@ public class syAct extends Fragment {
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
 
                         Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                .setTextColor(mContext.getColor(colorPrimaryDark));
+                                .setTextColor(mContext.getColor(sbColorText));
                         sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                         mdb.close();
                         sb.show();
@@ -898,7 +903,7 @@ public class syAct extends Fragment {
 
                         if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
                             Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
-                                    .setTextColor(mContext.getColor(colorPrimaryDark));
+                                    .setTextColor(mContext.getColor(sbColorText));
                             sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                             sb.show();
                         } else {
@@ -909,7 +914,7 @@ public class syAct extends Fragment {
                                 x = "Modified By: ";
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
                             Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                    .setTextColor(mContext.getColor(colorPrimaryDark));
+                                    .setTextColor(mContext.getColor(sbColorText));
                             sb.getView().setBackgroundColor(mContext.getColor(R.color.colorPrimaryLight));
                             sb.show();
                         }
@@ -949,7 +954,7 @@ public class syAct extends Fragment {
             }
         };
         adapterClg.notifyDataSetChanged();
-        
+
         recyclerViewHours.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerViewHours.setAdapter(adapterClg);
 

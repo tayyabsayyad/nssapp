@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.DatabaseAdapter;
+import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
@@ -113,11 +114,12 @@ public class CampActListDetails extends Fragment {
                                     c.getInt(c.getColumnIndex("CampDay")),
                                     c.getString(c.getColumnIndex("College_Name")),
                                     3,
+                                    Password.PASS,
                                     c.getInt(c.getColumnIndex("id"))
                             );
 
                                     mdb.dropDetailsCamp(Integer.parseInt(campData.get(l).getCampId()));
-                                    Toast.makeText(mContext, "" + campData.get(l).getCampId(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "" + campData.get(l).getCampId(), Toast.LENGTH_SHORT).show();
                                     campData.remove(l);
                                     campDataAdapter.notifyItemRemoved(l);
 
@@ -206,6 +208,7 @@ public class CampActListDetails extends Fragment {
                                         c.getInt(c.getColumnIndex("CampDay")),
                                         c.getString(c.getColumnIndex("College_Name")),
                                         2,
+                                        Password.PASS,
                                         c.getInt(c.getColumnIndex("id"))
                                 );
                                 mdb2.close();
@@ -251,7 +254,6 @@ public class CampActListDetails extends Fragment {
         campActAll = root.findViewById(R.id.campActAll);
 
         go_back.setOnClickListener(view1 -> {
-            camp_main_details.setVisibility(View.VISIBLE);
             campActAll.setVisibility(View.GONE);
 
             onDetach();
@@ -264,7 +266,7 @@ public class CampActListDetails extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        //camp_main_details.setVisibility(View.VISIBLE);
+        camp_main_details.setVisibility(View.VISIBLE);
         FragmentManager fm = requireActivity().getSupportFragmentManager();
 
         campActAll.setVisibility(View.GONE);
