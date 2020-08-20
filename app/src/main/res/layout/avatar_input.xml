@@ -54,4 +54,52 @@
             android:padding="@dimen/space_10dp"
             android:src="@drawable/ic_man_2" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_15dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="setWom3"
+            android:padding="@dimen/space_10dp"
+            android:src="@drawable/ic_women_3" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="setWom4"
+            android:padding="@dimen/space_10dp"
+            android:src="@drawable/ic_women_4" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_15dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="setMan3"
+            android:padding="@dimen/space_10dp"
+            android:src="@drawable/ic_man_3" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="setMan4"
+            android:padding="@dimen/space_10dp"
+            android:src="@drawable/ic_man_4" />
+    </LinearLayout>
 </LinearLayout>

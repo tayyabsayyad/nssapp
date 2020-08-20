@@ -16,10 +16,10 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.R;
-import com.test.nss.ediary;
 
 import static com.test.nss.ediary.blackish;
 import static com.test.nss.ediary.isFirst;
+import static com.test.nss.ediary.isSec;
 import static com.test.nss.ediary.primaryColDark;
 
 public class MainFragment extends Fragment {
@@ -70,8 +70,6 @@ public class MainFragment extends Fragment {
             secButton.setTextColor(mContext.getColor(R.color.grey));
             firstButton.setOnClickListener(v -> {
                 firstButton.setTextColor(primaryColDark);
-                if (!isFirst)
-                    secButton.setTextColor(ediary.blackish);
                 maLHay.setVisibility(View.GONE);
 
                 toolbar.setVisibility(View.VISIBLE);
@@ -85,7 +83,7 @@ public class MainFragment extends Fragment {
                 if (isFirst)
                     Snackbar.make(v, "Please complete First Year", Snackbar.LENGTH_SHORT).show();
             });
-        } else {
+        } else if (isSec) {
             secButton.setOnClickListener(v -> {
                 secButton.setTextColor(primaryColDark);
                 firstButton.setTextColor(blackish);
@@ -101,6 +99,18 @@ public class MainFragment extends Fragment {
 
             firstButton.setOnClickListener(view1 -> {
                 secButton.setTextColor(blackish);
+                firstButton.setTextColor(primaryColDark);
+                maLHay.setVisibility(View.GONE);
+
+                toolbar.setVisibility(View.VISIBLE);
+                if (halvesFrame.getVisibility() == View.GONE)
+                    halvesFrame.setVisibility(View.VISIBLE);
+
+                FragmentManager fragmentManager = getChildFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.halves_frame, new fyAct(), "fyAct").addToBackStack("MainFrag").commit();
+            });
+        } else {
+            firstButton.setOnClickListener(v -> {
                 firstButton.setTextColor(primaryColDark);
                 maLHay.setVisibility(View.GONE);
 

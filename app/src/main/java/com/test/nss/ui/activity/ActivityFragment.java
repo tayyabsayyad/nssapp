@@ -17,6 +17,7 @@ import com.test.nss.R;
 
 import static com.test.nss.ediary.blackish;
 import static com.test.nss.ediary.isFirst;
+import static com.test.nss.ediary.isSec;
 import static com.test.nss.ediary.primaryColDark;
 
 public class ActivityFragment extends Fragment {
@@ -63,7 +64,7 @@ public class ActivityFragment extends Fragment {
                 if (isFirst)
                     Snackbar.make(v, "Please complete First Year", Snackbar.LENGTH_SHORT).show();
             });
-        } else {
+        } else if (isSec) {
             secButton.setOnClickListener(v -> {
                 secButton.setTextColor(primaryColDark);
                 firstButton.setTextColor(blackish);
@@ -74,6 +75,12 @@ public class ActivityFragment extends Fragment {
             firstButton.setOnClickListener(view1 -> {
                 firstButton.setTextColor(primaryColDark);
                 secButton.setTextColor(blackish);
+
+                fm.beginTransaction().replace(R.id.act_list, new FirstHalfFrag()).addToBackStack("ActivityFrag").commit();
+            });
+        } else {
+            firstButton.setOnClickListener(v -> {
+                firstButton.setTextColor(primaryColDark);
 
                 fm.beginTransaction().replace(R.id.act_list, new FirstHalfFrag()).addToBackStack("ActivityFrag").commit();
             });

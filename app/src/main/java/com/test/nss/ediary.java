@@ -63,12 +63,18 @@ public class ediary extends AppCompatActivity {
     public static int red;
     public static int green;
     public static int kesar;
+    public static int sbColorText;
+    public static int black;
+    public static int white;
+    public static int blackGrey;
+
     public static String AUTH_TOKEN;
     public static String VEC;
     public static int isLeader;
     public static int leaderId;
     public static String name;
     public static boolean isFirst;
+    public static boolean isSec;
     public static int isNight = 0;
     static int whichAvatar = 0;
 
@@ -160,6 +166,7 @@ public class ediary extends AppCompatActivity {
         c.moveToFirst();
         name = c.getString(c.getColumnIndex("First_name")) + " " + c.getString(c.getColumnIndex("Last_name"));
         isFirst = c.getString(c.getColumnIndex("State")).equals("First Year");
+        isSec = c.getString(c.getColumnIndex("State")).equals("Second Year");
         mdb.close();
 
         View v = findViewById(android.R.id.content);
@@ -190,6 +197,10 @@ public class ediary extends AppCompatActivity {
         red = context.getColor(R.color.red);
         green = context.getColor(R.color.greenNic);
         kesar = context.getColor(R.color.kesar);
+        sbColorText = context.getColor(R.color.sbColorText);
+        black = context.getColor(R.color.black);
+        white = context.getColor(R.color.white);
+        blackGrey = context.getColor(R.color.blackGrey);
 
         //Toast.makeText(context, AUTH_TOKEN, Toast.LENGTH_SHORT).show();
         drawer = findViewById(R.id.drawer_layout);
@@ -221,12 +232,23 @@ public class ediary extends AppCompatActivity {
                 imageView.setImageResource(R.drawable.ic_women_2);
                 break;
             case 3:
-                imageView.setImageResource(R.drawable.ic_man_1);
+                imageView.setImageResource(R.drawable.ic_women_3);
                 break;
             case 4:
+                imageView.setImageResource(R.drawable.ic_women_4);
+                break;
+            case 5:
+                imageView.setImageResource(R.drawable.ic_man_1);
+                break;
+            case 6:
                 imageView.setImageResource(R.drawable.ic_man_2);
                 break;
-
+            case 7:
+                imageView.setImageResource(R.drawable.ic_man_3);
+                break;
+            case 8:
+                imageView.setImageResource(R.drawable.ic_man_4);
+                break;
             default:
             case 0:
                 imageView.setImageResource(R.drawable.ic_man_0);
@@ -462,9 +484,30 @@ public class ediary extends AppCompatActivity {
         eddy2.apply();
     }
 
+    public void setWom3(View view) {
+        imageView.setImageResource(R.drawable.ic_women_3);
+        whichAvatar = 3;
+        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
+
+        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
+        eddy2.putInt("avatar", whichAvatar);
+        eddy2.apply();
+    }
+
+    public void setWom4(View view) {
+        imageView.setImageResource(R.drawable.ic_women_4);
+        whichAvatar = 4;
+        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
+
+        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
+        eddy2.putInt("avatar", whichAvatar);
+        eddy2.apply();
+    }
+
+
     public void setMan1(View view) {
         imageView.setImageResource(R.drawable.ic_man_1);
-        whichAvatar = 3;
+        whichAvatar = 5;
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
 
         SharedPreferences.Editor eddy2 = sharedPreferences.edit();
@@ -474,7 +517,27 @@ public class ediary extends AppCompatActivity {
 
     public void setMan2(View view) {
         imageView.setImageResource(R.drawable.ic_man_2);
-        whichAvatar = 4;
+        whichAvatar = 6;
+        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
+
+        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
+        eddy2.putInt("avatar", whichAvatar);
+        eddy2.apply();
+    }
+
+    public void setMan3(View view) {
+        imageView.setImageResource(R.drawable.ic_man_3);
+        whichAvatar = 7;
+        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
+
+        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
+        eddy2.putInt("avatar", whichAvatar);
+        eddy2.apply();
+    }
+
+    public void setMan4(View view) {
+        imageView.setImageResource(R.drawable.ic_man_4);
+        whichAvatar = 8;
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
 
         SharedPreferences.Editor eddy2 = sharedPreferences.edit();

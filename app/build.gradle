@@ -1,12 +1,14 @@
 apply plugin: 'com.android.application'
 
-static def getDate() {
-    return new Date().format("dd-MM-HH.mm")
+task push(type: Exec) {
+    workingDir "${buildDir}/../.."
+    println(workingDir)
+    commandLine 'rclone'
+    args = ['delete', 'nss:']
+    args = ['copy', 'app/debug/NSS.apk', 'nss:']
 }
-
 android {
     def name = "NSS"
-    def date = getDate()
 
     compileSdkVersion 30
 
@@ -27,7 +29,7 @@ android {
     buildTypes {
         applicationVariants.all { variant ->
             variant.outputs.all { output ->
-                outputFileName = new File(name+"-" + date + ".apk")
+                outputFileName = new File(name+ ".apk")
             }
         }
         release {

@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -39,6 +38,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.test.nss.ediary.transparent;
 
 public class CampActListDetails extends Fragment {
 
@@ -242,7 +243,7 @@ public class CampActListDetails extends Fragment {
                 new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                         .addSwipeRightActionIcon(R.drawable.ic_del_24)
                         .addSwipeLeftActionIcon(R.drawable.ic_edit_24)
-                        .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                        .addBackgroundColor(transparent)
                         .create()
                         .decorate();
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);

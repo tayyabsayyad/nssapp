@@ -34,6 +34,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
+import static com.test.nss.ediary.blackish;
+
 
 public class CampInputDetailsFrag extends Fragment {
 
@@ -57,7 +59,7 @@ public class CampInputDetailsFrag extends Fragment {
 
         actName = getArguments().getString("actName");
 
-        which_day.setTextColor(getResources().getColor(R.color.blackish, requireActivity().getTheme()));
+        which_day.setTextColor(blackish);
         which_day.setText(getArguments().getString("whichDay")); //one
 
         return root;

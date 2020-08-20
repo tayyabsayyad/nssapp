@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.test.nss.DatabaseAdapter;
+import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
 
@@ -42,8 +43,7 @@ import static com.test.nss.ediary.AUTH_TOKEN;
 
 public class WorkDetailsFirstFrag extends Fragment {
 
-    static boolean isVisit = false;
-    static boolean isCont = false;
+    public static boolean isCont = false;
     static String c = "College";
     static String u = "University";
     static String a1 = "Area Based 1";
@@ -113,7 +113,7 @@ public class WorkDetailsFirstFrag extends Fragment {
         SharedPreferences sharedPreferences = context.getSharedPreferences("KEY", MODE_PRIVATE);
         isCont = sharedPreferences.getBoolean("isCont", false);
 
-        Log.e("AA", "" + isCont);
+        //Log.e("AA", "" + isCont);
         if (clgComp >= 20 && univComp >= 20) {
             if (areaCompOne >= 20 && areaCompTwo >= 20 && areaCompOne + areaCompTwo >= areaLvlOne + areaLvlTwo && !isCont) {
                 revealFab();
@@ -145,7 +145,7 @@ public class WorkDetailsFirstFrag extends Fragment {
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         dialogInterface.dismiss();
                                         //dialogInterface2.dismiss();
-                                        Call<ResponseBody> selfRegContinue = RetrofitClient.getInstance().getApi().putContinue("Token " + AUTH_TOKEN);
+                                        Call<ResponseBody> selfRegContinue = RetrofitClient.getInstance().getApi().putContinue("Token " + AUTH_TOKEN, Password.PASS);
                                         selfRegContinue.enqueue(new Callback<ResponseBody>() {
                                             @Override
                                             @EverythingIsNonNull

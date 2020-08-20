@@ -17,6 +17,8 @@ import com.test.nss.ediary;
 import java.util.Collections;
 import java.util.List;
 
+import static com.test.nss.ediary.blackGrey;
+
 public class MyListAdapterVolunteer extends RecyclerView.Adapter<MyListAdapterVolunteer.ViewHolder> {
     //private AdapterDataMain[] listdata;
 
@@ -55,10 +57,10 @@ public class MyListAdapterVolunteer extends RecyclerView.Adapter<MyListAdapterVo
             setColor(holder, ediary.kesar);
         } else {
             holder.approvedVol.setText(mCon.getString(R.string.no));
-            holder.dateVol.setTextColor(mCon.getColor(R.color.blackGrey));
-            holder.actVol.setTextColor(mCon.getColor(R.color.blackGrey));
-            holder.hoursVol.setTextColor(mCon.getColor(R.color.blackGrey));
-            holder.approvedVol.setTextColor(mCon.getColor(R.color.blackGrey));
+            holder.dateVol.setTextColor(blackGrey);
+            holder.actVol.setTextColor(blackGrey);
+            holder.hoursVol.setTextColor(blackGrey);
+            holder.approvedVol.setTextColor(blackGrey);
         }
     }
 

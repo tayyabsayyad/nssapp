@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.test.nss.ediary.black;
 import static com.test.nss.ediary.primaryColDark;
 
 public class ViewVolunteer extends Fragment {
@@ -92,8 +93,8 @@ public class ViewVolunteer extends Fragment {
         univ.setOnClickListener(view1 -> {
             detailsVol.setVisibility(View.VISIBLE);
             univ.setTextColor(primaryColDark);
-            area.setTextColor(context.getColor(R.color.black));
-            clg.setTextColor(context.getColor(R.color.black));
+            area.setTextColor(black);
+            clg.setTextColor(black);
             recViewVolUniv.setVisibility(View.VISIBLE);
             recViewVolArea.setVisibility(View.GONE);
             recViewVolClg.setVisibility(View.GONE);
@@ -102,8 +103,8 @@ public class ViewVolunteer extends Fragment {
         area.setOnClickListener(view1 -> {
             detailsVol.setVisibility(View.VISIBLE);
             area.setTextColor(primaryColDark);
-            univ.setTextColor(context.getColor(R.color.black));
-            clg.setTextColor(context.getColor(R.color.black));
+            univ.setTextColor(black);
+            clg.setTextColor(black);
             recViewVolArea.setVisibility(View.VISIBLE);
             recViewVolUniv.setVisibility(View.GONE);
             recViewVolClg.setVisibility(View.GONE);
@@ -112,8 +113,8 @@ public class ViewVolunteer extends Fragment {
         clg.setOnClickListener(view1 -> {
             detailsVol.setVisibility(View.VISIBLE);
             clg.setTextColor(primaryColDark);
-            univ.setTextColor(context.getColor(R.color.black));
-            area.setTextColor(context.getColor(R.color.black));
+            univ.setTextColor(black);
+            area.setTextColor(black);
             recViewVolClg.setVisibility(View.VISIBLE);
             recViewVolUniv.setVisibility(View.GONE);
             recViewVolArea.setVisibility(View.GONE);

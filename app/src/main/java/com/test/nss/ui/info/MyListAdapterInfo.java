@@ -1,8 +1,6 @@
 package com.test.nss.ui.info;
 
 import android.content.Context;
-import android.os.Build;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static android.content.Context.VIBRATOR_SERVICE;
+import static com.test.nss.ediary.primaryCol;
+import static com.test.nss.ediary.white;
 
 public class MyListAdapterInfo extends RecyclerView.Adapter<MyListAdapterInfo.ViewHolder> {
     //private AdapterDataAct[] listdata;
@@ -50,24 +50,28 @@ public class MyListAdapterInfo extends RecyclerView.Adapter<MyListAdapterInfo.Vi
         if (holder.getAdapterPosition() % 2 == 1)
             holder.rightChild.setBackgroundColor(mCon.getColor(R.color.pastel_cyan));
         else {
-            holder.infoDesc.setTextColor(mCon.getColor(R.color.white));
-            holder.infoName.setTextColor(mCon.getColor(R.color.white));
-            holder.leftChild.setBackgroundColor(mCon.getColor(R.color.colorPrimary));
+            holder.infoDesc.setTextColor(white);
+            holder.infoName.setTextColor(white);
+            holder.leftChild.setBackgroundColor(primaryCol);
             holder.git.setImageResource(R.drawable.ic_git_24);
-            holder.ig.setImageResource(R.drawable.ic_ig_24);
+            holder.ig.setImageResource(R.drawable.ic_linkedin_24);
         }
         long[] pattern = {0, 100, 1000, 300, 200, 100, 300, 200, 100};
 
         holder.infoName.setOnClickListener(view -> {
             Vibrator v = (Vibrator) mCon.getSystemService(VIBRATOR_SERVICE);
-            if (Build.VERSION.SDK_INT >= 26) {
+            /*if (Build.VERSION.SDK_INT >= 26) {
                 ((Vibrator) mCon.getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-                v.vibrate(pattern, -1);
-            }
+            } else {*/
+            v.vibrate(pattern, -1);
+            //}
         });
         holder.git.setOnClickListener(view -> {
             onClickInterface.setClick(list.get(position).getGitId());
+        });
+
+        holder.ig.setOnClickListener(view -> {
+            onClickInterface.setClick(list.get(position).getLinkdId());
         });
     }
 

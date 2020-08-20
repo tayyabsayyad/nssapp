@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -47,11 +46,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-import static com.test.nss.R.color.colorPrimaryLight;
-import static com.test.nss.R.color.sbColorText;
+import static com.test.nss.ediary.blackish;
 import static com.test.nss.ediary.isFirst;
 import static com.test.nss.ediary.isLeader;
 import static com.test.nss.ediary.primaryColDark;
+import static com.test.nss.ediary.sbColorText;
+import static com.test.nss.ediary.transparent;
 
 public class fyAct extends Fragment {
 
@@ -81,7 +81,6 @@ public class fyAct extends Fragment {
     int whichAct;
     int act;
     int newHours = 0;
-    int col;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +88,6 @@ public class fyAct extends Fragment {
 
         root = inflater.inflate(R.layout.fragment_fy_act, container, false);
         mContext = requireContext();
-        col = mContext.getColor(R.color.blackish);
 
         cardViewMain = root.findViewById(R.id.details_main_card);
         actHeaderInput = requireActivity().findViewById(R.id.actHeaderInput);
@@ -133,8 +131,8 @@ public class fyAct extends Fragment {
                 add.setVisibility(View.GONE);
 
             univ.setTextColor(primaryColDark);
-            area.setTextColor(col);
-            clg.setTextColor(col);
+            area.setTextColor(blackish);
+            clg.setTextColor(blackish);
         });
 
         area.setOnClickListener(v -> {
@@ -151,8 +149,8 @@ public class fyAct extends Fragment {
             clgRecFy.setVisibility(View.GONE);
 
             area.setTextColor(primaryColDark);
-            univ.setTextColor(col);
-            clg.setTextColor(col);
+            univ.setTextColor(blackish);
+            clg.setTextColor(blackish);
         });
 
 
@@ -168,8 +166,8 @@ public class fyAct extends Fragment {
             clgRecFy.setVisibility(View.VISIBLE);
 
             clg.setTextColor(primaryColDark);
-            univ.setTextColor(col);
-            area.setTextColor(col);
+            univ.setTextColor(blackish);
+            area.setTextColor(blackish);
 
             if (isFirst)
                 add.setVisibility(View.VISIBLE);
@@ -382,8 +380,8 @@ public class fyAct extends Fragment {
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
 
                         Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                .setTextColor(mContext.getColor(sbColorText));
-                        sb.getView().setBackgroundColor(mContext.getColor(colorPrimaryLight));
+                                .setTextColor(sbColorText);
+                        sb.getView().setBackgroundColor(transparent);
                         mdb.close();
                         sb.show();
                     } else {
@@ -396,8 +394,8 @@ public class fyAct extends Fragment {
 
                         if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
                             Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
-                                    .setTextColor(mContext.getColor(sbColorText));
-                            sb.getView().setBackgroundColor(mContext.getColor(colorPrimaryLight));
+                                    .setTextColor(sbColorText);
+                            sb.getView().setBackgroundColor(transparent);
                             sb.show();
                         } else {
                             if (univListDataFy.get(p).getState().equals("LeaderModified"))
@@ -406,8 +404,8 @@ public class fyAct extends Fragment {
                                 x = "Approved By: ";
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
                             Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                    .setTextColor(mContext.getColor(sbColorText));
-                            sb.getView().setBackgroundColor(mContext.getColor(colorPrimaryLight));
+                                    .setTextColor(sbColorText);
+                            sb.getView().setBackgroundColor(transparent);
                             sb.show();
                         }
                         mdb.close();
@@ -430,7 +428,7 @@ public class fyAct extends Fragment {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_del_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_edit_24)
-                            .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                            .addBackgroundColor(transparent)
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -438,7 +436,7 @@ public class fyAct extends Fragment {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_eye_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_eye_24)
-                            .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                            .addBackgroundColor(transparent)
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -649,8 +647,8 @@ public class fyAct extends Fragment {
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
 
                         Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                .setTextColor(mContext.getColor(sbColorText));
-                        sb.getView().setBackgroundColor(mContext.getColor(colorPrimaryLight));
+                                .setTextColor(sbColorText);
+                        sb.getView().setBackgroundColor(transparent);
                         mdb.close();
                         sb.show();
                     } else {
@@ -663,8 +661,8 @@ public class fyAct extends Fragment {
 
                         if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
                             Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
-                                    .setTextColor(mContext.getColor(sbColorText));
-                            sb.getView().setBackgroundColor(mContext.getColor(colorPrimaryLight));
+                                    .setTextColor(sbColorText);
+                            sb.getView().setBackgroundColor(transparent);
                             sb.show();
                         } else {
                             if (areaDataMainFy.get(p).getState().equals("LeaderModified"))
@@ -673,8 +671,8 @@ public class fyAct extends Fragment {
                                 x = "Approved By: ";
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
                             Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                    .setTextColor(mContext.getColor(sbColorText));
-                            sb.getView().setBackgroundColor(mContext.getColor(colorPrimaryLight));
+                                    .setTextColor(sbColorText);
+                            sb.getView().setBackgroundColor(transparent);
                             sb.show();
                         }
                         mdb.close();
@@ -697,7 +695,7 @@ public class fyAct extends Fragment {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_del_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_edit_24)
-                            .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                            .addBackgroundColor(transparent)
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -705,7 +703,7 @@ public class fyAct extends Fragment {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_eye_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_eye_24)
-                            .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                            .addBackgroundColor(transparent)
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -915,8 +913,8 @@ public class fyAct extends Fragment {
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
 
                         Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                .setTextColor(mContext.getColor(sbColorText));
-                        sb.getView().setBackgroundColor(mContext.getColor(colorPrimaryLight));
+                                .setTextColor(sbColorText);
+                        sb.getView().setBackgroundColor(transparent);
                         mdb.close();
                         sb.show();
                     } else {
@@ -929,8 +927,8 @@ public class fyAct extends Fragment {
 
                         if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
                             Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
-                                    .setTextColor(mContext.getColor(sbColorText));
-                            sb.getView().setBackgroundColor(mContext.getColor(colorPrimaryLight));
+                                    .setTextColor(sbColorText);
+                            sb.getView().setBackgroundColor(transparent);
                             sb.show();
                         } else {
                             if (clgListDataFy.get(p).getState().equals("LeaderModified"))
@@ -940,8 +938,8 @@ public class fyAct extends Fragment {
 
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
                             Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
-                                    .setTextColor(mContext.getColor(sbColorText));
-                            sb.getView().setBackgroundColor(mContext.getColor(colorPrimaryLight));
+                                    .setTextColor(sbColorText);
+                            sb.getView().setBackgroundColor(transparent);
                             sb.show();
                         }
                         mdb.close();
@@ -964,7 +962,7 @@ public class fyAct extends Fragment {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_del_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_edit_24)
-                            .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                            .addBackgroundColor(transparent)
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -972,7 +970,7 @@ public class fyAct extends Fragment {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_eye_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_eye_24)
-                            .addBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                            .addBackgroundColor(transparent)
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);

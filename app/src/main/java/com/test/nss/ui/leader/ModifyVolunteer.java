@@ -48,6 +48,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
+import static com.test.nss.ediary.black;
 import static com.test.nss.ediary.leaderId;
 import static com.test.nss.ediary.primaryColDark;
 import static com.test.nss.ediary.transparent;
@@ -109,8 +110,8 @@ public class ModifyVolunteer extends Fragment {
         univ.setOnClickListener(view1 -> {
             detailsVol.setVisibility(View.VISIBLE);
             univ.setTextColor(primaryColDark);
-            area.setTextColor(context.getColor(R.color.black));
-            clg.setTextColor(context.getColor(R.color.black));
+            area.setTextColor(black);
+            clg.setTextColor(black);
             recViewVolUniv.setVisibility(View.VISIBLE);
             recViewVolArea.setVisibility(View.GONE);
             recViewVolClg.setVisibility(View.GONE);
@@ -119,8 +120,8 @@ public class ModifyVolunteer extends Fragment {
         area.setOnClickListener(view1 -> {
             detailsVol.setVisibility(View.VISIBLE);
             area.setTextColor(primaryColDark);
-            univ.setTextColor(context.getColor(R.color.black));
-            clg.setTextColor(context.getColor(R.color.black));
+            univ.setTextColor(black);
+            clg.setTextColor(black);
             recViewVolArea.setVisibility(View.VISIBLE);
             recViewVolUniv.setVisibility(View.GONE);
             recViewVolClg.setVisibility(View.GONE);
@@ -129,8 +130,8 @@ public class ModifyVolunteer extends Fragment {
         clg.setOnClickListener(view1 -> {
             detailsVol.setVisibility(View.VISIBLE);
             clg.setTextColor(primaryColDark);
-            univ.setTextColor(context.getColor(R.color.black));
-            area.setTextColor(context.getColor(R.color.black));
+            univ.setTextColor(black);
+            area.setTextColor(black);
             recViewVolClg.setVisibility(View.VISIBLE);
             recViewVolUniv.setVisibility(View.GONE);
             recViewVolArea.setVisibility(View.GONE);

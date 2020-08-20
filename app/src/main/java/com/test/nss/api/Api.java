@@ -103,7 +103,7 @@ public interface Api {
     Call<ResponseBody> getUserDetail(@Header("Authorization") String token);
 
     @PUT("diary/SelfRegContinue")
-    Call<ResponseBody> putContinue(@Header("Authorization") String token);
+    Call<ResponseBody> putContinue(@Header("Authorization") String token, @Field("AppAuth") String p);
 
     @PATCH("/diary/dailyactivity/{id2}/")
     @FormUrlEncoded

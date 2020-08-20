@@ -1,10 +1,8 @@
 package com.test.nss.ui.work;
 
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,11 +33,11 @@ import com.test.nss.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
 import static com.test.nss.ediary.VEC;
 import static com.test.nss.ediary.blackish;
 import static com.test.nss.ediary.isFirst;
+import static com.test.nss.ediary.isSec;
 import static com.test.nss.ediary.primaryColDark;
 
 public class WorkFragment extends Fragment {
@@ -95,12 +93,12 @@ public class WorkFragment extends Fragment {
 
         if (isFirst) {
             for (int i = 0; i < adapterDataWorks.size() - 4; i++) {
-                Log.e("Values", adapterDataWorks.get(i).getCompHours());
+                //Log.e("Values", adapterDataWorks.get(i).getCompHours());
                 if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0 && !adapterDataWorks.get(i).getCompHours().equals("0")) {
                     data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
                 }
             }
-        } else {
+        } else if (isSec) {
             for (int i = 4; i < adapterDataWorks.size(); i++) {
                 if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0 && !adapterDataWorks.get(i).getCompHours().equals("0")) {
                     data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
@@ -127,7 +125,7 @@ public class WorkFragment extends Fragment {
             colors[counter] = color;
             counter++;
         }
-        Log.e("AAA", "" + colors.length);
+        //Log.e("AAA", "" + colors.length);
         pieData.setColors(colors);
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
@@ -162,7 +160,7 @@ public class WorkFragment extends Fragment {
         l.setWordWrapEnabled(true);
         l.setDrawInside(false);
         l.setTypeface(t);
-        l.setTextColor(requireContext().getColor(R.color.blackish));
+        l.setTextColor(blackish);
 
         pieChart.setCenterTextColor(primaryColDark);
 
@@ -174,7 +172,6 @@ public class WorkFragment extends Fragment {
         pieChart.invalidate();
 
         fm = requireActivity().getSupportFragmentManager();
-
         if (isFirst) {
             secButton.setTextColor(requireContext().getColor(R.color.grey));
             firstButton.setOnClickListener(v -> {
@@ -188,23 +185,23 @@ public class WorkFragment extends Fragment {
                     Snackbar.make(v, "Please complete First Year", Snackbar.LENGTH_SHORT).show();
             });
         } else {
-            firstButton.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    Log.e("AA", "AAA");
-                    SharedPreferences shareit = requireContext().getSharedPreferences("KEY", MODE_PRIVATE);
-                    SharedPreferences.Editor eddy = shareit.edit();
-                    eddy.putBoolean("isCont", false);
-                    eddy.apply();
-                    return true;
-                }
-            });
             secButton.setOnClickListener(v -> {
                 secButton.setTextColor(primaryColDark);
                 firstButton.setTextColor(blackish);
 
-                hoursInfo.setVisibility(View.GONE);
+                data.clear();
+                for (int i = 4; i < adapterDataWorks.size(); i++) {
+                    if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0 && !adapterDataWorks.get(i).getCompHours().equals("0")) {
+                        data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
+                    }
+                }
+                pieData1.notifyDataChanged();
+                pieData.notifyDataSetChanged();
+                pieChart.notifyDataSetChanged();
+                pieChart.invalidate();
+                pieChart.animateXY(800, 800, Easing.EaseInCirc);
 
+                hoursInfo.setVisibility(View.GONE);
                 fm.beginTransaction().replace(R.id.work_details, new WorkDetailsSecFrag(requireContext())).addToBackStack("WorkFrag").commit();
             });
 
@@ -212,18 +209,21 @@ public class WorkFragment extends Fragment {
                 firstButton.setTextColor(primaryColDark);
                 secButton.setTextColor(blackish);
 
+                data.clear();
+                for (int i = 0; i < adapterDataWorks.size() - 4; i++) {
+                    if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0 && !adapterDataWorks.get(i).getCompHours().equals("0")) {
+                        data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
+                    }
+                }
+                pieData1.notifyDataChanged();
+                pieData.notifyDataSetChanged();
+                pieChart.notifyDataSetChanged();
+                pieChart.invalidate();
+                pieChart.animateXY(800, 800, Easing.EaseInCirc);
+
                 hoursInfo.setVisibility(View.GONE);
                 fm.beginTransaction().replace(R.id.work_details, new WorkDetailsFirstFrag(requireContext())).addToBackStack("WorkFrag").commit();
             });
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if (fm.getBackStackEntryCount() > 0) {
-            //fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            //    fm.popBackStack("WorkFrag", 0);
         }
     }
 

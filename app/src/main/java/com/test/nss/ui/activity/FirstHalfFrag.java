@@ -47,6 +47,8 @@ import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
 import static com.test.nss.ediary.isFirst;
+import static com.test.nss.ediary.primaryColDark;
+import static com.test.nss.ediary.white;
 
 public class FirstHalfFrag extends Fragment {
 
@@ -101,8 +103,8 @@ public class FirstHalfFrag extends Fragment {
 
         s = Snackbar.make(v, "Hold on activity list to add activity", Snackbar.LENGTH_SHORT);
         TextView tv = s.getView().findViewById(com.google.android.material.R.id.snackbar_text);
-        s.getView().setBackgroundColor(mContext.getColor(R.color.white));
-        tv.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+        s.getView().setBackgroundColor(white);
+        tv.setTextColor(primaryColDark);
         tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         Typeface t = ResourcesCompat.getFont(mContext, R.font.google_sans_bold);
         tv.setTypeface(t);
