@@ -1,15 +1,12 @@
 apply plugin: 'com.android.application'
 
 task push(type: Exec) {
-    workingDir "${buildDir}/../.."
-    println(workingDir)
+    workingDir "${buildDir}"
     commandLine 'rclone'
-    args = ['delete', 'nss:']
-    args = ['copy', 'app/debug/NSS.apk', 'nss:']
+    //args = ['delete', 'work:nss/']
+    args = ['copy', 'outputs\\apk\\debug\\app-debug.apk', 'work:nss/']
 }
 android {
-    def name = "NSS"
-
     compileSdkVersion 30
 
     compileOptions {
@@ -26,12 +23,29 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
-        applicationVariants.all { variant ->
-            variant.outputs.all { output ->
-                outputFileName = new File(name+ ".apk")
-            }
+    /*
+     Remove 'signingConfigs' and 'debug' for personal builds
+     m.jks is keystore file for signing builds, rename m.jks to your keystore to get use cli build (:
+     Constants field are defined in gradle.properties
+     */
+    signingConfigs {
+        debug {
+            storeFile new File("C:\\Users\\"+System.getenv("USERNAME")+"\\AndroidStudioProjects\\m.jks")
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+
+            // Optional, specify signing versions used
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
