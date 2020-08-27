@@ -79,14 +79,14 @@ public interface Api {
     @GET("/diary/api/level/")
     Call<ResponseBody> getHours(@Header("Authorization") String token);
 
-    @GET("/diary/api/totalhours/")
-    Call<ResponseBody> getTotalAreaHours(@Header("Authorization") String token);
-
-    @GET("/diary/api/AreaProjectPreviousView/")
+    @GET("/diary/api/AreaProjectView/")
     Call<ResponseBody> getFyAct(@Header("Authorization") String token);
 
-    @GET("/diary/api/AreaProjectView/")
+    @GET("/diary/api/AreaProjectPreviousView/")
     Call<ResponseBody> getSyAct(@Header("Authorization") String token);
+
+    @GET("/diary/api/workhours/")
+    Call<ResponseBody> getHoursId(@Header("Authorization") String token);
 
     @POST("/diary/dailyactivity")
     @FormUrlEncoded

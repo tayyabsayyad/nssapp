@@ -181,7 +181,7 @@ public class syAct extends Fragment {
         onClickInterface = abc -> {
             TextView t;
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext, R.style.BottomSheetStyleTheme);
-            View bottomSheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet, (LinearLayout) root.findViewById(R.id.bottomSheetContainer));
+            View bottomSheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet, root.findViewById(R.id.bottomSheetContainer));
             bottomSheetDialog.setContentView(bottomSheetView);
             t = bottomSheetView.findViewById(R.id.actTitle);
             t.setText(univListDataSy.get(abc).getAct());
@@ -244,10 +244,10 @@ public class syAct extends Fragment {
                         builder2.setMessage("Are you sure you want to delete?");
                         builder2.setCancelable(false);
                         builder2.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                                adapterUniv.notifyItemChanged(p);
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                        adapterUniv.notifyItemChanged(p);
                                     }
                                 }
                         );
@@ -484,7 +484,7 @@ public class syAct extends Fragment {
         onClickInterface = abc -> {
             TextView t;
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext, R.style.BottomSheetStyleTheme);
-            View bottomSheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet, (LinearLayout) root.findViewById(R.id.bottomSheetContainer));
+            View bottomSheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet, root.findViewById(R.id.bottomSheetContainer));
             bottomSheetDialog.setContentView(bottomSheetView);
             t = bottomSheetView.findViewById(R.id.actTitle);
             t.setText(areaDataMainSy.get(abc).getAct());
@@ -518,7 +518,7 @@ public class syAct extends Fragment {
             bottomSheetDialog.show();
         };
 
-        RecyclerView recyclerViewArea = root.findViewById(R.id.areaRecFy);
+        RecyclerView recyclerViewArea = root.findViewById(R.id.areaRecSy);
         MyListAdapter adapterArea = new MyListAdapter(areaDataMainSy, mContext, onClickInterface);
         //adapterArea.notifyDataSetChanged();
 
@@ -790,7 +790,7 @@ public class syAct extends Fragment {
         onClickInterface = abc -> {
             TextView t;
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext, R.style.BottomSheetStyleTheme);
-            View bottomSheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet, (LinearLayout) root.findViewById(R.id.bottomSheetContainer));
+            View bottomSheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet, root.findViewById(R.id.bottomSheetContainer));
             bottomSheetDialog.setContentView(bottomSheetView);
             t = bottomSheetView.findViewById(R.id.actTitle);
             t.setText(clgListDataSy.get(abc).getAct());
@@ -824,7 +824,7 @@ public class syAct extends Fragment {
             bottomSheetDialog.show();
         };
 
-        RecyclerView recyclerViewHours = root.findViewById(R.id.hoursRecFy);
+        RecyclerView recyclerViewHours = root.findViewById(R.id.hoursRecSy);
         MyListAdapter adapterClg = new MyListAdapter(clgListDataSy, mContext, onClickInterface);
         //adapterClg.notifyDataSetChanged();
 
@@ -1110,25 +1110,23 @@ public class syAct extends Fragment {
             int c = mdb.getSumHoursSubmitted(df.format(calobj.getTime()), "Second Year%");
             mdb.close();
 
-            if (c <= 10) {
-                fragSy.setVisibility(View.GONE);
-                univRecSy.setVisibility(View.GONE);
-                areaRecSy.setVisibility(View.GONE);
-                clgRecSy.setVisibility(View.GONE);
-                cardViewMain.setVisibility(View.GONE);
-                AddDetailsActivity detailsActivity = new AddDetailsActivity();
-                Bundle args = new Bundle();
-                args.putInt("whichAct", whichAct);
-                args.putInt("act", act);
-                detailsActivity.setArguments(args);
+            fragSy.setVisibility(View.GONE);
+            univRecSy.setVisibility(View.GONE);
+            areaRecSy.setVisibility(View.GONE);
+            clgRecSy.setVisibility(View.GONE);
+            cardViewMain.setVisibility(View.GONE);
+            AddDetailsActivity detailsActivity = new AddDetailsActivity();
+            Bundle args = new Bundle();
+            args.putInt("whichAct", whichAct);
+            args.putInt("act", act);
+            detailsActivity.setArguments(args);
 
-                FragmentManager fm = requireActivity().getSupportFragmentManager();
-                fm.beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").commit();
+            FragmentManager fm = requireActivity().getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").commit();
                 /*adapterArea.notifyDataSetChanged();
                 adapterClg.notifyDataSetChanged();
                 adapterUniv.notifyDataSetChanged();*/
-            } else
-                Toast.makeText(mContext, "Cannot add more than 10 hours for a single day, today added total of: " + c + "hour", Toast.LENGTH_SHORT).show();
+
         });
     }
 

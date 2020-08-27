@@ -46,8 +46,8 @@ public class WorkDetailsFirstFrag extends Fragment {
     public static boolean isCont = false;
     static String c = "College";
     static String u = "University";
-    static String a1 = "Area Based 1";
-    static String a2 = "Area Based 2";
+    static String a1 = "Area Based One";
+    static String a2 = "Area Based Two";
     public Context context;
     View root;
     FloatingActionButton notif;
@@ -225,9 +225,9 @@ public class WorkDetailsFirstFrag extends Fragment {
 
         area2 = m.getHoursDet(a2, 1);
         area2.moveToFirst();
+        Log.e("AAA", "" + area2.getCount() + area1.getCount());
 
-        if (!(area1.getCount() == 0)) {
-
+        if (area1.getCount() > 0 && area2.getCount() > 0) {
             data.add(new AdapterDataWork(a1, area1.getString(area1.getColumnIndex("TotalHours")),
                     area1.getString(area1.getColumnIndex("HoursWorked")), area1.getString(area1.getColumnIndex("RemainingHours"))));
 

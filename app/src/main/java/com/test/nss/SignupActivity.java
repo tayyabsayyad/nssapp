@@ -210,7 +210,7 @@ public class SignupActivity extends AppCompatActivity {
 
             signupPost.setOnClickListener(v -> {
                 String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-                String passPattern = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})";
+                String passPattern = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@*#$%]).{8,20})";
 
                 final EditText vec = findViewById(R.id.vec_in);
 
@@ -257,7 +257,6 @@ public class SignupActivity extends AppCompatActivity {
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                     if (response.isSuccessful()) {
                                         finish();
-                                        Snackbar.make(v, "Signing you up!", Snackbar.LENGTH_SHORT).show();
                                         Toast.makeText(SignupActivity.this, "An email will be sent once PO confirms", Toast.LENGTH_SHORT).show();
                                     } else if (response.errorBody() != null) {
                                         Log.e("onResponse:error", response.errorBody().toString());

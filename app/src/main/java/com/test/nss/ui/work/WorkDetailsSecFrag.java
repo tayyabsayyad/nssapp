@@ -21,13 +21,12 @@ import java.util.List;
 
 
 public class WorkDetailsSecFrag extends Fragment {
-    View root;
     static String c = "College";
     static String u = "University";
-    static String a1 = "Area Based 1";
-    static String a2 = "Area Based 2";
+    static String a1 = "Area Based One";
+    static String a2 = "Area Based Two";
     public Context context;
-
+    View root;
     List<AdapterDataWork> workListData2;
 
     public WorkDetailsSecFrag(Context context) {
@@ -59,7 +58,6 @@ public class WorkDetailsSecFrag extends Fragment {
     public List<AdapterDataWork> secHalfWorkData() {
         ArrayList<AdapterDataWork> data = new ArrayList<>();
 
-
         Cursor col, univ, area1, area2;
         DatabaseAdapter m = new DatabaseAdapter(context);
 
@@ -78,21 +76,21 @@ public class WorkDetailsSecFrag extends Fragment {
         area2 = m.getHoursDet(a2, 2);
         area2.moveToFirst();
 
-        data.add(new AdapterDataWork(a1, area1.getString(area1.getColumnIndex("TotalHours")),
-                area1.getString(area1.getColumnIndex("HoursWorked")), area1.getString(area1.getColumnIndex("RemainingHours"))));
+        if (area1.getCount() > 0 && area2.getCount() > 0) {
+            data.add(new AdapterDataWork(a1, area1.getString(area1.getColumnIndex("TotalHours")),
+                    area1.getString(area1.getColumnIndex("HoursWorked")), area1.getString(area1.getColumnIndex("RemainingHours"))));
+
+            data.add(new AdapterDataWork(a2, area2.getString(area2.getColumnIndex("TotalHours")),
+                    area2.getString(area2.getColumnIndex("HoursWorked")), area2.getString(area2.getColumnIndex("RemainingHours"))));
 
 
-        data.add(new AdapterDataWork(a2, area2.getString(area2.getColumnIndex("TotalHours")),
-                area2.getString(area2.getColumnIndex("HoursWorked")), area2.getString(area2.getColumnIndex("RemainingHours"))));
+            data.add(new AdapterDataWork(u, univ.getString(univ.getColumnIndex("TotalHours")),
+                    univ.getString(univ.getColumnIndex("HoursWorked")), univ.getString(univ.getColumnIndex("RemainingHours"))));
 
 
-        data.add(new AdapterDataWork(u, univ.getString(univ.getColumnIndex("TotalHours")),
-                univ.getString(univ.getColumnIndex("HoursWorked")), univ.getString(univ.getColumnIndex("RemainingHours"))));
-
-
-        data.add(new AdapterDataWork(c, col.getString(col.getColumnIndex("TotalHours")),
-                col.getString(col.getColumnIndex("HoursWorked")), col.getString(col.getColumnIndex("RemainingHours"))));
-
+            data.add(new AdapterDataWork(c, col.getString(col.getColumnIndex("TotalHours")),
+                    col.getString(col.getColumnIndex("HoursWorked")), col.getString(col.getColumnIndex("RemainingHours"))));
+        }
         m.close();
         return data;
     }

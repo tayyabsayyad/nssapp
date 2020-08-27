@@ -50,6 +50,7 @@ import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
 import static com.test.nss.ediary.isFirst;
+import static com.test.nss.ediary.isSec;
 import static com.test.nss.ediary.sbColorText;
 
 public class FirstHalfFrag extends Fragment {
@@ -132,12 +133,22 @@ public class FirstHalfFrag extends Fragment {
         DatabaseAdapter md = new DatabaseAdapter(mContext);
         md.createDatabase();
         md.open();
-        z = md.getArea(121);
-        if (z != null && z.getCount() > 0)
-            areaActOne.setText(z.getString(z.getColumnIndex("ABProjectName")));
-        z = md.getArea(122);
-        if (z != null && z.getCount() > 0) {
-            areaActTwo.setText(z.getString(z.getColumnIndex("ABProjectName")));
+        if (isFirst) {
+            z = md.getArea("1%");
+            if (z != null && z.getCount() > 0)
+                areaActOne.setText(z.getString(z.getColumnIndex("ABProjectName")));
+            z = md.getArea("2%");
+            if (z != null && z.getCount() > 0) {
+                areaActTwo.setText(z.getString(z.getColumnIndex("ABProjectName")));
+            }
+        } else if (isSec) {
+            z = md.getAreaPrev("1%");
+            if (z != null && z.getCount() > 0)
+                areaActOne.setText(z.getString(z.getColumnIndex("ABProjectName")));
+            z = md.getAreaPrev("2%");
+            if (z != null && z.getCount() > 0) {
+                areaActTwo.setText(z.getString(z.getColumnIndex("ABProjectName")));
+            }
         }
         md.close();
         areaActOne.setOnClickListener(view14 -> {

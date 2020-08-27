@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
-import static com.test.nss.ediary.VEC;
 import static com.test.nss.ediary.blackish;
 import static com.test.nss.ediary.isFirst;
 import static com.test.nss.ediary.isSec;
@@ -288,23 +287,20 @@ public class WorkFragment extends Fragment {
         m.createDatabase();
         m.open();
         m.insertWork(
-                VEC,
-                "Area Based 1",
+                "Area Based One",
                 areaLvlOne,
                 areaCompOne,
                 areaRemOneHours,
                 1
         );
         m.insertWork(
-                VEC,
-                "Area Based 2",
+                "Area Based Two",
                 areaLvlTwo,
                 areaCompTwo,
                 areaRemTwoHours,
                 1
         );
         m.insertWork(
-                VEC,
                 "University",
                 univLvl,
                 univComp,
@@ -312,7 +308,6 @@ public class WorkFragment extends Fragment {
                 1
         );
         m.insertWork(
-                VEC,
                 "College",
                 clgLvl,
                 clgComp,
@@ -358,23 +353,23 @@ public class WorkFragment extends Fragment {
         m.createDatabase();
         m.open();
         m.insertWork(
-                VEC,
-                "Area Based 1",
+
+                "Area Based One",
                 areaLvlOne,
                 areaCompOne2,
                 areaRemOneHours,
                 2
         );
         m.insertWork(
-                VEC,
-                "Area Based 2",
+
+                "Area Based Two",
                 areaLvlTwo,
                 areaCompTwo2,
                 areaRemTwoHours,
                 2
         );
         m.insertWork(
-                VEC,
+
                 "University",
                 univLvl,
                 univComp2,
@@ -382,7 +377,7 @@ public class WorkFragment extends Fragment {
                 2
         );
         m.insertWork(
-                VEC,
+
                 "College",
                 clgLvl,
                 clgComp2,
@@ -404,7 +399,7 @@ public class WorkFragment extends Fragment {
         mDbHelper2.open();
         DataBaseHelper mDb2 = new DataBaseHelper(requireContext());
         SQLiteDatabase m = mDb2.getWritableDatabase();
-        m.execSQL("DELETE FROM " + table);
+        m.execSQL(String.format("UPDATE %s SET HoursWorked=NULL", table));
         mDbHelper2.close();
         m.close();
         mDb2.close();

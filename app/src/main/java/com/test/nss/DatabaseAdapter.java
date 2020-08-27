@@ -18,11 +18,10 @@ public class DatabaseAdapter {
     protected static final String TAG = "DataAdapter";
 
     private final Context mContext;
-    private SQLiteDatabase mDb;
-    private DataBaseHelper mDbHelper;
-
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     Calendar calobj = Calendar.getInstance();
+    private SQLiteDatabase mDb;
+    private DataBaseHelper mDbHelper;
 
     public DatabaseAdapter(Context context) {
         this.mContext = context;
@@ -235,7 +234,7 @@ public class DatabaseAdapter {
         }
     }
 
-    public void insertArea(int id, String actType, String actName, String clgName) {
+    public void insertArea(int id, String actType, String actName, String clgName, int yr) {
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -244,21 +243,45 @@ public class DatabaseAdapter {
             contentValues.put("ABProjectName", actName);
             contentValues.put("CollegeName", clgName);
 
-            mDb.insert("AreaData", null, contentValues);
+            if (yr == 1)
+                mDb.insert("AreaData", null, contentValues);
+            else
+                mDb.insert("AreaDataPrev", null, contentValues);
         } catch (SQLException e) {
             Log.e(TAG, ":insertArea " + e.getMessage());
         }
     }
 
-    public void insertWork(String vec, String act, int a, int b, int c, int yr) {
+    public void insertWork(String act, int a, int b, int c, int yr) {
+        try {
+            //ContentValues contentValues = new ContentValues();
+
+            /*contentValues.put("VEC", vec);
+            contentValues.put("NatureOfWork", act);
+            contentValues.put("TotalHours", a);*/
+            //contentValues.put("HoursWorked", b);
+            //contentValues.put("RemainingHours", c);
+
+            if (yr == 1)
+                mDb.execSQL(String.format(Locale.ENGLISH, "UPDATE WorkHoursFy SET TotalHours = \"%d\", HoursWorked = \"%d\", RemainingHours = \"%d\"  WHERE NatureOfWork=\"%s\"", a, b, c, act));
+            else
+                mDb.execSQL(String.format(Locale.ENGLISH, "UPDATE WorkHoursSy SET TotalHours = \"%d\", HoursWorked = \"%d\", RemainingHours = \"%d\"  WHERE NatureOfWork=\"%s\"", a, b, c, act));
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
+
+    public void insertWorkId(int id, String a, int th, int hw, int rh, int actCode, int yr) {
         try {
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("VEC", vec);
-            contentValues.put("NatureOfWork", act);
-            contentValues.put("TotalHours", a);
-            contentValues.put("HoursWorked", b);
-            contentValues.put("RemainingHours", c);
+            contentValues.put("id", id);
+            contentValues.put("VEC", ediary.VEC);
+            contentValues.put("NatureOfWork", a);
+            contentValues.put("TotalHours", th);
+            contentValues.put("HoursWorked", hw);
+            contentValues.put("RemainingHours", rh);
+            contentValues.put("actCode", actCode);
 
             if (yr == 1)
                 mDb.insert("WorkHoursFy", null, contentValues);
@@ -457,9 +480,23 @@ public class DatabaseAdapter {
         }
     }
 
-    public Cursor getArea(int actCode) {
+    public Cursor getArea(String actCode) {
         try {
-            String sql = String.format(Locale.ENGLISH, "SELECT * FROM AreaData WHERE ActivityName=%d", actCode);
+            String sql = String.format("SELECT * FROM AreaData WHERE ActivityName LIKE " + "\"__%s\"", actCode);
+            Cursor mCur2 = mDb.rawQuery(sql, null);
+            if (mCur2.getCount() == 0) {
+            }
+            mCur2.moveToFirst();
+            return mCur2;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getArea >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Cursor getAreaPrev(String actCode) {
+        try {
+            String sql = String.format("SELECT * FROM AreaDataPrev WHERE ActivityName LIKE " + "\"__%s\"", actCode);
             Cursor mCur2 = mDb.rawQuery(sql, null);
             if (mCur2.getCount() == 0) {
             }
@@ -481,6 +518,23 @@ public class DatabaseAdapter {
             return mCur2;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Cursor getAllDetHours(int yr) {
+        String sql;
+        if (yr == 1)
+            sql = "SELECT * FROM WorkHoursFy";
+        else
+            sql = "SELECT * FROM WorkHoursSy";
+        Cursor mCur = mDb.rawQuery(sql, null);
+        try {
+            if (mCur.getCount() == 0) {
+            }
+            return mCur;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getAllDetHours >>" + mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -836,7 +890,7 @@ public class DatabaseAdapter {
         try (Cursor mCur2 = mDb.rawQuery(sql, null)) {
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in DailyActivity", )();
-                return -1;
+                return 0;
             }
             mCur2.moveToFirst();
             return mCur2.getInt(0);

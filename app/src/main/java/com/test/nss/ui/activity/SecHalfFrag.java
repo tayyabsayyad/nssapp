@@ -114,12 +114,13 @@ public class SecHalfFrag extends Fragment {
         DatabaseAdapter md = new DatabaseAdapter(mContext);
         md.createDatabase();
         md.open();
-        z = md.getArea(221);
+        z = md.getArea("1%");
         if (z != null && z.getCount() > 0)
             areaActOne.setText(z.getString(z.getColumnIndex("ABProjectName")));
-        z = md.getArea(222);
-        if (z != null && z.getCount() > 0)
+        z = md.getArea("2%");
+        if (z != null && z.getCount() > 0) {
             areaActTwo.setText(z.getString(z.getColumnIndex("ABProjectName")));
+        }
         md.close();
 
         areaActOne.setOnClickListener(view14 -> {

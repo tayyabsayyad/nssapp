@@ -198,7 +198,7 @@ public class fyAct extends Fragment {
         onClickInterface = abc -> {
             TextView t;
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext, R.style.BottomSheetStyleTheme);
-            View bottomSheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet, (LinearLayout) root.findViewById(R.id.bottomSheetContainer));
+            View bottomSheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet, root.findViewById(R.id.bottomSheetContainer));
             bottomSheetDialog.setContentView(bottomSheetView);
             t = bottomSheetView.findViewById(R.id.actTitle);
             t.setText(univListDataFy.get(abc).getAct());
@@ -503,7 +503,7 @@ public class fyAct extends Fragment {
         onClickInterface = abc -> {
             TextView t;
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext, R.style.BottomSheetStyleTheme);
-            View bottomSheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet, (LinearLayout) root.findViewById(R.id.bottomSheetContainer));
+            View bottomSheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet, root.findViewById(R.id.bottomSheetContainer));
             bottomSheetDialog.setContentView(bottomSheetView);
             t = bottomSheetView.findViewById(R.id.actTitle);
             t.setText(areaDataMainFy.get(abc).getAct());
@@ -809,7 +809,7 @@ public class fyAct extends Fragment {
         onClickInterface = abc -> {
             TextView t;
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext, R.style.BottomSheetStyleTheme);
-            View bottomSheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet, (LinearLayout) root.findViewById(R.id.bottomSheetContainer));
+            View bottomSheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet, root.findViewById(R.id.bottomSheetContainer));
             bottomSheetDialog.setContentView(bottomSheetView);
             t = bottomSheetView.findViewById(R.id.actTitle);
             t.setText(clgListDataFy.get(abc).getAct());
@@ -1125,10 +1125,8 @@ public class fyAct extends Fragment {
             DatabaseAdapter mdb = new DatabaseAdapter(requireContext());
             mdb.createDatabase();
             mdb.open();
-            int c = mdb.getSumHoursSubmitted(df.format(calobj.getTime()), "First Year%");
             mdb.close();
 
-            if (c <= 10) {
                 fragFy.setVisibility(View.GONE);
                 univRecFy.setVisibility(View.GONE);
                 areaRecFy.setVisibility(View.GONE);
@@ -1148,8 +1146,6 @@ public class fyAct extends Fragment {
                 //adapterArea.notifyDataSetChanged();
                 //adapterClg.notifyDataSetChanged();
                 //adapterUniv.notifyDataSetChanged();
-            } else
-                Toast.makeText(mContext, "Cannot add more than 10 hours for a single day, today added total of: " + c + "hour", Toast.LENGTH_SHORT).show();
         });
     }
 

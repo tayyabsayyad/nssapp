@@ -36,15 +36,11 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ui.info.InfoSharedActivity;
-import com.test.nss.ui.work.AdapterDataWork;
-import com.test.nss.ui.work.WorkDetailsFirstFrag;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -77,7 +73,6 @@ public class ediary extends AppCompatActivity {
     public static int isNight = 0;
     static int whichAvatar = 0;
 
-    List<AdapterDataWork> dataWorkList;
     AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
     ImageView logout;
@@ -351,116 +346,75 @@ public class ediary extends AppCompatActivity {
     }
 
     private void add() {
-        WorkDetailsFirstFrag wf = new WorkDetailsFirstFrag(context);
-        dataWorkList = wf.firstHalfWorkData();
+        Cursor c;
+        Call<ResponseBody> insertHours;
+        DatabaseAdapter mdb = new DatabaseAdapter(context);
+        mdb.createDatabase();
+        mdb.open();
 
-        if (!dataWorkList.isEmpty()) {
+        c = mdb.getAllDetHours(1);
+        c.moveToFirst();
+        if (c.getCount() > 0) {
+            for (int i = 0; i < c.getCount(); i++) {
+                Log.e("AAA", "" + c.getString(c.getColumnIndex("actCode")) + " " + c.getString(c.getColumnIndex("NatureOfWork")));
+                insertHours = RetrofitClient.getInstance().getApi().insertHour(
+                        "Token " + AUTH_TOKEN,
+                        c.getInt(c.getColumnIndex("HoursWorked")),
+                        c.getInt(c.getColumnIndex("RemainingHours")),
+                        ediary.VEC,
+                        c.getInt(c.getColumnIndex("actCode")),
+                        c.getString(c.getColumnIndex("NatureOfWork")),
+                        Password.PASS,
+                        c.getInt(c.getColumnIndex("id"))
+                );
+                insertHours.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    @EverythingIsNonNull
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful() && response.body() != null)
+                            Log.e("AAA", "Done");
+                    }
 
-            Call<ResponseBody> insertHourZero = RetrofitClient.getInstance().getApi().insertHour(
-                    "Token " + AUTH_TOKEN,
-                    Integer.parseInt(dataWorkList.get(0).getCompHours()),
-                    Integer.parseInt(dataWorkList.get(0).getRemHours()),
-                    ediary.VEC,
-                    121,
-                    "Area Based Level One",
-                    Password.PASS,
-                    30
-            );
-            insertHourZero.enqueue(new Callback<ResponseBody>() {
-                @Override
-                @EverythingIsNonNull
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if (response.errorBody() != null) {
-                        try {
-                            JSONObject j = new JSONObject(response.errorBody().string());
-                            Log.e("Error here", j.toString());
-                        } catch (IOException | JSONException e) {
-                            e.printStackTrace();
-                            Log.e("error", e.toString());
-                        }
-                    } else if (response.isSuccessful())
-                        Log.i("Done ", "added hours to web");
-                }
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                @Override
-                @EverythingIsNonNull
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                }
-            });
-
-            Call<ResponseBody> insertHourOne = RetrofitClient.getInstance().getApi().insertHour(
-                    "Token " + ediary.AUTH_TOKEN,
-                    Integer.parseInt(dataWorkList.get(1).getCompHours()),
-                    Integer.parseInt(dataWorkList.get(1).getRemHours()),
-                    ediary.VEC,
-                    122,
-                    "Area Based Level Two",
-                    Password.PASS,
-                    31
-            );
-            insertHourOne.enqueue(new Callback<ResponseBody>() {
-                @Override
-                @EverythingIsNonNull
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                }
-
-                @Override
-                @EverythingIsNonNull
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                }
-            });
-
-            Call<ResponseBody> insertHourTwo = RetrofitClient.getInstance().getApi().insertHour(
-                    "Token " + ediary.AUTH_TOKEN,
-                    Integer.parseInt(dataWorkList.get(2).getCompHours()),
-                    Integer.parseInt(dataWorkList.get(2).getRemHours()),
-                    ediary.VEC,
-                    11,
-                    "College Level",
-                    Password.PASS,
-                    32
-            );
-            insertHourTwo.enqueue(new Callback<ResponseBody>() {
-                @Override
-                @EverythingIsNonNull
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                }
-
-                @Override
-                @EverythingIsNonNull
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                }
-            });
-
-            Call<ResponseBody> insertHourThr = RetrofitClient.getInstance().getApi().insertHour(
-                    "Token " + ediary.AUTH_TOKEN,
-                    Integer.parseInt(dataWorkList.get(3).getCompHours()),
-                    Integer.parseInt(dataWorkList.get(3).getRemHours()),
-                    ediary.VEC,
-                    13,
-                    "University Level",
-                    Password.PASS,
-                    29
-            );
-
-            insertHourThr.enqueue(new Callback<ResponseBody>() {
-                @Override
-                @EverythingIsNonNull
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                }
-
-                @Override
-                @EverythingIsNonNull
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                }
-            });
+                    }
+                });
+                c.moveToNext();
+            }
         }
+
+        c = mdb.getAllDetHours(2);
+        c.moveToFirst();
+        if (c.getCount() > 0) {
+            for (int i = 0; i < c.getCount(); i++) {
+                insertHours = RetrofitClient.getInstance().getApi().insertHour(
+                        "Token " + AUTH_TOKEN,
+                        c.getInt(c.getColumnIndex("HoursWorked")),
+                        c.getInt(c.getColumnIndex("RemainingHours")),
+                        ediary.VEC,
+                        c.getInt(c.getColumnIndex("actCode")),
+                        c.getString(c.getColumnIndex("NatureOfWork")),
+                        Password.PASS,
+                        c.getInt(c.getColumnIndex("id"))
+                );
+                insertHours.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    @EverythingIsNonNull
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful() && response.body() != null)
+                            Log.e("AAA", "Done2");
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
+                c.moveToNext();
+            }
+        }
+        mdb.close();
     }
 
     public void setWom1(View view) {
