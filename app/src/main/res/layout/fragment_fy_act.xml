@@ -90,7 +90,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="60dp"
-            android:padding="5dp"
+            android:paddingStart="@dimen/padding_5dp"
+            android:paddingEnd="@dimen/padding_5dp"
             android:scrollbars="vertical"
             android:visibility="gone"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
@@ -100,7 +101,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="60dp"
-            android:padding="5dp"
+            android:paddingStart="@dimen/padding_5dp"
+            android:paddingEnd="@dimen/padding_5dp"
             android:scrollbars="vertical"
             android:visibility="gone"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
@@ -110,7 +112,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="60dp"
-            android:padding="5dp"
+            android:paddingStart="@dimen/padding_5dp"
+            android:paddingEnd="@dimen/padding_5dp"
             android:scrollbars="vertical"
             android:visibility="gone"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
@@ -119,13 +122,12 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="@dimen/space_10dp"
             android:gravity="end"
-            android:paddingStart="@dimen/padding_5dp"
-            android:paddingEnd="@dimen/padding_5dp">
+            android:padding="@dimen/padding_5dp">
 
             <Button
-                android:layout_marginEnd="@dimen/space_10dp"
+                android:layout_marginEnd="@dimen/padding_5dp"
+                android:layout_marginBottom="1dp"
                 android:layout_gravity="bottom"
                 android:id="@+id/add"
                 android:layout_width="45dp"

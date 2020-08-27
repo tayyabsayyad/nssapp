@@ -32,10 +32,13 @@ import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
 import com.test.nss.ui.onClickInterface2;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -68,6 +71,9 @@ public class SecHalfFrag extends Fragment {
 
     LinearLayout actDetails;
     int act = -1;
+
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    Date calobj = new Date();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,6 +109,18 @@ public class SecHalfFrag extends Fragment {
         clgAct = root.findViewById(R.id.clg_act2);
         univAct = root.findViewById(R.id.univ_act2);
         noActDesc = root.findViewById(R.id.noActDesc);
+
+        Cursor z;
+        DatabaseAdapter md = new DatabaseAdapter(mContext);
+        md.createDatabase();
+        md.open();
+        z = md.getArea(221);
+        if (z != null && z.getCount() > 0)
+            areaActOne.setText(z.getString(z.getColumnIndex("ABProjectName")));
+        z = md.getArea(222);
+        if (z != null && z.getCount() > 0)
+            areaActTwo.setText(z.getString(z.getColumnIndex("ABProjectName")));
+        md.close();
 
         areaActOne.setOnClickListener(view14 -> {
             if (areaOneListDataAct.isEmpty())
@@ -167,7 +185,7 @@ public class SecHalfFrag extends Fragment {
         DatabaseAdapter mdb2 = new DatabaseAdapter(requireContext());
         mdb2.createDatabase();
         mdb2.open();
-        int c = mdb2.getSumHoursSubmitted("First Year%");
+        int c = mdb2.getSumHoursSubmitted(df.format(calobj.getTime()), "First Year%");
         mdb2.close();
 
         onClickInterface2 = abc -> {
@@ -177,36 +195,41 @@ public class SecHalfFrag extends Fragment {
                 String hours = "";
                 String actName = "";
 
+                String date = "";
+
                 switch (act) {
                     case 4:
                         if (!univListDataAct.isEmpty()) {
                             actName = univListDataAct.get(abc).getAct();
                             hours = univListDataAct.get(abc).getHours();
+                            date = univListDataAct.get(abc).getEndDate();
                         }
                     case 5:
                         if (!areaOneListDataAct.isEmpty()) {
                             actName = areaOneListDataAct.get(abc).getAct();
                             hours = areaOneListDataAct.get(abc).getHours();
+                            date = areaOneListDataAct.get(abc).getEndDate();
                         }
                         break;
                     case 6:
                         if (!areaTwoListDataAct.isEmpty()) {
                             actName = areaTwoListDataAct.get(abc).getAct();
                             hours = areaTwoListDataAct.get(abc).getHours();
+                            date = areaTwoListDataAct.get(abc).getEndDate();
                         }
                         break;
                     case 7:
                         if (!clgListDataAct.isEmpty()) {
                             actName = clgListDataAct.get(abc).getAct();
                             hours = clgListDataAct.get(abc).getHours();
+                            date = clgListDataAct.get(abc).getEndDate();
                         }
                         break;
                 }
-
                 if (!actName.equals("") && !hours.equals("") && act != -1) {
                     String actCode = getResources().getStringArray(R.array.valOfActNames)[act];
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
-                    View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
+                    View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.act_mini_input_layout, (ViewGroup) view, false);
 
                     EditText input = viewInflated.findViewById(R.id.input);
                     builder.setView(viewInflated);
@@ -215,15 +238,19 @@ public class SecHalfFrag extends Fragment {
                         dialog.cancel();
                     });
 
+                    EditText descr = viewInflated.findViewById(R.id.desc);
+
                     String finalHours = hours;
                     String finalActName = actName;
+                    String finalDate = date;
+                    Calendar cal = Calendar.getInstance();
+                    String nowDate = df.format(cal.getTime());
                     builder.setPositiveButton(android.R.string.ok, (dialog, i) -> {
                         int h = Integer.parseInt(finalHours);
                         int j = Integer.parseInt(input.getText().toString());
-                        if (j > 0 && j <= h) {
+                        String desc = descr.getText().toString();
+                        if (j > 0 && j <= h && !desc.equals("") && nowDate.compareTo(finalDate) <= 0) {
                             dialog.dismiss();
-                            Calendar cal = Calendar.getInstance();
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
                             DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                             mdb.createDatabase();
@@ -231,10 +258,11 @@ public class SecHalfFrag extends Fragment {
                             mdb.insertActOff(
                                     ediary.VEC,
                                     actCode,
-                                    formatter.format(cal.getTime()),
+                                    df.format(cal.getTime()),
                                     finalActName,
                                     //actId.getText().toString(),
                                     String.valueOf(j),
+                                    desc,
                                     0
                             );
 
@@ -245,9 +273,10 @@ public class SecHalfFrag extends Fragment {
                                     ediary.VEC,
                                     m.getInt(m.getColumnIndex("id")),// AAA
                                     j,
-                                    formatter.format(cal.getTime()),
+                                    df.format(cal.getTime()),
                                     m.getInt(m.getColumnIndex("activityType")),
                                     Password.PASS,
+                                    desc,
                                     1
                             );
                             mdb.close();
@@ -321,7 +350,8 @@ public class SecHalfFrag extends Fragment {
         while (c3.moveToNext()) {
             data3.add(new AdapterDataAct(
                             c3.getString(c3.getColumnIndex("ActivityName")),
-                            c3.getString(c3.getColumnIndex("HoursAssigned"))
+                            c3.getString(c3.getColumnIndex("HoursAssigned")),
+                            c3.getString(c3.getColumnIndex("finalDate"))
                     )
             );
         }

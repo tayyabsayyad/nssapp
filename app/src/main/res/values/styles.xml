@@ -20,10 +20,24 @@
         <item name="android:scrollbarThumbVertical">@drawable/thumb</item>
     </style>
 
-    <style name="datePick" parent="Theme.AppCompat.DayNight.Dialog">
+    <style name="datePick" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:headerYearTextAppearance">@style/headerColors</item>
+        <item name="android:headerMonthTextAppearance">@style/headerColors</item>
         <item name="android:background">@color/white</item>
         <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="BottomSheetStyleTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+    </style>
+
+    <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="headerColors" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="inputDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">

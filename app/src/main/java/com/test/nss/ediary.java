@@ -24,7 +24,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
@@ -99,9 +98,9 @@ public class ediary extends AppCompatActivity {
         Log.e("is night", "" + isNight);
 
         if (isNight == Configuration.UI_MODE_NIGHT_NO) {
-            imageView.setImageResource(R.drawable.ic_light);
-        } else {
             imageView.setImageResource(R.drawable.ic_dark);
+        } else {
+            imageView.setImageResource(R.drawable.ic_light);
         }
 
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
@@ -187,7 +186,7 @@ public class ediary extends AppCompatActivity {
         }
 
         s.setTextColor(context.getColor(R.color.white));
-        s.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+        //s.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
         s.show();
         blackish = context.getColor(R.color.blackish);
         transparent = context.getColor(R.color.transparent);

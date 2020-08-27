@@ -14,12 +14,15 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.R;
+import com.test.nss.ui.onClickInterface2;
 
 import java.util.Collections;
 import java.util.List;
 
+import static com.test.nss.ediary.blackish;
 import static com.test.nss.ediary.green;
 import static com.test.nss.ediary.kesar;
+import static com.test.nss.ediary.primaryColDark;
 import static com.test.nss.ediary.red;
 
 public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
@@ -27,10 +30,12 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
 
     List<AdapterDataMain> list = Collections.emptyList();
     Context mCon;
+    onClickInterface2 onClickInterface;
 
-    public MyListAdapter(List<AdapterDataMain> list, Context mCon) {
+    public MyListAdapter(List<AdapterDataMain> list, Context mCon, onClickInterface2 onClickInterface) {
         this.list = list;
         this.mCon = mCon;
+        this.onClickInterface = onClickInterface;
     }
 
     @NonNull
@@ -49,12 +54,13 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         holder.state.setText(String.format("• %s", list.get(position).getState()));
         holder.hours.setText(String.format("%sh", list.get(position).getHours()));
         holder.actId.setText(list.get(position).getId());
-        if (list.get(position).isApproved() == 1 && list.get(position).getState().equals("Approved")) {
-            setColor(holder, green);
-            holder.linearLayout.setBackground(ContextCompat.getDrawable(mCon, R.drawable.ic_circle_app));
-            return;
-        }
+
         switch (list.get(position).getState()) {
+            default:
+                holder.date.setTextColor(blackish);
+                holder.hours.setTextColor(primaryColDark);
+                holder.linearLayout.setBackground(ContextCompat.getDrawable(mCon, R.drawable.ic_circle));
+                break;
             case "LeaderDelete":
             case "PoDelete":
                 setColor(holder, red);
@@ -65,7 +71,15 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
                 setColor(holder, kesar);
                 holder.linearLayout.setBackground(ContextCompat.getDrawable(mCon, R.drawable.ic_circle_mod));
                 break;
+            case "Approved":
+                setColor(holder, green);
+                holder.linearLayout.setBackground(ContextCompat.getDrawable(mCon, R.drawable.ic_circle_app));
+                break;
         }
+
+        holder.mainLinear.setOnClickListener(view -> {
+            onClickInterface.setClick(position);
+        });
     }
 
     @Override
@@ -106,7 +120,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
         public TextView state;
 
         public CardView cardView;
-        public LinearLayout linearLayout;
+        public LinearLayout linearLayout, mainLinear;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -118,6 +132,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
 
             cardView = itemView.findViewById(R.id.dataCard);
             linearLayout = itemView.findViewById(R.id.imageLinear);
+            mainLinear = itemView.findViewById(R.id.mainLinear);
 
         }
     }

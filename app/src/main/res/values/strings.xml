@@ -69,4 +69,5 @@
     <string name="info">Info</string>
     <string name="not_pend_desc">Yay!\nNo Activities\nPending to approve</string>
     <string name="mu">MUMBAI UNIVERSITY</string>
+    <string name="info_desc">Below are the people and important assets for\ncompletion.</string>
 </resources>

@@ -255,6 +255,7 @@ public class CheckConn extends BroadcastReceiver {
                             c.getString(c.getColumnIndex("Date")),
                             getKey(actIdHash, c.getString(c.getColumnIndex("ActivityCode"))),
                             Password.PASS,
+                            c.getString(c.getColumnIndex("Descr")),
                             1
                     );
 
@@ -318,6 +319,7 @@ public class CheckConn extends BroadcastReceiver {
                                             j.getJSONObject(i).getString("Hours"),
                                             j.getJSONObject(i).getString("State"),
                                             j.getJSONObject(i).getString("ApprovedBy"),
+                                            j.getJSONObject(i).getString("ActDescription"),
                                             1
                                     );
                                 }
@@ -535,7 +537,8 @@ public class CheckConn extends BroadcastReceiver {
                                             j.getJSONObject(i).getString("ActivityName"),
                                             j.getJSONObject(i).getString("AssignedActivityName"),
                                             j.getJSONObject(i).getString("AssignedHours"),
-                                            j.getJSONObject(i).getString("AssignedDate")
+                                            j.getJSONObject(i).getString("AssignedDate"),
+                                            j.getJSONObject(i).getString("EndDate")
                                     );
                                 }
                                 mDbHelper.close();
@@ -660,8 +663,8 @@ public class CheckConn extends BroadcastReceiver {
 
                                 for (int i = 0; i < j.length(); i++) {
                                     mDbHelper.insertVolAllAct(
-                                            i+1,
-                                            j.getJSONObject(i).getString("FirstName") +" "+j.getJSONObject(i).getString("LastName"),
+                                            i + 1,
+                                            j.getJSONObject(i).getString("FirstName") + " " + j.getJSONObject(i).getString("LastName"),
                                             j.getJSONObject(i).getString("DateOfRegistration"),
                                             j.getJSONObject(i).getString("VEC")
                                     );
@@ -675,6 +678,109 @@ public class CheckConn extends BroadcastReceiver {
                     }
                     if (response.errorBody() != null) {
                         Log.e("error", "onResponse: " + response.errorBody().toString());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
+
+            Call<ResponseBody> getFyAct = RetrofitClient.getInstance().getApi().getFyAct("Token " + AUTH_TOKEN);
+            getFyAct.enqueue(new Callback<ResponseBody>() {
+                @Override
+                @EverythingIsNonNull
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        try {
+                            JSONArray j = new JSONArray(response.body().string());
+                            Log.e("FyAct:", "" + j.length());
+                            DatabaseAdapter mdb = new DatabaseAdapter(context);
+                            deleteData("AreaData");
+                            mdb.createDatabase();
+                            mdb.open();
+                            if (j.length() == 1) {
+                                if (j.getJSONObject(0).getString("ActivityName").equals("221")) {
+                                    mdb.insertArea(
+                                            j.getJSONObject(0).getInt("id"),
+                                            j.getJSONObject(0).getString("ActivityName"),
+                                            j.getJSONObject(0).getString("ABProjectName"),
+                                            j.getJSONObject(0).getString("CollegeName")
+                                    );
+                                } else if (j.getJSONObject(0).getString("ActivityName").equals("222")) {
+                                    mdb.insertArea(
+                                            j.getJSONObject(0).getInt("id"),
+                                            j.getJSONObject(0).getString("ActivityName"),
+                                            j.getJSONObject(0).getString("ABProjectName"),
+                                            j.getJSONObject(0).getString("CollegeName")
+                                    );
+                                }
+                            } else if (j.length() == 2) {
+                                for (int i = 0; i < j.length(); i++) {
+                                    mdb.insertArea(
+                                            j.getJSONObject(i).getInt("id"),
+                                            j.getJSONObject(i).getString("ActivityName"),
+                                            j.getJSONObject(i).getString("ABProjectName"),
+                                            j.getJSONObject(i).getString("CollegeName")
+                                    );
+                                }
+                            }
+                            mdb.close();
+                        } catch (JSONException | IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        Call<ResponseBody> getSyAct = RetrofitClient.getInstance().getApi().getSyAct("Token " + AUTH_TOKEN);
+                        getSyAct.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            @EverythingIsNonNull
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                if (response.isSuccessful() && response.body() != null) {
+                                    try {
+                                        JSONArray j = new JSONArray(response.body().string());
+                                        Log.e("SyAct:", "" + j.length());
+                                        DatabaseAdapter mdb = new DatabaseAdapter(context);
+                                        mdb.createDatabase();
+                                        mdb.open();
+                                        if (j.length() == 1) {
+                                            if (j.getJSONObject(0).getString("ActivityName").equals("121")) {
+                                                mdb.insertArea(
+                                                        j.getJSONObject(0).getInt("id"),
+                                                        j.getJSONObject(0).getString("ActivityName"),
+                                                        j.getJSONObject(0).getString("ABProjectName"),
+                                                        j.getJSONObject(0).getString("CollegeName")
+                                                );
+                                            } else if (j.getJSONObject(0).getString("ActivityName").equals("122")) {
+                                                mdb.insertArea(
+                                                        j.getJSONObject(0).getInt("id"),
+                                                        j.getJSONObject(0).getString("ActivityName"),
+                                                        j.getJSONObject(0).getString("ABProjectName"),
+                                                        j.getJSONObject(0).getString("CollegeName")
+                                                );
+                                            }
+                                        } else if (j.length() == 2) {
+                                            for (int i = 0; i < j.length(); i++) {
+                                                mdb.insertArea(
+                                                        j.getJSONObject(i).getInt("id"),
+                                                        j.getJSONObject(i).getString("ActivityName"),
+                                                        j.getJSONObject(i).getString("ABProjectName"),
+                                                        j.getJSONObject(i).getString("CollegeName")
+                                                );
+                                            }
+                                        }
+                                        mdb.close();
+                                    } catch (JSONException | IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
                     }
                 }
 

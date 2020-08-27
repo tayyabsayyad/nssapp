@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/off_white"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/camp_act_in"
     android:layout_width="match_parent"
@@ -55,10 +56,52 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2.5dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="@dimen/padding_5dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
                     android:minHeight="30dp" />
 
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_5dp"
+            android:layout_marginTop="@dimen/space_10dp"
+            android:layout_marginEnd="@dimen/padding_5dp"
+            android:elevation="@dimen/space_10dp"
+            android:orientation="vertical"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/padding_4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/act_bg_lines_card"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/space_10dp"
+                    android:layout_marginTop="@dimen/space_10dp"
+                    android:fontFamily="@font/google_sans"
+                    android:gravity="center"
+                    android:text="Activity Description:"
+                    android:textColor="@color/blackish"
+                    android:textSize="@dimen/text_18sp" />
+
+                <EditText
+                    android:id="@+id/act_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/space_10dp"
+                    android:background="@color/transparent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="@dimen/padding_5dp"
+                    android:fontFamily="@font/google_sans"
+                    android:hint="Enter activity description..."
+                    android:maxLength="500"
+                    android:minHeight="30dp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -232,12 +275,10 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginEnd="@dimen/space_10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space_10dp"
         android:gravity="end"
-        android:paddingStart="@dimen/padding_5dp"
-        android:paddingEnd="@dimen/padding_5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -245,17 +286,15 @@
             android:id="@+id/addSend"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_margin="@dimen/space_10dp"
+            android:layout_margin="@dimen/padding_5dp"
             android:background="@drawable/ic_tick_24" />
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginStart="@dimen/space_10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space_10dp"
         android:gravity="start"
-        android:paddingStart="@dimen/padding_5dp"
-        android:paddingEnd="@dimen/padding_5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -263,7 +302,7 @@
             android:id="@+id/backActDetail"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_margin="@dimen/space_10dp"
+            android:layout_margin="@dimen/padding_5dp"
             android:background="@drawable/ic_back_24" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

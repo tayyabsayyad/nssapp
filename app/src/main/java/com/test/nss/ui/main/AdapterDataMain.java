@@ -6,16 +6,17 @@ public class AdapterDataMain {
     private String hours;
     private String id;
     private String state;
+    private String desc;
     private int isApproved;
 
-    public AdapterDataMain(String date, String act, String hours, String id, int isApproved, String state) {
+    public AdapterDataMain(String date, String act, String hours, String id, int isApproved, String state, String desc) {
         this.date = date;
         this.act = act;
         this.hours = hours;
         this.id = id;
         this.state = state;
         this.isApproved = isApproved;
-
+        this.desc = desc;
     }
 
     public String getDate() {
@@ -40,5 +41,9 @@ public class AdapterDataMain {
 
     public String getState() {
         return state;
+    }
+
+    public String getDesc() {
+        return desc;
     }
 }

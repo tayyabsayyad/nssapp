@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimaryDark">#1759CA</color>
-    <color name="sbColorText">@color/colorPrimaryDark</color>
     <color name="colorPrimary">#4B9EF6</color>
     <color name="colorPrimaryLight">#78ACDF</color>
     <color name="white">#000000</color>
@@ -21,4 +20,6 @@
 
     <color name="colorStartLogin">@color/help_end</color>
     <color name="colorLoginPrimD">@color/help_start</color>
+    <color name="design_snackbar_background_color" tools:override="true">@color/colorPrimaryDark
+    </color>
 </resources>

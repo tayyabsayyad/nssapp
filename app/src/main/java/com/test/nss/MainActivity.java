@@ -3,7 +3,7 @@ package com.test.nss;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
@@ -17,14 +17,14 @@ MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_FULLSCREEN);
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-        //      WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        //      | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        //    | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
-        motionLayout = findViewById(R.id.motionLayout);
+        motionLayout = findViewById(R.id.actMainMotionLayout);
 
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
 
@@ -44,13 +44,12 @@ MainActivity extends AppCompatActivity {
                 if (sharedPreferences.getInt("logged", 0) == 1) {
                     Intent intent = new Intent(MainActivity.this, ediary.class);
                     startActivity(intent);
-                    finish();
                 } else {
                     Intent in = new Intent(MainActivity.this,
                             startActivity.class);
                     startActivity(in);
-                    finish();
                 }
+                finish();
             }
 
             @Override

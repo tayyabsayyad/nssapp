@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="mainBg">@color/transparent</color>
 
     <color name="kesar">#e69500</color>
     <color name="red">#f00</color>
     <color name="greenNic">#008f00</color>
-    <color name="sbColorText">#0B4FC5</color>
+    <color name="sbColorText">@color/white</color>
     <color name="colorStartLogin">#7CE0FF</color>
     <color name="colorLoginPrim">#5E99FF</color>
     <color name="colorLoginPrimD">#0B4FC5</color>
@@ -41,4 +41,6 @@
     <color name="help_end">#d4ecff</color>
     <color name="greyWhite">#F5F5F5</color>
     <color name="regBoxBg">#0D000000</color>
+    <color name="design_snackbar_background_color" tools:override="true">@color/colorPrimaryDark
+    </color>
 </resources>

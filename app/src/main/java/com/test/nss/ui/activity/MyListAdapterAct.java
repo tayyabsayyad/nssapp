@@ -40,6 +40,7 @@ public class MyListAdapterAct extends RecyclerView.Adapter<MyListAdapterAct.View
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.act.setText(list.get(position).getAct());
         holder.date.setText(list.get(position).getHours());
+        holder.endDate.setText(list.get(position).getEndDate());
         holder.actDataCard.setOnLongClickListener(view -> {
             onClickInterface2.setClick(position);
             return true;
@@ -66,13 +67,14 @@ public class MyListAdapterAct extends RecyclerView.Adapter<MyListAdapterAct.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView date;
         public TextView act;
-
+        public TextView endDate;
         public CardView actDataCard;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.date = itemView.findViewById(R.id.date);
             this.act = itemView.findViewById(R.id.act);
+            this.endDate = itemView.findViewById(R.id.endDate);
 
             actDataCard = itemView.findViewById(R.id.actDataCard);
         }

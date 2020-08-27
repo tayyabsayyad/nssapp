@@ -67,6 +67,7 @@ public class AddDetailsActivity extends Fragment {
 
     int whichAct;
     int act;
+    private EditText act_desc;
     private TextView todayBtn;
     private TextView actDate;
     private EditText actHour;
@@ -163,6 +164,7 @@ public class AddDetailsActivity extends Fragment {
         drpdownactClg = huh.findViewById(R.id.drpdown_actClg);
         drpdownactName = huh.findViewById(R.id.drpdown_actName);
 
+        act_desc = huh.findViewById(R.id.act_desc);
         actAssignListId = getAssignActListId();
 
         final Calendar cal = Calendar.getInstance();
@@ -227,6 +229,9 @@ public class AddDetailsActivity extends Fragment {
             else if (actDate.getText().toString().equals("") || actDate.getText().toString().equals("YYYY/MM/DD"))
                 Toast.makeText(requireContext(), "Enter Date", Toast.LENGTH_SHORT).show();
 
+            else if (act_desc.getText().toString().equals(""))
+                Toast.makeText(requireContext(), "Enter Description", Toast.LENGTH_SHORT).show();
+
             else if (!actDate.getText().toString().equals("") && drpdownactAssignName.getSelectedItem() != null
                     && !isEmpty(actHour)
                     //&& !actId.getText().toString().equals("")
@@ -257,6 +262,7 @@ public class AddDetailsActivity extends Fragment {
                         drpdownactAssignName.getSelectedItem().toString(),
                         //actId.getText().toString(),
                         actHour.getText().toString(),
+                        act_desc.getText().toString(),
                         0
                 );
 
@@ -275,6 +281,7 @@ public class AddDetailsActivity extends Fragment {
                             //drpdownactAssignName.getSelectedItem().toString(),
                             m.getInt(m.getColumnIndex("activityType")),
                             Password.PASS,
+                            act_desc.getText().toString(),
                             1
                     );
                     m.close();

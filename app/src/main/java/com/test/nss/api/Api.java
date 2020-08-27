@@ -82,6 +82,12 @@ public interface Api {
     @GET("/diary/api/totalhours/")
     Call<ResponseBody> getTotalAreaHours(@Header("Authorization") String token);
 
+    @GET("/diary/api/AreaProjectPreviousView/")
+    Call<ResponseBody> getFyAct(@Header("Authorization") String token);
+
+    @GET("/diary/api/AreaProjectView/")
+    Call<ResponseBody> getSyAct(@Header("Authorization") String token);
+
     @POST("/diary/dailyactivity")
     @FormUrlEncoded
     Call<ResponseBody> sendActList(
@@ -92,6 +98,7 @@ public interface Api {
             @Field("Date") String actDate,
             @Field("ActivityName") int actName,
             @Field("AppAuth") String p,
+            @Field("ActDescription") String aa,
 
             @Field("State") int s
     );

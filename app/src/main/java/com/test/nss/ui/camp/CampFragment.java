@@ -62,7 +62,7 @@ public class CampFragment extends Fragment {
         camp_act.setOnClickListener(v -> {
             new Handler().postDelayed(() -> {
                 camp_main_details.setVisibility(View.GONE);
-                fm.popBackStack();
+                //fm.popBackStack();
                 fm.beginTransaction().replace(R.id.camp_frag, new CampDetailsDays(), "CampDetailsDays").addToBackStack("CampFrag").commit();
             }, 350);
         });

@@ -4,14 +4,18 @@
     android:id="@+id/dataCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/padding_5dp"
-    android:layout_marginBottom="@dimen/padding_5dp"
+    android:layout_marginTop="@dimen/space_3dp"
+    android:layout_marginBottom="@dimen/space_3dp"
     app:cardCornerRadius="2dp"
     app:cardBackgroundColor="@color/white"
     app:cardElevation="2dp"
     app:cardPreventCornerOverlap="true">
 
     <LinearLayout
+        android:id="@+id/mainLinear"
+        android:background="@drawable/ripple_light"
+        android:clickable="true"
+        android:focusable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

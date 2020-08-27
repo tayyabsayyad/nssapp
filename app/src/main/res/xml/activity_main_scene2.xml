@@ -6,77 +6,77 @@
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
-        motion:duration="1700"
+        motion:duration="2000"
         motion:autoTransition="animateToEnd">
        <KeyFrameSet>
            <KeyAttribute
                motion:transitionEasing="decelerate"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:framePosition="0"
                android:scaleX="0.7" />
            <KeyAttribute
                motion:transitionEasing="decelerate"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:framePosition="0"
                android:scaleY="0.7" />
            <KeyAttribute
                motion:transitionEasing="decelerate"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:framePosition="15"
                android:scaleX="1" />
            <KeyAttribute
                motion:transitionEasing="decelerate"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:framePosition="15"
                android:scaleY="1" />
            <KeyAttribute
                motion:transitionEasing="decelerate"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:framePosition="40"
                android:scaleX="0.5" />
            <KeyAttribute
                motion:transitionEasing="decelerate"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:framePosition="40"
                android:scaleY="0.5" />
            <KeyAttribute
                motion:transitionEasing="decelerate"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:framePosition="60"
                android:scaleX="0.7" />
            <KeyAttribute
                motion:transitionEasing="decelerate"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:framePosition="60"
                android:scaleY="0.7" />
            <KeyAttribute
                motion:transitionEasing="decelerate"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:framePosition="75"
                android:scaleX="0.5" />
            <KeyAttribute
                motion:transitionEasing="decelerate"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:framePosition="75"
                android:scaleY="0.5" />
            <KeyAttribute
                android:scaleX="1"
                motion:framePosition="90"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:transitionEasing="decelerate" />
            <KeyAttribute
                android:scaleY="1"
                motion:framePosition="90"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:transitionEasing="decelerate" />
            <KeyAttribute
                motion:transitionEasing="accelerate"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:framePosition="100"
                android:scaleX="50" />
            <KeyAttribute
                motion:transitionEasing="accelerate"
-               motion:motionTarget="@+id/linearLayout2"
+               motion:motionTarget="@+id/actMainLinear"
                motion:framePosition="100"
                android:scaleY="50" />
        </KeyFrameSet>

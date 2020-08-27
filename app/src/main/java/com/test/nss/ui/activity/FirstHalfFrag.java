@@ -35,10 +35,13 @@ import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
 import com.test.nss.ui.onClickInterface2;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -47,8 +50,7 @@ import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
 import static com.test.nss.ediary.isFirst;
-import static com.test.nss.ediary.primaryColDark;
-import static com.test.nss.ediary.white;
+import static com.test.nss.ediary.sbColorText;
 
 public class FirstHalfFrag extends Fragment {
 
@@ -75,6 +77,9 @@ public class FirstHalfFrag extends Fragment {
     LinearLayout actDetails;
     TextView noActDesc;
     int act = -1;
+
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    Date calobj = new Date();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,8 +108,7 @@ public class FirstHalfFrag extends Fragment {
 
         s = Snackbar.make(v, "Hold on activity list to add activity", Snackbar.LENGTH_SHORT);
         TextView tv = s.getView().findViewById(com.google.android.material.R.id.snackbar_text);
-        s.getView().setBackgroundColor(white);
-        tv.setTextColor(primaryColDark);
+        tv.setTextColor(sbColorText);
         tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         Typeface t = ResourcesCompat.getFont(mContext, R.font.google_sans_bold);
         tv.setTypeface(t);
@@ -124,6 +128,18 @@ public class FirstHalfFrag extends Fragment {
         clgAct = root.findViewById(R.id.clg_act);
         univAct = root.findViewById(R.id.univ_act);
 
+        Cursor z;
+        DatabaseAdapter md = new DatabaseAdapter(mContext);
+        md.createDatabase();
+        md.open();
+        z = md.getArea(121);
+        if (z != null && z.getCount() > 0)
+            areaActOne.setText(z.getString(z.getColumnIndex("ABProjectName")));
+        z = md.getArea(122);
+        if (z != null && z.getCount() > 0) {
+            areaActTwo.setText(z.getString(z.getColumnIndex("ABProjectName")));
+        }
+        md.close();
         areaActOne.setOnClickListener(view14 -> {
             if (areaOneListDataAct.isEmpty())
                 noActDesc.setVisibility(View.VISIBLE);
@@ -184,7 +200,7 @@ public class FirstHalfFrag extends Fragment {
         DatabaseAdapter mdb2 = new DatabaseAdapter(requireContext());
         mdb2.createDatabase();
         mdb2.open();
-        int c = mdb2.getSumHoursSubmitted("First Year%");
+        int c = mdb2.getSumHoursSubmitted(df.format(calobj.getTime()), "First Year%");
         mdb2.close();
         onClickInterface2 = abc -> {
 
@@ -193,29 +209,34 @@ public class FirstHalfFrag extends Fragment {
 
                 String hours = "";
                 String actName = "";
+                String date = "";
 
                 switch (act) {
                     case 0:
                         if (!univListDataAct.isEmpty()) {
                             actName = univListDataAct.get(abc).getAct();
                             hours = univListDataAct.get(abc).getHours();
+                            date = univListDataAct.get(abc).getEndDate();
                         }
                     case 1:
                         if (!areaOneListDataAct.isEmpty()) {
                             actName = areaOneListDataAct.get(abc).getAct();
                             hours = areaOneListDataAct.get(abc).getHours();
+                            date = areaOneListDataAct.get(abc).getEndDate();
                         }
                         break;
                     case 2:
                         if (!areaTwoListDataAct.isEmpty()) {
                             actName = areaTwoListDataAct.get(abc).getAct();
                             hours = areaTwoListDataAct.get(abc).getHours();
+                            date = areaTwoListDataAct.get(abc).getEndDate();
                         }
                         break;
                     case 3:
                         if (!clgListDataAct.isEmpty()) {
                             actName = clgListDataAct.get(abc).getAct();
                             hours = clgListDataAct.get(abc).getHours();
+                            date = clgListDataAct.get(abc).getEndDate();
                         }
                         break;
                 }
@@ -223,24 +244,27 @@ public class FirstHalfFrag extends Fragment {
                 if (!actName.equals("") && !hours.equals("") && act != -1) {
                     String actCode = getResources().getStringArray(R.array.valOfActNames)[act];
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.inputDialog);
-                    View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.hours_input_layout, (ViewGroup) view, false);
+                    View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.act_mini_input_layout, (ViewGroup) view, false);
 
                     EditText input = viewInflated.findViewById(R.id.input);
                     builder.setView(viewInflated);
 
+                    EditText descr = viewInflated.findViewById(R.id.desc);
                     builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                         dialog.cancel();
                     });
 
                     String finalHours = hours;
                     String finalActName = actName;
+                    String finalDate = date;
+                    Calendar cal = Calendar.getInstance();
+                    String nowDate = df.format(cal.getTime());
                     builder.setPositiveButton(android.R.string.ok, (dialog, i) -> {
                         int h = Integer.parseInt(finalHours);
                         int j = Integer.parseInt(input.getText().toString());
-                        if (j > 0 && j <= h) {
+                        String desc = descr.getText().toString();
+                        if (j > 0 && j <= h && !desc.equals("") && nowDate.compareTo(finalDate) <= 0) {
                             dialog.dismiss();
-                            Calendar cal = Calendar.getInstance();
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
                             DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                             mdb.createDatabase();
@@ -248,10 +272,11 @@ public class FirstHalfFrag extends Fragment {
                             mdb.insertActOff(
                                     ediary.VEC,
                                     actCode,
-                                    formatter.format(cal.getTime()),
+                                    df.format(cal.getTime()),
                                     finalActName,
                                     //actId.getText().toString(),
                                     String.valueOf(j),
+                                    desc,
                                     0
                             );
 
@@ -262,9 +287,10 @@ public class FirstHalfFrag extends Fragment {
                                     ediary.VEC,
                                     m.getInt(m.getColumnIndex("id")),// AAA
                                     j,
-                                    formatter.format(cal.getTime()),
+                                    df.format(cal.getTime()),
                                     m.getInt(m.getColumnIndex("activityType")),
                                     Password.PASS,
+                                    desc,
                                     1
                             );
                             mdb.close();
@@ -339,7 +365,8 @@ public class FirstHalfFrag extends Fragment {
         while (c3.moveToNext()) {
             data3.add(new AdapterDataAct(
                             c3.getString(c3.getColumnIndex("ActivityName")),
-                            c3.getString(c3.getColumnIndex("HoursAssigned"))
+                            c3.getString(c3.getColumnIndex("HoursAssigned")),
+                            c3.getString(c3.getColumnIndex("finalDate"))
                     )
             );
         }

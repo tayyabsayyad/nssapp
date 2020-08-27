@@ -8,7 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class DatabaseAdapter {
@@ -17,6 +20,9 @@ public class DatabaseAdapter {
     private final Context mContext;
     private SQLiteDatabase mDb;
     private DataBaseHelper mDbHelper;
+
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    Calendar calobj = Calendar.getInstance();
 
     public DatabaseAdapter(Context context) {
         this.mContext = context;
@@ -211,7 +217,7 @@ public class DatabaseAdapter {
     }
 
     public void insertActAdmin(int id, String clgName, String actType, String actName,
-                               String hours, String assignedDate) {
+                               String hours, String assignedDate, String fdate) {
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -221,10 +227,26 @@ public class DatabaseAdapter {
             contentValues.put("ActivityName", actName);
             contentValues.put("HoursAssigned", hours);
             contentValues.put("AssignedDate", assignedDate);
+            contentValues.put("finalDate", fdate);
 
             mDb.insert("ActivityListByAdmin", null, contentValues);
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
+
+    public void insertArea(int id, String actType, String actName, String clgName) {
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("id", id);
+            contentValues.put("ActivityName", actType);
+            contentValues.put("ABProjectName", actName);
+            contentValues.put("CollegeName", clgName);
+
+            mDb.insert("AreaData", null, contentValues);
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertArea " + e.getMessage());
         }
     }
 
@@ -384,6 +406,7 @@ public class DatabaseAdapter {
                           String hours,
                           String state,
                           String appBy,
+                          String actDesc,
                           int sync) {
         try {
             ContentValues contentValues = new ContentValues();
@@ -398,6 +421,8 @@ public class DatabaseAdapter {
             contentValues.put("If_Added", 1);
             contentValues.put("Approved_by", appBy);
             contentValues.put("Sync", sync);
+            contentValues.put("Descr", actDesc);
+            contentValues.put("dateAdded", assignedDate);
 
             mDb.insert("DailyActivity", null, contentValues);
         } catch (SQLException e) {
@@ -409,6 +434,7 @@ public class DatabaseAdapter {
                              String assignedDate,
                              String actName,
                              String hours,
+                             String desc,
                              int sync) {
         try {
             ContentValues contentValues = new ContentValues();
@@ -420,12 +446,28 @@ public class DatabaseAdapter {
             contentValues.put("HoursWorked", hours);
             contentValues.put("If_Added", 1);
             contentValues.put("State", "Submitted");
+            contentValues.put("Descr", desc);
             contentValues.put("Sync", sync);
+            contentValues.put("dateAdded", df.format(calobj.getTime()));
 
             mDb.insert("DailyActivity", null, contentValues);
 
         } catch (SQLException e) {
             Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
+
+    public Cursor getArea(int actCode) {
+        try {
+            String sql = String.format(Locale.ENGLISH, "SELECT * FROM AreaData WHERE ActivityName=%d", actCode);
+            Cursor mCur2 = mDb.rawQuery(sql, null);
+            if (mCur2.getCount() == 0) {
+            }
+            mCur2.moveToFirst();
+            return mCur2;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getArea >>" + mSQLException.toString());
+            throw mSQLException;
         }
     }
 
@@ -804,8 +846,8 @@ public class DatabaseAdapter {
         }
     }
 
-    public int getSumHoursSubmitted(String actCode) {
-        String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode LIKE \"%s\" AND Date=CURRENT_DATE AND (State=\"Submitted\" OR State=\"Approved\" OR State=\"Modified\" OR State=\"PoModified\" OR State=\"LeaderModified\")", actCode);
+    public int getSumHoursSubmitted(String date, String actCode) {
+        String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode LIKE \"%s\" AND dateAdded=\"%s\" AND (State=\"Submitted\" OR State=\"Approved\" OR State=\"Modified\" OR State=\"PoModified\" OR State=\"LeaderModified\")", actCode, date);
         try (Cursor mCur2 = mDb.rawQuery(sql, null)) {
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in DailyActivity", )();
