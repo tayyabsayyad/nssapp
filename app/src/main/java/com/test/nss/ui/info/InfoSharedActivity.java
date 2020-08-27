@@ -31,13 +31,14 @@ public class InfoSharedActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recInfo);
         imageSource = findViewById(R.id.imageSource);
 
-        adapterDataInfo.add(new AdapterDataInfo("Hayden Cordeiro", "Web Developer", "https://github.com/haydencordeiro", ""));
-        adapterDataInfo.add(new AdapterDataInfo("Malvika Shetty", "Web Developer", "https://github.com/MalvikaShetty", ""));
-        adapterDataInfo.add(new AdapterDataInfo("Manasi", "Web Developer", "", ""));
-        adapterDataInfo.add(new AdapterDataInfo("Priyal Vaz", "Designer", "", ""));
+         adapterDataInfo.add(new AdapterDataInfo("Satyam Sharma", "App Developer", "https://github.com/Dixzz", ""));
+        adapterDataInfo.add(new AdapterDataInfo("Hayden Cordeiro", "Web Developer", "https://github.com/haydencordeiro", "https://www.linkedin.com/in/haydencordeiro/"));
+        adapterDataInfo.add(new AdapterDataInfo("Malvika Shetty", "Web Developer", "https://github.com/MalvikaShetty", "https://www.linkedin.com/in/malvika-shetty-052a35165"));
+        adapterDataInfo.add(new AdapterDataInfo("Manasi", "Web Developer", "https://github.com/mansayyy", "https://www.linkedin.com/in/manasi-anantpurkar-426a301a7/"));
+        adapterDataInfo.add(new AdapterDataInfo("Priyal Vaz", "Designer", "https://github.com/priyalvaz", "https://www.linkedin.com/in/priyal-vaz-48bb71194"));
         adapterDataInfo.add(new AdapterDataInfo("Ramola", "Contributor", "", ""));
-        adapterDataInfo.add(new AdapterDataInfo("Satyam Sharma", "App Developer", "https://github.com/Dixzz", ""));
-        adapterDataInfo.add(new AdapterDataInfo("Shawn Louis", "Web Developer", "https://github.com/Shawn1912", ""));
+        adapterDataInfo.add(new AdapterDataInfo("Grejo Joby", "Contributor", "https://github.com/grejo-joby", "https://www.linkedin.com/in/grejojoby/"));
+        adapterDataInfo.add(new AdapterDataInfo("Shawn Louis", "Contributor", "https://github.com/Shawn1912", "https://www.linkedin.com/in/shawnlouis/"));
         adapterDataInfo.add(new AdapterDataInfo("Shivam Singh", "Contributor", "", "https://www.linkedin.com/in/shivaam-singh-12450b1b2"));
         adapterDataInfo.add(new AdapterDataInfo("Tayyabali Sayyad", "Mentor", "https://github.com/tayyabsayyad", ""));
 
