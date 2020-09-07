@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -27,24 +25,21 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.DatabaseAdapter;
 import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
-import com.test.nss.ediary;
 import com.test.nss.ui.onClickInterface2;
 
 import org.apache.commons.collections4.ListUtils;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import okhttp3.ResponseBody;
@@ -53,49 +48,50 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-import static com.test.nss.ediary.blackish;
-import static com.test.nss.ediary.green;
-import static com.test.nss.ediary.isFirst;
-import static com.test.nss.ediary.isLeader;
-import static com.test.nss.ediary.kesar;
-import static com.test.nss.ediary.primaryColDark;
-import static com.test.nss.ediary.red;
-import static com.test.nss.ediary.sbColorText;
-import static com.test.nss.ediary.transparent;
+import static com.test.nss.Helper.AUTH_TOKEN;
+import static com.test.nss.Helper.VEC;
+import static com.test.nss.Helper.blackishy;
+import static com.test.nss.Helper.green;
+import static com.test.nss.Helper.isFirst;
+import static com.test.nss.Helper.isLeader;
+import static com.test.nss.Helper.kesar;
+import static com.test.nss.Helper.primaryColDark;
+import static com.test.nss.Helper.red;
+import static com.test.nss.Helper.sbColorText;
+import static com.test.nss.Helper.transparent;
+
 
 public class fyAct extends Fragment {
 
-    private static final String TAG = "fyAct";
-
-    DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    Date calobj = new Date();
-
+    MyListAdapter adapterUniv;
     View root;
     Button univ;
     Button area;
     Button clg;
-
     Context mContext;
-
     RecyclerView univRecFy;
     RecyclerView areaRecFy;
     RecyclerView clgRecFy;
-
     List<AdapterDataMain> univListDataFy;
     List<AdapterDataMain> areaDataMainFy;
     List<AdapterDataMain> clgListDataFy;
-
     CardView cardViewMain;
-
-    Button add;
+    FloatingActionButton add;
     LinearLayout fragFy;
-
     LinearLayout actHeaderInput;
     onClickInterface2 onClickInterface;
+    LottieAnimationView lottieAnimationView;
 
     int whichAct;
     int act;
     int newHours = 0;
+
+    public fyAct() {
+    }
+
+    public static fyAct newInstance() {
+        return new fyAct();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,6 +104,7 @@ public class fyAct extends Fragment {
         actHeaderInput = requireActivity().findViewById(R.id.actHeaderInput);
         actHeaderInput.setVisibility(View.GONE);
 
+        lottieAnimationView = root.findViewById(R.id.mainLottie);
         univ = root.findViewById(R.id.main_univ_fy);
         area = root.findViewById(R.id.main_area_fy);
         clg = root.findViewById(R.id.main_clg_fy);
@@ -127,11 +124,7 @@ public class fyAct extends Fragment {
         fragFy = root.findViewById(R.id.frag_fy);
 
         univ.setOnClickListener(v -> {
-
-            Animation animation = new TranslateAnimation(0, 0, -100, 0);
-
-            animation.setDuration(4000);
-            Snackbar.make(view, "Swipe left on activity to modify", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(view.findViewById(R.id.add), "Swipe left on activity to modify", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
 
             whichAct = 13;
             act = 0;
@@ -141,13 +134,12 @@ public class fyAct extends Fragment {
             clgRecFy.setVisibility(View.GONE);
             if (isFirst) {
                 add.setVisibility(View.VISIBLE);
-                add.startAnimation(animation);
             } else
                 add.setVisibility(View.GONE);
 
             univ.setTextColor(primaryColDark);
-            area.setTextColor(blackish);
-            clg.setTextColor(blackish);
+            area.setTextColor(blackishy);
+            clg.setTextColor(blackishy);
         });
 
         area.setOnClickListener(v -> {
@@ -164,8 +156,8 @@ public class fyAct extends Fragment {
             clgRecFy.setVisibility(View.GONE);
 
             area.setTextColor(primaryColDark);
-            univ.setTextColor(blackish);
-            clg.setTextColor(blackish);
+            univ.setTextColor(blackishy);
+            clg.setTextColor(blackishy);
         });
 
 
@@ -179,8 +171,8 @@ public class fyAct extends Fragment {
             clgRecFy.setVisibility(View.VISIBLE);
 
             clg.setTextColor(primaryColDark);
-            univ.setTextColor(blackish);
-            area.setTextColor(blackish);
+            univ.setTextColor(blackishy);
+            area.setTextColor(blackishy);
 
             if (isFirst)
                 add.setVisibility(View.VISIBLE);
@@ -233,11 +225,11 @@ public class fyAct extends Fragment {
         };
 
         RecyclerView recyclerViewUniv = root.findViewById(R.id.univRecFy);
-        MyListAdapter adapterUniv = new MyListAdapter(univListDataFy, mContext, onClickInterface);
+        adapterUniv = new MyListAdapter(univListDataFy, mContext, onClickInterface);
         //adapterUniv.notifyDataSetChanged();
 
         ItemTouchHelper.SimpleCallback simpleCallbackUniv = new ItemTouchHelper.SimpleCallback
-                (100, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+                (0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -286,9 +278,9 @@ public class fyAct extends Fragment {
                                 c2.moveToFirst();
 
                                 Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                        "Token " + ediary.AUTH_TOKEN,
+                                        "Token " + AUTH_TOKEN,
                                         Integer.parseInt(adapterUniv.list.get(p).getHours()),
-                                        ediary.VEC,
+                                        VEC,
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
                                         4,
@@ -368,9 +360,9 @@ public class fyAct extends Fragment {
                                     //mdb.setSyncActDetails(0, actID);
 
                                     Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                            "Token " + ediary.AUTH_TOKEN,
+                                            "Token " + AUTH_TOKEN,
                                             newHours,
-                                            ediary.VEC,
+                                            VEC,
                                             Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
                                             Integer.parseInt(c.getString(c.getColumnIndex("id"))),
                                             3,
@@ -415,11 +407,14 @@ public class fyAct extends Fragment {
 
                     }
                 } else if (adapterUniv.list.get(p).getState().equals("Approved")
-                        || adapterUniv.list.get(p).getState().equals("LeaderModified")) {
+                        || adapterUniv.list.get(p).getState().equals("LeaderModified") || adapterUniv.list.get(p).getState().equals("LeaderDelete")) {
+                    Log.e("here", "onSwiped: " + isLeader);
+                    String x;
                     if (isLeader != 1) {
-                        String x = "";
                         if (adapterUniv.list.get(p).getState().equals("Approved"))
                             x = "Approved By: ";
+                        else if (adapterUniv.list.get(p).getState().equals("LeaderDelete"))
+                            x = "Deleted By: ";
                         else
                             x = "Modified By: ";
 
@@ -430,14 +425,15 @@ public class fyAct extends Fragment {
                         c.moveToFirst();
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
 
-                        Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                        Log.e("Here", "onSwiped: " + leadId);
+                        x = mdb.getLeaderName(leadId) != null ? x + mdb.getLeaderName(leadId) : x + "PO";
+
+                        Snackbar sb = Snackbar.make(view, x, Snackbar.LENGTH_LONG)
                                 .setTextColor(sbColorText);
                         //sb.getView().setBackgroundColor(transparent);
                         mdb.close();
                         sb.show();
-                        adapterUniv.notifyItemChanged(p);
                     } else {
-                        String x;
                         DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                         mdb.createDatabase();
                         mdb.open();
@@ -452,18 +448,22 @@ public class fyAct extends Fragment {
                         } else {
                             if (adapterUniv.list.get(p).getState().equals("Approved"))
                                 x = "Approved By: ";
+                            else if (adapterUniv.list.get(p).getState().equals("LeaderDelete"))
+                                x = "Deleted By: ";
                             else
                                 x = "Modified By: ";
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-                            Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                            x = mdb.getLeaderName(leadId) != null ? x + mdb.getLeaderName(leadId) : x + "PO";
+                            Snackbar sb = Snackbar.make(view, x, Snackbar.LENGTH_LONG)
                                     .setTextColor(sbColorText);
                             //sb.getView().setBackgroundColor(transparent);
                             sb.show();
                         }
                         mdb.close();
-                        adapterUniv.notifyItemChanged(p);
                     }
+                    adapterUniv.notifyItemChanged(p);
                 }
+                adapterUniv.notifyDataSetChanged();
             }
 
             @Override
@@ -484,7 +484,7 @@ public class fyAct extends Fragment {
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                } else if (adapterUniv.list.get(p).getState().equals("Approved") || adapterUniv.list.get(p).getState().equals("LeaderModified")) {
+                } else if (adapterUniv.list.get(p).getState().equals("Approved") || adapterUniv.list.get(p).getState().equals("LeaderModified") || adapterUniv.list.get(p).getState().equals("LeaderDelete")) {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_eye_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_eye_24)
@@ -542,7 +542,7 @@ public class fyAct extends Fragment {
         //adapterArea.notifyDataSetChanged();
 
         ItemTouchHelper.SimpleCallback simpleCallbackArea = new ItemTouchHelper.SimpleCallback
-                (100, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+                (0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -591,9 +591,9 @@ public class fyAct extends Fragment {
                                 c2.moveToFirst();
 
                                 Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                        "Token " + ediary.AUTH_TOKEN,
+                                        "Token " + AUTH_TOKEN,
                                         Integer.parseInt(adapterArea.list.get(p).getHours()),
-                                        ediary.VEC,
+                                        VEC,
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
                                         4,
@@ -674,9 +674,9 @@ public class fyAct extends Fragment {
                                     //mdb.setSyncActDetails(0, actID);
 
                                     Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                            "Token " + ediary.AUTH_TOKEN,
+                                            "Token " + AUTH_TOKEN,
                                             newHours,
-                                            ediary.VEC,
+                                            VEC,
                                             Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
                                             Integer.parseInt(c.getString(c.getColumnIndex("id"))),
                                             3,
@@ -726,6 +726,8 @@ public class fyAct extends Fragment {
                         String x = "";
                         if (adapterArea.list.get(p).getState().equals("Approved"))
                             x = "Approved By: ";
+                        else if (adapterArea.list.get(p).getState().equals("LeaderDelete"))
+                            x = "Deleted By: ";
                         else
                             x = "Modified By: ";
 
@@ -735,8 +737,8 @@ public class fyAct extends Fragment {
                         Cursor c = mdb.getActLeaderId(Integer.parseInt(adapterArea.list.get(p).getId()));
                         c.moveToFirst();
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-
-                        Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                        x = mdb.getLeaderName(leadId) != null ? x + mdb.getLeaderName(leadId) : x + "PO";
+                        Snackbar sb = Snackbar.make(view, x, Snackbar.LENGTH_LONG)
                                 .setTextColor(sbColorText);
                         //sb.getView().setBackgroundColor(transparent);
                         mdb.close();
@@ -758,10 +760,14 @@ public class fyAct extends Fragment {
                         } else {
                             if (adapterArea.list.get(p).getState().equals("Approved"))
                                 x = "Approved By: ";
+                            else if (adapterArea.list.get(p).getState().equals("LeaderDelete"))
+                                x = "Deleted By: ";
                             else
                                 x = "Modified By: ";
+
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-                            Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                            x = mdb.getLeaderName(leadId) != null ? x + mdb.getLeaderName(leadId) : x + "PO";
+                            Snackbar sb = Snackbar.make(view, x, Snackbar.LENGTH_LONG)
                                     .setTextColor(sbColorText);
                             //sb.getView().setBackgroundColor(transparent);
                             sb.show();
@@ -770,6 +776,7 @@ public class fyAct extends Fragment {
                         mdb.close();
                     }
                 }
+                adapterArea.notifyDataSetChanged();
             }
 
             @Override
@@ -790,7 +797,7 @@ public class fyAct extends Fragment {
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                } else if (adapterArea.list.get(p).getState().equals("Approved") || adapterArea.list.get(p).getState().equals("LeaderModified")) {
+                } else if (adapterArea.list.get(p).getState().equals("Approved") || adapterArea.list.get(p).getState().equals("LeaderModified") || adapterArea.list.get(p).getState().equals("LeaderDelete")) {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_eye_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_eye_24)
@@ -848,7 +855,7 @@ public class fyAct extends Fragment {
         //adapterClg.notifyDataSetChanged();
 
         ItemTouchHelper.SimpleCallback simpleCallbackHours = new ItemTouchHelper.SimpleCallback
-                (100, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+                (0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -897,9 +904,9 @@ public class fyAct extends Fragment {
                                 c2.moveToFirst();
 
                                 Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                        "Token " + ediary.AUTH_TOKEN,
+                                        "Token " + AUTH_TOKEN,
                                         Integer.parseInt(adapterClg.list.get(p).getHours()),
-                                        ediary.VEC,
+                                        VEC,
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("activityType"))),
                                         Integer.parseInt(c2.getString(c2.getColumnIndex("id"))),
                                         4,
@@ -980,9 +987,9 @@ public class fyAct extends Fragment {
                                     //mdb.setSyncActDetails(0, actID);
 
                                     Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                            "Token " + ediary.AUTH_TOKEN,
+                                            "Token " + AUTH_TOKEN,
                                             newHours,
-                                            ediary.VEC,
+                                            VEC,
                                             Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
                                             Integer.parseInt(c.getString(c.getColumnIndex("id"))),
                                             3,
@@ -1032,6 +1039,8 @@ public class fyAct extends Fragment {
                         String x = "";
                         if (adapterClg.list.get(p).getState().equals("Approved"))
                             x = "Approved By: ";
+                        else if (adapterClg.list.get(p).getState().equals("LeaderDelete"))
+                            x = "Deleted By: ";
                         else
                             x = "Modified By: ";
 
@@ -1041,8 +1050,8 @@ public class fyAct extends Fragment {
                         Cursor c = mdb.getActLeaderId(Integer.parseInt(adapterClg.list.get(p).getId()));
                         c.moveToFirst();
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-
-                        Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                        x = mdb.getLeaderName(leadId) != null ? x + mdb.getLeaderName(leadId) : x + "PO";
+                        Snackbar sb = Snackbar.make(view, x, Snackbar.LENGTH_LONG)
                                 .setTextColor(sbColorText);
                         //sb.getView().setBackgroundColor(transparent);
                         mdb.close();
@@ -1065,10 +1074,14 @@ public class fyAct extends Fragment {
                         } else {
                             if (adapterClg.list.get(p).getState().equals("Approved"))
                                 x = "Approved By: ";
+                            else if (adapterClg.list.get(p).getState().equals("LeaderDelete"))
+                                x = "Deleted By: ";
                             else
                                 x = "Modified By: ";
+
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
-                            Snackbar sb = Snackbar.make(view, x + mdb.getLeaderName(leadId), Snackbar.LENGTH_LONG)
+                            x = mdb.getLeaderName(leadId) != null ? x + mdb.getLeaderName(leadId) : x + "PO";
+                            Snackbar sb = Snackbar.make(view, x, Snackbar.LENGTH_LONG)
                                     .setTextColor(sbColorText);
                             //sb.getView().setBackgroundColor(transparent);
                             sb.show();
@@ -1077,6 +1090,7 @@ public class fyAct extends Fragment {
                         mdb.close();
                     }
                 }
+                adapterClg.notifyDataSetChanged();
             }
 
             @Override
@@ -1097,7 +1111,7 @@ public class fyAct extends Fragment {
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                } else if (adapterClg.list.get(p).getState().equals("Approved") || adapterClg.list.get(p).getState().equals("LeaderModified")) {
+                } else if (adapterClg.list.get(p).getState().equals("Approved") || adapterClg.list.get(p).getState().equals("LeaderModified") || adapterClg.list.get(p).getState().equals("LeaderDelete")) {
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addSwipeRightActionIcon(R.drawable.ic_eye_24)
                             .addSwipeLeftActionIcon(R.drawable.ic_eye_24)
@@ -1122,18 +1136,32 @@ public class fyAct extends Fragment {
         itemTouchHelper3.attachToRecyclerView(recyclerViewUniv);
 
         add.setOnClickListener(view1 -> {
-            DatabaseAdapter mdb = new DatabaseAdapter(requireContext());
+            DatabaseAdapter mdb = new DatabaseAdapter(mContext);
             mdb.createDatabase();
             mdb.open();
+            int c = mdb.getCountAssignAct();
             mdb.close();
+            if (c > 0) {
+                AddDetailsActivity detailsActivity;
 
-                fragFy.setVisibility(View.GONE);
-                univRecFy.setVisibility(View.GONE);
-                areaRecFy.setVisibility(View.GONE);
-                clgRecFy.setVisibility(View.GONE);
-                cardViewMain.setVisibility(View.GONE);
+                switch (whichAct) {
+                    case 11:
+                        detailsActivity = new AddDetailsActivity(adapterClg, lottieAnimationView);
+                        break;
+                    case 12:
+                        detailsActivity = new AddDetailsActivity(adapterArea, lottieAnimationView);
+                        break;
+                    default:
+                    case 13:
+                        detailsActivity = new AddDetailsActivity(adapterUniv, lottieAnimationView);
+                        break;
+                }
+            /*univRecFy.setVisibility(View.GONE);
+            areaRecFy.setVisibility(View.GONE);
+            fragFy.setVisibility(View.GONE);
+            clgRecFy.setVisibility(View.GONE);
+            cardViewMain.setVisibility(View.GONE);*/
 
-                AddDetailsActivity detailsActivity = new AddDetailsActivity();
                 Bundle args = new Bundle();
                 //Log.e(TAG, "onViewCreated: " + whichAct);
                 args.putInt("whichAct", whichAct);
@@ -1146,6 +1174,8 @@ public class fyAct extends Fragment {
                 //adapterArea.notifyDataSetChanged();
                 //adapterClg.notifyDataSetChanged();
                 //adapterUniv.notifyDataSetChanged();
+            } else
+                Toast.makeText(mContext, "No activity exist", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -1182,4 +1212,5 @@ public class fyAct extends Fragment {
         mDbHelper.close();
         return data;
     }
+
 }

@@ -52,17 +52,12 @@
             android:id="@id/work_details"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="75dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintTop_toTopOf="parent">
             <CustomAttribute
                 motion:attributeName="BackgroundColor"
                 motion:customColorValue="@color/white" />
-        </Constraint>
-        <Constraint android:id="@+id/hoursInfo">
-            <CustomAttribute
-                motion:attributeName="text"
-                motion:customStringValue="" />
         </Constraint>
     </ConstraintSet>
 </MotionScene>

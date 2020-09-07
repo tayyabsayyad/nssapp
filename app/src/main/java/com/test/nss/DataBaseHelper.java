@@ -14,9 +14,8 @@ import java.io.OutputStream;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
-    private static String TAG = "DataBaseHelper"; // Tag just for the LogCat window
-    private static String DB_NAME = "diaryAndroid.db"; // Database name
-    private static int DB_VERSION = 1; // Database version
+    private static final String DB_NAME = "diaryAndroid.db"; // Database name
+    private static final int DB_VERSION = 1; // Database version
     private final File DB_FILE;
     private final Context mContext;
     private SQLiteDatabase mDataBase;
@@ -27,7 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         this.mContext = context;
     }
 
-    public void createDataBase() throws IOException {
+    public void createDataBase() {
         // If the database does not exist, copy it from the assets.
         boolean mDataBaseExist = checkDataBase();
         if (!mDataBaseExist) {
@@ -36,6 +35,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             try {
                 // Copy the database from assests
                 copyDataBase();
+                // Tag just for the LogCat window
+                String TAG = "DataBaseHelper";
                 Log.e(TAG, "createDatabase database created");
             } catch (IOException mIOException) {
                 throw new Error("ErrorCopyingDataBase");

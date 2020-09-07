@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
         <item android:title="Ediary">
             <menu>
                 <item
-                    android:id="@+id/nav_main"
+                    android:id="@+id/nav_home"
                     android:icon="@drawable/ic_home_24"
+                    android:title="Home" />
+                <item
+                    android:id="@+id/nav_main"
+                    android:icon="@drawable/ic_diary_24"
                     android:title="@string/home" />
 
                 <item
@@ -40,6 +42,9 @@
                     android:id="@+id/nav_info"
                     android:icon="@drawable/ic_help"
                     android:title="@string/info" />
+                <item
+                    android:id="@+id/nav_data"
+                    android:title="About NSS" />
             </menu>
         </item>
     </group>

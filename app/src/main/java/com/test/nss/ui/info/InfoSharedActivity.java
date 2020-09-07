@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.rahul.bounce.library.BounceTouchListener;
 import com.test.nss.R;
 import com.test.nss.ui.onClickInterface;
@@ -22,6 +24,7 @@ public class InfoSharedActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ImageView imageSource;
     ArrayList<AdapterDataInfo> adapterDataInfo = new ArrayList<>();
+    LottieAnimationView animationView;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -31,7 +34,9 @@ public class InfoSharedActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recInfo);
         imageSource = findViewById(R.id.imageSource);
 
-         adapterDataInfo.add(new AdapterDataInfo("Satyam Sharma", "App Developer", "https://github.com/Dixzz", ""));
+        animationView = findViewById(R.id.lottie_heart);
+
+        adapterDataInfo.add(new AdapterDataInfo("Satyam Sharma", "App Developer", "https://github.com/Dixzz", ""));
         adapterDataInfo.add(new AdapterDataInfo("Hayden Cordeiro", "Web Developer", "https://github.com/haydencordeiro", "https://www.linkedin.com/in/haydencordeiro/"));
         adapterDataInfo.add(new AdapterDataInfo("Malvika Shetty", "Web Developer", "https://github.com/MalvikaShetty", "https://www.linkedin.com/in/malvika-shetty-052a35165"));
         adapterDataInfo.add(new AdapterDataInfo("Manasi", "Web Developer", "https://github.com/mansayyy", "https://www.linkedin.com/in/manasi-anantpurkar-426a301a7/"));
@@ -44,7 +49,17 @@ public class InfoSharedActivity extends AppCompatActivity {
 
         onClickInterface onClickInterface;
         onClickInterface = abc -> {
-            if (!abc.equals("")) {
+            if (abc.equals("Satyam Sharma")) {
+                animationView.setVisibility(View.VISIBLE);
+                animationView.playAnimation();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        animationView.cancelAnimation();
+                        animationView.setVisibility(View.GONE);
+                    }
+                }, animationView.getDuration());
+            } else if (!abc.equals("")) {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(abc));
                 startActivity(i);
@@ -62,7 +77,6 @@ public class InfoSharedActivity extends AppCompatActivity {
                 if (translation <= 0) {
                     bounceTouchListener.setMaxAbsTranslation(Math.max(80, -99));
                 }
-
             }
         });
 

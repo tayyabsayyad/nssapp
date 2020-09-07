@@ -21,10 +21,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.test.nss.DatabaseAdapter;
+import com.test.nss.Helper;
 import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
-import com.test.nss.ediary;
 
 import java.io.IOException;
 
@@ -34,7 +34,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-import static com.test.nss.ediary.blackish;
+import static com.test.nss.Helper.VEC;
+import static com.test.nss.Helper.blackishy;
 
 
 public class CampInputDetailsFrag extends Fragment {
@@ -59,7 +60,7 @@ public class CampInputDetailsFrag extends Fragment {
 
         actName = getArguments().getString("actName");
 
-        which_day.setTextColor(blackish);
+        which_day.setTextColor(blackishy);
         which_day.setText(getArguments().getString("whichDay")); //one
 
         return root;
@@ -91,11 +92,13 @@ public class CampInputDetailsFrag extends Fragment {
         submit.setOnClickListener(view1 -> {
 
             FragmentManager fm = requireActivity().getSupportFragmentManager();
-            if (!isEmpty(campDesc)
-                    && (!isEmptyStr(which_day.getText().toString()))) {
+            if (!isEmpty(campDesc) && (!isEmptyStr(which_day.getText().toString()))) {
 
                 mDbHelper.createDatabase();
                 mDbHelper.open();
+                Cursor cursor = mDbHelper.getRegDetails(VEC);
+                cursor.moveToFirst();
+
                 mDbHelper.insertCampActListAllOff(
                         actName,
                         campDesc.getText().toString(),
@@ -105,13 +108,12 @@ public class CampInputDetailsFrag extends Fragment {
                 mDbHelper.close();
 
                 if (isNetworkAvailable()) {
-
                     Call<ResponseBody> sendCampDetails = RetrofitClient.getInstance().getApi().sendCampDetail(
-                            "Token " + ediary.AUTH_TOKEN,
-                            "DBIT",
+                            "Token " + Helper.AUTH_TOKEN,
+                            cursor.getString(cursor.getColumnIndex("College_name")),
                             campDesc.getText().toString(),
                             Integer.parseInt(day.substring(day.indexOf(" ") + 1)),
-                            ediary.VEC,
+                            Helper.VEC,
                             "1",
                             Password.PASS,
                             campId);
@@ -142,13 +144,13 @@ public class CampInputDetailsFrag extends Fragment {
                     Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
                 } else if (!isNetworkAvailable()) {
                     Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();
+                    fm.popBackStack();
+                    fm.popBackStack();
+                    fm.popBackStack();
+                    Toast.makeText(requireContext(), "Entered locally", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(requireContext(), "Enter something...", Toast.LENGTH_SHORT).show();
                 }
-                submit.setEnabled(false);
-                campDesc.setEnabled(false);
-                campDesc.setBackground(null);
-                submit.setBackground(null);
             } else
                 Toast.makeText(requireContext(), "Enter details.", Toast.LENGTH_SHORT).show();
         });

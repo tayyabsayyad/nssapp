@@ -25,11 +25,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.test.nss.DatabaseAdapter;
 import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
-import com.test.nss.ediary;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,38 +44,43 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-import static com.test.nss.ediary.isFirst;
+import static com.test.nss.Helper.AUTH_TOKEN;
+import static com.test.nss.Helper.VEC;
+import static com.test.nss.Helper.isFirst;
 
 public class AddDetailsActivity extends Fragment {
+    public MyListAdapter myListAdapter;
+    public LottieAnimationView lottieAnimationView;
+
     View huh;
     ConstraintLayout constFyAct;
     LinearLayout nssHalvesLinear;
-    ArrayList<String> clgList;
+    //    ArrayList<String> clgList;
     ArrayList<String> actAssignList;
     ArrayList<String> actAssignListId;
-
     DatePickerDialog.OnDateSetListener onDateSetListener;
-    TextView clgCode;
     TextView actId;
-
     Button addSend;
-    Button add;
-    Button add2;
-    Button backActDetail;
 
+    Button backActDetail;
     ConstraintLayout campActIn;
     LinearLayout actHeaderInput;
     TextView malHay;
-
     int whichAct;
     int act;
     private EditText act_desc;
     private TextView todayBtn;
     private TextView actDate;
     private EditText actHour;
-    private Spinner drpdownactClg;
-    private Spinner drpdownactName;
     private Spinner drpdownactAssignName;
+
+    public AddDetailsActivity() {
+    }
+
+    public AddDetailsActivity(MyListAdapter myListAdapter, LottieAnimationView lottieAnimationView) {
+        this.myListAdapter = myListAdapter;
+        this.lottieAnimationView = lottieAnimationView;
+    }
 
     public static <K> String getRoot(Map<String, Integer> map, Integer value) {
         for (String key : map.keySet()) {
@@ -86,13 +91,14 @@ public class AddDetailsActivity extends Fragment {
         return null;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         huh = inflater.inflate(R.layout.fragment_add_details_activity, container, false);
 
-        clgList = getClgList();
+//        clgList = getClgList();
         actAssignList = getAssignActList();
         actHeaderInput = requireActivity().findViewById(R.id.actHeaderInput);
 
@@ -127,21 +133,6 @@ public class AddDetailsActivity extends Fragment {
         return e.getText().toString().trim().length() <= 0;
     }
 
-    public ArrayList<String> getClgList() {
-        ArrayList<String> data2 = new ArrayList<>();
-
-        DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
-        mDbHelper.createDatabase();
-        mDbHelper.open();
-        Cursor c = mDbHelper.getClgList();
-        Log.e("clgList:", "" + c.getCount());
-
-        while (c.moveToNext()) {
-            data2.add(c.getString(c.getColumnIndex("CollegeName")));
-        }
-        mDbHelper.close();
-        return data2;
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -149,11 +140,8 @@ public class AddDetailsActivity extends Fragment {
         constFyAct.setVisibility(View.GONE);
         nssHalvesLinear.setVisibility(View.GONE);
 
-        clgCode = huh.findViewById(R.id.clgCode);
         addSend = huh.findViewById(R.id.addSend);
         campActIn = huh.findViewById(R.id.camp_act_in);
-        add = requireActivity().findViewById(R.id.add);
-        add2 = requireActivity().findViewById(R.id.add2);
 
         actId = huh.findViewById(R.id.actdetailId);
 
@@ -163,8 +151,6 @@ public class AddDetailsActivity extends Fragment {
         todayBtn = huh.findViewById(R.id.todayBtn);
 
         drpdownactAssignName = huh.findViewById(R.id.drpdown_actAssignName);
-        drpdownactClg = huh.findViewById(R.id.drpdown_actClg);
-        drpdownactName = huh.findViewById(R.id.drpdown_actName);
 
         act_desc = huh.findViewById(R.id.act_desc);
         actAssignListId = getAssignActListId();
@@ -174,10 +160,8 @@ public class AddDetailsActivity extends Fragment {
         int currMont = cal.get(Calendar.MONTH) + 1;
         int currYear = cal.get(Calendar.YEAR);
 
-        String todayDate = "" + currYear + "-" + String.format(Locale.ENGLISH, "%02d", currMont) + "-" + currDay;
-        todayBtn.setOnClickListener(view12 -> {
-            actDate.setText(todayDate);
-        });
+        String todayDate = "" + currYear + "-" + String.format(Locale.ENGLISH, "%02d", currMont) + "-" + String.format(Locale.ENGLISH, "%02d", currDay);
+        todayBtn.setOnClickListener(view12 -> actDate.setText(todayDate));
         actDate.setOnClickListener(view1 -> {
             int dd = cal.get(Calendar.DAY_OF_MONTH);
             int mm = cal.get(Calendar.MONTH);
@@ -196,17 +180,13 @@ public class AddDetailsActivity extends Fragment {
 
         onDateSetListener = (datePicker, i, i1, i2) -> {
             i1 = i1 + 1;
-            String date = i + "-" + String.format(Locale.ENGLISH, "%02d", i1) + "-" + i2;
-            Log.e("AAAAAA", date);
+            String date = i + "-" + String.format(Locale.ENGLISH, "%02d", i1) + "-" + String.format(Locale.ENGLISH, "%02d", i2);
 
             if (i2 > currDay - 8 && i2 <= currDay && i1 >= currMont && i >= currYear)
                 actDate.setText(date);
             else
                 Toast.makeText(requireContext(), "Enter today's date or 8 days before", Toast.LENGTH_SHORT).show();
         };
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, clgList);
-        drpdownactClg.setAdapter(adapter);
 
         Map<String, Integer> actIdHash = new HashMap<>();
         actIdHash.put("First Year College", 11);
@@ -219,31 +199,33 @@ public class AddDetailsActivity extends Fragment {
         actIdHash.put("Second Year University", 23);
         ArrayAdapter<String> a = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, actAssignList);
         drpdownactAssignName.setAdapter(a);
-
         DatabaseAdapter mdb = new DatabaseAdapter(requireContext());
 
         //String actName = getResources().getStringArray(R.array.valOfActNames)[act];
         addSend.setOnClickListener(view13 -> {
-            int c = -1;
+            mdb.createDatabase();
+            mdb.open();
+            String activityName = drpdownactAssignName.getSelectedItem().toString();
+            Cursor m = mdb.getActAssigActNameAdmin(activityName);
+            m.moveToFirst();
+            int maxH = m.getInt(m.getColumnIndex("HoursAssigned"));
 
-            if (actHour.getText().toString().equals("") || Integer.parseInt(actHour.getText().toString().trim()) <= 0)
+            int c;
+
+            if (act_desc.getText().toString().equals("") || act_desc.getText().toString().trim().length() <= 0)
+                Toast.makeText(requireContext(), "Enter Description", Toast.LENGTH_SHORT).show();
+
+            else if (actHour.getText().toString().equals("") || Integer.parseInt(actHour.getText().toString().trim()) <= 0)
                 Toast.makeText(requireContext(), "Work atleast an hour and enter", Toast.LENGTH_SHORT).show();
 
-
-            else if (Integer.parseInt(actHour.getText().toString().trim()) > 10)
-                Toast.makeText(requireContext(), "Cannot enter more than 10 hours", Toast.LENGTH_SHORT).show();
+            else if (Integer.parseInt(actHour.getText().toString()) > maxH)
+                Toast.makeText(requireContext(), String.format(Locale.ENGLISH, "Cannot enter more than %d hours", maxH), Toast.LENGTH_SHORT).show();
 
             else if (actDate.getText().toString().equals("") || actDate.getText().toString().equals("YYYY/MM/DD"))
                 Toast.makeText(requireContext(), "Enter Date", Toast.LENGTH_SHORT).show();
 
-            else if (act_desc.getText().toString().equals(""))
-                Toast.makeText(requireContext(), "Enter Description", Toast.LENGTH_SHORT).show();
-
             else if (!actDate.getText().toString().equals("") && drpdownactAssignName.getSelectedItem() != null
-                    && !isEmpty(actHour)
-                    //&& !actId.getText().toString().equals("")
-                    && drpdownactClg.getSelectedItem() != null
-                    && drpdownactName.getSelectedItem() != null) {
+                    && !isEmpty(actHour)) {
 
                 mdb.createDatabase();
                 mdb.open();
@@ -253,6 +235,7 @@ public class AddDetailsActivity extends Fragment {
                     c = mdb.getSumHoursSubmitted(actDate.getText().toString(), "Second Year%");
                 mdb.close();
 
+                Toast.makeText(requireContext(), actDate.getText().toString() + " " + c, Toast.LENGTH_SHORT).show();
                 if (c <= 10) {
                     actId.setText(actAssignListId.get(drpdownactAssignName.getSelectedItemPosition()));
 
@@ -260,20 +243,15 @@ public class AddDetailsActivity extends Fragment {
                     mDbHelper.createDatabase();
                     mDbHelper.open();
 
-                    String activityName = drpdownactAssignName.getSelectedItem().toString();
-
-                    Log.e("hmm", "" + whichAct);
+                    Log.e("hmm", "" + whichAct + " " + activityName);
                     Log.e("hmm", "" + actDate.getText().toString());
                     Log.e("hmm", "" + drpdownactAssignName.getSelectedItem().toString());
                     Log.e("hmm", "" + actId.getText().toString());
 
-
-                    Cursor m = mDbHelper.getActAssigActNameAdmin(activityName);
-                    m.moveToFirst();
-
                     String actName = getRoot(actIdHash, m.getInt(m.getColumnIndex("activityType")));
+                    Log.e("AAA", "" + actName);
                     mDbHelper.insertActOff(
-                            ediary.VEC,
+                            VEC,
                             actName,
                             actDate.getText().toString(),
                             drpdownactAssignName.getSelectedItem().toString(),
@@ -289,13 +267,13 @@ public class AddDetailsActivity extends Fragment {
                         Log.e("AOO", "" + whichAct);
                         Log.e("AOO", "" + actId.getText().toString());
 
+
                         Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
-                                "Token " + ediary.AUTH_TOKEN,
-                                ediary.VEC,
-                                m.getInt(m.getColumnIndex("id")),// AAA
+                                "Token " + AUTH_TOKEN,
+                                VEC,
+                                m.getInt(m.getColumnIndex("id")),
                                 Integer.parseInt(actHour.getText().toString()),
                                 actDate.getText().toString(),
-                                //drpdownactAssignName.getSelectedItem().toString(),
                                 m.getInt(m.getColumnIndex("activityType")),
                                 Password.PASS,
                                 act_desc.getText().toString(),
@@ -308,18 +286,28 @@ public class AddDetailsActivity extends Fragment {
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                 if (response.isSuccessful() && response.body() != null) {
                                     Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
+                                    /*try {
+                                        Log.e("AAA", response.body().string());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }*/
                                     mDbHelper.createDatabase();
                                     mDbHelper.open();
                                     mDbHelper.setSync("DailyActivity", 1);
                                     mDbHelper.close();
+
+                                    myListAdapter.list.add(0, new AdapterDataMain(actDate.getText().toString(), drpdownactAssignName.getSelectedItem().toString(), actHour.getText().toString(), actId.getText().toString(), 0, "Submitted", act_desc.getText().toString()));
+                                    myListAdapter.notifyDataSetChanged();
                                     FragmentManager fm = requireActivity().getSupportFragmentManager();
                                     fm.popBackStack("AddDetailsActivity", 0);
+                                    lottieAnimationView.playAnimation();
                                 } else if (response.errorBody() != null) {
                                     try {
                                         Log.e("onResponse:error", response.errorBody().string());
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
+                                    lottieAnimationView.setVisibility(View.GONE);
                                 }
                             }
 
@@ -342,15 +330,14 @@ public class AddDetailsActivity extends Fragment {
                     Toast.makeText(requireContext(), "For date " + actDate.getText().toString() + " already added " + c + "hours cannot add more", Toast.LENGTH_SHORT).show();
             } else
                 Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();
+            mdb.close();
         });
 
         backActDetail.setOnClickListener(view14 -> {
             AlertDialog.Builder builder2 = new AlertDialog.Builder(requireContext(), R.style.delDialog);
             builder2.setMessage("Exit without saving?");
 
-            builder2.setNegativeButton("No", (dialog, which) -> {
-                dialog.dismiss();
-            });
+            builder2.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
 
             builder2.setPositiveButton("Yes", (dialog, which) -> {
                 dialog.cancel();
@@ -359,7 +346,6 @@ public class AddDetailsActivity extends Fragment {
                 actHeaderInput.setVisibility(View.GONE);
                 campActIn.setVisibility(View.GONE);
                 malHay.setVisibility(View.VISIBLE);
-//                add.setVisibility(View.VISIBLE);
             });
             builder2.show();
         });

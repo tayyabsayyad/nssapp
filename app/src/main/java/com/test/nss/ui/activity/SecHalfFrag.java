@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -26,10 +25,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.test.nss.DatabaseAdapter;
+import com.test.nss.Helper;
 import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
-import com.test.nss.ediary;
 import com.test.nss.ui.onClickInterface2;
 
 import java.text.DateFormat;
@@ -48,32 +47,35 @@ import retrofit2.internal.EverythingIsNonNull;
 
 public class SecHalfFrag extends Fragment {
 
+
     View root;
     Context mContext;
     List<AdapterDataAct> areaOneListDataAct;
     List<AdapterDataAct> areaTwoListDataAct;
     List<AdapterDataAct> univListDataAct;
     List<AdapterDataAct> clgListDataAct;
-
     RecyclerView recyclerViewAreaOneAct;
     RecyclerView recyclerViewAreaTwoAct;
     RecyclerView recyclerViewUnivAct;
     RecyclerView recyclerViewClgAct;
-
     TextView areaActOne;
     TextView areaActTwo;
     TextView clgAct;
     TextView univAct;
     TextView noActDesc;
-
     onClickInterface2 onClickInterface2;
     FloatingActionButton backAct;
-
     LinearLayout actDetails;
     int act = -1;
-
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     Date calobj = new Date();
+
+    public SecHalfFrag() {
+    }
+
+    public static SecHalfFrag newInstance() {
+        return new SecHalfFrag();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,7 +97,7 @@ public class SecHalfFrag extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Toast.makeText(requireContext(), "These are the assigned activities by PO", Toast.LENGTH_SHORT).show();
 
-        hideFab();
+        root.post(this::hideFab);
 
         recyclerViewAreaOneAct = root.findViewById(R.id.areasyListOne);
         recyclerViewAreaTwoAct = root.findViewById(R.id.areasyListTwo);
@@ -135,7 +137,7 @@ public class SecHalfFrag extends Fragment {
                 recyclerViewAreaTwoAct.setVisibility(View.GONE);
                 recyclerViewClgAct.setVisibility(View.GONE);
                 recyclerViewUnivAct.setVisibility(View.GONE);
-            }, 350);
+            }, 250);
         });
 
         areaActTwo.setOnClickListener(view14 -> {
@@ -150,7 +152,7 @@ public class SecHalfFrag extends Fragment {
                 recyclerViewAreaOneAct.setVisibility(View.GONE);
                 recyclerViewClgAct.setVisibility(View.GONE);
                 recyclerViewUnivAct.setVisibility(View.GONE);
-            }, 350);
+            }, 250);
         });
 
         clgAct.setOnClickListener(view13 -> {
@@ -165,7 +167,7 @@ public class SecHalfFrag extends Fragment {
                 recyclerViewAreaOneAct.setVisibility(View.GONE);
                 recyclerViewAreaTwoAct.setVisibility(View.GONE);
                 recyclerViewUnivAct.setVisibility(View.GONE);
-            }, 350);
+            }, 250);
         });
 
         univAct.setOnClickListener(view12 -> {
@@ -180,13 +182,13 @@ public class SecHalfFrag extends Fragment {
                 recyclerViewClgAct.setVisibility(View.GONE);
                 recyclerViewAreaOneAct.setVisibility(View.GONE);
                 recyclerViewAreaTwoAct.setVisibility(View.GONE);
-            }, 350);
+            }, 250);
         });
 
         DatabaseAdapter mdb2 = new DatabaseAdapter(requireContext());
         mdb2.createDatabase();
         mdb2.open();
-        int c = mdb2.getSumHoursSubmitted(df.format(calobj.getTime()), "First Year%");
+        int c = mdb2.getSumHoursSubmitted(df.format(calobj.getTime()), "Second Year%");
         mdb2.close();
 
         onClickInterface2 = abc -> {
@@ -257,7 +259,7 @@ public class SecHalfFrag extends Fragment {
                             mdb.createDatabase();
                             mdb.open();
                             mdb.insertActOff(
-                                    ediary.VEC,
+                                    Helper.VEC,
                                     actCode,
                                     df.format(cal.getTime()),
                                     finalActName,
@@ -270,8 +272,8 @@ public class SecHalfFrag extends Fragment {
                             Cursor m = mdb.getActAssigActNameAdmin(finalActName);
                             m.moveToFirst();
                             Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
-                                    "Token " + ediary.AUTH_TOKEN,
-                                    ediary.VEC,
+                                    "Token " + Helper.AUTH_TOKEN,
+                                    Helper.VEC,
                                     m.getInt(m.getColumnIndex("id")),// AAA
                                     j,
                                     df.format(cal.getTime()),
@@ -338,7 +340,7 @@ public class SecHalfFrag extends Fragment {
     }
 
     public List<AdapterDataAct> addActData(int yr) {
-        Log.e("opening db", "now for yr:" + yr);
+        //Log.e("opening db", "now for yr:" + yr);
         ArrayList<AdapterDataAct> data3 = new ArrayList<>();
 
         DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
@@ -346,7 +348,7 @@ public class SecHalfFrag extends Fragment {
         mDbHelper.open();
 
         Cursor c3 = mDbHelper.getActAllAdmin(yr);
-        Log.e("SSS", "" + c3.getCount());
+        //Log.e("SSS", "" + c3.getCount());
 
         while (c3.moveToNext()) {
             data3.add(new AdapterDataAct(
@@ -392,10 +394,10 @@ public class SecHalfFrag extends Fragment {
     public void onDetach() {
         super.onDetach();
         FragmentManager fm = getChildFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
+        /*if (fm.getBackStackEntryCount() > 0) {
             Log.e("SecHalfFrag", "onDetach: " + fm.getBackStackEntryCount());
             fm.popBackStack("SecHalfFrag", 0);
-        }
+        }*/
         noActDesc.setVisibility(View.GONE);
         actDetails.setVisibility(View.VISIBLE);
         recyclerViewUnivAct.setVisibility(View.GONE);

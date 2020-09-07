@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -22,17 +21,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.DatabaseAdapter;
+import com.test.nss.Helper;
 import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
-import com.test.nss.ediary;
 import com.test.nss.ui.onClickInterface2;
 
 import java.text.DateFormat;
@@ -49,9 +47,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-import static com.test.nss.ediary.isFirst;
-import static com.test.nss.ediary.isSec;
-import static com.test.nss.ediary.sbColorText;
+import static com.test.nss.Helper.isFirst;
+import static com.test.nss.Helper.isSec;
+import static com.test.nss.Helper.sbColorText;
 
 public class FirstHalfFrag extends Fragment {
 
@@ -61,26 +59,28 @@ public class FirstHalfFrag extends Fragment {
     List<AdapterDataAct> areaTwoListDataAct;
     List<AdapterDataAct> univListDataAct;
     List<AdapterDataAct> clgListDataAct;
-
     RecyclerView recyclerViewAreaOneAct;
     RecyclerView recyclerViewAreaTwoAct;
     RecyclerView recyclerViewUnivAct;
     RecyclerView recyclerViewClgAct;
-
     TextView areaActOne;
     TextView areaActTwo;
     TextView clgAct;
     TextView univAct;
-
     onClickInterface2 onClickInterface2;
     FloatingActionButton backAct;
-
     LinearLayout actDetails;
     TextView noActDesc;
     int act = -1;
-
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     Date calobj = new Date();
+
+    public FirstHalfFrag() {
+    }
+
+    public static FirstHalfFrag newInstance() {
+        return new FirstHalfFrag();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -115,7 +115,7 @@ public class FirstHalfFrag extends Fragment {
         tv.setTypeface(t);
         s.show();
 
-        hideFab();
+        root.post(this::hideFab);
 
         recyclerViewAreaOneAct = root.findViewById(R.id.areafyListOne);
         recyclerViewAreaTwoAct = root.findViewById(R.id.areafyListTwo);
@@ -281,7 +281,7 @@ public class FirstHalfFrag extends Fragment {
                             mdb.createDatabase();
                             mdb.open();
                             mdb.insertActOff(
-                                    ediary.VEC,
+                                    Helper.VEC,
                                     actCode,
                                     df.format(cal.getTime()),
                                     finalActName,
@@ -294,8 +294,8 @@ public class FirstHalfFrag extends Fragment {
                             Cursor m = mdb.getActAssigActNameAdmin(finalActName);
                             m.moveToFirst();
                             Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
-                                    "Token " + ediary.AUTH_TOKEN,
-                                    ediary.VEC,
+                                    "Token " + Helper.AUTH_TOKEN,
+                                    Helper.VEC,
                                     m.getInt(m.getColumnIndex("id")),// AAA
                                     j,
                                     df.format(cal.getTime()),
@@ -363,7 +363,7 @@ public class FirstHalfFrag extends Fragment {
     }
 
     public List<AdapterDataAct> addActData(int yr) {
-        Log.e("opening db", "now for yr:" + yr);
+        //Log.e("opening db", "now for yr:" + yr);
         ArrayList<AdapterDataAct> data3 = new ArrayList<>();
 
         DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
@@ -371,7 +371,7 @@ public class FirstHalfFrag extends Fragment {
         mDbHelper.open();
 
         Cursor c3 = mDbHelper.getActAllAdmin(yr);
-        Log.e("SSS", "" + c3.getCount());
+        //Log.e("SSS", "" + c3.getCount());
 
         while (c3.moveToNext()) {
             data3.add(new AdapterDataAct(
@@ -416,11 +416,11 @@ public class FirstHalfFrag extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        FragmentManager fm = getChildFragmentManager();
+        /*FragmentManager fm = getChildFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             Log.e("FirstHalfFrag", "onDetach: " + fm.getBackStackEntryCount());
             fm.popBackStack("FirstHalfFrag", 0);
-        }
+        }*/
         noActDesc.setVisibility(View.GONE);
         actDetails.setVisibility(View.VISIBLE);
         recyclerViewUnivAct.setVisibility(View.GONE);

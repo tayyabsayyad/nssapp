@@ -3,6 +3,7 @@ package com.test.nss.ui.work;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,10 +35,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
-import static com.test.nss.ediary.blackish;
-import static com.test.nss.ediary.isFirst;
-import static com.test.nss.ediary.isSec;
-import static com.test.nss.ediary.primaryColDark;
+import static com.test.nss.Helper.blackishy;
+import static com.test.nss.Helper.isFirst;
+import static com.test.nss.Helper.isSec;
+import static com.test.nss.Helper.primaryColDark;
 
 public class WorkFragment extends Fragment {
 
@@ -51,11 +52,13 @@ public class WorkFragment extends Fragment {
     TextView toolbarTitle;
     TextView hoursInfo;
     PieChart pieChart;
-    List<AdapterDataWork> adapterDataWorks;
+    List<AdapterDataWork> adapterDataWorks, fyData, syData;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        fyData = new ArrayList<>();
+        syData = new ArrayList<>();
         root = inflater.inflate(R.layout.fragment_work, container, false);
 
         deleteData("WorkHoursFy");
@@ -84,6 +87,14 @@ public class WorkFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        for (int i = 0; i < adapterDataWorks.size() - 4; i++) {
+            fyData.add(adapterDataWorks.get(i));
+        }
+        for (int i = 4; i < adapterDataWorks.size(); i++) {
+            syData.add(adapterDataWorks.get(i));
+        }
+
         toolbar = requireActivity().findViewById(R.id.toolbar);
 
         toolbar.setVisibility(View.VISIBLE);
@@ -104,7 +115,6 @@ public class WorkFragment extends Fragment {
                 }
             }
         }
-
 
         PieDataSet pieData = new PieDataSet(data, "");
         pieData.setSliceSpace(3);
@@ -159,7 +169,7 @@ public class WorkFragment extends Fragment {
         l.setWordWrapEnabled(true);
         l.setDrawInside(false);
         l.setTypeface(t);
-        l.setTextColor(blackish);
+        l.setTextColor(blackishy);
 
         pieChart.setCenterTextColor(primaryColDark);
 
@@ -170,23 +180,22 @@ public class WorkFragment extends Fragment {
         pieChart.animateXY(1500, 1000, Easing.EaseInOutExpo); //SINE QUART
         pieChart.invalidate();
 
-        fm = requireActivity().getSupportFragmentManager();
+        fm = getChildFragmentManager();
         if (isFirst) {
             secButton.setTextColor(requireContext().getColor(R.color.grey));
             firstButton.setOnClickListener(v -> {
                 firstButton.setTextColor(primaryColDark);
 
                 hoursInfo.setVisibility(View.GONE);
-                fm.beginTransaction().replace(R.id.work_details, new WorkDetailsFirstFrag(requireContext())).addToBackStack("WorkFrag").commit();
+                fm.beginTransaction().replace(R.id.work_details, WorkDetailsFirstFrag.newInstance(fyData)).addToBackStack(null).commit();
             });
             secButton.setOnClickListener(v -> {
-                if (isFirst)
-                    Snackbar.make(v, "Please complete First Year", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(v, "Please complete First Year", Snackbar.LENGTH_SHORT).show();
             });
-        } else {
+        } else if (isSec) {
             secButton.setOnClickListener(v -> {
                 secButton.setTextColor(primaryColDark);
-                firstButton.setTextColor(blackish);
+                firstButton.setTextColor(blackishy);
 
                 data.clear();
                 for (int i = 4; i < adapterDataWorks.size(); i++) {
@@ -198,15 +207,15 @@ public class WorkFragment extends Fragment {
                 pieData.notifyDataSetChanged();
                 pieChart.notifyDataSetChanged();
                 pieChart.invalidate();
-                pieChart.animateXY(800, 800, Easing.EaseInCirc);
+                //pieChart.animateXY(800, 800, Easing.EaseInCirc);
 
                 hoursInfo.setVisibility(View.GONE);
-                fm.beginTransaction().replace(R.id.work_details, new WorkDetailsSecFrag(requireContext())).addToBackStack("WorkFrag").commit();
+                fm.beginTransaction().replace(R.id.work_details, WorkDetailsSecFrag.newInstace(syData)).addToBackStack(null).commit();
             });
 
             firstButton.setOnClickListener(view1 -> {
                 firstButton.setTextColor(primaryColDark);
-                secButton.setTextColor(blackish);
+                secButton.setTextColor(blackishy);
 
                 data.clear();
                 for (int i = 0; i < adapterDataWorks.size() - 4; i++) {
@@ -218,10 +227,10 @@ public class WorkFragment extends Fragment {
                 pieData.notifyDataSetChanged();
                 pieChart.notifyDataSetChanged();
                 pieChart.invalidate();
-                pieChart.animateXY(800, 800, Easing.EaseInCirc);
+                //pieChart.animateXY(800, 800, Easing.EaseInCirc);
 
                 hoursInfo.setVisibility(View.GONE);
-                fm.beginTransaction().replace(R.id.work_details, new WorkDetailsFirstFrag(requireContext())).addToBackStack("WorkFrag").commit();
+                fm.beginTransaction().replace(R.id.work_details, WorkDetailsFirstFrag.newInstance(fyData)).addToBackStack(null).commit();
             });
         }
     }
@@ -287,28 +296,28 @@ public class WorkFragment extends Fragment {
         m.createDatabase();
         m.open();
         m.insertWork(
-                "Area Based One",
+                "Area Based Level One",
                 areaLvlOne,
                 areaCompOne,
                 areaRemOneHours,
                 1
         );
         m.insertWork(
-                "Area Based Two",
+                "Area Based Level Two",
                 areaLvlTwo,
                 areaCompTwo,
                 areaRemTwoHours,
                 1
         );
         m.insertWork(
-                "University",
+                "University Level",
                 univLvl,
                 univComp,
                 univRemHours,
                 1
         );
         m.insertWork(
-                "College",
+                "College Level",
                 clgLvl,
                 clgComp,
                 clgRemHours,
@@ -316,10 +325,10 @@ public class WorkFragment extends Fragment {
         );
         m.close();
 
-        data.add(new AdapterDataWork("FY Area Based 1", String.valueOf(areaLvlOne), String.valueOf(areaCompOne), String.valueOf(areaRemOneHours)));
-        data.add(new AdapterDataWork("FY Area Based 2", String.valueOf(areaLvlTwo), String.valueOf(areaCompTwo), String.valueOf(areaRemTwoHours)));
-        data.add(new AdapterDataWork("FY University", String.valueOf(univLvl), String.valueOf(univComp), String.valueOf(univRemHours)));
-        data.add(new AdapterDataWork("FY College", String.valueOf(clgLvl), String.valueOf(clgComp), String.valueOf(clgRemHours)));
+        data.add(new AdapterDataWork("Area Based 1", String.valueOf(areaLvlOne), String.valueOf(areaCompOne), String.valueOf(areaRemOneHours)));
+        data.add(new AdapterDataWork("Area Based 2", String.valueOf(areaLvlTwo), String.valueOf(areaCompTwo), String.valueOf(areaRemTwoHours)));
+        data.add(new AdapterDataWork("University", String.valueOf(univLvl), String.valueOf(univComp), String.valueOf(univRemHours)));
+        data.add(new AdapterDataWork("College", String.valueOf(clgLvl), String.valueOf(clgComp), String.valueOf(clgRemHours)));
 
         if (areaCompOne2 >= 1 && areaLvlOne - areaCompOne2 > 0)
             areaRemOneHours = areaLvlOne - areaCompOne2;
@@ -386,10 +395,10 @@ public class WorkFragment extends Fragment {
         );
         m.close();
 
-        data.add(new AdapterDataWork("SY Area Based 1", String.valueOf(areaLvlOne), String.valueOf(areaCompOne2), String.valueOf(areaRemOneHours)));
-        data.add(new AdapterDataWork("SY Area Based 2", String.valueOf(areaLvlTwo), String.valueOf(areaCompTwo2), String.valueOf(areaRemTwoHours)));
-        data.add(new AdapterDataWork("SY University", String.valueOf(univLvl), String.valueOf(univComp2), String.valueOf(univRemHours)));
-        data.add(new AdapterDataWork("SY College", String.valueOf(clgLvl), String.valueOf(clgComp2), String.valueOf(clgRemHours)));
+        data.add(new AdapterDataWork("Area Based 1", String.valueOf(areaLvlOne), String.valueOf(areaCompOne2), String.valueOf(areaRemOneHours)));
+        data.add(new AdapterDataWork("Area Based 2", String.valueOf(areaLvlTwo), String.valueOf(areaCompTwo2), String.valueOf(areaRemTwoHours)));
+        data.add(new AdapterDataWork("University", String.valueOf(univLvl), String.valueOf(univComp2), String.valueOf(univRemHours)));
+        data.add(new AdapterDataWork("College", String.valueOf(clgLvl), String.valueOf(clgComp2), String.valueOf(clgRemHours)));
         return data;
     }
 
@@ -400,8 +409,33 @@ public class WorkFragment extends Fragment {
         DataBaseHelper mDb2 = new DataBaseHelper(requireContext());
         SQLiteDatabase m = mDb2.getWritableDatabase();
         m.execSQL(String.format("UPDATE %s SET HoursWorked=NULL", table));
-        mDbHelper2.close();
         m.close();
         mDb2.close();
+        mDbHelper2.close();
+    }
+
+    @Override
+    public void onDetach() {
+        Fragment simpleFragment = fm
+                .findFragmentById(R.id.work_details);
+        //int c = fm.getBackStackEntryCount();
+        Log.d("AAA", "onDetach() called WorkFrag" + simpleFragment + fm.getBackStackEntryCount());
+        if (simpleFragment instanceof WorkDetailsFirstFrag || simpleFragment instanceof WorkDetailsSecFrag) {
+            //((ediary) requireActivity()).closeFragment(simpleFragment);
+            fm.popBackStack();
+            simpleFragment.onDetach();
+        }
+//            WorkDetailsFirstFrag.newInstance().onDetach();
+        /*if (simpleFragment instanceof WorkDetailsFirstFrag)
+            fm.popBackStack();
+        if (simpleFragment instanceof WorkDetailsSecFrag)
+            fm.popBackStack();*/
+        /*int c = fm.getBackStackEntryCount();
+        if (c >= 0) {
+            Log.e(null, "onDetache: " + fm.getBackStackEntryCount());
+            fm.popBackStack();
+            c--;
+        }*/
+        super.onDetach();
     }
 }

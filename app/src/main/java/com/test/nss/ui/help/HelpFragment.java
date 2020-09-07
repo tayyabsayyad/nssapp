@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,13 +42,11 @@ public class HelpFragment extends Fragment {
     BounceTouchListener bounceTouchListener;
 
     TextView toolbarTitle;
-    ImageView nssLogo;
     CardView contactUs, mainCard;
     TextView sun;
 
-    List<AdapterDataHelp> dataLeaderHelpList;
+    List<AdapterDataHelp> dataLeaderHelpList = new ArrayList<>();
     RecyclerView recyclerView;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -56,15 +54,14 @@ public class HelpFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_help, container, false);
 
         toolbar = requireActivity().findViewById(R.id.toolbar);
-        dataLeaderHelpList = addHelpData();
 
         //toolbar.setVisibility(View.GONE);
-        nssLogo = requireActivity().findViewById(R.id.nss_logo);
 
-        nssLogo.setVisibility(View.GONE);
         sun = root.findViewById(R.id.sun);
         toolbarTitle = requireActivity().findViewById(R.id.titleTool);
         toolbarTitle.setText(getString(R.string.menu_help));
+
+        recyclerView = root.findViewById(R.id.leaderRecDet);
 
         onClickInterface onClickInterface;
         onClickInterface = abc -> {
@@ -72,11 +69,21 @@ public class HelpFragment extends Fragment {
             callIntent.setData(Uri.parse("tel:" + abc));
             startActivity(callIntent);
         };
-        recyclerView = root.findViewById(R.id.leaderRecDet);
-        MyListAdapterHelp campActDataAdapter = new MyListAdapterHelp(dataLeaderHelpList, requireContext(), onClickInterface);
+
+        dataLeaderHelpList = addHelpData();
+        MyListAdapterHelp helpDataAdapter = new MyListAdapterHelp(dataLeaderHelpList,
+                requireContext(), onClickInterface);
+        recyclerView.setAdapter(helpDataAdapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setAdapter(campActDataAdapter);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                helpDataAdapter.isShimmer = false;
+                helpDataAdapter.notifyDataSetChanged();
+            }
+        }, 3000);
+
         return root;
     }
 
@@ -164,11 +171,5 @@ public class HelpFragment extends Fragment {
         }
         mDbHelper.close();
         return data3;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        nssLogo.setVisibility(View.VISIBLE);
     }
 }

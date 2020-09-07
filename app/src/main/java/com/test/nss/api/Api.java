@@ -182,6 +182,14 @@ public interface Api {
 
     );
 
+    @POST("/diary/api/password_reset/")
+    @FormUrlEncoded
+    Call<ResponseBody> sendEmail(@Field("email") String email);
+
+    @POST("/diary/api/password_reset/confirm/")
+    @FormUrlEncoded
+    Call<ResponseBody> verifyPass(@Field("email") String email, @Field("token") String otp, @Field("password") String newPass);
+
     @GET("/diary/api/IsLeader/")
     Call<ResponseBody> isLeader(@Header("Authorization") String token);
 
@@ -194,5 +202,4 @@ public interface Api {
     @GET("/diary/getVolDailyAct/{vec}")
     Call<ResponseBody> volActVec(@Header("Authorization") String token,
                                  @Path("vec") String vec);
-
 }

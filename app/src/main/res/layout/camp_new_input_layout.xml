@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/act_bg_lines_card"
+    app:cardBackgroundColor="@color/white"
     app:cardElevation="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/act_bg_lines_card"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,6 @@
             android:textSize="18sp" />
 
         <EditText
-            android:textColor="@color/blackGrey"
             android:id="@+id/inputDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +35,8 @@
             android:fontFamily="@font/google_sans"
             android:hint="Type Something..."
             android:inputType="text"
-            android:padding="@dimen/padding_5dp" />
+            android:padding="@dimen/padding_5dp"
+            android:textColor="@color/blackGrey" />
 
         <TextView
             android:layout_width="match_parent"

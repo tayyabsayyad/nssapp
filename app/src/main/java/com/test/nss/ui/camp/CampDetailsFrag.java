@@ -25,6 +25,13 @@ import java.util.List;
 
 public class CampDetailsFrag extends Fragment {
 
+    public CampDetailsFrag() {
+    }
+
+    public static CampDetailsFrag newInstance() {
+        return new CampDetailsFrag();
+    }
+
     Button go_back;
     LinearLayout camp_main_details;
 
@@ -77,9 +84,10 @@ public class CampDetailsFrag extends Fragment {
     public void onDetach() {
         super.onDetach();
         //camp_main_details.setVisibility(View.VISIBLE);
-        FragmentManager fm = requireActivity().getSupportFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             Log.e("CampFrag", "onDetache: " + fm.getBackStackEntryCount());
+            fm.popBackStack();
             //fm.popBackStackImmediate("CampDetailsDays", 0);
 //            fm.popBackStack("CampDetailsFrag", 0);
             //fm.popBackStackImmediate();

@@ -6,13 +6,21 @@ public class AdapterDataVolunteer {
     private String hours;
     private String id;
     private String state;
+    private int actCode;
+    private int assActCode;
 
-    public AdapterDataVolunteer(String date, String act, String hours, String id, String state) {
+    public AdapterDataVolunteer(String date, String act, String hours, String id, String state, int actCode, int assActCode) {
         this.date = date;
         this.act = act;
         this.hours = hours;
         this.id = id;
         this.state = state;
+        this.actCode = actCode;
+        this.assActCode = assActCode;
+    }
+
+    public int getActCode() {
+        return actCode;
     }
 
     public String getDate() {
@@ -33,5 +41,9 @@ public class AdapterDataVolunteer {
 
     public String getState() {
         return state;
+    }
+
+    public int getAssActCode() {
+        return assActCode;
     }
 }

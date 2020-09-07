@@ -20,13 +20,14 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
-        android:transitionName="trans"
+        android:background="@color/off_white"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:itemTextAppearance="@style/font"
+        android:transitionName="trans"
         app:headerLayout="@layout/nav_header_main"
+        app:itemTextAppearance="@style/font"
         app:menu="@menu/activity_main_drawer">
 
         <LinearLayout
@@ -34,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="@dimen/padding_5dp"
-            android:layout_marginBottom="50dp">
+            android:layout_marginBottom="85dp">
 
             <include
                 android:id="@+id/logout"
@@ -48,11 +49,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="@dimen/space_10dp">
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="45dp">
 
             <include
                 layout="@layout/switch_dark"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="@dimen/padding_5dp">
+
+            <include
+                layout="@layout/refresh"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
         </LinearLayout>

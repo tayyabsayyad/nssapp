@@ -19,11 +19,11 @@ import com.test.nss.ui.onClickInterface2;
 import java.util.Collections;
 import java.util.List;
 
-import static com.test.nss.ediary.blackish;
-import static com.test.nss.ediary.green;
-import static com.test.nss.ediary.kesar;
-import static com.test.nss.ediary.primaryColDark;
-import static com.test.nss.ediary.red;
+import static com.test.nss.Helper.blackishy;
+import static com.test.nss.Helper.green;
+import static com.test.nss.Helper.kesar;
+import static com.test.nss.Helper.primaryColDark;
+import static com.test.nss.Helper.red;
 
 public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
     //private AdapterDataMain[] listdata;
@@ -48,7 +48,6 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
         holder.date.setText(list.get(position).getDate());
         holder.act.setText(list.get(position).getAct());
         holder.state.setText(String.format("• %s", list.get(position).getState()));
@@ -57,12 +56,13 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
 
         switch (list.get(position).getState()) {
             default:
-                holder.date.setTextColor(blackish);
+                holder.date.setTextColor(blackishy);
                 holder.hours.setTextColor(primaryColDark);
                 holder.linearLayout.setBackground(ContextCompat.getDrawable(mCon, R.drawable.ic_circle));
                 break;
             case "LeaderDelete":
             case "PoDelete":
+            case "Finished":
                 setColor(holder, red);
                 holder.linearLayout.setBackground(ContextCompat.getDrawable(mCon, R.drawable.ic_circle_del));
                 break;
@@ -130,10 +130,10 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
             this.actId = itemView.findViewById(R.id.actID);
             this.state = itemView.findViewById(R.id.state);
 
-            cardView = itemView.findViewById(R.id.dataCard);
-            linearLayout = itemView.findViewById(R.id.imageLinear);
-            mainLinear = itemView.findViewById(R.id.mainLinear);
 
+            this.cardView = itemView.findViewById(R.id.dataCard);
+            this.linearLayout = itemView.findViewById(R.id.imageLinear);
+            this.mainLinear = itemView.findViewById(R.id.mainLinear);
         }
     }
 }

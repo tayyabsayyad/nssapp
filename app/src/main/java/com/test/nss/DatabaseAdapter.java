@@ -7,31 +7,30 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import static com.test.nss.Helper.isFirst;
+
 public class DatabaseAdapter {
     protected static final String TAG = "DataAdapter";
 
-    private final Context mContext;
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     Calendar calobj = Calendar.getInstance();
     private SQLiteDatabase mDb;
     private DataBaseHelper mDbHelper;
 
     public DatabaseAdapter(Context context) {
-        this.mContext = context;
-        mDbHelper = new DataBaseHelper(mContext);
+        mDbHelper = new DataBaseHelper(context);
     }
 
-    public DatabaseAdapter createDatabase() throws SQLException {
+    public DatabaseAdapter createDatabase() {
         try {
             mDbHelper.createDataBase();
-        } catch (IOException mIOException) {
+        } catch (SQLException mIOException) {
             Log.e(TAG, mIOException.toString() + "  UnableToCreateDatabase");
             throw new Error("UnableToCreateDatabase");
         }
@@ -99,8 +98,7 @@ public class DatabaseAdapter {
         try {
             String sql = "SELECT * FROM CampDetails";
             Cursor mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() == 0) {
-            }
+            mCur.getCount();
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -108,7 +106,7 @@ public class DatabaseAdapter {
         }
     }
 
-    public Cursor getClgList() {
+    /*public Cursor getClgList() {
         try {
             String sql = "SELECT CollegeName FROM CollegeNames";
             Cursor mCur = mDb.rawQuery(sql, null);
@@ -119,14 +117,13 @@ public class DatabaseAdapter {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;
         }
-    }
+    }*/
 
     public Cursor getClgState(String clgName) {
         try {
             String sql = String.format("SELECT * FROM CollegeNames WHERE CollegeName= \"%s\"", clgName);
             Cursor mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() == 0) {
-            }
+            mCur.getCount();
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -153,9 +150,7 @@ public class DatabaseAdapter {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT CampId FROM CampActivityList WHERE CampActivityName=\"%s\"", campActName);
             Cursor mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() == 0) {
-            } else {
-            }
+            mCur.getCount();
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -276,7 +271,7 @@ public class DatabaseAdapter {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("id", id);
-            contentValues.put("VEC", ediary.VEC);
+            contentValues.put("VEC", Helper.VEC);
             contentValues.put("NatureOfWork", a);
             contentValues.put("TotalHours", th);
             contentValues.put("HoursWorked", hw);
@@ -344,6 +339,8 @@ public class DatabaseAdapter {
                              String vec,
                              String actName,
                              String assActName,
+                             String assActCode,
+                             String actCode,
                              String state) {
         try {
             ContentValues contentValues = new ContentValues();
@@ -355,6 +352,8 @@ public class DatabaseAdapter {
             contentValues.put("VEC", vec);
             contentValues.put("ActivityName", actName);
             contentValues.put("AssignedActivityName", assActName);
+            contentValues.put("AssignedActivityCode", assActCode);
+            contentValues.put("ActCode", actCode);
             contentValues.put("State", state);
 
             mDb.insert("VolAct", null, contentValues);
@@ -484,8 +483,7 @@ public class DatabaseAdapter {
         try {
             String sql = String.format("SELECT * FROM AreaData WHERE ActivityName LIKE " + "\"__%s\"", actCode);
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            if (mCur2.getCount() == 0) {
-            }
+            mCur2.getCount();
             mCur2.moveToFirst();
             return mCur2;
         } catch (SQLException mSQLException) {
@@ -498,8 +496,7 @@ public class DatabaseAdapter {
         try {
             String sql = String.format("SELECT * FROM AreaDataPrev WHERE ActivityName LIKE " + "\"__%s\"", actCode);
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            if (mCur2.getCount() == 0) {
-            }
+            mCur2.getCount();
             mCur2.moveToFirst();
             return mCur2;
         } catch (SQLException mSQLException) {
@@ -513,8 +510,7 @@ public class DatabaseAdapter {
             //String a = String.format("aaa %d", act);
             String sql = "SELECT * FROM DailyActivity WHERE sync=0";
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            if (mCur2.getCount() == 0) {
-            }
+            mCur2.getCount();
             return mCur2;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -530,8 +526,7 @@ public class DatabaseAdapter {
             sql = "SELECT * FROM WorkHoursSy";
         Cursor mCur = mDb.rawQuery(sql, null);
         try {
-            if (mCur.getCount() == 0) {
-            }
+            mCur.getCount();
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getAllDetHours >>" + mSQLException.toString());
@@ -539,7 +534,7 @@ public class DatabaseAdapter {
         }
     }
 
-    public Cursor getHoursDet(String lvl, int yr) {
+    /*public Cursor getHoursDet(String lvl, int yr) {
         String sql;
         if (yr == 1)
             sql = String.format("SELECT * FROM WorkHoursFy WHERE NatureOfWork=\"%s\"", lvl);
@@ -556,12 +551,11 @@ public class DatabaseAdapter {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;
         }
-    }
+    }*/
 
     public int getHours(String lvl) {
-        try {
-            String sql = String.format("SELECT * FROM HoursList WHERE Level=\"%s\"", lvl);
-            Cursor mCur = mDb.rawQuery(sql, null);
+        String sql = String.format("SELECT * FROM HoursList WHERE Level=\"%s\"", lvl);
+        try (Cursor mCur = mDb.rawQuery(sql, null)) {
             if (mCur.getCount() == 0) {
                 return 0;
             }
@@ -578,8 +572,7 @@ public class DatabaseAdapter {
             //String a = String.format("aaa %d", act);
             String sql = "SELECT * FROM Leaders WHERE State=\"Appointed\"";
             Cursor mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() == 0) {
-            }
+            mCur.getCount();
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -589,18 +582,15 @@ public class DatabaseAdapter {
 
     public String getLeaderName(int id) {
         String sql = String.format(Locale.ENGLISH, "SELECT Name FROM Leaders WHERE id=%d", id);
-        Cursor mCur = mDb.rawQuery(sql, null);
-        try {
-
-            if (mCur.getCount() == 0) {
-            }
+        try (Cursor mCur = mDb.rawQuery(sql, null)) {
             mCur.moveToFirst();
-            return mCur.getString(mCur.getColumnIndex("Name"));
+            if (mCur.getCount() < 1 || mCur.getString(mCur.getColumnIndex("Name")) == null)
+                return null;
+            else
+                return mCur.getString(mCur.getColumnIndex("Name"));
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;
-        } finally {
-            mCur.close();
         }
     }
 
@@ -608,9 +598,7 @@ public class DatabaseAdapter {
         try {
             String sql = "SELECT DISTINCT VEC FROM VolAct";
             Cursor mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() == 0) {
-                //Log.e(TAG, "getVec: " + "Empty");
-            }
+            mCur.getCount();//Log.e(TAG, "getVec: " + "Empty");
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -622,9 +610,7 @@ public class DatabaseAdapter {
         try {
             String sql = "SELECT DISTINCT VEC FROM VolActAll";
             Cursor mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() == 0) {
-                //Log.e(TAG, "getVec: " + "Empty");
-            }
+            mCur.getCount();//Log.e(TAG, "getVec: " + "Empty");
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -656,8 +642,7 @@ public class DatabaseAdapter {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT * FROM VolAct WHERE VEC=\"%s\"", vec);
             Cursor mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() == 0) {
-            }
+            mCur.getCount();
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -669,8 +654,7 @@ public class DatabaseAdapter {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT * FROM VolActAll WHERE VEC=\"%s\"", vec);
             Cursor mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() == 0) {
-            }
+            mCur.getCount();
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -682,8 +666,7 @@ public class DatabaseAdapter {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT * FROM VolAct WHERE id=\"%d\"", id);
             Cursor mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() == 0) {
-            }
+            mCur.getCount();
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -695,8 +678,7 @@ public class DatabaseAdapter {
         try {
             String sql = String.format("SELECT * FROM VolAct WHERE ActivityName=\"%s\" AND VEC=\"%s\"", actName, vec);
             Cursor mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() == 0) {
-            }
+            mCur.getCount();
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -704,12 +686,33 @@ public class DatabaseAdapter {
         }
     }
 
+    public boolean isApproved(String vec) {
+        String sql = String.format("SELECT State FROM VolAct WHERE VEC = \"%s\"", vec);
+        boolean isApp = true;
+        try (Cursor c = mDb.rawQuery(sql, null)) {
+            if (c != null && c.getCount() > 0) {
+                c.moveToFirst();
+                for (int i = 0; i < c.getCount(); i++) {
+                    try {
+                        isApp = !c.getString(i).equals("Submitted") && !c.getString(i).equals("Modified");
+                    } catch (IllegalStateException ignored) {
+                    }
+                    c.moveToNext();
+                }
+                if (c.getCount() == 0)
+                    isApp = true;
+            }
+        } catch (SQLException | IllegalArgumentException exception) {
+            Log.e(TAG, "getTestData >>" + exception.toString());
+        }
+        return isApp;
+    }
+
     public Cursor getVolAllDetails(String actName, String vec) {
         try {
             String sql = String.format("SELECT * FROM VolVecActAll WHERE ActivityName=\"%s\" AND VEC=\"%s\"", actName, vec);
             Cursor mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() == 0) {
-            }
+            mCur.getCount();
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -722,8 +725,7 @@ public class DatabaseAdapter {
             //String a = String.format("aaa %d", act);
             String sql = String.format("SELECT * FROM Registration WHERE VEC=\"%s\"", vec);
             Cursor mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() == 0) {
-            }
+            mCur.getCount();
             return mCur;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -751,9 +753,7 @@ public class DatabaseAdapter {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT * FROM DailyActivity WHERE ActivityCode=\"%s\" AND (not State=\"Deleted\") ORDER BY Date DESC", act);
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            if (mCur2.getCount() == 0) {
-                //Log.e(mContext, "Too bad no data in DailyActivity", )();
-            }
+            mCur2.getCount();
             return mCur2;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -765,9 +765,7 @@ public class DatabaseAdapter {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT * FROM DailyActivity WHERE actID=%d AND (not State=\"Deleted\")", id);
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            if (mCur2.getCount() == 0) {
-                //Log.e(mContext, "Too bad no data in DailyActivity", )();
-            }
+            mCur2.getCount();//Log.e(mContext, "Too bad no data in DailyActivity", )();
             return mCur2;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -793,8 +791,7 @@ public class DatabaseAdapter {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT * FROM ActivityListByAdmin WHERE activityType LIKE '%s'", act);
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            if (mCur2.getCount() == 0) {
-            }
+            mCur2.getCount();
             return mCur2;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -802,13 +799,29 @@ public class DatabaseAdapter {
         }
     }
 
+    public int getCountAssignAct() {
+        String sql = "SELECT * FROM ActivityListByAdmin";
+
+        try (Cursor mCur2 = mDb.rawQuery(sql, null)) {
+            return mCur2.getCount();
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            //throw mSQLException;
+        }
+        return 0;
+    }
+
     public Cursor getActAssigActNameAdmin(String act) {
         try {
-            String sql = String.format("SELECT * FROM ActivityListByAdmin WHERE ActivityName=\"%s\"", act);
-            Cursor mCur2 = mDb.rawQuery(sql, null);
-            if (mCur2.getCount() == 0) {
-            }
-            return mCur2;
+            String sql;
+            Cursor c;
+            if (isFirst)
+                sql = String.format("SELECT * FROM ActivityListByAdmin WHERE ((activityType like \"1%%\") and (ActivityName=\"%s\"))", act);
+            else
+                sql = String.format("SELECT * FROM ActivityListByAdmin WHERE ((activityType like \"2%%\") and (ActivityName=\"%s\"))", act);
+            c = mDb.rawQuery(sql, null);
+
+            return c;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             //throw mSQLException;
@@ -875,9 +888,7 @@ public class DatabaseAdapter {
         try {
             String sql = "SELECT * FROM CampActivities ORDER BY id DESC";
             Cursor mCur2 = mDb.rawQuery(sql, null);
-            if (mCur2.getCount() == 0) {
-                //Log.e(mContext, "Too bad no data in CampActivityList", )();
-            }
+            mCur2.getCount();//Log.e(mContext, "Too bad no data in CampActivityList", )();
             return mCur2;
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
@@ -901,7 +912,7 @@ public class DatabaseAdapter {
     }
 
     public int getSumHoursSubmitted(String date, String actCode) {
-        String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode LIKE \"%s\" AND dateAdded=\"%s\" AND (State=\"Submitted\" OR State=\"Approved\" OR State=\"Modified\" OR State=\"PoModified\" OR State=\"LeaderModified\")", actCode, date);
+        String sql = String.format("SELECT sum(HoursWorked) FROM DailyActivity WHERE ActivityCode LIKE \"%s\" AND Date=\"%s\" AND (State=\"Submitted\" OR State=\"Approved\" OR State=\"Modified\" OR State=\"PoModified\" OR State=\"LeaderModified\")", actCode, date);
         try (Cursor mCur2 = mDb.rawQuery(sql, null)) {
             if (mCur2.getCount() == 0) {
                 //Log.e(mContext, "Too bad no data in DailyActivity", )();
@@ -974,6 +985,31 @@ public class DatabaseAdapter {
         }
     }
 
+    public void setActState() {
+        try {
+            String sql = "SELECT actID from DailyActivity WHERE (State=\"Submitted\" OR State=\"Modified\") EXCEPT SELECT actID from DailyActivity a, ActivityListByAdmin b where a.ActivityName=b.ActivityName";
+
+            Cursor mCur2 = mDb.rawQuery(sql, null);
+            int c = mCur2.getCount();
+            mCur2.moveToFirst();
+
+            if (c == 0) {
+                //Log.e(mContext, "Too bad no data in DailyActivity", )();
+            } else {
+                while (c > 0) {
+                    mDb.execSQL(String.format(Locale.ENGLISH, "UPDATE DailyActivity SET State=\"Finished\" WHERE actID = %d", mCur2.getInt(mCur2.getColumnIndex("actID"))));
+                    c--;
+                    mCur2.moveToNext();
+                }
+                mCur2.close();
+            }
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+
     public void dropDetails(int id) {
         try {
             String sql = String.format(Locale.ENGLISH, "DELETE FROM DailyActivity WHERE actID=\"%d\"", id);
@@ -997,16 +1033,6 @@ public class DatabaseAdapter {
     public void dropDetailsCamp(int id) {
         try {
             String sql = String.format(Locale.ENGLISH, "DELETE FROM CampActivities WHERE id=\"%d\"", id);
-            mDb.execSQL(sql);
-        } catch (SQLException mSQLException) {
-            Log.e(TAG, "getTestData >>" + mSQLException.toString());
-            throw mSQLException;
-        }
-    }
-
-    public void setSyncActDetails(int sync, int actId) {
-        try {
-            String sql = String.format(Locale.ENGLISH, "UPDATE DailyActivity SET Sync = %d WHERE actID=\"%d\"", sync, actId);
             mDb.execSQL(sql);
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());

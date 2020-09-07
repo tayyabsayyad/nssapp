@@ -1,25 +1,27 @@
 package com.test.nss;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -35,134 +37,96 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.api.RetrofitClient;
+import com.test.nss.ui.data.DataActivity;
 import com.test.nss.ui.info.InfoSharedActivity;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
+import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.FocusShape;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-public class ediary extends AppCompatActivity {
+import static com.test.nss.Helper.AUTH_TOKEN;
+import static com.test.nss.Helper.VEC;
+import static com.test.nss.Helper.isFirst;
+import static com.test.nss.Helper.isNight;
+import static com.test.nss.Helper.name;
 
-    public static int primaryColDark;
-    public static int blackish;
-    public static int transparent;
-    public static int primaryCol;
-    public static int primaryColLight;
-    public static int red;
-    public static int green;
-    public static int kesar;
-    public static int sbColorText;
-    public static int black;
-    public static int white;
-    public static int blackGrey;
+public class ediary extends AppCompatActivity implements View.OnClickListener {
 
-    public static String AUTH_TOKEN;
-    public static String VEC;
-    public static int isLeader;
-    public static int leaderId;
-    public static String name;
-    public static boolean isFirst;
-    public static boolean isSec;
-    public static int isNight = 0;
     static int whichAvatar = 0;
 
+    Activity app;
     AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
     ImageView logout;
+    ImageView refresh;
     FragmentManager fm;
     CheckConn checkConn;
     IntentFilter z;
     ImageView imageView;
     Context context;
+    Helper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        startRec();
         setContentView(R.layout.activity_ediary);
+
+        app = this;
         context = ediary.this;
+        helper = new Helper(context);
+
         imageView = findViewById(R.id.switchdark);
+        refresh = findViewById(R.id.refresh);
 
-        isNight = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        Log.e("is night", "" + isNight);
-
-        if (isNight == Configuration.UI_MODE_NIGHT_NO) {
+        if (!isNight) {
             imageView.setImageResource(R.drawable.ic_dark);
         } else {
             imageView.setImageResource(R.drawable.ic_light);
         }
 
         SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
-
-        AUTH_TOKEN = sharedPreferences.getString("AUTH_TOKEN", "");
-        VEC = sharedPreferences.getString("VEC", "");
-
-        Call<ResponseBody> call2 = RetrofitClient.getInstance().getApi().isLeader("Token " + AUTH_TOKEN);
-        call2.enqueue(new Callback<ResponseBody>() {
-            @Override
-            @EverythingIsNonNull
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
-                SharedPreferences.Editor eddy = shareit.edit();
-                if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        JSONArray j2 = new JSONArray(response.body().string());
-                        if (j2.length() > 0) {
-                            eddy.putInt("isLeader", 1);
-                            eddy.putInt("leaderId", j2.getJSONObject(0).getInt("id"));
-                            isLeader = 1;
-                            leaderId = j2.getJSONObject(0).getInt("id");
-                        } else {
-                            eddy.putInt("isLeader", 0);
-                            isLeader = 0;
-                        }
-                        Log.e("HH", "onResponse: " + isLeader);
-                        eddy.apply();
-
-                    } catch (JSONException | IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.errorBody() != null) {
-                    try {
-                        Log.e("Error", "onResponse: " + response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            @EverythingIsNonNull
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
-        Log.e("AA", "" + isLeader + name);
-        //TODO:
-        //if (isNetworkAvailable()) {
-        //} else {
-        isLeader = sharedPreferences.getInt("isLeader", 0);
-        leaderId = sharedPreferences.getInt("leaderId", 0);
-        //}
+        int isLeader = sharedPreferences.getInt("isLeader", 0);
 
         fm = getSupportFragmentManager();
 
-        DatabaseAdapter mdb = new DatabaseAdapter(context);
-        mdb.createDatabase();
-        mdb.open();
-        Cursor c = mdb.getRegDetails(VEC);
-        c.moveToFirst();
-        name = c.getString(c.getColumnIndex("First_name")) + " " + c.getString(c.getColumnIndex("Last_name"));
-        isFirst = c.getString(c.getColumnIndex("State")).equals("First Year");
-        isSec = c.getString(c.getColumnIndex("State")).equals("Second Year");
-        mdb.close();
+        //TODO:
+        //if (isNetworkAvailable()) {
+        //} else {
+        /*isLeader = sharedPreferences.getInt("isLeader", 0);
+        leaderId = sharedPreferences.getInt("leaderId", 0);*/
+        //}
 
+        refresh.setOnClickListener(view -> {
+            RotateAnimation animation = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            animation.setInterpolator(new DecelerateInterpolator());
+            animation.setInterpolator(new MyBounceInterpolator(20, 5));
+            animation.setDuration(700);
+            refresh.startAnimation(animation);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    finish();
+                    clearData();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
+                    overridePendingTransition(0, 0);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        });
         View v = findViewById(android.R.id.content);
         Snackbar s;
         if (isLeader == 1) {
@@ -183,18 +147,6 @@ public class ediary extends AppCompatActivity {
         s.setTextColor(context.getColor(R.color.white));
         //s.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
         s.show();
-        blackish = context.getColor(R.color.blackish);
-        transparent = context.getColor(R.color.transparent);
-        primaryCol = context.getColor(R.color.colorPrimary);
-        primaryColLight = context.getColor(R.color.colorPrimaryLight);
-        primaryColDark = context.getColor(R.color.colorPrimaryDark);
-        red = context.getColor(R.color.red);
-        green = context.getColor(R.color.greenNic);
-        kesar = context.getColor(R.color.kesar);
-        sbColorText = context.getColor(R.color.sbColorText);
-        black = context.getColor(R.color.black);
-        white = context.getColor(R.color.white);
-        blackGrey = context.getColor(R.color.blackGrey);
 
         //Toast.makeText(context, AUTH_TOKEN, Toast.LENGTH_SHORT).show();
         drawer = findViewById(R.id.drawer_layout);
@@ -214,7 +166,45 @@ public class ediary extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
         navigationView.setItemIconTintList(null);
 
+        Menu m = navigationView.getMenu().getItem(0).getSubMenu();
+
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+                if (!sharedPreferences.getBoolean("isAboutDone", false)) {
+                    new FancyShowCaseView.Builder(app)
+                            .focusOn((findViewById(R.id.nav_main)))
+                            .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                            .roundRectRadius(24)
+                            .fitSystemWindows(true)
+                            .title("This is your diary!")
+                            .titleStyle(R.style.focusTitleStyle, Gravity.BOTTOM)
+                            .build()
+                            .show();
+
+                    SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
+                    SharedPreferences.Editor eddy = sharedPreferences.edit();
+                    eddy.putBoolean("isAboutDone", true);
+                    eddy.apply();
+                }
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
         View headerView = navigationView.getHeaderView(0);
+
         imageView = headerView.findViewById(R.id.imageView);
 
         whichAvatar = sharedPreferences.getInt("avatar", 0);
@@ -249,17 +239,25 @@ public class ediary extends AppCompatActivity {
                 break;
         }
 
-        Menu m = navigationView.getMenu().getItem(0).getSubMenu();
+        //Log.e("AAA", "" + m.getItem(1).getTitle());
         if (isLeader == 1)
-            m.getItem(4).setVisible(true);
+            m.findItem(R.id.nav_leader).setVisible(true);
 
         else if (isLeader == 0)
-            m.getItem(4).setVisible(false);
+            m.findItem(R.id.nav_leader).setVisible(false);
 
+        m.findItem(R.id.nav_home).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent in = new Intent(context, About.class);
+                startActivity(in);
+                finish();
+                return true;
+            }
+        });
         m = navigationView.getMenu();
         m.getItem(1).getSubMenu().getItem(1).setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getTitle().toString().equals(getString(R.string.info))) {
-                Intent o = new Intent(context, InfoSharedActivity.class);
+            Intent o = new Intent(context, InfoSharedActivity.class);
 
                 /*View v1 = findViewById(R.id.imageView);
                 Pair[] pair = new Pair[1];
@@ -267,9 +265,14 @@ public class ediary extends AppCompatActivity {
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ediary.context, pair);*/
 
 
-                //startActivity(o, options.toBundle());
-                startActivity(o);
-            }
+            //startActivity(o, options.toBundle());
+            startActivity(o);
+            return true;
+        });
+
+        m.getItem(1).getSubMenu().getItem(2).setOnMenuItemClickListener(menuItem -> {
+            Intent o = new Intent(context, DataActivity.class);
+            startActivity(o);
             return true;
         });
 
@@ -283,9 +286,7 @@ public class ediary extends AppCompatActivity {
             builder.setMessage("Choose Avatar");
             builder.setView(R.layout.avatar_input);
 
-            builder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                dialogInterface.dismiss();
-            });
+            builder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss());
             builder.show();
         });
 
@@ -293,11 +294,10 @@ public class ediary extends AppCompatActivity {
             AlertDialog.Builder builder2 = new AlertDialog.Builder(context, R.style.delDialog);
             builder2.setMessage("Do you want to logout?");
 
-            builder2.setNegativeButton("No", (dialog, which) -> {
-                dialog.dismiss();
-            });
+            builder2.setNegativeButton("No", (dialog, which) -> dialog.cancel());
 
             builder2.setPositiveButton("Yes", (dialog, which) -> {
+                clearData();
                 dialog.dismiss();
 
                 SharedPreferences shareit = getSharedPreferences("KEY", MODE_PRIVATE);
@@ -305,18 +305,16 @@ public class ediary extends AppCompatActivity {
                 eddy.putInt("logged", 0);
                 eddy.putInt("isLeader", 0);
                 eddy.putInt("leaderId", 0);
+                eddy.putBoolean("isAboutDone", false);
                 eddy.apply();
 
                 Toast.makeText(context, "Logged Out", Toast.LENGTH_SHORT).show();
-                fm.popBackStackImmediate();
 
-                Call<Void> helpData = RetrofitClient.getInstance().getApi().delToken("Token " + ediary.AUTH_TOKEN);
-                helpData.enqueue(new Callback<Void>() {
+                Call<Void> logout = RetrofitClient.getInstance().getApi().delToken("Token " + AUTH_TOKEN);
+                logout.enqueue(new Callback<Void>() {
                     @Override
                     @EverythingIsNonNull
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.isSuccessful()) {
-                        }
                     }
 
                     @Override
@@ -335,7 +333,74 @@ public class ediary extends AppCompatActivity {
             builder2.show();
         });
 
-        Log.e("Here", "onCreate: " + isFirst + isLeader);
+        Log.e("Here", "onCreate: " + isFirst + isLeader + isNight);
+    }
+
+    private void clearData() {
+        deleteData("ActivityListByAdmin");
+        deleteData("AreaData");
+        deleteData("AreaDataPrev");
+        deleteData("CampActivities");
+        deleteData("CampActivityList");
+        deleteData("CampActivityListByAdmin");
+        deleteData("CampDetails");
+        deleteData("CollegeNames");
+        deleteData("DailyActivity");
+        deleteData("HoursList");
+        deleteData("Leaders");
+        deleteData("NatureOfActivity");
+        deleteData("VolAct");
+        deleteData("VolActAll");
+        //deleteData("VolVecActAll");
+        deleteData("WorkHoursSy");
+        deleteData("WorkHoursFy");
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            default:
+                imageView.setImageResource(R.drawable.ic_man_0);
+                whichAvatar = 0;
+                break;
+            case R.id.girl1:
+                imageView.setImageResource(R.drawable.ic_women_1);
+                whichAvatar = 1;
+                break;
+            case R.id.girl2:
+                imageView.setImageResource(R.drawable.ic_women_2);
+                whichAvatar = 2;
+                break;
+            case R.id.girl3:
+                imageView.setImageResource(R.drawable.ic_women_3);
+                whichAvatar = 3;
+                break;
+            case R.id.girl4:
+                imageView.setImageResource(R.drawable.ic_women_4);
+                whichAvatar = 4;
+                break;
+            case R.id.boy1:
+                imageView.setImageResource(R.drawable.ic_man_1);
+                whichAvatar = 5;
+                break;
+            case R.id.boy2:
+                imageView.setImageResource(R.drawable.ic_man_2);
+                whichAvatar = 6;
+                break;
+            case R.id.boy3:
+                imageView.setImageResource(R.drawable.ic_man_3);
+                whichAvatar = 7;
+                break;
+            case R.id.boy4:
+                imageView.setImageResource(R.drawable.ic_man_4);
+                whichAvatar = 8;
+                break;
+        }
+
+        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
+        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
+        eddy2.putInt("avatar", whichAvatar);
+        eddy2.apply();
     }
 
     @Override
@@ -343,159 +408,6 @@ public class ediary extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
-
-    private void add() {
-        Cursor c;
-        Call<ResponseBody> insertHours;
-        DatabaseAdapter mdb = new DatabaseAdapter(context);
-        mdb.createDatabase();
-        mdb.open();
-
-        c = mdb.getAllDetHours(1);
-        c.moveToFirst();
-        if (c.getCount() > 0) {
-            for (int i = 0; i < c.getCount(); i++) {
-                Log.e("AAA", "" + c.getString(c.getColumnIndex("actCode")) + " " + c.getString(c.getColumnIndex("NatureOfWork")));
-                insertHours = RetrofitClient.getInstance().getApi().insertHour(
-                        "Token " + AUTH_TOKEN,
-                        c.getInt(c.getColumnIndex("HoursWorked")),
-                        c.getInt(c.getColumnIndex("RemainingHours")),
-                        ediary.VEC,
-                        c.getInt(c.getColumnIndex("actCode")),
-                        c.getString(c.getColumnIndex("NatureOfWork")),
-                        Password.PASS,
-                        c.getInt(c.getColumnIndex("id"))
-                );
-                insertHours.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    @EverythingIsNonNull
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful() && response.body() != null)
-                            Log.e("AAA", "Done");
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                    }
-                });
-                c.moveToNext();
-            }
-        }
-
-        c = mdb.getAllDetHours(2);
-        c.moveToFirst();
-        if (c.getCount() > 0) {
-            for (int i = 0; i < c.getCount(); i++) {
-                insertHours = RetrofitClient.getInstance().getApi().insertHour(
-                        "Token " + AUTH_TOKEN,
-                        c.getInt(c.getColumnIndex("HoursWorked")),
-                        c.getInt(c.getColumnIndex("RemainingHours")),
-                        ediary.VEC,
-                        c.getInt(c.getColumnIndex("actCode")),
-                        c.getString(c.getColumnIndex("NatureOfWork")),
-                        Password.PASS,
-                        c.getInt(c.getColumnIndex("id"))
-                );
-                insertHours.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    @EverythingIsNonNull
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful() && response.body() != null)
-                            Log.e("AAA", "Done2");
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                    }
-                });
-                c.moveToNext();
-            }
-        }
-        mdb.close();
-    }
-
-    public void setWom1(View view) {
-        imageView.setImageResource(R.drawable.ic_women_1);
-        whichAvatar = 1;
-        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
-
-        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
-        eddy2.putInt("avatar", whichAvatar);
-        eddy2.apply();
-    }
-
-    public void setWom2(View view) {
-        imageView.setImageResource(R.drawable.ic_women_2);
-        whichAvatar = 2;
-        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
-
-        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
-        eddy2.putInt("avatar", whichAvatar);
-        eddy2.apply();
-    }
-
-    public void setWom3(View view) {
-        imageView.setImageResource(R.drawable.ic_women_3);
-        whichAvatar = 3;
-        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
-
-        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
-        eddy2.putInt("avatar", whichAvatar);
-        eddy2.apply();
-    }
-
-    public void setWom4(View view) {
-        imageView.setImageResource(R.drawable.ic_women_4);
-        whichAvatar = 4;
-        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
-
-        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
-        eddy2.putInt("avatar", whichAvatar);
-        eddy2.apply();
-    }
-
-
-    public void setMan1(View view) {
-        imageView.setImageResource(R.drawable.ic_man_1);
-        whichAvatar = 5;
-        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
-
-        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
-        eddy2.putInt("avatar", whichAvatar);
-        eddy2.apply();
-    }
-
-    public void setMan2(View view) {
-        imageView.setImageResource(R.drawable.ic_man_2);
-        whichAvatar = 6;
-        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
-
-        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
-        eddy2.putInt("avatar", whichAvatar);
-        eddy2.apply();
-    }
-
-    public void setMan3(View view) {
-        imageView.setImageResource(R.drawable.ic_man_3);
-        whichAvatar = 7;
-        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
-
-        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
-        eddy2.putInt("avatar", whichAvatar);
-        eddy2.apply();
-    }
-
-    public void setMan4(View view) {
-        imageView.setImageResource(R.drawable.ic_man_4);
-        whichAvatar = 8;
-        SharedPreferences sharedPreferences = getSharedPreferences("KEY", MODE_PRIVATE);
-
-        SharedPreferences.Editor eddy2 = sharedPreferences.edit();
-        eddy2.putInt("avatar", whichAvatar);
-        eddy2.apply();
     }
 
     public void setMode(View view) {
@@ -515,10 +427,10 @@ public class ediary extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if (isNight == Configuration.UI_MODE_NIGHT_NO) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                } else {
+                if (isNight) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 }
                 finish();
                 overridePendingTransition(0, 0);
@@ -533,33 +445,58 @@ public class ediary extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    public void startRec() {
         checkConn = new CheckConn();
         z = new IntentFilter();
         z.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(checkConn, z);
     }
 
+    public void leaderRef() {
+        checkConn.leaderRef();
+    }
+
+    private void deleteData(String table) {
+        DatabaseAdapter mDbHelper2 = new DatabaseAdapter(context);
+        mDbHelper2.createDatabase();
+        mDbHelper2.open();
+        DataBaseHelper mDb2 = new DataBaseHelper(context);
+        SQLiteDatabase m = mDb2.getWritableDatabase();
+        m.execSQL("DELETE FROM " + table);
+        mDbHelper2.close();
+        m.close();
+        mDb2.close();
+    }
+
+    public String getKey(String value) {
+        return helper.getKey(Integer.parseInt(value));
+    }
+
     @Override
     protected void onStop() {
-        add();
-        unregisterReceiver(checkConn);
+        try {
+            unregisterReceiver(checkConn);
+        } catch (Exception ignored) {
+        }
+        helper.add();
         super.onStop();
     }
 
-    /*@Override
-    protected void onDestroy() {
-        super.onDestroy();
-        add();
-        //unregisterReceiver(checkConn);
-    }*/
+    @Override
+    protected void onPause() {
+        super.onPause();
+        helper.add();
+    }
 
-    private boolean isNetworkAvailable() {
+    /*private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+    public void closeFragment(Fragment fragment) {
+        fragment.getChildFragmentManager().popBackStack();
+        Log.e("ediary", "after: " + fragment.toString());
+    }*/
 }

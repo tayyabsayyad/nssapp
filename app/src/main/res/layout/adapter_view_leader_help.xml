@@ -2,92 +2,100 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/leaderHelpDataCard"
-    app:cardBackgroundColor="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    app:cardElevation="0dp"
+    android:layout_marginTop="@dimen/padding_5dp"
     android:orientation="vertical"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="0dp"
     app:cardPreventCornerOverlap="true">
 
-    <View
-        android:layout_width="20dp"
-        android:layout_height="5dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="2.5dp"
-        android:background="@drawable/help_round_bg" />
 
-    <LinearLayout
-        android:paddingStart="@dimen/space_10dp"
-        android:paddingEnd="@dimen/space_10dp"
-        android:minHeight="60dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="@dimen/padding_5dp"
-        android:id="@+id/cardLinear"
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_con"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/leader"
-            android:text="Leader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/google_sans_bold"
-            android:gravity="start"
-            android:textColor="@color/blackGrey"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/clgNameLead"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/google_sans_bold"
-            android:gravity="end"
-            android:textColor="@color/blackGrey"
-            android:textSize="15sp" />
-    </LinearLayout>
+        <View
+            android:layout_width="20dp"
+            android:layout_height="5dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="2.5dp"
+            android:background="@drawable/help_round_bg" />
 
         <LinearLayout
-            android:layout_marginTop="2dp"
-            android:orientation="vertical"
+            android:id="@+id/cardLinear"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="@dimen/padding_5dp"
+            android:minHeight="60dp"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/space_10dp"
+            android:paddingEnd="@dimen/space_10dp">
 
-            <TextView
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp"
-                android:textSize="15sp"
-                android:id="@+id/lead_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/google_sans"
-                android:textColor="@color/blackGrey" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp"
-                android:textSize="15sp"
-                android:id="@+id/lead_email"
+                <TextView
+                    android:id="@+id/leader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/google_sans_bold"
+                    android:gravity="start"
+                    android:textColor="@color/blackGrey"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/clgNameLead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/shimmer_bg"
+                    android:fontFamily="@font/google_sans_bold"
+                    android:gravity="end"
+                    android:textColor="@color/blackGrey"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/google_sans"
-                android:textColor="@color/blackGrey" />
+                android:layout_marginTop="4dp"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp"
-                android:textSize="15sp"
-                android:id="@+id/lead_contact"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/google_sans"
-                android:textColor="@color/blackGrey" />
+                <TextView
+                    android:id="@+id/lead_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/shimmer_bg"
+                    android:fontFamily="@font/google_sans"
+                    android:textColor="@color/blackGrey"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/lead_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@color/shimmer_bg"
+                    android:fontFamily="@font/google_sans"
+                    android:textColor="@color/blackGrey"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/lead_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:background="@color/shimmer_bg"
+                    android:fontFamily="@font/google_sans"
+                    android:textColor="@color/blackGrey"
+                    android:textSize="15sp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 </androidx.cardview.widget.CardView>

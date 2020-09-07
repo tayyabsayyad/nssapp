@@ -1,6 +1,7 @@
 package com.test.nss.ui.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,10 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.R;
 
-import static com.test.nss.ediary.blackish;
-import static com.test.nss.ediary.isFirst;
-import static com.test.nss.ediary.isSec;
-import static com.test.nss.ediary.primaryColDark;
+import static com.test.nss.Helper.blackishy;
+import static com.test.nss.Helper.isFirst;
+import static com.test.nss.Helper.isSec;
+import static com.test.nss.Helper.primaryColDark;
 
 public class ActivityFragment extends Fragment {
 
@@ -37,11 +38,11 @@ public class ActivityFragment extends Fragment {
         toolbarTitle.setText(getString(R.string.menu_activity));
 
         toolbar = requireActivity().findViewById(R.id.toolbar);
-        fm = requireActivity().getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            //fm.popBackStackImmediate("ActivityFrag", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            //fm.popBackStack(this.toString(), 0);
-        }
+        fm = getChildFragmentManager();
+        /*if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fm.popBackStack(this.toString(), 0);
+        }*/
 
         firstButton = root.findViewById(R.id.firstButton);
         secButton = root.findViewById(R.id.secButton);
@@ -56,9 +57,10 @@ public class ActivityFragment extends Fragment {
         if (isFirst) {
             secButton.setTextColor(requireContext().getColor(R.color.grey));
             firstButton.setOnClickListener(v -> {
+                clear();
                 firstButton.setTextColor(primaryColDark);
 
-                fm.beginTransaction().replace(R.id.act_list, new FirstHalfFrag()).addToBackStack("ActivityFrag").commit();
+                fm.beginTransaction().replace(R.id.act_list, FirstHalfFrag.newInstance()).addToBackStack(null).commit();
             });
             secButton.setOnClickListener(v -> {
                 if (isFirst)
@@ -66,32 +68,38 @@ public class ActivityFragment extends Fragment {
             });
         } else if (isSec) {
             secButton.setOnClickListener(v -> {
+                clear();
                 secButton.setTextColor(primaryColDark);
-                firstButton.setTextColor(blackish);
+                firstButton.setTextColor(blackishy);
 
-                fm.beginTransaction().replace(R.id.act_list, new SecHalfFrag()).addToBackStack("ActivityFrag").commit();
+                fm.beginTransaction().replace(R.id.act_list, SecHalfFrag.newInstance()).addToBackStack(null).commit();
             });
 
             firstButton.setOnClickListener(view1 -> {
+                clear();
                 firstButton.setTextColor(primaryColDark);
-                secButton.setTextColor(blackish);
+                secButton.setTextColor(blackishy);
 
-                fm.beginTransaction().replace(R.id.act_list, new FirstHalfFrag()).addToBackStack("ActivityFrag").commit();
+                fm.beginTransaction().replace(R.id.act_list, FirstHalfFrag.newInstance()).addToBackStack(null).commit();
             });
         } else {
             firstButton.setOnClickListener(v -> {
+                clear();
                 firstButton.setTextColor(primaryColDark);
 
-                fm.beginTransaction().replace(R.id.act_list, new FirstHalfFrag()).addToBackStack("ActivityFrag").commit();
+                fm.beginTransaction().replace(R.id.act_list, FirstHalfFrag.newInstance()).addToBackStack(null).commit();
             });
         }
     }
 
-    public void onDetach() {
-        super.onDetach();
-        if (fm.getBackStackEntryCount() > 0) {
-            //fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            //fm.popBackStack("ActivityFrag", 0);
+    public void clear() {
+        Fragment simpleFragment = getChildFragmentManager().findFragmentById(R.id.act_list);
+
+        Log.e("AAA", "clear() called ActivityFrag " + simpleFragment + fm.getBackStackEntryCount());
+        if (simpleFragment instanceof FirstHalfFrag || simpleFragment instanceof SecHalfFrag) {
+            //((Helper) requireActivity()).closeFragment(simpleFragment);
+            fm.popBackStack();
+            //simpleFragment.clear();
         }
     }
 }

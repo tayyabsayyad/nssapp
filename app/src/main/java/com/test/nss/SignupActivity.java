@@ -7,11 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +59,7 @@ public class SignupActivity extends AppCompatActivity {
     private Button signupPost;
     private EditText contactNo;
     private EditText password;
+    private EditText password2;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -76,6 +80,7 @@ public class SignupActivity extends AppCompatActivity {
         contactNo = findViewById(R.id.contact_no);
         vecClgPref = findViewById(R.id.vec_clg_pref);
         password = findViewById(R.id.password);
+        password2 = findViewById(R.id.password2);
 
         clgList = new ArrayList<>();
 
@@ -98,6 +103,13 @@ public class SignupActivity extends AppCompatActivity {
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, R.layout.drop_down_start, clgList);
                             dropdownClg.setAdapter(adapter);
                             Log.e("Added college", "");
+                        } catch (JSONException | IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (response.errorBody() != null) {
+                        try {
+                            JSONArray jArry = new JSONArray(response.errorBody().string());
+                            Log.e("onResponse:getClgList", jArry.toString());
                         } catch (JSONException | IOException e) {
                             e.printStackTrace();
                         }
@@ -207,25 +219,34 @@ public class SignupActivity extends AppCompatActivity {
                 }
                 mdb.close();
             });
+            LinearLayout ll = findViewById(R.id.loader2);
 
             signupPost.setOnClickListener(v -> {
                 String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-                String passPattern = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@*#$%]).{8,20})";
+                //String passPattern = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@*#$%]).{8,20})";
 
-                final EditText vec = findViewById(R.id.vec_in);
 
                 if (!isEmpty(fName) && !isEmpty(fathName) &&
                         !isEmpty(mName) && !isEmpty(lName) && !isEmpty(vec) && !isEmpty(password) &&
                         !isEmpty(email) && !isEmpty(contactNo) && !vecClgPref.getText().toString().equals("")
-                        && !isEmpty(dropdownClg) && vec.getText().toString().trim().length() > 0) {
+                        && !isEmpty(dropdownClg) && vec.getText().toString().length() > 0 && !isEmpty(password) && !isEmpty(password2)) {
 
-                    if (!email.getText().toString().trim().matches(emailPattern))
+                    if (!email.getText().toString().matches(emailPattern)) {
                         Toast.makeText(mContext, "Please enter proper email", Toast.LENGTH_SHORT).show();
-                    if (vec.getText().toString().trim().length() < 5 && vec.getText().toString().trim().length() != 5)
+                        email.requestFocus();
+                    }
+                    if (vec.getText().toString().length() < 5 && vec.getText().toString().length() != 5) {
                         vec.setError("Enter only 5 digits");
-                    if (!password.getText().toString().trim().matches(passPattern)) {
+                        vec.requestFocus();
+                    }
+                    if (!(password.getText().toString().length() > 5)) {
                         password.setError("Error");
-                        Snackbar.make(v, "Password should contain at least a number, capital letter and a special character", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(v, "Password length must be atleast 5", Snackbar.LENGTH_SHORT).show();
+                        password2.setText("");
+                        password.requestFocus();
+                    } else if (!password.getText().toString().equals(password2.getText().toString())) {
+                        Toast.makeText(mContext, "Password don't match", Toast.LENGTH_SHORT).show();
+                        password2.requestFocus();
                     } else {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(mContext, R.style.delDialog);
                         builder2.setTitle("Confirm");
@@ -251,26 +272,36 @@ public class SignupActivity extends AppCompatActivity {
                                     Password.PASS
                             );
 
+                            ll.findViewById(R.id.lazyloader).setVisibility(View.VISIBLE);
+                            ll.findViewById(R.id.signup_post).setVisibility(View.GONE);
+
                             signup.enqueue(new Callback<ResponseBody>() {
                                 @EverythingIsNonNull
                                 @Override
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                    if (response.isSuccessful()) {
-                                        finish();
-                                        Toast.makeText(SignupActivity.this, "An email will be sent once PO confirms", Toast.LENGTH_SHORT).show();
+                                    if (response.isSuccessful() && response.body() != null) {
+                                        new Handler().postDelayed(() -> {
+                                            finish();
+                                            Toast.makeText(SignupActivity.this, "An email will be sent once PO confirms", Toast.LENGTH_SHORT).show();
+                                        }, 2500);
                                     } else if (response.errorBody() != null) {
                                         Log.e("onResponse:error", response.errorBody().toString());
                                         try {
                                             JSONObject j = new JSONObject(response.errorBody().string());
-
+                                            if (!j.isNull("VEC")) {
+                                                Toast.makeText(mContext, j.getJSONArray("VEC").getString(0), Toast.LENGTH_SHORT).show();
+                                                vec.requestFocus();
+                                                vec.setError("Error!");
+                                            }
                                             if (!j.isNull("Contact")) {
                                                 Toast.makeText(mContext, "" + j.getJSONArray("Contact").getString(0), Toast.LENGTH_SHORT).show();
                                                 contactNo.setError("Enter correct number");
                                                 contactNo.requestFocus();
-                                            } if (!j.isNull("Email")) {
+                                            }
+                                            if (!j.isNull("Email")) {
                                                 Toast.makeText(mContext, "" + j.getJSONArray("Email").getString(0), Toast.LENGTH_SHORT).show();
-                                                contactNo.setError("Enter correct number");
-                                                email.setError("");
+                                                email.setError("Enter correct email");
+                                                email.requestFocus();
                                             } else
                                                 Toast.makeText(mContext, "Recheck and sign up again", Toast.LENGTH_SHORT).show();
                                             Log.e("error", j.toString());

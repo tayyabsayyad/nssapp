@@ -25,10 +25,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.nss.DatabaseAdapter;
+import com.test.nss.Helper;
 import com.test.nss.Password;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
-import com.test.nss.ediary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +39,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.test.nss.ediary.transparent;
+import static com.test.nss.Helper.transparent;
 
 public class CampActListDetails extends Fragment {
+
+    public CampActListDetails() {
+    }
+
+    public static CampActListDetails newInstance() {
+        return new CampActListDetails();
+    }
 
     View root;
     List<AdapterCampActList> campData;
@@ -67,6 +74,8 @@ public class CampActListDetails extends Fragment {
         Toast.makeText(mContext, "Swipe left on list to modify", Toast.LENGTH_SHORT).show();
         recCampList = root.findViewById(R.id.recCampListAll);
         CampActListDataAdapter campDataAdapter = new CampActListDataAdapter(campData, mContext);
+
+        String regex = "[0-9]+";
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
@@ -108,8 +117,8 @@ public class CampActListDetails extends Fragment {
                             c2.moveToFirst();
 
                             Call<ResponseBody> putCamp = RetrofitClient.getInstance().getApi().putCamp(
-                                    "Token " + ediary.AUTH_TOKEN,
-                                    ediary.VEC,
+                                    "Token " + Helper.AUTH_TOKEN,
+                                    Helper.VEC,
                                     c2.getInt(c2.getColumnIndex("CampId")),
                                     c.getString(c.getColumnIndex("CampActivityDescription")),
                                     c.getInt(c.getColumnIndex("CampDay")),
@@ -172,7 +181,7 @@ public class CampActListDetails extends Fragment {
                             if (desc.equals("")) {
                                 Toast.makeText(mContext, "Please enter Camp Description", Toast.LENGTH_SHORT).show();
                                 campDataAdapter.notifyItemChanged(p);
-                            } else if (day.equals("")) {
+                            } else if (day.equals("") && !day.matches(regex)) {
                                 Toast.makeText(mContext, "Please enter Camp Day", Toast.LENGTH_SHORT).show();
                                 campDataAdapter.notifyItemChanged(p);
                             } else if (Integer.parseInt(day) <= 0 || Integer.parseInt(day) > 7) {
@@ -202,8 +211,8 @@ public class CampActListDetails extends Fragment {
                                 c2.moveToFirst();
 
                                 Call<ResponseBody> putCamp = RetrofitClient.getInstance().getApi().putCamp(
-                                        "Token " + ediary.AUTH_TOKEN,
-                                        ediary.VEC,
+                                        "Token " + Helper.AUTH_TOKEN,
+                                        Helper.VEC,
                                         c2.getInt(c2.getColumnIndex("CampId")),
                                         c.getString(c.getColumnIndex("CampActivityDescription")),
                                         c.getInt(c.getColumnIndex("CampDay")),
@@ -269,12 +278,6 @@ public class CampActListDetails extends Fragment {
         super.onDetach();
         camp_main_details.setVisibility(View.VISIBLE);
         FragmentManager fm = requireActivity().getSupportFragmentManager();
-
-        campActAll.setVisibility(View.GONE);
-        if (fm.getBackStackEntryCount() > 0) {
-            Log.e("CampFrag", "onDetach: " + fm.getBackStackEntryCount());
-            fm.beginTransaction().remove(this).commit();
-        }
         fm.popBackStack();
     }
 

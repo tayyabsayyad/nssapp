@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -29,23 +30,28 @@ import org.apache.commons.collections4.ListUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import static com.test.nss.ediary.black;
-import static com.test.nss.ediary.primaryColDark;
+import static com.test.nss.Helper.black;
+import static com.test.nss.Helper.primaryColDark;
 
 public class ViewVolunteer extends Fragment {
 
+    LinearLayout linearL;
     RecyclerView recViewLeader, recViewVolUniv, recViewVolArea, recViewVolClg;
     List<AdapterDataVolunteer> dataVolListUniv, dataVolListArea, dataVolListClg;
     Button univ, area, clg;
     FloatingActionButton back;
-
     LinearLayout detailsVol;
     CardView cardModify, leader, leaderAll;
-
     Context context;
     View root;
+
+    public ViewVolunteer() {
+    }
+
+    public static ViewVolunteer newInstance() {
+        return new ViewVolunteer();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,7 +59,7 @@ public class ViewVolunteer extends Fragment {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_modify_details, container, false);
         recViewLeader = requireActivity().findViewById(R.id.vecLeaderListAll);
-
+        linearL = root.findViewById(R.id.linearL);
         dataVolListUniv = ListUtils.union(addVolActData("First Year University"), addVolActData("Second Year University"));
         dataVolListArea = ListUtils.union(ListUtils.union(addVolActData("First Year Area Based One"), addVolActData("First Year Area Based Two")),
                 ListUtils.union(addVolActData("Second Year Area Based One"), addVolActData("Second Year Area Based Two")));
@@ -67,7 +73,8 @@ public class ViewVolunteer extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        revealFab();
+        root.post(this::revealFab);
+        //revealFab();
         back = root.findViewById(R.id.back);
         detailsVol = root.findViewById(R.id.detailsVol);
         cardModify = root.findViewById(R.id.cardModify);
@@ -122,13 +129,7 @@ public class ViewVolunteer extends Fragment {
 
         back.setOnClickListener(view12 -> {
             hideFab();
-            onDetach();
-            new Handler().postDelayed(() -> {
-
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().remove(Objects.requireNonNull(fragmentManager.findFragmentByTag("ViewVolunteer")));
-                cardModify.setVisibility(View.GONE);
-            }, 250);
+            new Handler().postDelayed(this::onDetach, 250);
         });
 
         recViewVolUniv.setLayoutManager(new LinearLayoutManager(context));
@@ -160,7 +161,8 @@ public class ViewVolunteer extends Fragment {
                     c0.getString(c0.getColumnIndex("AssignedActivityName")),
                     c0.getString(c0.getColumnIndex("Hours")),
                     c0.getString(c0.getColumnIndex("id")),
-                    c0.getString(c0.getColumnIndex("State"))
+                    c0.getString(c0.getColumnIndex("State")),
+                    0, 0
             ));
             c0.moveToNext();
             m = m - 1;
@@ -170,21 +172,18 @@ public class ViewVolunteer extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         //hideFab();
         leaderAll.setVisibility(View.VISIBLE);
         leader.setVisibility(View.VISIBLE);
         recViewLeader.setVisibility(View.VISIBLE);
-        detailsVol.setVisibility(View.GONE);
-        recViewVolUniv.setVisibility(View.GONE);
-        recViewVolArea.setVisibility(View.GONE);
-        recViewVolClg.setVisibility(View.GONE);
+        //((ediary)requireActivity()).closeFragment(this);
+        FragmentManager fm = getParentFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            Log.e("ViewVol", "onDetache: " + fm.getBackStackEntryCount());
+            linearL.setVisibility(View.GONE);
+        }
     }
 
     private void revealFab() {

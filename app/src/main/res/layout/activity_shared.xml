@@ -6,11 +6,11 @@
     android:background="@color/off_white">
 
     <LinearLayout
-        android:layout_height="210dp"
-        android:elevation="6dp"
         android:layout_width="match_parent"
-        android:gravity="center"
+        android:layout_height="210dp"
         android:background="@drawable/grad_primary"
+        android:elevation="6dp"
+        android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -55,11 +55,24 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recInfo"
-        android:layout_width="wrap_content"
         style="@style/scrollbar_shape_style"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginTop="215dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_heart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_fileName="beating_heart.json"
+        app:lottie_loop="false"
+        app:lottie_repeatCount="1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

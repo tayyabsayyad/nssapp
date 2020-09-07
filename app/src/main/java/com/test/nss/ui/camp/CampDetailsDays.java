@@ -27,11 +27,20 @@ public class CampDetailsDays extends Fragment {
     ConstraintLayout campList;
     FrameLayout camp_details_days_frame;
 
+    public CampDetailsDays() {
+    }
+
+    public static CampDetailsDays newInstance() {
+        return new CampDetailsDays();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         root = inflater.inflate(R.layout.fragment_camp_details_days, container, false);
+
         assert getArguments() != null;
         //actName = getArguments().getString("actName");
         camp_main_details = requireActivity().findViewById(R.id.camp_main_details);
@@ -49,26 +58,28 @@ public class CampDetailsDays extends Fragment {
 
         listView.setOnItemClickListener((parent, view1, position, id) -> {
             String day = parent.getItemAtPosition(position).toString();
-            CampDetailsFrag campDetailsFrag = new CampDetailsFrag();
+            CampDetailsFrag campDetailsFrag = CampDetailsFrag.newInstance();
 
             Bundle args = new Bundle();
             args.putString("whichDay", day);
 
             campDetailsFrag.setArguments(args);
             //Toast.makeText(requireContext(), day, Toast.LENGTH_SHORT).show();
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            FragmentManager fragmentManager = getParentFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.camp_frag, campDetailsFrag, "CampDetailsFrag").addToBackStack(null).commit();
         });
     }
 
     @Override
     public void onDetach() {
-        super.onDetach();
         camp_main_details.setVisibility(View.VISIBLE);
+//        ((ediary) requireActivity()).closeFragment(this);
+        super.onDetach();
+        /*camp_main_details.setVisibility(View.VISIBLE);
         campList.setVisibility(View.GONE);
-        camp_details_days_frame.setVisibility(View.GONE);
+        camp_details_days_frame.setVisibility(View.GONE);*/
         Log.e("AAA", "Called");
-        FragmentManager fm = requireActivity().getSupportFragmentManager();
+        //FragmentManager fm = requireActivity().getSupportFragmentManager();
         //fm.beginTransaction().remove(this).commit();
     }
 }

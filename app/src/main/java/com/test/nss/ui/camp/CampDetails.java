@@ -25,6 +25,13 @@ import java.util.List;
 
 public class CampDetails extends Fragment {
 
+    public CampDetails() {
+    }
+
+    public static CampDetails newInstance() {
+        return new CampDetails();
+    }
+
     View root;
     List<AdapterCampDetails> campData;
     RecyclerView recCamp;
@@ -65,11 +72,12 @@ public class CampDetails extends Fragment {
         super.onDetach();
         FragmentManager fm = requireActivity().getSupportFragmentManager();
         camp_main_details.setVisibility(View.VISIBLE);
+        /*
         camp_details.setVisibility(View.GONE);
         if (fm.getBackStackEntryCount() > 0) {
             Log.e("CampDetails", "onDetach: " + fm.getBackStackEntryCount());
             //fm.beginTransaction().remove(this).commit();
-        }
+        }*/
         fm.popBackStack();
     }
 

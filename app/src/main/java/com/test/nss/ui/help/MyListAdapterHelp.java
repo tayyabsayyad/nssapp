@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.test.nss.R;
 import com.test.nss.ui.onClickInterface;
 
@@ -21,6 +22,7 @@ public class MyListAdapterHelp extends RecyclerView.Adapter<MyListAdapterHelp.Vi
     List<AdapterDataHelp> list = Collections.emptyList();
     Context mCon;
     onClickInterface onClickInterface;
+    boolean isShimmer = true;
 
     public MyListAdapterHelp(List<AdapterDataHelp> list, Context mCon, onClickInterface onClickInterface) {
         this.list = list;
@@ -37,17 +39,31 @@ public class MyListAdapterHelp extends RecyclerView.Adapter<MyListAdapterHelp.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.leadName.setText(list.get(position).getLeadName());
-        holder.leadEmail.setText(String.format("Email: %s", list.get(position).getLeadEmail()));
-        holder.leadCont.setText(String.format("Contact No: %s", list.get(position).getLeadCont()));
-        holder.clgNameLead.setText(list.get(position).getLeadClg());
-        holder.leadCont.setOnClickListener(view -> onClickInterface.setClick(list.get(position).getLeadCont()));
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        if (isShimmer) {
+            holder.shimmerCon.startShimmer();
+        } else {
+            holder.leadName.setBackground(null);
+            holder.leadEmail.setBackground(null);
+            holder.leadCont.setBackground(null);
+            holder.clgNameLead.setBackground(null);
+
+            holder.shimmerCon.stopShimmer();
+            holder.shimmerCon.setShimmer(null);
+
+            holder.leader.setText("Leader");
+            holder.leadName.setText(list.get(position).getLeadName());
+            holder.leadEmail.setText(String.format("Email: %s", list.get(position).getLeadEmail()));
+            holder.leadCont.setText(String.format("Contact No: %s", list.get(position).getLeadCont()));
+            holder.clgNameLead.setText(list.get(position).getLeadClg());
+            holder.leadCont.setOnClickListener(view -> onClickInterface.setClick(list.get(position).getLeadCont()));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        int SHIMMER_NUMBER = list.size();
+        return isShimmer ? SHIMMER_NUMBER : list.size();
     }
 
 
@@ -56,6 +72,8 @@ public class MyListAdapterHelp extends RecyclerView.Adapter<MyListAdapterHelp.Vi
         public TextView leadName;
         public TextView clgNameLead;
         public TextView leadCont;
+        public TextView leader;
+        public ShimmerFrameLayout shimmerCon;
 
         public CardView actDataCard;
 
@@ -65,8 +83,10 @@ public class MyListAdapterHelp extends RecyclerView.Adapter<MyListAdapterHelp.Vi
             this.leadName = itemView.findViewById(R.id.lead_name);
             this.clgNameLead = itemView.findViewById(R.id.clgNameLead);
             this.leadCont = itemView.findViewById(R.id.lead_contact);
+            this.shimmerCon = itemView.findViewById(R.id.shimmer_con);
+            this.leader = itemView.findViewById(R.id.leader);
 
-            actDataCard = itemView.findViewById(R.id.leaderHelpDataCard);
+            this.actDataCard = itemView.findViewById(R.id.leaderHelpDataCard);
         }
     }
 }

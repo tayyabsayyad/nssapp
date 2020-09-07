@@ -11,13 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.test.nss.Helper;
 import com.test.nss.R;
-import com.test.nss.ediary;
 
 import java.util.Collections;
 import java.util.List;
 
-import static com.test.nss.ediary.blackGrey;
+import static com.test.nss.Helper.blackGrey;
 
 public class MyListAdapterVolunteer extends RecyclerView.Adapter<MyListAdapterVolunteer.ViewHolder> {
     //private AdapterDataMain[] listdata;
@@ -46,21 +46,32 @@ public class MyListAdapterVolunteer extends RecyclerView.Adapter<MyListAdapterVo
         holder.actIDVol.setText(list.get(position).getId());
         holder.actVolState.setText(list.get(position).getState());
 
-        if (list.get(position).getState().equals("Approved")) {
-            holder.approvedVol.setText(mCon.getString(R.string.yes));
-            setColor(holder, ediary.green);
-        } else if (list.get(position).getState().equals("LeaderDelete") || list.get(position).getState().equals("Deleted")) {
-            holder.approvedVol.setText(mCon.getString(R.string.no));
-            setColor(holder, ediary.red);
-        } else if (list.get(position).getState().equals("LeaderModified")) {
-            holder.approvedVol.setText(mCon.getString(R.string.yes));
-            setColor(holder, ediary.kesar);
-        } else {
-            holder.approvedVol.setText(mCon.getString(R.string.no));
-            holder.dateVol.setTextColor(blackGrey);
-            holder.actVol.setTextColor(blackGrey);
-            holder.hoursVol.setTextColor(blackGrey);
-            holder.approvedVol.setTextColor(blackGrey);
+        switch (list.get(position).getState()) {
+            case "Approved":
+                holder.approvedVol.setText(mCon.getString(R.string.yes));
+                setColor(holder, Helper.green);
+                break;
+            case "PoDelete":
+            case "LeaderDelete":
+            case "Deleted":
+                holder.approvedVol.setText(mCon.getString(R.string.no));
+                setColor(holder, Helper.red);
+                break;
+            case "PoModified":
+            case "LeaderModified":
+            case "Modified":
+                holder.approvedVol.setText(mCon.getString(R.string.yes));
+                setColor(holder, Helper.kesar);
+                break;
+            case "Submitted":
+            default:
+                setColor(holder, Helper.white);
+                holder.approvedVol.setText(mCon.getString(R.string.no));
+                holder.dateVol.setTextColor(blackGrey);
+                holder.actVol.setTextColor(blackGrey);
+                holder.hoursVol.setTextColor(blackGrey);
+                holder.approvedVol.setTextColor(blackGrey);
+                break;
         }
     }
 

@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/blackish</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/blackGrey</item>
+        <item name="android:windowContentTransitions">true</item>
         <!-- <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item> -->
     </style>
@@ -20,7 +21,7 @@
         <item name="android:scrollbarThumbVertical">@drawable/thumb</item>
     </style>
 
-    <style name="datePick" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+    <style name="datePick" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="android:headerYearTextAppearance">@style/headerColors</item>
         <item name="android:headerMonthTextAppearance">@style/headerColors</item>
@@ -82,5 +83,31 @@
 
     <style name="font">
         <item name="android:fontFamily">@font/google_sans</item>
+    </style>
+
+    <style name="focusTitleStyle">
+        <item name="android:textSize">@dimen/text_18sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:fontFamily">@font/google_sans_bold</item>
+    </style>
+
+    <style name="wave_title_right">
+        <item name="android:textColor">@color/blackGrey</item>
+        <item name="android:fontFamily">@font/google_sans_bold</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:paddingStart">@dimen/space_10dp</item>
+        <item name="android:paddingBottom">@dimen/space_3dp</item>
+        <item name="android:textSize">12.5sp</item>
+    </style>
+
+    <style name="wave_title">
+        <item name="android:textColor">@color/blackGrey</item>
+        <item name="android:fontFamily">@font/google_sans_bold</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:textAlignment">textEnd</item>
+        <item name="android:paddingEnd">@dimen/space_10dp</item>
+        <item name="android:paddingBottom">@dimen/space_3dp</item>
+        <item name="android:textSize">12.5sp</item>
     </style>
 </resources>

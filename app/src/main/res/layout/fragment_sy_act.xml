@@ -3,13 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constFyAct"
-    android:background="@color/off_white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/off_white"
     tools:context=".ui.main.syAct">
 
     <androidx.cardview.widget.CardView
-        app:cardBackgroundColor="@color/white"
         android:id="@+id/details_main_card2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,12 +16,23 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="8dp"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="5dp"
         app:cardElevation="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="parent">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/mainLottie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:elevation="@dimen/space_10dp"
+            app:lottie_fileName="pop.json"
+            app:lottie_loop="false"
+            app:lottie_repeatCount="0" />
 
         <LinearLayout
             android:id="@+id/frag_sy"
@@ -36,10 +46,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/ripple_light"
-                android:textColor="@color/blackGrey"
                 android:enabled="true"
                 android:fontFamily="@font/google_sans_bold"
-                android:text="@string/univ" />
+                android:text="@string/univ"
+                android:textColor="@color/blackGrey" />
 
             <View
                 android:id="@+id/act_line"
@@ -54,9 +64,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/ripple_light"
-                android:textColor="@color/blackGrey"
                 android:fontFamily="@font/google_sans_bold"
-                android:text="@string/area" />
+                android:text="@string/area"
+                android:textColor="@color/blackGrey" />
 
             <View
                 android:id="@+id/act_line2"
@@ -71,9 +81,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/ripple_light"
-                android:textColor="@color/blackGrey"
                 android:fontFamily="@font/google_sans_bold"
-                android:text="@string/clg" />
+                android:text="@string/clg"
+                android:textColor="@color/blackGrey" />
 
         </LinearLayout>
 
@@ -94,12 +104,12 @@
             android:visibility="invisible">
 
             <TextView
-                android:paddingStart="-5dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/nunito_semibold"
                 android:gravity="center"
+                android:paddingStart="-5dp"
                 android:paddingTop="@dimen/margin_15dp"
                 android:paddingBottom="@dimen/margin_15dp"
                 android:text="Date"
@@ -164,24 +174,24 @@
             android:visibility="gone"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <LinearLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:gravity="end"
-            android:padding="@dimen/padding_5dp">
+            android:minHeight="120dp">
 
-            <Button
-                android:layout_marginEnd="@dimen/padding_5dp"
-                android:layout_marginBottom="1dp"
-                android:layout_gravity="bottom"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/add2"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:background="@drawable/ripple_add"
-                android:foreground="@drawable/ic_plus_24"
-                android:textAllCaps="false"
-                android:visibility="gone" />
-        </LinearLayout>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/space_10dp"
+                android:src="@drawable/ic_plus_24"
+                android:visibility="gone"
+                app:backgroundTint="@color/off_white"
+                app:elevation="@dimen/padding_5dp"
+                app:fabCustomSize="45dp"
+                app:rippleColor="@color/colorPrimaryLight" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
