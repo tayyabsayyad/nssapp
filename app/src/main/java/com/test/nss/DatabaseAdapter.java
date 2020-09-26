@@ -421,6 +421,20 @@ public class DatabaseAdapter {
         }
     }
 
+    public void insertActAgain(String id, String actName, String state) {
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("actID", id);
+            contentValues.put("ActivityName", actName);
+            contentValues.put("State", state);
+
+            mDb.insert("DailyActivityTemp", null, contentValues);
+        } catch (SQLException e) {
+            Log.e(TAG, ":insertData " + e.getMessage());
+        }
+    }
+
     public void insertAct(String vec, String actCode,
                           String id,
                           String assignedDate,
@@ -505,6 +519,19 @@ public class DatabaseAdapter {
         }
     }
 
+
+    public Cursor getUpdatedAct() {
+        try {
+            String sql = "select actID, State, ActivityName from DailyActivityTemp except Select actID, State, ActivityName from DailyActivity";
+            Cursor mCur2 = mDb.rawQuery(sql, null);
+            mCur2.moveToFirst();
+            return mCur2;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getUpdatedAct >>" + mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
     public Cursor getActListOff() {
         try {
             //String a = String.format("aaa %d", act);
@@ -513,7 +540,7 @@ public class DatabaseAdapter {
             mCur2.getCount();
             return mCur2;
         } catch (SQLException mSQLException) {
-            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            Log.e(TAG, "getActListOff >>" + mSQLException.toString());
             throw mSQLException;
         }
     }

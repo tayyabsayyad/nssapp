@@ -67,7 +67,6 @@ MainActivity extends AppCompatActivity {
                         @EverythingIsNonNull
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             SharedPreferences.Editor eddy = sharedPreferences.edit();
-                            Log.e("AAA", "here");
                             if (response.isSuccessful() && response.body() != null) {
                                 try {
                                     JSONArray j2 = new JSONArray(response.body().string());
@@ -124,7 +123,18 @@ MainActivity extends AppCompatActivity {
                         @Override
                         @EverythingIsNonNull
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            Log.e("AAA", "here");
+                            Intent intent;
+                            if (sharedPreferences.getInt("logged", 0) == 1) {
+                                if (!sharedPreferences.getBoolean("isAboutDone", false))
+                                    intent = new Intent(MainActivity.this, About.class);
+                                else
+                                    intent = new Intent(MainActivity.this, ediary.class);
+                            } else {
+                                intent = new Intent(MainActivity.this,
+                                        startActivity.class);
+                            }
+                            startActivity(intent);
+                            finish();
                         }
                     });
                 } else {

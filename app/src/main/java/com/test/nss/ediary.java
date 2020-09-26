@@ -39,6 +39,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ui.data.DataActivity;
 import com.test.nss.ui.info.InfoSharedActivity;
+import com.test.nss.worker.MyWorker;
+import com.test.nss.worker.MyWorkerDb;
 
 import me.toptas.fancyshowcase.FancyShowCaseView;
 import me.toptas.fancyshowcase.FocusShape;
@@ -74,6 +76,9 @@ public class ediary extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         startRec();
         setContentView(R.layout.activity_ediary);
+
+        MyWorker.enqueueSelf();
+        MyWorkerDb.enqueueSelf();
 
         app = this;
         context = ediary.this;
@@ -182,7 +187,7 @@ public class ediary extends AppCompatActivity implements View.OnClickListener {
                             .roundRectRadius(24)
                             .fitSystemWindows(true)
                             .title("This is your diary!")
-                            .titleStyle(R.style.focusTitleStyle, Gravity.BOTTOM)
+                            .titleStyle(R.style.focusTitleStyle, Gravity.BOTTOM | Gravity.CENTER)
                             .build()
                             .show();
 
