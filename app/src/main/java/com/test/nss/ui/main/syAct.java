@@ -633,65 +633,68 @@ public class syAct extends Fragment {
                                     DatabaseAdapter mdb = new DatabaseAdapter(mContext);
                                     mdb.createDatabase();
                                     mdb.open();
-                                    mdb.setDetails(newHours, "Modified", actID);
 
                                     Cursor c = mdb.getActAssigActNameAdmin(actName);
                                     c.moveToFirst();
 
-                                    adapterArea.list.add(p, new AdapterDataMain(
-                                                    adapterArea.list.get(p).getDate(),
-                                                    adapterArea.list.get(p).getAct(),
-                                                    String.valueOf(newHours),
-                                                    adapterArea.list.get(p).getId(),
-                                                    adapterArea.list.get(p).isApproved(),
-                                                    "Modified",
-                                                    adapterArea.list.get(p).getDesc()
-                                            )
-                                    );
+                                    if (c.getCount() > 0) {
+                                        mdb.setDetails(newHours, "Modified", actID);
+                                        adapterArea.list.add(p, new AdapterDataMain(
+                                                        adapterArea.list.get(p).getDate(),
+                                                        adapterArea.list.get(p).getAct(),
+                                                        String.valueOf(newHours),
+                                                        adapterArea.list.get(p).getId(),
+                                                        adapterArea.list.get(p).isApproved(),
+                                                        "Modified",
+                                                        adapterArea.list.get(p).getDesc()
+                                                )
+                                        );
 
-                                    adapterArea.notifyDataSetChanged();
-                                    adapterArea.list.remove(p + 1);
-                                    adapterArea.notifyItemInserted(p);
+                                        adapterArea.notifyDataSetChanged();
+                                        adapterArea.list.remove(p + 1);
+                                        adapterArea.notifyItemInserted(p);
 
-                                    //TODO: Offline mode needs to be checked
-                                    //mdb.setSyncActDetails(0, actID);
+                                        //TODO: Offline mode needs to be checked
+                                        //mdb.setSyncActDetails(0, actID);
 
-                                    Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
-                                            "Token " + AUTH_TOKEN,
-                                            newHours,
-                                            VEC,
-                                            Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
-                                            Integer.parseInt(c.getString(c.getColumnIndex("id"))),
-                                            3,
-                                            Password.PASS,
+                                        Call<ResponseBody> putHours = RetrofitClient.getInstance().getApi().putHour(
+                                                "Token " + AUTH_TOKEN,
+                                                newHours,
+                                                VEC,
+                                                Integer.parseInt(c.getString(c.getColumnIndex("activityType"))),
+                                                Integer.parseInt(c.getString(c.getColumnIndex("id"))),
+                                                3,
+                                                Password.PASS,
 
-                                            actID
-                                    );
-                                    c.close();
-                                    mdb.close();
-                                    putHours.enqueue(new Callback<ResponseBody>() {
-                                        @Override
-                                        @EverythingIsNonNull
-                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                            if (response.isSuccessful())
-                                                Snackbar.make(view, "Edited to " + newHours + "hours", Snackbar.LENGTH_SHORT);
-                                            else if (response.errorBody() != null) {
-                                                try {
-                                                    Toast.makeText(requireContext(), "onResponse: " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
+                                                actID
+                                        );
+                                        c.close();
+                                        mdb.close();
+                                        putHours.enqueue(new Callback<ResponseBody>() {
+                                            @Override
+                                            @EverythingIsNonNull
+                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                if (response.isSuccessful())
+                                                    Snackbar.make(view, "Edited to " + newHours + "hours", Snackbar.LENGTH_SHORT);
+                                                else if (response.errorBody() != null) {
+                                                    try {
+                                                        Toast.makeText(requireContext(), "onResponse: " + response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
                                                 }
                                             }
-                                        }
 
-                                        @Override
-                                        @EverythingIsNonNull
-                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                            Log.e("Error:onFailure", t.toString());
-                                        }
-                                    });
+                                            @Override
+                                            @EverythingIsNonNull
+                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                Log.e("Error:onFailure", t.toString());
+                                            }
+                                        });
+                                    } else
+                                        Toast.makeText(mContext, "No activity found", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext, "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
                                     adapterArea.notifyItemChanged(p);
                                 }
                             } else

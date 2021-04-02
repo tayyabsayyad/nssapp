@@ -522,7 +522,7 @@ public class DatabaseAdapter {
 
     public Cursor getUpdatedAct() {
         try {
-            String sql = "select actID, State, ActivityName from DailyActivityTemp except Select actID, State, ActivityName from DailyActivity";
+            String sql = "select actID, State, ActivityName from DailyActivityTemp where (not state = \"Deleted\") except Select actID, State, ActivityName from DailyActivity";
             Cursor mCur2 = mDb.rawQuery(sql, null);
             mCur2.moveToFirst();
             return mCur2;
@@ -791,9 +791,7 @@ public class DatabaseAdapter {
     public Cursor getActLeaderId(int id) {
         try {
             String sql = String.format(Locale.ENGLISH, "SELECT * FROM DailyActivity WHERE actID=%d AND (not State=\"Deleted\")", id);
-            Cursor mCur2 = mDb.rawQuery(sql, null);
-            mCur2.getCount();//Log.e(mContext, "Too bad no data in DailyActivity", )();
-            return mCur2;
+            return mDb.rawQuery(sql, null);
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;

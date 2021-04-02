@@ -11,13 +11,14 @@
 
     <application
         android:allowBackup="true"
+        android:requestLegacyExternalStorage="true"
         android:fullBackupContent="true"
         android:icon="@drawable/ic_nss_200"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_nss_200"
+        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:theme="@style/AppTheme">
         <receiver
             android:name=".BootCompleteReceiver"
             android:enabled="true"
@@ -35,6 +36,7 @@
         <activity android:name=".ui.info.InfoSharedActivity" />
         <activity
             android:name=".SignupActivity"
+            android:theme="@style/AppTheme3"
             android:screenOrientation="nosensor" />
         <activity android:name=".About" />
 
@@ -47,6 +49,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".startActivity"
+            android:theme="@style/AppTheme2"
             android:screenOrientation="nosensor" />
         <activity android:name=".MainActivity">
             <intent-filter>

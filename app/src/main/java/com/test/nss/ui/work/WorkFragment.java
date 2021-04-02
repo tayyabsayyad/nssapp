@@ -102,6 +102,8 @@ public class WorkFragment extends Fragment {
         ArrayList<PieEntry> data = new ArrayList<>();
 
         if (isFirst) {
+            firstButton.setTextColor(primaryColDark);
+            secButton.setTextColor(blackishy);
             for (int i = 0; i < adapterDataWorks.size() - 4; i++) {
                 //Log.e("Values", adapterDataWorks.get(i).getCompHours());
                 if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0 && !adapterDataWorks.get(i).getCompHours().equals("0")) {
@@ -109,6 +111,8 @@ public class WorkFragment extends Fragment {
                 }
             }
         } else if (isSec) {
+            firstButton.setTextColor(blackishy);
+            secButton.setTextColor(primaryColDark);
             for (int i = 4; i < adapterDataWorks.size(); i++) {
                 if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0 && !adapterDataWorks.get(i).getCompHours().equals("0")) {
                     data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
@@ -179,6 +183,7 @@ public class WorkFragment extends Fragment {
         pieChart.animate();
         pieChart.animateXY(1500, 1000, Easing.EaseInOutExpo); //SINE QUART
         pieChart.invalidate();
+        getChildFragmentManager().beginTransaction().replace(R.id.work_details, WorkDetailsFirstFrag.newInstance(fyData)).commit();
 
         fm = getChildFragmentManager();
         if (isFirst) {
@@ -187,7 +192,7 @@ public class WorkFragment extends Fragment {
                 firstButton.setTextColor(primaryColDark);
 
                 hoursInfo.setVisibility(View.GONE);
-                fm.beginTransaction().replace(R.id.work_details, WorkDetailsFirstFrag.newInstance(fyData)).addToBackStack(null).commit();
+                fm.beginTransaction().replace(R.id.work_details, WorkDetailsFirstFrag.newInstance(fyData)).commit();
             });
             secButton.setOnClickListener(v -> {
                 Snackbar.make(v, "Please complete First Year", Snackbar.LENGTH_SHORT).show();
@@ -210,7 +215,7 @@ public class WorkFragment extends Fragment {
                 //pieChart.animateXY(800, 800, Easing.EaseInCirc);
 
                 hoursInfo.setVisibility(View.GONE);
-                fm.beginTransaction().replace(R.id.work_details, WorkDetailsSecFrag.newInstace(syData)).addToBackStack(null).commit();
+                fm.beginTransaction().replace(R.id.work_details, WorkDetailsSecFrag.newInstace(syData)).commit();
             });
 
             firstButton.setOnClickListener(view1 -> {

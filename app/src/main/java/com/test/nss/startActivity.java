@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
@@ -69,6 +70,8 @@ public class startActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setStatusBarColor(getColor(R.color.white));
+        getWindow().setNavigationBarColor(getColor(R.color.white));
         setContentView(R.layout.activity_start);
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
@@ -327,6 +330,7 @@ public class startActivity extends AppCompatActivity {
                                 });
                             } else {
                                 if (response.errorBody() != null) {
+                                    Log.d("AAA", "onResponse: "+response);
                                     JSONObject j = new JSONObject(response.errorBody().string());
                                     String m = j.getString("non_field_errors");
                                     Toast.makeText(mContext, "" + m.substring(2, m.length() - 2), Toast.LENGTH_SHORT).show();

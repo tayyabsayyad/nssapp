@@ -1,10 +1,12 @@
 package com.test.nss;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -56,9 +58,35 @@ import static com.test.nss.Helper.isNight;
 import static com.test.nss.Helper.name;
 
 public class ediary extends AppCompatActivity implements View.OnClickListener {
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.delDialog);
+        builder.setTitle("Exit");
+        builder.setMessage("Are your sure?");
+        builder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> super.onBackPressed());
+        builder.setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss());
+        builder.show();
+    }
+
+    private static final Intent[] POWERMANAGER_INTENTS = {
+            new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
+            new Intent().setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.appcontrol.activity.StartupAppControlActivity")),
+            new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.startupapp.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.oppo.safe", "com.oppo.safe.permission.startup.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity")),
+            new Intent().setComponent(new ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.BgStartUpManager")),
+            new Intent().setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")),
+            new Intent().setComponent(new ComponentName("com.samsung.android.lool", "com.samsung.android.sm.ui.battery.BatteryActivity")),
+            new Intent().setComponent(new ComponentName("com.htc.pitroad", "com.htc.pitroad.landingpage.activity.LandingPageActivity")),
+            new Intent().setComponent(new ComponentName("com.asus.mobilemanager", "com.asus.mobilemanager.MainActivity")),
+            new Intent().setComponent(new ComponentName("com.transsion.phonemanager", "com.itel.autobootmanager.activity.AutoBootMgrActivity"))
+    };
 
     static int whichAvatar = 0;
-
     Activity app;
     AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
@@ -77,15 +105,13 @@ public class ediary extends AppCompatActivity implements View.OnClickListener {
         startRec();
         setContentView(R.layout.activity_ediary);
 
-        MyWorker.enqueueSelf();
-        MyWorkerDb.enqueueSelf();
-
         app = this;
         context = ediary.this;
         helper = new Helper(context);
 
         imageView = findViewById(R.id.switchdark);
         refresh = findViewById(R.id.refresh);
+        MyWorkerDb.enqueueSelf();
 
         if (!isNight) {
             imageView.setImageResource(R.drawable.ic_dark);
@@ -339,6 +365,13 @@ public class ediary extends AppCompatActivity implements View.OnClickListener {
         });
 
         Log.e("Here", "onCreate: " + isFirst + isLeader + isNight);
+
+        /*for (Intent intent : POWERMANAGER_INTENTS)
+            if (getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+                //startActivity(intent);
+                break;
+            }*/
+        MyWorker.enqueueSelf();
     }
 
     private void clearData() {
@@ -492,7 +525,6 @@ public class ediary extends AppCompatActivity implements View.OnClickListener {
         super.onPause();
         helper.add();
     }
-
     /*private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

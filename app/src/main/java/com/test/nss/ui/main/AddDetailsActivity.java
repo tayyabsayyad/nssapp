@@ -235,7 +235,7 @@ public class AddDetailsActivity extends Fragment {
                     c = mdb.getSumHoursSubmitted(actDate.getText().toString(), "Second Year%");
                 mdb.close();
 
-                Toast.makeText(requireContext(), actDate.getText().toString() + " " + c, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(requireContext(), actDate.getText().toString() + " " + c, Toast.LENGTH_SHORT).show();
                 if (c <= 10) {
                     actId.setText(actAssignListId.get(drpdownactAssignName.getSelectedItemPosition()));
 
@@ -298,8 +298,8 @@ public class AddDetailsActivity extends Fragment {
 
                                     myListAdapter.list.add(0, new AdapterDataMain(actDate.getText().toString(), drpdownactAssignName.getSelectedItem().toString(), actHour.getText().toString(), actId.getText().toString(), 0, "Submitted", act_desc.getText().toString()));
                                     myListAdapter.notifyDataSetChanged();
-                                    FragmentManager fm = requireActivity().getSupportFragmentManager();
-                                    fm.popBackStack("AddDetailsActivity", 0);
+                                    //FragmentManager fm = requireActivity().getSupportFragmentManager();
+                                    //fm.popBackStack("AddDetailsActivity", 0);
                                     lottieAnimationView.playAnimation();
                                 } else if (response.errorBody() != null) {
                                     try {

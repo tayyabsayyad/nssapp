@@ -18,9 +18,11 @@
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@+id/start"
         motion:duration="1000"
-        motion:motionInterpolator="linear">
+        motion:motionInterpolator="easeOut">
 
         <OnSwipe
+            motion:moveWhenScrollAtTop="true"
+            motion:dragScale="1.5"
             motion:dragDirection="dragUp"
             motion:touchAnchorId="@+id/work_details"
             motion:touchAnchorSide="top" />

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -279,6 +280,7 @@ public class SignupActivity extends AppCompatActivity {
                                 @EverythingIsNonNull
                                 @Override
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    Log.d("AAA", "onResponse: "+response);
                                     if (response.isSuccessful() && response.body() != null) {
                                         new Handler().postDelayed(() -> {
                                             finish();
@@ -288,23 +290,24 @@ public class SignupActivity extends AppCompatActivity {
                                         Log.e("onResponse:error", response.errorBody().toString());
                                         try {
                                             JSONObject j = new JSONObject(response.errorBody().string());
-                                            if (!j.isNull("VEC")) {
-                                                Toast.makeText(mContext, j.getJSONArray("VEC").getString(0), Toast.LENGTH_SHORT).show();
+                                            if (j.has("VEC")) {
                                                 vec.requestFocus();
                                                 vec.setError("Error!");
                                             }
-                                            if (!j.isNull("Contact")) {
-                                                Toast.makeText(mContext, "" + j.getJSONArray("Contact").getString(0), Toast.LENGTH_SHORT).show();
+                                            if (j.has("Contact")) {
                                                 contactNo.setError("Enter correct number");
                                                 contactNo.requestFocus();
                                             }
-                                            if (!j.isNull("Email")) {
-                                                Toast.makeText(mContext, "" + j.getJSONArray("Email").getString(0), Toast.LENGTH_SHORT).show();
+                                            if (j.has("Email")) {
                                                 email.setError("Enter correct email");
                                                 email.requestFocus();
-                                            } else
-                                                Toast.makeText(mContext, "Recheck and sign up again", Toast.LENGTH_SHORT).show();
+                                            }
+                                            if (j.has("Error"))
+                                            Toast.makeText(mContext, ""+j.getString("Error"), Toast.LENGTH_SHORT).show();
                                             Log.e("error", j.toString());
+
+                                            ll.findViewById(R.id.lazyloader).setVisibility(View.GONE);
+                                            ll.findViewById(R.id.signup_post).setVisibility(View.VISIBLE);
                                         } catch (JSONException | IOException e) {
                                             e.printStackTrace();
                                         }
