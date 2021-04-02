@@ -14,7 +14,7 @@ public class BootCompleteReceiver extends BroadcastReceiver {
         if (intent.getAction() == null || !intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
             return;
 
-        MyWorker.enqueueSelf();
         MyWorkerDb.enqueueSelf();
+        MyWorker.enqueueSelf();
     }
 }

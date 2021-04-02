@@ -52,6 +52,7 @@ public class About extends AppCompatActivity {
         fadeOut.setDuration(1000);
 
         letsGo.setOnClickListener(view -> {
+
             letsGoArrow.setVisibility(View.VISIBLE);
             ObjectAnimator lftToRgt = ObjectAnimator.ofFloat(letsGoArrow, "translationX", 0f, displayMetrics.widthPixels).setDuration(900);
             constraintLayout.startAnimation(fadeOut);

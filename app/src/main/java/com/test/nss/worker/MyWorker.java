@@ -3,9 +3,7 @@ package com.test.nss.worker;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
@@ -19,11 +17,11 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.test.nss.CheckConn;
 import com.test.nss.DataBaseHelper;
 import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
-import com.test.nss.ediary;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,9 +38,8 @@ import static com.test.nss.Helper.AUTH_TOKEN;
 public class MyWorker extends Worker {
     private static final String uniqueWorkName = "com.test.nss.worker";
     private static final long repeatIntervalMin = 20;
-    //private static final long flexIntervalMin = 5;
-    private static final int NOTIFY_ID = 1;
-    private static final String id = "101";
+    private static final long flexIntervalMin = 5;
+    private static final String NOTIFY_ID = "nssNotif";
 
     private NotificationManager notificationManager;
     private Context context;
@@ -59,7 +56,7 @@ public class MyWorker extends Worker {
     private static PeriodicWorkRequest getOwnWorkRequest() {
         Log.e("MyWorker", "working");
         return new PeriodicWorkRequest.Builder(
-                MyWorker.class, repeatIntervalMin, TimeUnit.MINUTES)
+                MyWorker.class, repeatIntervalMin, TimeUnit.MINUTES, flexIntervalMin, TimeUnit.MINUTES)
                 .build();
     }
 
@@ -68,7 +65,7 @@ public class MyWorker extends Worker {
         if (notificationManager == null) {
             notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         }
-
+        Log.e("MyWorker", "working2");
         DatabaseAdapter mdb = new DatabaseAdapter(context);
         mdb.createDatabase();
         mdb.open();
@@ -77,12 +74,15 @@ public class MyWorker extends Worker {
 
         try {
             responseAct = insertAct.execute();
-            if (responseAct.isSuccessful() && responseAct.body() != null) {
+            if (responseAct.errorBody() != null) {
+                Log.e("Error", "doWork: " + responseAct.errorBody().string());
+            } else if (responseAct.isSuccessful() && responseAct.body() != null) {
                 try {
                     JSONArray j = new JSONArray(responseAct.body().string());
 
                     if (j.length() > 0) {
                         deleteData("DailyActivityTemp");
+                        Log.e("DailyActivityTemp", "doWork: ");
                         for (int i = 0; i < j.length(); i++) {
                             mdb.insertActAgain(
                                     j.getJSONObject(i).getString("id"),
@@ -107,33 +107,35 @@ public class MyWorker extends Worker {
             Cursor c = mdb.getUpdatedAct();
 
             if (c.getCount() > 0) {
+                c.moveToFirst();
                 if (c.getCount() < 2) {
                     String s;
                     Cursor m = mdb.getActLeaderId(c.getInt(c.getColumnIndex("actID")));
-                    int abbBy = m.getInt(m.getColumnIndex("Approved_by"));
-                    if (!String.valueOf(abbBy).equals("null")) {
-                        s = mdb.getLeaderName(abbBy);
-                    } else
+                    Log.e("AAA", m.getCount() + " " + mdb.getActLeaderId(c.getInt(c.getColumnIndex("actID"))) + " " + c.getString(c.getColumnIndex("actID")));
+                    m.moveToFirst();
+                    String abbBy = m.getString(m.getColumnIndex("Approved_by"));
+                    if (abbBy.equals("null")) {
                         s = "PO";
+                    } else
+                        s = mdb.getLeaderName(Integer.parseInt(abbBy));
 
-                    NotificationCompat.Builder builder2 = getBuilder(id, context.getString(R.string.app_name), c.getString(c.getColumnIndex("State")) + ": " + c.getString(c.getColumnIndex("ActivityName")) + "By " + s);
-                    Notification notification2 = builder2.build();
-                    notificationManager.notify(NOTIFY_ID, notification2);
+                    notify(c.getString(c.getColumnIndex("State")) + ": " + c.getString(c.getColumnIndex("ActivityName")) + " By " + s);
                 } else {
-                    NotificationCompat.Builder builder2 = getBuilder(id, context.getString(R.string.app_name), "Approved: " + c.getCount() + "activities");
-                    Notification notification2 = builder2.build();
-                    notificationManager.notify(NOTIFY_ID, notification2);
+                    notify("Approved: " + c.getCount() + " activities");
                 }
             }
+            CheckConn checkConn = new CheckConn();
+            checkConn.syncDailyAct();
             mdb.close();
         }
 
         Call<ResponseBody> helpData = RetrofitClient.getInstance().getApi().getPoData("Token " + AUTH_TOKEN);
         Response<ResponseBody> responseHelp = null;
-
         try {
             responseHelp = helpData.execute();
-            if (responseHelp.isSuccessful() && responseHelp.body() != null) {
+            if (responseAct.errorBody() != null) {
+                Log.e("Error", "doWork: " + responseAct.errorBody().string());
+            } else if (responseHelp.isSuccessful() && responseHelp.body() != null) {
                 try {
                     JSONArray j = new JSONArray(responseHelp.body().string());
 
@@ -163,43 +165,10 @@ public class MyWorker extends Worker {
         }
 
         mdb.close();
-        return responseAct != null && responseHelp != null && responseHelp.isSuccessful() && responseAct.isSuccessful() ? Result.success() : Result.retry();
-    }
+        Log.e("AAA", (responseAct != null && responseAct.isSuccessful()) + "" + (responseHelp != null && responseHelp.isSuccessful()));
+        //Log.e("AAA", responseAct.isSuccessful() + "" + insertAct.isExecuted());
 
-    @NonNull
-    public NotificationCompat.Builder getBuilder(String id, String title, String msg) {
-        NotificationCompat.Builder builder;
-        Intent intent;
-        PendingIntent pendingIntent;
-
-        builder = new NotificationCompat.Builder(context, id);
-        intent = new Intent(context, ediary.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel mChannel = notificationManager.getNotificationChannel(id);
-            if (mChannel == null) {
-                mChannel = new NotificationChannel(id, title, importance);
-                notificationManager.createNotificationChannel(mChannel);
-            }
-            pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            builder.setContentTitle(context.getString(R.string.congrats))                            // required
-                    .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
-                    .setContentText(msg) // required
-                    .setAutoCancel(true)
-                    .setChannelId(id)
-                    .setContentIntent(pendingIntent);
-        } else {
-            pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            builder.setContentTitle(context.getString(R.string.congrats))                            // required
-                    .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
-                    .setContentText(msg) // required
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setPriority(Notification.PRIORITY_DEFAULT);
-        }
-        return builder;
+        return helpData.isExecuted() && insertAct.isExecuted() ? Result.success() : Result.failure();
     }
 
     public void deleteData(String table) {
@@ -212,5 +181,30 @@ public class MyWorker extends Worker {
         mDbHelper2.close();
         m.close();
         mDb2.close();
+    }
+
+    private void notify(String content) {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context, NOTIFY_ID);
+
+        mBuilder.setSmallIcon(R.drawable.ic_nss_200);
+        mBuilder.setContentTitle(context.getString(R.string.congrats));
+        mBuilder.setContentText(content);
+        mBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    NOTIFY_ID,
+                    context.getString(R.string.congrats),
+                    NotificationManager.IMPORTANCE_HIGH);
+            mNotificationManager.createNotificationChannel(channel);
+            mBuilder.setChannelId(NOTIFY_ID);
+        }
+
+        mNotificationManager.notify(0, mBuilder.build());
+
     }
 }

@@ -269,50 +269,7 @@ public class CheckConn extends BroadcastReceiver {
         }
         mDbHelper.close();
 
-        Call<ResponseBody> insertAct = RetrofitClient.getInstance().getApi().getDailyAct("Token " + AUTH_TOKEN);
-        insertAct.enqueue(new Callback<ResponseBody>() {
-            @Override
-            @EverythingIsNonNull
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        JSONArray j = new JSONArray(response.body().string());
-
-                        if (j.length() > 0) {
-                            DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
-                            mDbHelper.createDatabase();
-                            mDbHelper.open();
-                            deleteData("DailyActivity");
-                            for (int i = 0; i < j.length(); i++) {
-                                mDbHelper.insertAct(
-                                        j.getJSONObject(i).getString("VEC"),
-                                        j.getJSONObject(i).getString("ActivityName"),
-                                        j.getJSONObject(i).getString("id"),
-                                        j.getJSONObject(i).getString("Date"),
-                                        j.getJSONObject(i).getString("AssignedActivityName"),
-                                        j.getJSONObject(i).getString("Hours"),
-                                        j.getJSONObject(i).getString("State"),
-                                        j.getJSONObject(i).getString("ApprovedBy"),
-                                        j.getJSONObject(i).getString("ActDescription"),
-                                        1
-                                );
-                            }
-                            mDbHelper.setApproved("DailyActivity");
-                            mDbHelper.close();
-                        }
-                    } catch (JSONException | IOException e) {
-                        Log.e("Failed", e.toString());
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            @EverythingIsNonNull
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
+        syncDailyAct();
 
         mDbHelper.createDatabase();
         mDbHelper.open();
@@ -725,6 +682,53 @@ public class CheckConn extends BroadcastReceiver {
                 mdb.open();
                 mdb.setActState();
                 mdb.close();
+            }
+        });
+    }
+
+    public void syncDailyAct() {
+        Call<ResponseBody> insertAct = RetrofitClient.getInstance().getApi().getDailyAct("Token " + AUTH_TOKEN);
+        insertAct.enqueue(new Callback<ResponseBody>() {
+            @Override
+            @EverythingIsNonNull
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        JSONArray j = new JSONArray(response.body().string());
+
+                        if (j.length() > 0) {
+                            DatabaseAdapter mDbHelper = new DatabaseAdapter(context);
+                            mDbHelper.createDatabase();
+                            mDbHelper.open();
+                            deleteData("DailyActivity");
+                            for (int i = 0; i < j.length(); i++) {
+                                mDbHelper.insertAct(
+                                        j.getJSONObject(i).getString("VEC"),
+                                        j.getJSONObject(i).getString("ActivityName"),
+                                        j.getJSONObject(i).getString("id"),
+                                        j.getJSONObject(i).getString("Date"),
+                                        j.getJSONObject(i).getString("AssignedActivityName"),
+                                        j.getJSONObject(i).getString("Hours"),
+                                        j.getJSONObject(i).getString("State"),
+                                        j.getJSONObject(i).getString("ApprovedBy"),
+                                        j.getJSONObject(i).getString("ActDescription"),
+                                        1
+                                );
+                            }
+                            mDbHelper.setApproved("DailyActivity");
+                            mDbHelper.close();
+                        }
+                    } catch (JSONException | IOException e) {
+                        Log.e("Failed", e.toString());
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            @EverythingIsNonNull
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
             }
         });
     }
