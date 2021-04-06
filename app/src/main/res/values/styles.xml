@@ -7,16 +7,13 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/blackGrey</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <!-- <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item> -->
     </style>
 
-    <style name="AppTheme2" parent="AppTheme"/>
-
-    <style name="AppTheme3" parent="AppTheme">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:fitsSystemWindows">true</item>
+    <style name="AppTheme2" parent="AppTheme">
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="scrollbar_shape_style">
@@ -68,12 +65,12 @@
         <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <!--<style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
-    </style>
+    </style>-->
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

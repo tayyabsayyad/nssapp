@@ -87,7 +87,7 @@ public class MainFragment extends Fragment {
                     halvesFrame.setVisibility(View.VISIBLE);
 
                 FragmentManager fragmentManager = getChildFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.halves_frame, fyAct.newInstance(), "fyAct").addToBackStack("MainFrag").commit();
+                fragmentManager.beginTransaction().replace(R.id.halves_frame, fyAct.newInstance(), "fyAct").commit();
             });
             secButton.setOnClickListener(v -> {
                 if (isFirst)
@@ -105,7 +105,7 @@ public class MainFragment extends Fragment {
                     halvesFrame.setVisibility(View.VISIBLE);
 
                 FragmentManager fragmentManager = getChildFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.halves_frame, syAct.newInstance(), "syAct").addToBackStack("MainFrag").commit();
+                fragmentManager.beginTransaction().replace(R.id.halves_frame, syAct.newInstance(), "syAct").commit();
             });
 
             firstButton.setOnClickListener(view1 -> {
@@ -119,7 +119,7 @@ public class MainFragment extends Fragment {
                     halvesFrame.setVisibility(View.VISIBLE);
 
                 FragmentManager fragmentManager = getChildFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.halves_frame, fyAct.newInstance(), "fyAct").addToBackStack("MainFrag").commit();
+                fragmentManager.beginTransaction().replace(R.id.halves_frame, fyAct.newInstance(), "fyAct").commit();
             });
         } else {
             firstButton.setOnClickListener(v -> {
@@ -132,19 +132,19 @@ public class MainFragment extends Fragment {
                     halvesFrame.setVisibility(View.VISIBLE);
 
                 FragmentManager fragmentManager = getChildFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.halves_frame, fyAct.newInstance(), "fyAct").addToBackStack("MainFrag").commit();
+                fragmentManager.beginTransaction().replace(R.id.halves_frame, fyAct.newInstance(), "fyAct").commit();
             });
         }
     }
 
     public void clear() {
-        Fragment simpleFragment = getChildFragmentManager().findFragmentById(R.id.halves_frame);
+        /*Fragment simpleFragment = getChildFragmentManager().findFragmentById(R.id.halves_frame);
 
         Log.e("AAA", "clear() called MainFrag " + simpleFragment + fm.getBackStackEntryCount());
         if (simpleFragment instanceof fyAct || simpleFragment instanceof syAct) {
             //((ediary) requireActivity()).closeFragment(simpleFragment);
             fm.popBackStack();
             //simpleFragment.clear();
-        }
+        }*/
     }
 }

@@ -113,13 +113,15 @@ public class MyWorker extends Worker {
                     Cursor m = mdb.getActLeaderId(c.getInt(c.getColumnIndex("actID")));
                     Log.e("AAA", m.getCount() + " " + mdb.getActLeaderId(c.getInt(c.getColumnIndex("actID"))) + " " + c.getString(c.getColumnIndex("actID")));
                     m.moveToFirst();
-                    String abbBy = m.getString(m.getColumnIndex("Approved_by"));
-                    if (abbBy.equals("null")) {
-                        s = "PO";
-                    } else
-                        s = mdb.getLeaderName(Integer.parseInt(abbBy));
+                    if (m.getCount() > 0) {
+                        String abbBy = m.getString(m.getColumnIndex("Approved_by"));
+                        if (abbBy.equals("null")) {
+                            s = "PO";
+                        } else
+                            s = mdb.getLeaderName(Integer.parseInt(abbBy));
 
-                    notify(c.getString(c.getColumnIndex("State")) + ": " + c.getString(c.getColumnIndex("ActivityName")) + " By " + s);
+                        notify(c.getString(c.getColumnIndex("State")) + ": " + c.getString(c.getColumnIndex("ActivityName")) + " By " + s);
+                    }
                 } else {
                     notify("Approved: " + c.getCount() + " activities");
                 }

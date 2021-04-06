@@ -3,8 +3,8 @@
     <color name="colorPrimaryDark">#1759CA</color>
     <color name="colorPrimary">#4B9EF6</color>
     <color name="colorPrimaryLight">#78ACDF</color>
-    <color name="white">#000000</color>
-    <color name="off_white">#171717</color>
+    <color name="white">#131313</color>
+    <color name="off_white">#1C1C1C</color>
     <color name="blackGrey">#DFDFDF</color>
     <color name="black">#FFFFFF</color>
     <color name="grey">#8C8C8C</color>

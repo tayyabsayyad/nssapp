@@ -53,20 +53,12 @@ import retrofit2.internal.EverythingIsNonNull;
 
 import static com.test.nss.Helper.AUTH_TOKEN;
 import static com.test.nss.Helper.VEC;
+import static com.test.nss.Helper.black;
 import static com.test.nss.Helper.isFirst;
 import static com.test.nss.Helper.isNight;
 import static com.test.nss.Helper.name;
 
 public class ediary extends AppCompatActivity implements View.OnClickListener {
-    @Override
-    public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.delDialog);
-        builder.setTitle("Exit");
-        builder.setMessage("Are your sure?");
-        builder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> super.onBackPressed());
-        builder.setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss());
-        builder.show();
-    }
 
     private static final Intent[] POWERMANAGER_INTENTS = {
             new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
@@ -102,6 +94,8 @@ public class ediary extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setStatusBarColor(getColor(R.color.white));
+        getWindow().setNavigationBarColor(getColor(R.color.off_white));
         startRec();
         setContentView(R.layout.activity_ediary);
 

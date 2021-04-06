@@ -124,7 +124,7 @@ public class fyAct extends Fragment {
         fragFy = root.findViewById(R.id.frag_fy);
 
         univ.setOnClickListener(v -> {
-            Snackbar.make(view.findViewById(R.id.add), "Swipe left on activity to modify", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            Snackbar.make(add, "Swipe left on activity to modify", Snackbar.LENGTH_SHORT).show();
 
             whichAct = 13;
             act = 0;
@@ -328,12 +328,26 @@ public class fyAct extends Fragment {
                             dialog.dismiss();
 
                             if (!input.getText().toString().trim().equals("")) {
-                                newHours = Integer.parseInt(input.getText().toString());
+                                try {
+                                    newHours = Integer.parseInt(input.getText().toString());
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(mContext, "" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                    newHours = 0;
+                                }
 
-                                if (newHours >= 1 && newHours <= 10) {
-                                    String actName = adapterUniv.list.get(p).getAct();
+                                String actName = adapterUniv.list.get(p).getAct();
 
-                                    DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                mdb.createDatabase();
+                                mdb.open();
+                                Cursor m = mdb.getActAssigActNameAdmin(actName);
+                                m.moveToFirst();
+                                int maxH = m.getInt(m.getColumnIndex("HoursAssigned"));
+                                mdb.close();
+
+                                if (newHours >= 1 && newHours <= maxH) {
+                                    mdb = new DatabaseAdapter(mContext);
                                     mdb.createDatabase();
                                     mdb.open();
                                     mdb.setDetails(newHours, "Modified", actID);
@@ -394,7 +408,7 @@ public class fyAct extends Fragment {
                                         }
                                     });
                                 } else {
-                                    Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), "Enter upto: " + maxH + "hour", Toast.LENGTH_SHORT).show();
                                     adapterUniv.notifyItemChanged(p);
                                 }
                             } else
@@ -428,7 +442,7 @@ public class fyAct extends Fragment {
                         Log.e("Here", "onSwiped: " + leadId);
                         x = mdb.getLeaderName(leadId) != null ? x + mdb.getLeaderName(leadId) : x + "PO";
 
-                        Snackbar sb = Snackbar.make(view, x, Snackbar.LENGTH_LONG)
+                        Snackbar sb = Snackbar.make(add, x, Snackbar.LENGTH_LONG)
                                 .setTextColor(sbColorText);
                         //sb.getView().setBackgroundColor(transparent);
                         mdb.close();
@@ -441,7 +455,8 @@ public class fyAct extends Fragment {
                         c.moveToFirst();
 
                         if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
-                            Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
+
+                            Snackbar sb = Snackbar.make(add, "Approved By: PO", Snackbar.LENGTH_LONG)
                                     .setTextColor(sbColorText);
                             //sb.getView().setBackgroundColor(transparent);
                             sb.show();
@@ -454,7 +469,7 @@ public class fyAct extends Fragment {
                                 x = "Modified By: ";
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
                             x = mdb.getLeaderName(leadId) != null ? x + mdb.getLeaderName(leadId) : x + "PO";
-                            Snackbar sb = Snackbar.make(view, x, Snackbar.LENGTH_LONG)
+                            Snackbar sb = Snackbar.make(add, x, Snackbar.LENGTH_LONG)
                                     .setTextColor(sbColorText);
                             //sb.getView().setBackgroundColor(transparent);
                             sb.show();
@@ -642,12 +657,26 @@ public class fyAct extends Fragment {
 
                             //Log.e("Yes this", adapterArea.list.get(p).getAct());
                             if (!input.getText().toString().trim().equals("")) {
-                                newHours = Integer.parseInt(input.getText().toString());
+                                try {
+                                    newHours = Integer.parseInt(input.getText().toString());
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(mContext, "" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                    newHours = 0;
+                                }
 
-                                if (newHours >= 1 && newHours <= 10) {
-                                    String actName = adapterArea.list.get(p).getAct();
+                                String actName = adapterArea.list.get(p).getAct();
 
-                                    DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                mdb.createDatabase();
+                                mdb.open();
+                                Cursor m = mdb.getActAssigActNameAdmin(actName);
+                                m.moveToFirst();
+                                int maxH = m.getInt(m.getColumnIndex("HoursAssigned"));
+                                mdb.close();
+
+                                if (newHours >= 1 && newHours <= maxH) {
+                                    mdb = new DatabaseAdapter(mContext);
                                     mdb.createDatabase();
                                     mdb.open();
                                     mdb.setDetails(newHours, "Modified", actID);
@@ -708,7 +737,7 @@ public class fyAct extends Fragment {
                                         }
                                     });
                                 } else {
-                                    Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), "Enter upto: " + maxH + "hour", Toast.LENGTH_SHORT).show();
                                     adapterArea.notifyItemChanged(p);
                                 }
                             } else
@@ -738,7 +767,7 @@ public class fyAct extends Fragment {
                         c.moveToFirst();
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
                         x = mdb.getLeaderName(leadId) != null ? x + mdb.getLeaderName(leadId) : x + "PO";
-                        Snackbar sb = Snackbar.make(view, x, Snackbar.LENGTH_LONG)
+                        Snackbar sb = Snackbar.make(add, x, Snackbar.LENGTH_LONG)
                                 .setTextColor(sbColorText);
                         //sb.getView().setBackgroundColor(transparent);
                         mdb.close();
@@ -753,7 +782,7 @@ public class fyAct extends Fragment {
                         c.moveToFirst();
 
                         if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
-                            Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
+                            Snackbar sb = Snackbar.make(add, "Approved By: PO", Snackbar.LENGTH_LONG)
                                     .setTextColor(sbColorText);
                             //sb.getView().setBackgroundColor(transparent);
                             sb.show();
@@ -767,7 +796,7 @@ public class fyAct extends Fragment {
 
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
                             x = mdb.getLeaderName(leadId) != null ? x + mdb.getLeaderName(leadId) : x + "PO";
-                            Snackbar sb = Snackbar.make(view, x, Snackbar.LENGTH_LONG)
+                            Snackbar sb = Snackbar.make(add, x, Snackbar.LENGTH_LONG)
                                     .setTextColor(sbColorText);
                             //sb.getView().setBackgroundColor(transparent);
                             sb.show();
@@ -951,20 +980,33 @@ public class fyAct extends Fragment {
                         );
 
                         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                            dialog.dismiss();
 
                             //Log.e("Yes this", adapterArea.list.get(p).getAct());
                             if (!input.getText().toString().trim().equals("")) {
-                                newHours = Integer.parseInt(input.getText().toString());
+                                try {
+                                    newHours = Integer.parseInt(input.getText().toString());
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(mContext, "" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                    newHours = 0;
+                                }
 
-                                if (newHours >= 1 && newHours <= 10) {
-                                    String actName = adapterClg.list.get(p).getAct();
+                                String actName = adapterClg.list.get(p).getAct();
 
-                                    DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                DatabaseAdapter mdb = new DatabaseAdapter(mContext);
+                                mdb.createDatabase();
+                                mdb.open();
+                                Cursor m = mdb.getActAssigActNameAdmin(actName);
+                                m.moveToFirst();
+                                int maxH = m.getInt(m.getColumnIndex("HoursAssigned"));
+                                mdb.close();
+
+                                if (newHours >= 1 && newHours <= maxH) {
+                                    dialog.dismiss();
+                                    mdb = new DatabaseAdapter(mContext);
                                     mdb.createDatabase();
                                     mdb.open();
                                     mdb.setDetails(newHours, "Modified", actID);
-
                                     Cursor c = mdb.getActAssigActNameAdmin(actName);
                                     c.moveToFirst();
 
@@ -1021,7 +1063,7 @@ public class fyAct extends Fragment {
                                         }
                                     });
                                 } else {
-                                    Toast.makeText(requireContext(), "Please enter atleast\nan hour between 1 to 10", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), "Enter upto: " + maxH + "hour", Toast.LENGTH_SHORT).show();
                                     adapterClg.notifyItemChanged(p);
                                 }
                             } else
@@ -1051,7 +1093,7 @@ public class fyAct extends Fragment {
                         c.moveToFirst();
                         int leadId = c.getInt(c.getColumnIndex("Approved_by"));
                         x = mdb.getLeaderName(leadId) != null ? x + mdb.getLeaderName(leadId) : x + "PO";
-                        Snackbar sb = Snackbar.make(view, x, Snackbar.LENGTH_LONG)
+                        Snackbar sb = Snackbar.make(add, x, Snackbar.LENGTH_LONG)
                                 .setTextColor(sbColorText);
                         //sb.getView().setBackgroundColor(transparent);
                         mdb.close();
@@ -1066,7 +1108,7 @@ public class fyAct extends Fragment {
                         c.moveToFirst();
 
                         if (c.getString(c.getColumnIndex("Approved_by")).equals("null")) {
-                            Snackbar sb = Snackbar.make(view, "Approved By: PO", Snackbar.LENGTH_LONG)
+                            Snackbar sb = Snackbar.make(add, "Approved By: PO", Snackbar.LENGTH_LONG)
                                     .setTextColor(sbColorText);
                             //sb.getView().setBackgroundColor(transparent);
                             sb.show();
@@ -1081,7 +1123,7 @@ public class fyAct extends Fragment {
 
                             int leadId = c.getInt(c.getColumnIndex("Approved_by"));
                             x = mdb.getLeaderName(leadId) != null ? x + mdb.getLeaderName(leadId) : x + "PO";
-                            Snackbar sb = Snackbar.make(view, x, Snackbar.LENGTH_LONG)
+                            Snackbar sb = Snackbar.make(add, x, Snackbar.LENGTH_LONG)
                                     .setTextColor(sbColorText);
                             //sb.getView().setBackgroundColor(transparent);
                             sb.show();
@@ -1168,8 +1210,7 @@ public class fyAct extends Fragment {
                 args.putInt("act", act);
                 detailsActivity.setArguments(args);
 
-                FragmentManager fm = requireActivity().getSupportFragmentManager();
-                fm.beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").commit();
+                getParentFragmentManager().beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").commit();
 
                 //adapterArea.notifyDataSetChanged();
                 //adapterClg.notifyDataSetChanged();

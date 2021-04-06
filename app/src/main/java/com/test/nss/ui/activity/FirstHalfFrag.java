@@ -413,19 +413,19 @@ public class FirstHalfFrag extends Fragment {
         animator.start();
     }
 
-    @Override
+/*    @Override
     public void onDetach() {
         super.onDetach();
-        /*FragmentManager fm = getChildFragmentManager();
+        *//*FragmentManager fm = getChildFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             Log.e("FirstHalfFrag", "onDetach: " + fm.getBackStackEntryCount());
             fm.popBackStack("FirstHalfFrag", 0);
-        }*/
+        }*//*
         noActDesc.setVisibility(View.GONE);
         actDetails.setVisibility(View.VISIBLE);
         recyclerViewUnivAct.setVisibility(View.GONE);
         recyclerViewAreaOneAct.setVisibility(View.GONE);
         recyclerViewAreaTwoAct.setVisibility(View.GONE);
         recyclerViewClgAct.setVisibility(View.GONE);
-    }
+    }*/
 }

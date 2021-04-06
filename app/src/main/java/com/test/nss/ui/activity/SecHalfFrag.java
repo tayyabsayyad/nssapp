@@ -390,14 +390,14 @@ public class SecHalfFrag extends Fragment {
         animator.start();
     }
 
-    @Override
+   /* @Override
     public void onDetach() {
         super.onDetach();
         FragmentManager fm = getChildFragmentManager();
-        /*if (fm.getBackStackEntryCount() > 0) {
+        *//*if (fm.getBackStackEntryCount() > 0) {
             Log.e("SecHalfFrag", "onDetach: " + fm.getBackStackEntryCount());
             fm.popBackStack("SecHalfFrag", 0);
-        }*/
+        }*//*
         noActDesc.setVisibility(View.GONE);
         actDetails.setVisibility(View.VISIBLE);
         recyclerViewUnivAct.setVisibility(View.GONE);
@@ -405,5 +405,5 @@ public class SecHalfFrag extends Fragment {
         recyclerViewAreaOneAct.setVisibility(View.GONE);
         recyclerViewAreaTwoAct.setVisibility(View.GONE);
         recyclerViewClgAct.setVisibility(View.GONE);
-    }
+    }*/
 }

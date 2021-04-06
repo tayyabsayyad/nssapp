@@ -2,6 +2,7 @@ package com.test.nss.ui.work;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,6 +54,9 @@ public class WorkFragment extends Fragment {
     TextView hoursInfo;
     PieChart pieChart;
     List<AdapterDataWork> adapterDataWorks, fyData, syData;
+    ArrayList<PieEntry> data;
+    PieDataSet pieData;
+    PieData pieData1;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -87,105 +91,12 @@ public class WorkFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fm = getChildFragmentManager();
 
-        for (int i = 0; i < adapterDataWorks.size() - 4; i++) {
-            fyData.add(adapterDataWorks.get(i));
-        }
-        for (int i = 4; i < adapterDataWorks.size(); i++) {
-            syData.add(adapterDataWorks.get(i));
-        }
-
+        view.post(() -> new PieChartAnim().execute());
         toolbar = requireActivity().findViewById(R.id.toolbar);
-
         toolbar.setVisibility(View.VISIBLE);
 
-        ArrayList<PieEntry> data = new ArrayList<>();
-
-        if (isFirst) {
-            firstButton.setTextColor(primaryColDark);
-            secButton.setTextColor(blackishy);
-            for (int i = 0; i < adapterDataWorks.size() - 4; i++) {
-                //Log.e("Values", adapterDataWorks.get(i).getCompHours());
-                if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0 && !adapterDataWorks.get(i).getCompHours().equals("0")) {
-                    data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
-                }
-            }
-        } else if (isSec) {
-            firstButton.setTextColor(blackishy);
-            secButton.setTextColor(primaryColDark);
-            for (int i = 4; i < adapterDataWorks.size(); i++) {
-                if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0 && !adapterDataWorks.get(i).getCompHours().equals("0")) {
-                    data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
-                }
-            }
-        }
-
-        PieDataSet pieData = new PieDataSet(data, "");
-        pieData.setSliceSpace(3);
-        pieData.setSelectionShift(7);
-
-        int[] colors = new int[10];
-        int counter = 0;
-
-        /*for (int color : ColorTemplate.MATERIAL_COLORS
-        ) {
-            colors[counter] = color;
-            counter++;
-        }*/
-
-        for (int color : CUSTOM
-        ) {
-            colors[counter] = color;
-            counter++;
-        }
-        //Log.e("AAA", "" + colors.length);
-        pieData.setColors(colors);
-
-        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                String s = Float.toString(e.getY());
-
-                Toast.makeText(requireContext(), s.substring(0, s.indexOf(".")) + "h Worked", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });
-
-        pieData.setValueFormatter(new PercentFormatter(pieChart));
-        pieChart.setUsePercentValues(true);
-        pieChart.setDrawEntryLabels(false);
-        pieData.setValueTextSize(15f);
-
-        PieData pieData1 = new PieData(pieData);
-        Typeface t = Typeface.createFromAsset(requireActivity().getAssets(), "google_sans_bold.ttf");
-
-        pieData1.setDataSet(pieData);
-        pieData.setValueTypeface(t);
-
-        Legend l = pieChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setWordWrapEnabled(true);
-        l.setDrawInside(false);
-        l.setTypeface(t);
-        l.setTextColor(blackishy);
-
-        pieChart.setCenterTextColor(primaryColDark);
-
-        pieChart.setData(pieData1);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setCenterText("Total hours worked");
-        pieChart.animate();
-        pieChart.animateXY(1500, 1000, Easing.EaseInOutExpo); //SINE QUART
-        pieChart.invalidate();
-        getChildFragmentManager().beginTransaction().replace(R.id.work_details, WorkDetailsFirstFrag.newInstance(fyData)).commit();
-
-        fm = getChildFragmentManager();
         if (isFirst) {
             secButton.setTextColor(requireContext().getColor(R.color.grey));
             firstButton.setOnClickListener(v -> {
@@ -442,5 +353,110 @@ public class WorkFragment extends Fragment {
             c--;
         }*/
         super.onDetach();
+    }
+
+    public class PieChartAnim extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... views) {
+            data = new ArrayList<>();
+            pieData = new PieDataSet(data, "");
+            pieData1 = new PieData(pieData);
+
+            for (int i = 0; i < adapterDataWorks.size() - 4; i++) {
+                fyData.add(adapterDataWorks.get(i));
+            }
+            for (int i = 4; i < adapterDataWorks.size(); i++) {
+                syData.add(adapterDataWorks.get(i));
+            }
+
+            if (isFirst) {
+                firstButton.setTextColor(primaryColDark);
+                secButton.setTextColor(blackishy);
+                for (int i = 0; i < adapterDataWorks.size() - 4; i++) {
+                    //Log.e("Values", adapterDataWorks.get(i).getCompHours());
+                    if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0 && !adapterDataWorks.get(i).getCompHours().equals("0")) {
+                        data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
+                    }
+                }
+            } else if (isSec) {
+                firstButton.setTextColor(blackishy);
+                secButton.setTextColor(primaryColDark);
+                for (int i = 4; i < adapterDataWorks.size(); i++) {
+                    if (Integer.parseInt(adapterDataWorks.get(i).getCompHours()) > 0 && !adapterDataWorks.get(i).getCompHours().equals("0")) {
+                        data.add(new PieEntry(Integer.parseInt(adapterDataWorks.get(i).getCompHours()), adapterDataWorks.get(i).getNature()));
+                    }
+                }
+            }
+
+            pieData.setSliceSpace(3);
+            pieData.setSelectionShift(7);
+
+            int[] colors = new int[10];
+            int counter = 0;
+
+        /*for (int color : ColorTemplate.MATERIAL_COLORS
+        ) {
+            colors[counter] = color;
+            counter++;
+        }*/
+
+            for (int color : CUSTOM
+            ) {
+                colors[counter] = color;
+                counter++;
+            }
+            //Log.e("AAA", "" + colors.length);
+            pieData.setColors(colors);
+
+            pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                @Override
+                public void onValueSelected(Entry e, Highlight h) {
+                    String s = Float.toString(e.getY());
+
+                    Toast.makeText(requireContext(), s.substring(0, s.indexOf(".")) + "h Worked", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onNothingSelected() {
+
+                }
+            });
+
+            pieData.setValueFormatter(new PercentFormatter(pieChart));
+            pieChart.setUsePercentValues(true);
+            pieChart.setDrawEntryLabels(false);
+            pieData.setValueTextSize(15f);
+
+            Typeface t = Typeface.createFromAsset(requireActivity().getAssets(), "google_sans_bold.ttf");
+
+            pieData1.setDataSet(pieData);
+            pieData.setValueTypeface(t);
+
+            Legend l = pieChart.getLegend();
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+            l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+            l.setWordWrapEnabled(true);
+            l.setDrawInside(false);
+            l.setTypeface(t);
+            l.setTextColor(blackishy);
+
+            pieChart.setCenterTextColor(primaryColDark);
+
+            pieChart.setData(pieData1);
+            pieChart.getDescription().setEnabled(false);
+            pieChart.setCenterText("Total hours worked");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pieChart.animate();
+            pieChart.animateXY(1500, 1500, Easing.EaseInOutExpo); //SINE QUART
+            pieChart.invalidate();
+            fm.beginTransaction().replace(R.id.work_details, WorkDetailsFirstFrag.newInstance(fyData)).commit();
+        }
     }
 }

@@ -50,7 +50,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.date.setText(list.get(position).getDate());
         holder.act.setText(list.get(position).getAct());
-        holder.state.setText(String.format("• %s", list.get(position).getState()));
+        //holder.state.setText(String.format("• %s", list.get(position).getState()));
         holder.hours.setText(String.format("%sh", list.get(position).getHours()));
         holder.actId.setText(list.get(position).getId());
 

@@ -41,7 +41,6 @@ public class CampDetailsDays extends Fragment {
 
         root = inflater.inflate(R.layout.fragment_camp_details_days, container, false);
 
-        assert getArguments() != null;
         //actName = getArguments().getString("actName");
         camp_main_details = requireActivity().findViewById(R.id.camp_main_details);
         campList = root.findViewById(R.id.camp_details_days);

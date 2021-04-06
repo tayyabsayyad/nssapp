@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/startCons"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -124,31 +125,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
-    <LinearLayout
-        android:id="@+id/bottomLinear"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="@dimen/padding_5dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_marginBottom="6dp"
+        android:fontFamily="@font/google_sans_bold"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/forgotText"
+        app:layout_constraintEnd_toEndOf="@+id/forgotText"
+        app:layout_constraintStart_toStartOf="@+id/forgotText" />
 
-        <TextView
-            android:id="@+id/register"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding_5dp"
-            android:fontFamily="@font/google_sans_bold"
-            android:textAllCaps="false"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/forgotText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/google_sans_bold"
-            android:text="Forgot password"
-            android:textColor="@color/blackGrey" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/forgotText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_20dp"
+        android:fontFamily="@font/google_sans_bold"
+        android:text="Forgot password"
+        android:textColor="@color/blackGrey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/loginText"
+        app:layout_constraintStart_toStartOf="@+id/loginText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

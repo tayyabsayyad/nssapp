@@ -190,7 +190,7 @@
                 android:visibility="gone"
                 app:backgroundTint="@color/off_white"
                 app:elevation="@dimen/padding_5dp"
-                app:fabCustomSize="45dp"
+                app:fabCustomSize="36dp"
                 app:rippleColor="@color/colorPrimaryLight" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.cardview.widget.CardView>

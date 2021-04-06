@@ -1,5 +1,7 @@
 package com.test.nss;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,6 +13,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -22,6 +28,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.agrawalsuneet.dotsloader.loaders.LazyLoader;
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.api.RetrofitClient;
 
@@ -62,11 +69,100 @@ public class SignupActivity extends AppCompatActivity {
     private EditText password;
     private EditText password2;
 
+    /*public static void expand(final View v) {
+        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
+        v.getLayoutParams().height = 1;
+        v.setVisibility(View.VISIBLE);
+
+        ValueAnimator va = ValueAnimator.ofInt(1, targetHeight);
+        va.addUpdateListener(animation -> {
+            v.getLayoutParams().height = (Integer) animation.getAnimatedValue();
+            v.requestLayout();
+        });
+        va.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                v.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        va.setDuration(300);
+        va.setInterpolator(new AccelerateDecelerateInterpolator());
+        va.start();
+    }
+
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        ValueAnimator va = ValueAnimator.ofInt(initialHeight, 0);
+        va.addUpdateListener(animation -> {
+            v.getLayoutParams().height = (Integer) animation.getAnimatedValue();
+            v.requestLayout();
+        });
+        va.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                v.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        va.setDuration(300);
+        va.setInterpolator(new DecelerateInterpolator());
+        va.start();
+    }*/
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);*/
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
         setContentView(R.layout.activity_signup);
+        /*LinearLayout contOne = findViewById(R.id.container_one);
+        LinearLayout contTwo = findViewById(R.id.container_two);
+        LinearLayout loader = findViewById(R.id.loader2);
+        View back = findViewById(R.id.sign_back);
+
+        back.setOnClickListener(view -> {
+            if (contTwo.getVisibility() == View.VISIBLE) {
+                collapse(contTwo);
+                expand(contOne);
+            } else {
+                collapse(contOne);
+                expand(contTwo);
+            }
+        });*/
 
         mContext = SignupActivity.this;
         vec = findViewById(R.id.vec_in);
@@ -220,7 +316,6 @@ public class SignupActivity extends AppCompatActivity {
                 }
                 mdb.close();
             });
-            LinearLayout ll = findViewById(R.id.loader2);
 
             signupPost.setOnClickListener(v -> {
                 String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
@@ -242,7 +337,7 @@ public class SignupActivity extends AppCompatActivity {
                     }
                     if (!(password.getText().toString().length() > 5)) {
                         password.setError("Error");
-                        Snackbar.make(v, "Password length must be atleast 5", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(v, "Password length must be atleast 6", Snackbar.LENGTH_SHORT).show();
                         password2.setText("");
                         password.requestFocus();
                     } else if (!password.getText().toString().equals(password2.getText().toString())) {
@@ -273,14 +368,14 @@ public class SignupActivity extends AppCompatActivity {
                                     Password.PASS
                             );
 
-                            ll.findViewById(R.id.lazyloader).setVisibility(View.VISIBLE);
-                            ll.findViewById(R.id.signup_post).setVisibility(View.GONE);
+                            findViewById(R.id.lazyloader).setVisibility(View.VISIBLE);
+                            findViewById(R.id.signup_post).setVisibility(View.GONE);
 
                             signup.enqueue(new Callback<ResponseBody>() {
                                 @EverythingIsNonNull
                                 @Override
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                    Log.d("AAA", "onResponse: "+response);
+                                    Log.d("AAA", "onResponse: " + response);
                                     if (response.isSuccessful() && response.body() != null) {
                                         new Handler().postDelayed(() -> {
                                             finish();
@@ -303,11 +398,13 @@ public class SignupActivity extends AppCompatActivity {
                                                 email.requestFocus();
                                             }
                                             if (j.has("Error"))
-                                            Toast.makeText(mContext, ""+j.getString("Error"), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(mContext, "" + j.getString("Error"), Toast.LENGTH_SHORT).show();
+                                            else
+                                                Toast.makeText(mContext, "" + response.message(), Toast.LENGTH_SHORT).show();
                                             Log.e("error", j.toString());
 
-                                            ll.findViewById(R.id.lazyloader).setVisibility(View.GONE);
-                                            ll.findViewById(R.id.signup_post).setVisibility(View.VISIBLE);
+                                            findViewById(R.id.lazyloader).setVisibility(View.GONE);
+                                            findViewById(R.id.signup_post).setVisibility(View.VISIBLE);
                                         } catch (JSONException | IOException e) {
                                             e.printStackTrace();
                                         }

@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.test.nss.R;
@@ -53,53 +54,60 @@ public class ActivityFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         toolbar.setVisibility(View.VISIBLE);
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        if (fm.findFragmentById(R.id.act_list) == null)
+            ft.replace(R.id.act_list, isFirst ? FirstHalfFrag.newInstance() : SecHalfFrag.newInstance()).commit();
 
         if (isFirst) {
-            secButton.setTextColor(requireContext().getColor(R.color.grey));
-            firstButton.setOnClickListener(v -> {
-                clear();
-                firstButton.setTextColor(primaryColDark);
+            secButton.setTextColor(blackishy);
+            firstButton.setTextColor(primaryColDark);
 
-                fm.beginTransaction().replace(R.id.act_list, FirstHalfFrag.newInstance()).addToBackStack(null).commit();
+            firstButton.setOnClickListener(v -> {
+
+                if (!(fm.findFragmentById(R.id.act_list) instanceof FirstHalfFrag)) {
+                    firstButton.setTextColor(primaryColDark);
+                    secButton.setTextColor(blackishy);
+
+                    fm.beginTransaction().replace(R.id.act_list, FirstHalfFrag.newInstance()).commit();
+                }
             });
             secButton.setOnClickListener(v -> {
-                if (isFirst)
-                    Snackbar.make(v, "Please complete First Year", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(v, "Please complete First Year", Snackbar.LENGTH_SHORT).show();
             });
         } else if (isSec) {
-            secButton.setOnClickListener(v -> {
-                clear();
-                secButton.setTextColor(primaryColDark);
-                firstButton.setTextColor(blackishy);
+            secButton.setTextColor(primaryColDark);
+            firstButton.setTextColor(blackishy);
 
-                fm.beginTransaction().replace(R.id.act_list, SecHalfFrag.newInstance()).addToBackStack(null).commit();
+            secButton.setOnClickListener(v -> {
+                //Log.d("AAA", "onViewCreated: " + (fm.findFragmentById(R.id.act_list) instanceof FirstHalfFrag));
+
+                if (fm.findFragmentById(R.id.act_list) instanceof FirstHalfFrag) {
+                    secButton.setTextColor(primaryColDark);
+                    firstButton.setTextColor(blackishy);
+
+                    fm.beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, R.anim.fragment_fade_enter).replace(R.id.act_list, SecHalfFrag.newInstance()).commit();
+                }
             });
 
             firstButton.setOnClickListener(view1 -> {
-                clear();
-                firstButton.setTextColor(primaryColDark);
-                secButton.setTextColor(blackishy);
 
-                fm.beginTransaction().replace(R.id.act_list, FirstHalfFrag.newInstance()).addToBackStack(null).commit();
+                //Log.d("AAA", "onViewCreated: " + getChildFragmentManager().findFragmentById(R.id.act_list));
+
+                if (!((fm.findFragmentById(R.id.act_list)) instanceof FirstHalfFrag)) {
+                    firstButton.setTextColor(primaryColDark);
+                    secButton.setTextColor(blackishy);
+
+                    fm.beginTransaction().setCustomAnimations(android.R.anim.slide_out_right, R.anim.fragment_fade_exit).replace(R.id.act_list, FirstHalfFrag.newInstance()).commit();
+                }
             });
         } else {
             firstButton.setOnClickListener(v -> {
-                clear();
+
                 firstButton.setTextColor(primaryColDark);
 
-                fm.beginTransaction().replace(R.id.act_list, FirstHalfFrag.newInstance()).addToBackStack(null).commit();
+                fm.beginTransaction().replace(R.id.act_list, FirstHalfFrag.newInstance()).commit();
             });
-        }
-    }
-
-    public void clear() {
-        Fragment simpleFragment = getChildFragmentManager().findFragmentById(R.id.act_list);
-
-        Log.e("AAA", "clear() called ActivityFrag " + simpleFragment + fm.getBackStackEntryCount());
-        if (simpleFragment instanceof FirstHalfFrag || simpleFragment instanceof SecHalfFrag) {
-            //((Helper) requireActivity()).closeFragment(simpleFragment);
-            fm.popBackStack();
-            //simpleFragment.clear();
         }
     }
 }

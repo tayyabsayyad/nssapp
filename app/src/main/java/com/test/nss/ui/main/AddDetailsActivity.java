@@ -103,7 +103,8 @@ public class AddDetailsActivity extends Fragment {
         actHeaderInput = requireActivity().findViewById(R.id.actHeaderInput);
 
         actHeaderInput.setVisibility(View.VISIBLE);
-        constFyAct = requireActivity().findViewById(R.id.constFyAct);
+        if (constFyAct != null)
+            constFyAct = requireActivity().findViewById(R.id.constFyAct);
         nssHalvesLinear = requireActivity().findViewById(R.id.nss_halves_Linear);
         malHay = requireActivity().findViewById(R.id.malHay);
 
@@ -137,7 +138,8 @@ public class AddDetailsActivity extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        constFyAct.setVisibility(View.GONE);
+        if (constFyAct != null)
+            constFyAct.setVisibility(View.GONE);
         nssHalvesLinear.setVisibility(View.GONE);
 
         addSend = huh.findViewById(R.id.addSend);
@@ -341,7 +343,8 @@ public class AddDetailsActivity extends Fragment {
 
             builder2.setPositiveButton("Yes", (dialog, which) -> {
                 dialog.cancel();
-                constFyAct.setVisibility(View.VISIBLE);
+                if (constFyAct != null)
+                    constFyAct.setVisibility(View.VISIBLE);
                 nssHalvesLinear.setVisibility(View.VISIBLE);
                 actHeaderInput.setVisibility(View.GONE);
                 campActIn.setVisibility(View.GONE);
@@ -351,22 +354,22 @@ public class AddDetailsActivity extends Fragment {
         });
     }
 
-    @Override
+    /*@Override
     public void onDetach() {
         super.onDetach();
 
         constFyAct.setVisibility(View.VISIBLE);
         nssHalvesLinear.setVisibility(View.VISIBLE);
-        /*if (add2.getVisibility()==View.VISIBLE)
+        *//*if (add2.getVisibility()==View.VISIBLE)
         add2.setVisibility(View.GONE);
         else
-            add.setVisibility(View.GONE);*/
+            add.setVisibility(View.GONE);*//*
 
         campActIn.setVisibility(View.GONE);
         actHeaderInput.setVisibility(View.GONE);
         malHay.setVisibility(View.VISIBLE);
         //FragmentManager fm = requireActivity().getSupportFragmentManager();
-    }
+    }*/
 
     public ArrayList<String> getAssignActList() {
         assert getArguments() != null;

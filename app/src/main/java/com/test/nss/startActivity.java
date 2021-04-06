@@ -16,6 +16,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -70,8 +71,11 @@ public class startActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(getColor(R.color.white));
-        getWindow().setNavigationBarColor(getColor(R.color.white));
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
         setContentView(R.layout.activity_start);
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
@@ -104,6 +108,7 @@ public class startActivity extends AppCompatActivity {
         startReg.setOnClickListener(v -> {
             Intent m = new Intent(mContext, SignupActivity.class);
             startActivity(m);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });
 
         ActivityCompat.requestPermissions(startActivity.this,
@@ -240,6 +245,7 @@ public class startActivity extends AppCompatActivity {
         loginButton.setOnClickListener(view -> {
             if (!isEmpty(username) && !(isEmpty(password))) {
                 Log.e("Start", "onClick: Logging in...");
+                Snackbar.make(view, "Logging In", Snackbar.LENGTH_SHORT).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE).show();
 
                 Call<ResponseBody> call = RetrofitClient.getInstance().getApi().login(username.getText().toString(), password.getText().toString());
                 call.enqueue(new Callback<ResponseBody>() {
