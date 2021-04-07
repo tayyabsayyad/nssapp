@@ -1203,7 +1203,7 @@ public class syAct extends Fragment {
                 detailsActivity.setArguments(args);
 
                 FragmentManager fm = requireActivity().getSupportFragmentManager();
-                getParentFragmentManager().beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").commit();
+                fm.beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").commit();
                 /*adapterArea.notifyDataSetChanged();
                 adapterClg.notifyDataSetChanged();
                 adapterUniv.notifyDataSetChanged();*/

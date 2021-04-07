@@ -1,6 +1,8 @@
 package com.test.nss.ui.info;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +75,11 @@ public class MyListAdapterInfo extends RecyclerView.Adapter<MyListAdapterInfo.Vi
                 onClickInterface.setClick("");
         });
 
+        holder.git.setOnClickListener(view -> {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(list.get(position).getGitId()));
+            view.getContext().startActivity(i);
+        });
         holder.ig.setOnClickListener(view -> {
             onClickInterface.setClick(list.get(position).getLinkdId());
         });

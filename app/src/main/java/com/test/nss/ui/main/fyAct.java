@@ -1210,7 +1210,8 @@ public class fyAct extends Fragment {
                 args.putInt("act", act);
                 detailsActivity.setArguments(args);
 
-                getParentFragmentManager().beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").commit();
+                FragmentManager fm = requireActivity().getSupportFragmentManager();
+                fm.beginTransaction().replace(R.id.halves_frame, detailsActivity, "AddDetailsActivity").commit();
 
                 //adapterArea.notifyDataSetChanged();
                 //adapterClg.notifyDataSetChanged();

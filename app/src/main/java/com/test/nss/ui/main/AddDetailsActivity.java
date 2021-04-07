@@ -55,7 +55,6 @@ public class AddDetailsActivity extends Fragment {
     View huh;
     ConstraintLayout constFyAct;
     LinearLayout nssHalvesLinear;
-    //    ArrayList<String> clgList;
     ArrayList<String> actAssignList;
     ArrayList<String> actAssignListId;
     DatePickerDialog.OnDateSetListener onDateSetListener;
@@ -103,8 +102,7 @@ public class AddDetailsActivity extends Fragment {
         actHeaderInput = requireActivity().findViewById(R.id.actHeaderInput);
 
         actHeaderInput.setVisibility(View.VISIBLE);
-        if (constFyAct != null)
-            constFyAct = requireActivity().findViewById(R.id.constFyAct);
+        constFyAct = requireActivity().findViewById(R.id.constFyAct);
         nssHalvesLinear = requireActivity().findViewById(R.id.nss_halves_Linear);
         malHay = requireActivity().findViewById(R.id.malHay);
 
@@ -204,136 +202,139 @@ public class AddDetailsActivity extends Fragment {
         DatabaseAdapter mdb = new DatabaseAdapter(requireContext());
 
         //String actName = getResources().getStringArray(R.array.valOfActNames)[act];
-        addSend.setOnClickListener(view13 -> {
-            mdb.createDatabase();
-            mdb.open();
-            String activityName = drpdownactAssignName.getSelectedItem().toString();
-            Cursor m = mdb.getActAssigActNameAdmin(activityName);
-            m.moveToFirst();
-            int maxH = m.getInt(m.getColumnIndex("HoursAssigned"));
-
-            int c;
-
-            if (act_desc.getText().toString().equals("") || act_desc.getText().toString().trim().length() <= 0)
-                Toast.makeText(requireContext(), "Enter Description", Toast.LENGTH_SHORT).show();
-
-            else if (actHour.getText().toString().equals("") || Integer.parseInt(actHour.getText().toString().trim()) <= 0)
-                Toast.makeText(requireContext(), "Work atleast an hour and enter", Toast.LENGTH_SHORT).show();
-
-            else if (Integer.parseInt(actHour.getText().toString()) > maxH)
-                Toast.makeText(requireContext(), String.format(Locale.ENGLISH, "Cannot enter more than %d hours", maxH), Toast.LENGTH_SHORT).show();
-
-            else if (actDate.getText().toString().equals("") || actDate.getText().toString().equals("YYYY/MM/DD"))
-                Toast.makeText(requireContext(), "Enter Date", Toast.LENGTH_SHORT).show();
-
-            else if (!actDate.getText().toString().equals("") && drpdownactAssignName.getSelectedItem() != null
-                    && !isEmpty(actHour)) {
-
+        if (drpdownactAssignName.getSelectedItem() != null) {
+            addSend.setOnClickListener(view13 -> {
                 mdb.createDatabase();
                 mdb.open();
-                if (isFirst)
-                    c = mdb.getSumHoursSubmitted(actDate.getText().toString(), "First Year%");
-                else
-                    c = mdb.getSumHoursSubmitted(actDate.getText().toString(), "Second Year%");
-                mdb.close();
+                String activityName = drpdownactAssignName.getSelectedItem().toString();
+                Cursor m = mdb.getActAssigActNameAdmin(activityName);
+                m.moveToFirst();
+                int maxH = m.getInt(m.getColumnIndex("HoursAssigned"));
 
-                //Toast.makeText(requireContext(), actDate.getText().toString() + " " + c, Toast.LENGTH_SHORT).show();
-                if (c <= 10) {
-                    actId.setText(actAssignListId.get(drpdownactAssignName.getSelectedItemPosition()));
+                int c;
 
-                    DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
-                    mDbHelper.createDatabase();
-                    mDbHelper.open();
+                if (act_desc.getText().toString().equals("") || act_desc.getText().toString().trim().length() <= 0)
+                    Toast.makeText(requireContext(), "Enter Description", Toast.LENGTH_SHORT).show();
 
-                    Log.e("hmm", "" + whichAct + " " + activityName);
-                    Log.e("hmm", "" + actDate.getText().toString());
-                    Log.e("hmm", "" + drpdownactAssignName.getSelectedItem().toString());
-                    Log.e("hmm", "" + actId.getText().toString());
+                else if (actHour.getText().toString().equals("") || Integer.parseInt(actHour.getText().toString().trim()) <= 0)
+                    Toast.makeText(requireContext(), "Work atleast an hour and enter", Toast.LENGTH_SHORT).show();
 
-                    String actName = getRoot(actIdHash, m.getInt(m.getColumnIndex("activityType")));
-                    Log.e("AAA", "" + actName);
-                    mDbHelper.insertActOff(
-                            VEC,
-                            actName,
-                            actDate.getText().toString(),
-                            drpdownactAssignName.getSelectedItem().toString(),
-                            //actId.getText().toString(),
-                            actHour.getText().toString(),
-                            act_desc.getText().toString(),
-                            0
-                    );
+                else if (Integer.parseInt(actHour.getText().toString()) > maxH)
+                    Toast.makeText(requireContext(), String.format(Locale.ENGLISH, "Cannot enter more than %d hours", maxH), Toast.LENGTH_SHORT).show();
 
-                    if (isNetworkAvailable()) {
-                        Log.e("AOO", "" + actName);
-                        Log.e("AOO", "" + drpdownactAssignName.getSelectedItem().toString());
-                        Log.e("AOO", "" + whichAct);
-                        Log.e("AOO", "" + actId.getText().toString());
+                else if (actDate.getText().toString().equals("") || actDate.getText().toString().equals("YYYY/MM/DD"))
+                    Toast.makeText(requireContext(), "Enter Date", Toast.LENGTH_SHORT).show();
 
+                else if (!actDate.getText().toString().equals("") && drpdownactAssignName.getSelectedItem() != null
+                        && !isEmpty(actHour)) {
 
-                        Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
-                                "Token " + AUTH_TOKEN,
+                    mdb.createDatabase();
+                    mdb.open();
+                    if (isFirst)
+                        c = mdb.getSumHoursSubmitted(actDate.getText().toString(), "First Year%");
+                    else
+                        c = mdb.getSumHoursSubmitted(actDate.getText().toString(), "Second Year%");
+                    mdb.close();
+
+                    //Toast.makeText(requireContext(), actDate.getText().toString() + " " + c, Toast.LENGTH_SHORT).show();
+                    if (c <= 10) {
+                        actId.setText(actAssignListId.get(drpdownactAssignName.getSelectedItemPosition()));
+
+                        DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
+                        mDbHelper.createDatabase();
+                        mDbHelper.open();
+
+                        Log.e("hmm", "" + whichAct + " " + activityName);
+                        Log.e("hmm", "" + actDate.getText().toString());
+                        Log.e("hmm", "" + drpdownactAssignName.getSelectedItem().toString());
+                        Log.e("hmm", "" + actId.getText().toString());
+
+                        String actName = getRoot(actIdHash, m.getInt(m.getColumnIndex("activityType")));
+                        Log.e("AAA", "" + actName);
+                        mDbHelper.insertActOff(
                                 VEC,
-                                m.getInt(m.getColumnIndex("id")),
-                                Integer.parseInt(actHour.getText().toString()),
+                                actName,
                                 actDate.getText().toString(),
-                                m.getInt(m.getColumnIndex("activityType")),
-                                Password.PASS,
+                                drpdownactAssignName.getSelectedItem().toString(),
+                                //actId.getText().toString(),
+                                actHour.getText().toString(),
                                 act_desc.getText().toString(),
-                                1
+                                0
                         );
-                        m.close();
-                        pushActList.enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            @EverythingIsNonNull
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful() && response.body() != null) {
-                                    Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
-                                    /*try {
-                                        Log.e("AAA", response.body().string());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }*/
-                                    mDbHelper.createDatabase();
-                                    mDbHelper.open();
-                                    mDbHelper.setSync("DailyActivity", 1);
-                                    mDbHelper.close();
 
-                                    myListAdapter.list.add(0, new AdapterDataMain(actDate.getText().toString(), drpdownactAssignName.getSelectedItem().toString(), actHour.getText().toString(), actId.getText().toString(), 0, "Submitted", act_desc.getText().toString()));
-                                    myListAdapter.notifyDataSetChanged();
-                                    //FragmentManager fm = requireActivity().getSupportFragmentManager();
-                                    //fm.popBackStack("AddDetailsActivity", 0);
-                                    lottieAnimationView.playAnimation();
-                                } else if (response.errorBody() != null) {
-                                    try {
-                                        Log.e("onResponse:error", response.errorBody().string());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
+                        if (isNetworkAvailable()) {
+                            Log.e("AOO", "" + actName);
+                            Log.e("AOO", "" + drpdownactAssignName.getSelectedItem().toString());
+                            Log.e("AOO", "" + whichAct);
+                            Log.e("AOO", "" + actId.getText().toString());
+
+
+                            Call<ResponseBody> pushActList = RetrofitClient.getInstance().getApi().sendActList(
+                                    "Token " + AUTH_TOKEN,
+                                    VEC,
+                                    m.getInt(m.getColumnIndex("id")),
+                                    Integer.parseInt(actHour.getText().toString()),
+                                    actDate.getText().toString(),
+                                    m.getInt(m.getColumnIndex("activityType")),
+                                    Password.PASS,
+                                    act_desc.getText().toString(),
+                                    1
+                            );
+                            m.close();
+                            pushActList.enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                @EverythingIsNonNull
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    if (response.isSuccessful() && response.body() != null) {
+                                        Toast.makeText(requireContext(), "Data Entered", Toast.LENGTH_SHORT).show();
+                                        /*try {
+                                            Log.e("AAA", response.body().string());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }*/
+                                        mDbHelper.createDatabase();
+                                        mDbHelper.open();
+                                        mDbHelper.setSync("DailyActivity", 1);
+                                        mDbHelper.close();
+
+                                        myListAdapter.list.add(0, new AdapterDataMain(actDate.getText().toString(), drpdownactAssignName.getSelectedItem().toString(), actHour.getText().toString(), actId.getText().toString(), 0, "Submitted", act_desc.getText().toString()));
+                                        myListAdapter.notifyDataSetChanged();
+                                        //FragmentManager fm = requireActivity().getSupportFragmentManager();
+                                        //fm.popBackStack("AddDetailsActivity", 0);
+                                        lottieAnimationView.playAnimation();
+                                    } else if (response.errorBody() != null) {
+                                        try {
+                                            Log.e("onResponse:error", response.errorBody().string());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        lottieAnimationView.setVisibility(View.GONE);
                                     }
-                                    lottieAnimationView.setVisibility(View.GONE);
                                 }
-                            }
 
-                            @Override
-                            @EverythingIsNonNull
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                Log.e("onFail", t.toString());
-                            }
-                        });
-                    }
-                    mDbHelper.close();
-                    constFyAct.setVisibility(View.VISIBLE);
-                    nssHalvesLinear.setVisibility(View.VISIBLE);
-//                add.setVisibility(View.VISIBLE);
+                                @Override
+                                @EverythingIsNonNull
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                    Log.e("onFail", t.toString());
+                                }
+                            });
+                        }
+                        mDbHelper.close();
+                        if (constFyAct != null)
+                            constFyAct.setVisibility(View.VISIBLE);
+                        nssHalvesLinear.setVisibility(View.VISIBLE);
+                        //                add.setVisibility(View.VISIBLE);
 
-                    actHeaderInput.setVisibility(View.GONE);
-                    malHay.setVisibility(View.VISIBLE);
-                    campActIn.setVisibility(View.GONE);
+                        actHeaderInput.setVisibility(View.GONE);
+                        malHay.setVisibility(View.VISIBLE);
+                        campActIn.setVisibility(View.GONE);
+                    } else
+                        Toast.makeText(requireContext(), "For date " + actDate.getText().toString() + " already added " + c + "hours cannot add more", Toast.LENGTH_SHORT).show();
                 } else
-                    Toast.makeText(requireContext(), "For date " + actDate.getText().toString() + " already added " + c + "hours cannot add more", Toast.LENGTH_SHORT).show();
-            } else
-                Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();
-            mdb.close();
-        });
+                    Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();
+                mdb.close();
+            });
+        }
 
         backActDetail.setOnClickListener(view14 -> {
             AlertDialog.Builder builder2 = new AlertDialog.Builder(requireContext(), R.style.delDialog);
@@ -354,22 +355,23 @@ public class AddDetailsActivity extends Fragment {
         });
     }
 
-    /*@Override
+    @Override
     public void onDetach() {
         super.onDetach();
 
-        constFyAct.setVisibility(View.VISIBLE);
+        if (constFyAct != null)
+            constFyAct.setVisibility(View.VISIBLE);
         nssHalvesLinear.setVisibility(View.VISIBLE);
-        *//*if (add2.getVisibility()==View.VISIBLE)
+        /*if (add2.getVisibility()==View.VISIBLE)
         add2.setVisibility(View.GONE);
         else
-            add.setVisibility(View.GONE);*//*
+            add.setVisibility(View.GONE);*/
 
         campActIn.setVisibility(View.GONE);
         actHeaderInput.setVisibility(View.GONE);
         malHay.setVisibility(View.VISIBLE);
         //FragmentManager fm = requireActivity().getSupportFragmentManager();
-    }*/
+    }
 
     public ArrayList<String> getAssignActList() {
         assert getArguments() != null;

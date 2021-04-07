@@ -94,10 +94,9 @@ public class ModifyVolunteer extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ediary a = ((ediary) requireActivity());
-
         String thisVec = getArguments() != null ? getArguments().getString("thisVec") : null;
         back = root.findViewById(R.id.back);
+        back.setVisibility(View.VISIBLE);
         detailsVol = root.findViewById(R.id.detailsVol);
         cardModify = root.findViewById(R.id.cardModify);
         leader = requireActivity().findViewById(R.id.volAct);

@@ -166,7 +166,7 @@
             android:id="@+id/back"
             android:layout_gravity="end|bottom"
             app:rippleColor="#FAFAFA"
-            app:elevation="0dp"
+            android:visibility="gone"
             app:backgroundTint="@color/colorPrimaryLight"
             android:src="@drawable/ic_back_32"
             app:fabCustomSize="45dp"

@@ -25,11 +25,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.test.nss.DataBaseHelper;
 import com.test.nss.DatabaseAdapter;
 import com.test.nss.R;
 import com.test.nss.api.RetrofitClient;
 import com.test.nss.ediary;
+import com.test.nss.ui.BottomDialogFragment;
 import com.test.nss.ui.onClickInterface2;
 
 import org.json.JSONArray;
@@ -59,7 +61,7 @@ public class Leader extends Fragment implements SwipeRefreshLayout.OnRefreshList
     TextView toolbarTitle;
 
     List<AdapterDataLeader> dataLeaderList, dataLeaderListAll;
-    onClickInterface2 onClickInterface, onClickInterface2;
+    onClickInterface2 modVol, viewVol;
     View root;
     RecyclerView recViewLeader, recViewLeaderAll;
     CardView leader, leaderAll;
@@ -137,9 +139,13 @@ public class Leader extends Fragment implements SwipeRefreshLayout.OnRefreshList
             recViewLeader.setVisibility(View.GONE);
         });
 
-        onClickInterface = abc -> {
+        BottomDialogFragment commonSheet = new BottomDialogFragment();
+        commonSheet.setStyle(BottomDialogFragment.STYLE_NORMAL, R.style.BottomSheetStyleTheme);
+
+        modVol = abc -> {
             if (!swipeRefresh.isRefreshing()) {
                 if (!checkApproved(dataLeaderList.get(abc).getvolVec())) {
+
                     leaderAll.setVisibility(View.GONE);
                     leader.setVisibility(View.GONE);
                     Toast.makeText(requireContext(), "" + dataLeaderList.get(abc).getVolName(), Toast.LENGTH_SHORT).show();
@@ -164,7 +170,7 @@ public class Leader extends Fragment implements SwipeRefreshLayout.OnRefreshList
                 Toast.makeText(requireContext(), "Refreshing", Toast.LENGTH_SHORT).show();
         };
 
-        onClickInterface2 = abc1 -> {
+        viewVol = abc1 -> {
             Call<ResponseBody> getVecDet = RetrofitClient.getInstance().getApi().volActVec("Token " + AUTH_TOKEN, dataLeaderListAll.get(abc1).getvolVec());
             getVecDet.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -200,53 +206,61 @@ public class Leader extends Fragment implements SwipeRefreshLayout.OnRefreshList
                             Log.e("Failed", e.toString());
                             e.printStackTrace();
                         }
+
+                        if (!swipeRefresh.isRefreshing()) {
+                            Bundle args = new Bundle();
+                            args.putString("thisVec2", dataLeaderListAll.get(abc1).getvolVec());
+                            commonSheet.fragment = new ViewVolunteer();
+                            commonSheet.setArguments(args);
+                            commonSheet.show(getChildFragmentManager(), "view");
+
+                            //fragmentManager.beginTransaction().replace(R.id.detailsModify, viewVolunteer, "ViewVolunteer").addToBackStack(null).commit();
+
+                            /*Log.e("AAA", abc1 + "");
+                            Toast.makeText(requireContext(), dataLeaderListAll.get(abc1).getVolName(), Toast.LENGTH_SHORT).show();
+                            leaderAll.setVisibility(View.GONE);
+                            leader.setVisibility(View.GONE);
+                            ViewVolunteer viewVolunteer = ViewVolunteer.newInstance();
+                            Bundle args = new Bundle();
+                            args.putString("thisVec2", dataLeaderListAll.get(abc1).getvolVec());
+                            viewVolunteer.setArguments(args);
+                            recViewLeaderAll.setVisibility(View.GONE);
+                            FragmentManager fragmentManager = getChildFragmentManager();
+                            Fragment simpleFragment = fragmentManager.findFragmentById(R.id.detailsModify);
+
+                            //Log.e("Leader", "onViewCreated: " + fragmentManager + fragmentManager.getBackStackEntryCount());
+
+                            int c = fragmentManager.getBackStackEntryCount();
+                            if (simpleFragment instanceof ViewVolunteer) {
+                                while (c >= 0) {
+                                    fragmentManager.popBackStack();
+                                    c--;
+                                }
+                            }
+                            fragmentManager.beginTransaction().replace(R.id.detailsModify, viewVolunteer, "ViewVolunteer").addToBackStack(null).commit();*/
+                        } else
+                            Toast.makeText(requireContext(), "Refreshing", Toast.LENGTH_SHORT).show();
                         //Log.e("here", "onViewCreated: " + abc1);
                     } else if (response.errorBody() != null) {
                         try {
                             Log.e("Here", "onResponse: " + response.errorBody().string());
+                            Toast.makeText(getContext(), "Error in adding activity", Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    } else
-                        Toast.makeText(requireContext(), "Device offline", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @EverythingIsNonNull
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Toast.makeText(requireContext(), "Failed to add", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Failed to add activity, device offline", Toast.LENGTH_SHORT).show();
                 }
             });
-
-            if (!swipeRefresh.isRefreshing()) {
-                Log.e("AAA", abc1 + "");
-                Toast.makeText(requireContext(), dataLeaderListAll.get(abc1).getVolName(), Toast.LENGTH_SHORT).show();
-                leaderAll.setVisibility(View.GONE);
-                leader.setVisibility(View.GONE);
-                ViewVolunteer viewVolunteer = ViewVolunteer.newInstance();
-                Bundle args = new Bundle();
-                args.putString("thisVec2", dataLeaderListAll.get(abc1).getvolVec());
-                viewVolunteer.setArguments(args);
-                recViewLeaderAll.setVisibility(View.GONE);
-                FragmentManager fragmentManager = getChildFragmentManager();
-                Fragment simpleFragment = fragmentManager.findFragmentById(R.id.detailsModify);
-
-                //Log.e("Leader", "onViewCreated: " + fragmentManager + fragmentManager.getBackStackEntryCount());
-
-                int c = fragmentManager.getBackStackEntryCount();
-                if (simpleFragment instanceof ViewVolunteer)
-                    while (c >= 0) {
-                        fragmentManager.popBackStack();
-                        c--;
-                    }
-
-                fragmentManager.beginTransaction().replace(R.id.detailsModify, viewVolunteer, "ViewVolunteer").addToBackStack(null).commit();
-            } else
-                Toast.makeText(requireContext(), "Refreshing", Toast.LENGTH_SHORT).show();
         };
 
-        leaderActDataAdapter = new MyListAdapterLeader(dataLeaderList, requireContext(), onClickInterface);
-        leaderActAllDataAdapter = new MyListAdapterLeader(dataLeaderListAll, requireContext(), onClickInterface2);
+        leaderActDataAdapter = new MyListAdapterLeader(dataLeaderList, requireContext(), modVol);
+        leaderActAllDataAdapter = new MyListAdapterLeader(dataLeaderListAll, requireContext(), viewVol);
 
         recViewLeader.setLayoutManager(new LinearLayoutManager(requireContext()));
         recViewLeader.setAdapter(leaderActDataAdapter);

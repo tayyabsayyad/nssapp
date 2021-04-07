@@ -17,8 +17,10 @@
         android:layout_height="match_parent">
 
         <View
-            android:layout_width="20dp"
-            android:layout_height="5dp"
+            android:layout_width="@dimen/space_20dp"
+            android:layout_height="3dp"
+            android:alpha=".3"
+            android:backgroundTint="@color/blackGrey"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="2.5dp"
             android:background="@drawable/help_round_bg" />
@@ -27,7 +29,7 @@
             android:id="@+id/cardLinear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/space_20dp"
             android:layout_marginBottom="@dimen/padding_5dp"
             android:minHeight="60dp"
             android:orientation="vertical"
@@ -50,6 +52,8 @@
 
                 <TextView
                     android:id="@+id/clgNameLead"
+                    android:singleLine="true"
+                    android:layout_marginStart="@dimen/space_10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/shimmer_bg"

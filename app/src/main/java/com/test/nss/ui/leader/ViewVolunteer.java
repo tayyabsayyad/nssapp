@@ -40,7 +40,7 @@ public class ViewVolunteer extends Fragment {
     RecyclerView recViewLeader, recViewVolUniv, recViewVolArea, recViewVolClg;
     List<AdapterDataVolunteer> dataVolListUniv, dataVolListArea, dataVolListClg;
     Button univ, area, clg;
-    FloatingActionButton back;
+    //FloatingActionButton back;
     LinearLayout detailsVol;
     CardView cardModify, leader, leaderAll;
     Context context;
@@ -58,6 +58,7 @@ public class ViewVolunteer extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_modify_details, container, false);
+        root.findViewById(R.id.back).findViewById(R.id.back).setVisibility(View.GONE);
         recViewLeader = requireActivity().findViewById(R.id.vecLeaderListAll);
         linearL = root.findViewById(R.id.linearL);
         dataVolListUniv = ListUtils.union(addVolActData("First Year University"), addVolActData("Second Year University"));
@@ -73,9 +74,9 @@ public class ViewVolunteer extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        root.post(this::revealFab);
+        //root.post(this::revealFab);
         //revealFab();
-        back = root.findViewById(R.id.back);
+        //back = root.findViewById(R.id.back);
         detailsVol = root.findViewById(R.id.detailsVol);
         cardModify = root.findViewById(R.id.cardModify);
 
@@ -94,8 +95,6 @@ public class ViewVolunteer extends Fragment {
 
         recViewVolClg = root.findViewById(R.id.recVecDetailClg);
         MyListAdapterVolunteer adapterVolClg = new MyListAdapterVolunteer(dataVolListClg, context);
-        recViewVolClg.setLayoutManager(new LinearLayoutManager(context));
-        recViewVolClg.setAdapter(adapterVolClg);
 
         univ.setOnClickListener(view1 -> {
             detailsVol.setVisibility(View.VISIBLE);
@@ -126,12 +125,14 @@ public class ViewVolunteer extends Fragment {
             recViewVolUniv.setVisibility(View.GONE);
             recViewVolArea.setVisibility(View.GONE);
         });
+        //back.setVisibility(View.GONE);
 
-        back.setOnClickListener(view12 -> {
+        /*back.setOnClickListener(view12 -> {
             hideFab();
             new Handler().postDelayed(this::onDetach, 250);
-        });
+        });*/
 
+        univ.performClick();
         recViewVolUniv.setLayoutManager(new LinearLayoutManager(context));
         recViewVolUniv.setAdapter(adapterVolUniv);
 
@@ -148,8 +149,10 @@ public class ViewVolunteer extends Fragment {
         DatabaseAdapter mDbHelper = new DatabaseAdapter(requireContext());
         mDbHelper.createDatabase();
         mDbHelper.open();
-        assert getArguments() != null;
-        String thisVec = getArguments().getString("thisVec2");
+        String thisVec = null;
+        if (getArguments() != null) {
+            thisVec = getArguments().getString("thisVec2");
+        }
 
         Cursor c0 = mDbHelper.getVolAllDetails(actName, thisVec);
         int m = c0.getCount();

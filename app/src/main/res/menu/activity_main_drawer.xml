@@ -43,6 +43,7 @@
                     android:icon="@drawable/ic_help"
                     android:title="@string/info" />
                 <item
+                    android:icon="@drawable/nss_logo"
                     android:id="@+id/nav_data"
                     android:title="About NSS" />
             </menu>
