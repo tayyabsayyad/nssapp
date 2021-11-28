@@ -1,0 +1,107 @@
+name: Android CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ test ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew build
+        
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.0.0
+        
+      - name: Update AndroidManifest.xml
+        uses: damienaicheh/update-android-version-manifest-action@v1.0.0
+        with:
+          android-manifest-path: './app/src/main/AndroidManifest.xml'
+          version-code: ${{ env.NUMBER_OF_COMMITS }}
+          version-name: '${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}'
+          print-file: true
+
+      - name: Update gradle version for Android
+        uses: damienaicheh/update-android-version-gradle-action@v1.0.0
+        with:
+          build-gradle-path: './app/build.gradle'
+          version-code: ${{ env.NUMBER_OF_COMMITS }}
+          version-name: '${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}'
+          print-file: true
+
+      - name: Build Apk
+        run: ./gradlew assembleRelease
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+
+      - name: Save name of our Artifact
+        id: set-result-artifact
+        run: |
+          ARTIFACT_PATHNAME_APK=$(ls app/build/outputs/apk/release/app-release*.apk | head -n 1)
+          ARTIFACT_NAME_APK=$(basename $ARTIFACT_PATHNAME_APK)
+          echo "ARTIFACT_NAME_APK is " ${ARTIFACT_NAME_APK}
+          echo "ARTIFACT_PATHNAME_APK=${ARTIFACT_PATHNAME_APK}" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME_APK=${ARTIFACT_NAME_APK}" >> $GITHUB_ENV
+          git log --pretty=oneline > Changelog.MD
+          
+      - name: Upload APK
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          name: Release artifact
+          path: ${{ env.ARTIFACT_PATHNAME_APK }}
+
+      - name: Bump version and push tag
+        id: tag_generate
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          INITIAL_VERSION: 1.0.0
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag_generate.outputs.new_tag }}
+          release_name: Release ${{ steps.tag_generate.outputs.new_tag }}
+          draft: false
+          #body: ${{ env.CH_LOG }}
+          prerelease: false
+
+      - name: Upload our Artifact Assets
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.ARTIFACT_PATHNAME_APK }}
+          asset_name: ${{ env.ARTIFACT_NAME_APK }}
+          asset_content_type: application/zip
+          
+      - name: Upload to telegram
+        run: |
+          CH_LOG=$(git log --pretty=oneline --abbrev-commit -1)
+          echo "Changelog " ${CH_LOG}
+          curl -s "https://api.telegram.org/${{ secrets.BOT_TOKEN }}/sendmessage" --data "text=<b>Commit Message</b>%0A<i>${CH_LOG}</i>%0A<b>Download</b>%0A${{ steps.upload-release-asset.outputs.browser_download_url }}&chat_id=${{ secrets.CHAT_ID }}&parse_mode=HTML"
+
